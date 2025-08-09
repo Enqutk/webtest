@@ -53,7 +53,7 @@ class SocialRefResource extends Resource {
             Tables\Columns\TextColumn::make( 'status' )->sortable(),
             Tables\Columns\TextColumn::make( 'created_at' )->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make( 'updated_at' )->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-            Tables\Columns\TextColumn::make( 'deleted_at' )->dateTime()->sortable()->toggleable( isToggledHiddenByDefault: true ),
+            Tables\Columns\TextColumn::make( 'deleted_at' )->dateTime()->sortable()->nullable()->toggleable( isToggledHiddenByDefault: true ),
         ] )
         ->filters( [
             Tables\Filters\TrashedFilter::make(),
