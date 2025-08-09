@@ -25,6 +25,7 @@ class SocialRefResource extends Resource {
             ->maxLength( 255 ),
             Forms\Components\TextInput::make( 'link' )
             ->required()
+            ->url()
             ->maxLength( 255 ),
             Forms\Components\Textarea::make( 'description' )
             ->maxLength( 65535 ),
@@ -34,10 +35,7 @@ class SocialRefResource extends Resource {
             ->numeric()
             ->default( 0 ),
             Forms\Components\Select::make( 'status' )
-            ->options( [
-                'active' => 'Active',
-                'inactive' => 'Inactive',
-            ] )
+            ->options( SocialRef::statusOptions() )
             ->default( 'active' )
             ->required(),
         ] );
@@ -48,7 +46,7 @@ class SocialRefResource extends Resource {
         ->columns( [
             Tables\Columns\TextColumn::make( 'id' )->sortable(),
             Tables\Columns\TextColumn::make( 'title' )->searchable()->sortable(),
-            Tables\Columns\TextColumn::make( 'link' )->searchable(),
+            Tables\Columns\TextColumn::make( 'link' )->searchable()->url(fn ($record) => $record->link, true),
             Tables\Columns\TextColumn::make( 'description' )->limit( 50 ),
             Tables\Columns\TextColumn::make( 'icon_class' ),
             Tables\Columns\TextColumn::make( 'order' )->sortable(),
@@ -60,13 +58,11 @@ class SocialRefResource extends Resource {
         ->filters( [
             Tables\Filters\TrashedFilter::make(),
             Tables\Filters\SelectFilter::make( 'status' )
-            ->options( [
-                'active' => 'Active',
-                'inactive' => 'Inactive',
-            ] ),
+            ->options( SocialRef::statusOptions() ),
         ] )
         ->actions( [
             Tables\Actions\EditAction::make(),
+            Tables\Actions\DeleteAction::make(),
         ] )
         ->bulkActions( [
             Tables\Actions\BulkActionGroup::make( [
