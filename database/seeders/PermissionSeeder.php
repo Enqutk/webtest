@@ -11,8 +11,10 @@ class PermissionSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+        public function run(): void
     {
+        app()["\Spatie\Permission\PermissionRegistrar"]->forgetCachedPermissions();
+
         $entities = ['blog', 'service', 'team'];
         $actions = ['create', 'read', 'update', 'delete'];
         $roles = ['admin', 'blogger', 'moderator'];
@@ -20,22 +22,18 @@ class PermissionSeeder extends Seeder
         // Insert permissions
         foreach ($entities as $entity) {
             foreach ($actions as $action) {
-            DB::table('permissions')->insert([
-                'name' => "{$action}-{$entity}",
-                'guard_name' => 'web',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+                \Spatie\Permission\Models\Permission::create([
+                    'name' => "{$action}-{$entity}",
+                    'guard_name' => 'web',
+                ]);
             }
         }
 
         // Insert roles
         foreach ($roles as $role) {
-            DB::table('roles')->insert([
-            'name' => $role,
-            'guard_name' => 'web',
-            'created_at' => now(),
-            'updated_at' => now(),
+            \Spatie\Permission\Models\Role::create([
+                'name' => $role,
+                'guard_name' => 'web',
             ]);
         }
     }
