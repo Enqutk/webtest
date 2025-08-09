@@ -39,7 +39,7 @@
 						<!-- Slide2 -->
 						<div class="swiper-slide">
 							<div class="pbmit-slider-item">
-								<div class="pbmit-slider-bg" style="background-image: url(images/banner-slider-img/slider1-02.jpg);"></div>
+								<div class="pbmit-slider-bg" style="background-image: url(assets/images/banner-slider-img/slider1-02.jpg);"></div>
 								<div class="container">
 									<div class="pbmit-slider-content">
 										<h5 class="pbmit-slider-subtitle transform-right transform-delay-1">
@@ -70,7 +70,7 @@
 						<!-- Slide3 -->
 						<div class="swiper-slide">
 							<div class="pbmit-slider-item">
-								<div class="pbmit-slider-bg" style="background-image: url(images/banner-slider-img/slider1-03.jpg);"></div>
+								<div class="pbmit-slider-bg" style="background-image: url(assets/images/banner-slider-img/slider1-03.jpg);"></div>
 								<div class="container">
 									<div class="pbmit-slider-content">
 										<h5 class="pbmit-slider-subtitle transform-right transform-delay-1">
@@ -125,7 +125,7 @@
 										<div class="pbmit-image-wrap">
 											<div class="pbmit-featured-img-wrapper">
 												<div class="pbmit-featured-wrapper">
-													<img src="images/homepage-1/service/service-img-01.jpg" class="img-fluid" alt="">
+													<img src="assets/images/homepage-1/service/service-img-01.jpg" class="img-fluid" alt="">
 												</div>
 											</div>
 											<div class="pbmit-service-icon-wrapper">
@@ -164,7 +164,7 @@
 										<div class="pbmit-image-wrap">
 											<div class="pbmit-featured-img-wrapper">
 												<div class="pbmit-featured-wrapper">
-													<img src="images/homepage-1/service/service-img-02.jpg" class="img-fluid" alt="">
+													<img src="assets/images/homepage-1/service/service-img-02.jpg" class="img-fluid" alt="">
 												</div>
 											</div>
 											<div class="pbmit-service-icon-wrapper">
@@ -201,7 +201,7 @@
 										<div class="pbmit-image-wrap">
 											<div class="pbmit-featured-img-wrapper">
 												<div class="pbmit-featured-wrapper">
-													<img src="images/homepage-1/service/service-img-03.jpg" class="img-fluid" alt="">
+													<img src="assets/images/homepage-1/service/service-img-03.jpg" class="img-fluid" alt="">
 												</div>
 											</div>
 											<div class="pbmit-service-icon-wrapper">
@@ -238,7 +238,7 @@
 										<div class="pbmit-image-wrap">
 											<div class="pbmit-featured-img-wrapper">
 												<div class="pbmit-featured-wrapper">
-													<img src="images/homepage-1/service/service-img-04.jpg" class="img-fluid" alt="">
+													<img src="assets/images/homepage-1/service/service-img-04.jpg" class="img-fluid" alt="">
 												</div>
 											</div>
 											<div class="pbmit-service-icon-wrapper">
@@ -275,7 +275,7 @@
 										<div class="pbmit-image-wrap">
 											<div class="pbmit-featured-img-wrapper">
 												<div class="pbmit-featured-wrapper">
-													<img src="images/homepage-1/service/service-img-05.jpg" class="img-fluid" alt="">
+													<img src="assets/images/homepage-1/service/service-img-05.jpg" class="img-fluid" alt="">
 												</div>
 											</div>
 											<div class="pbmit-service-icon-wrapper">
@@ -312,7 +312,7 @@
 										<div class="pbmit-image-wrap">
 											<div class="pbmit-featured-img-wrapper">
 												<div class="pbmit-featured-wrapper">
-													<img src="images/homepage-1/service/service-img-06.jpg" class="img-fluid" alt="">
+													<img src="assets/images/homepage-1/service/service-img-06.jpg" class="img-fluid" alt="">
 												</div>
 											</div>
 											<div class="pbmit-service-icon-wrapper">
@@ -971,7 +971,7 @@
 										<div class="pbmit-featured-inner">
 											<div class="pbmit-featured-img-wrapper">
 												<div class="pbmit-featured-wrapper">
-													<img src="images/homepage-1/team/team-img-01.jpg" class="img-fluid" alt="">
+													<img src="assets/images/homepage-1/team/team-img-01.jpg" class="img-fluid" alt="">
 												</div>
 											</div>
 											<a class="pbmit-link" href="team-member-detail.html"></a>
@@ -1021,7 +1021,7 @@
 										<div class="pbmit-featured-inner">
 											<div class="pbmit-featured-img-wrapper">
 												<div class="pbmit-featured-wrapper">
-													<img src="images/homepage-1/team/team-img-02.jpg" class="img-fluid" alt=""></div>
+													<img src="assets/images/homepage-1/team/team-img-02.jpg" class="img-fluid" alt=""></div>
 											</div>
 											<a class="pbmit-link" href="team-member-detail.html"></a>
 										</div>
@@ -1070,7 +1070,7 @@
 										<div class="pbmit-featured-inner">
 											<div class="pbmit-featured-img-wrapper">
 												<div class="pbmit-featured-wrapper">
-													<img src="images/homepage-1/team/team-img-03.jpg" class="img-fluid" alt=""></div>
+													<img src="assets/images/homepage-1/team/team-img-03.jpg" class="img-fluid" alt=""></div>
 											</div>
 											<a class="pbmit-link" href="team-member-detail.html"></a>
 										</div>
@@ -1119,7 +1119,7 @@
 										<div class="pbmit-featured-inner">
 											<div class="pbmit-featured-img-wrapper">
 												<div class="pbmit-featured-wrapper">
-													<img src="images/homepage-1/team/team-img-04.jpg" class="img-fluid" alt=""></div>
+													<img src="assets/images/homepage-1/team/team-img-04.jpg" class="img-fluid" alt=""></div>
 											</div>
 											<a class="pbmit-link" href="team-member-detail.html"></a>
 										</div>
@@ -1168,7 +1168,7 @@
 										<div class="pbmit-featured-inner">
 											<div class="pbmit-featured-img-wrapper">
 												<div class="pbmit-featured-wrapper">
-													<img src="images/homepage-1/team/team-img-05.jpg" class="img-fluid" alt=""></div>
+													<img src="assets/images/homepage-1/team/team-img-05.jpg" class="img-fluid" alt=""></div>
 											</div>
 											<a class="pbmit-link" href="team-member-detail.html"></a>
 										</div>
@@ -1217,7 +1217,7 @@
 										<div class="pbmit-featured-inner">
 											<div class="pbmit-featured-img-wrapper">
 												<div class="pbmit-featured-wrapper">
-													<img src="images/homepage-1/team/team-img-06.jpg" class="img-fluid" alt=""></div>
+													<img src="assets/images/homepage-1/team/team-img-06.jpg" class="img-fluid" alt=""></div>
 											</div>
 											<a class="pbmit-link" href="team-member-detail.html"></a>
 										</div>
@@ -1293,11 +1293,11 @@
 												<div class="pbmit-client-wrapper pbmit-client-with-hover-img">
 													<h4 class="pbmit-hide">Client 08</h4>
 													<div class="pbmit-client-hover-img">
-														<img src="images/client/client-01-hover.png" alt>
+														<img src="assets/images/client/client-01-hover.png" alt>
 													</div>
 													<div class="pbmit-featured-img-wrapper">
 														<div class="pbmit-featured-wrapper">
-															<img src="images/client/client-01.png" class="img-fluid" alt="">
+															<img src="assets/images/client/client-01.png" class="img-fluid" alt="">
 														</div>
 													</div>
 												</div>
@@ -1309,11 +1309,11 @@
 												<div class="pbmit-client-wrapper pbmit-client-with-hover-img">
 													<h4 class="pbmit-hide">Client 08</h4>
 													<div class="pbmit-client-hover-img">
-														<img src="images/client/client-02-hover.png" alt>
+														<img src="assets/images/client/client-02-hover.png" alt>
 													</div>
 													<div class="pbmit-featured-img-wrapper">
 														<div class="pbmit-featured-wrapper">
-															<img src="images/client/client-02.png" class="img-fluid" alt="">
+															<img src="assets/images/client/client-02.png" class="img-fluid" alt="">
 														</div>
 													</div>
 												</div>
@@ -1325,11 +1325,11 @@
 												<div class="pbmit-client-wrapper pbmit-client-with-hover-img">
 													<h4 class="pbmit-hide">Client 08</h4>
 													<div class="pbmit-client-hover-img">
-														<img src="images/client/client-03-hover.png" alt>
+														<img src="assets/images/client/client-03-hover.png" alt>
 													</div>
 													<div class="pbmit-featured-img-wrapper">
 														<div class="pbmit-featured-wrapper">
-															<img src="images/client/client-03.png" class="img-fluid" alt="">
+															<img src="assets/images/client/client-03.png" class="img-fluid" alt="">
 														</div>
 													</div>
 												</div>
@@ -1341,11 +1341,11 @@
 												<div class="pbmit-client-wrapper pbmit-client-with-hover-img">
 													<h4 class="pbmit-hide">Client 08</h4>
 													<div class="pbmit-client-hover-img">
-														<img src="images/client/client-04-hover.png" alt>
+														<img src="assets/images/client/client-04-hover.png" alt>
 													</div>
 													<div class="pbmit-featured-img-wrapper">
 														<div class="pbmit-featured-wrapper">
-															<img src="images/client/client-04.png" class="img-fluid" alt="">
+															<img src="assets/images/client/client-04.png" class="img-fluid" alt="">
 														</div>
 													</div>
 												</div>
@@ -1365,7 +1365,7 @@
 												<div class="pbmit-ihbox-box">
 													<div class="pbmit-ihbox-icon">
 														<div class="pbmit-ihbox-icon-wrapper pbmit-ihbox-icon-type-image">
-															<img src="images/ratting.png" alt="">
+															<img src="assets/images/ratting.png" alt="">
 														</div>
 													</div>
 													<div class="pbmit-ihbox-contents">
@@ -1387,7 +1387,7 @@
 															<div class="pbminfotech-box-author">
 																<div class="pbmit-featured-img-wrapper">
 																	<div class="pbmit-featured-wrapper">
-																		<img src="images/homepage-1/testimonial/testimonial-img-01.jpg" class="img-fluid" alt="">
+																		<img src="assets/images/homepage-1/testimonial/testimonial-img-01.jpg" class="img-fluid" alt="">
 																	</div>
 																</div>
 																<div class="pbmit-auther-content">
@@ -1406,7 +1406,7 @@
 															<div class="pbminfotech-box-author">
 																<div class="pbmit-featured-img-wrapper">
 																	<div class="pbmit-featured-wrapper">
-																		<img src="images/homepage-1/testimonial/testimonial-img-02.jpg" class="img-fluid" alt="">
+																		<img src="assets/images/homepage-1/testimonial/testimonial-img-02.jpg" class="img-fluid" alt="">
 																	</div>
 																</div>
 																<div class="pbmit-auther-content">
@@ -1425,7 +1425,7 @@
 															<div class="pbminfotech-box-author">
 																<div class="pbmit-featured-img-wrapper">
 																	<div class="pbmit-featured-wrapper">
-																		<img src="images/homepage-1/testimonial/testimonial-img-03.jpg" class="img-fluid" alt="">
+																		<img src="assets/images/homepage-1/testimonial/testimonial-img-03.jpg" class="img-fluid" alt="">
 																	</div>
 																</div>
 																<div class="pbmit-auther-content">
@@ -1620,7 +1620,7 @@
 										<div class="pbmit-featured-container">
 											<div class="pbmit-featured-img-wrapper">
 												<div class="pbmit-featured-wrapper">
-													<img src="images/homepage-1/blog/blog-img-01.jpg" class="img-fluid" alt="">
+													<img src="assets/images/homepage-1/blog/blog-img-01.jpg" class="img-fluid" alt="">
 												</div>
 											</div>
 											<a class="pbmit-link" href="blog-single-details.html"></a>
@@ -1657,7 +1657,7 @@
 										<div class="pbmit-featured-container">
 											<div class="pbmit-featured-img-wrapper">
 												<div class="pbmit-featured-wrapper">
-													<img src="images/homepage-1/blog/blog-img-01.jpg" class="img-fluid" alt="">
+													<img src="assets/images/homepage-1/blog/blog-img-01.jpg" class="img-fluid" alt="">
 												</div>
 											</div>
 											<a class="pbmit-link" href="blog-single-details.html"></a>
@@ -1692,7 +1692,7 @@
 										<div class="pbmit-featured-container">
 											<div class="pbmit-featured-img-wrapper">
 												<div class="pbmit-featured-wrapper">
-													<img src="images/homepage-1/blog/blog-img-01.jpg" class="img-fluid" alt="">
+													<img src="assets/images/homepage-1/blog/blog-img-01.jpg" class="img-fluid" alt="">
 												</div>
 											</div>
 											<a class="pbmit-link" href="blog-single-details.html"></a>
@@ -1727,7 +1727,7 @@
 										<div class="pbmit-featured-container">
 											<div class="pbmit-featured-img-wrapper">
 												<div class="pbmit-featured-wrapper">
-													<img src="images/homepage-1/blog/blog-img-01.jpg" class="img-fluid" alt="">
+													<img src="assets/images/homepage-1/blog/blog-img-01.jpg" class="img-fluid" alt="">
 												</div>
 											</div>
 											<a class="pbmit-link" href="blog-single-details.html"></a>
