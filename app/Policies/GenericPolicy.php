@@ -10,18 +10,23 @@ class GenericPolicy
 {
     use HandlesAuthorization;
 
+      public function view(User $user, object $model)
+    {
+        return $user->hasPermissionTo('read-' . Str::snake(class_basename($model)));
+    }
+
     public function create(User $user, $model)
     {
-        return $user->hasPermissionTo('create ' . Str::kebab(class_basename($model)));
+        return $user->hasPermissionTo('create-' . Str::kebab(class_basename($model)));
     }
 
     public function update(User $user, $model)
     {
-        return $user->hasPermissionTo('update ' . Str::kebab(class_basename($model)));
+        return $user->hasPermissionTo('update-' . Str::kebab(class_basename($model)));
     }
 
     public function delete(User $user, $model)
     {
-        return $user->hasPermissionTo('delete ' . Str::kebab(class_basename($model)));
+        return $user->hasPermissionTo('delete-' . Str::kebab(class_basename($model)));
     }
 }

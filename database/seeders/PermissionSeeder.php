@@ -21,7 +21,7 @@ class PermissionSeeder extends Seeder
         foreach ($entities as $entity) {
             foreach ($actions as $action) {
             DB::table('permissions')->insert([
-                'name' => "{$action}_{$entity}",
+                'name' => "{$action}-{$entity}",
                 'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now(),
