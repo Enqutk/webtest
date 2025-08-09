@@ -44,7 +44,7 @@
 @show
     <!-- Begin page -->
     <div id="layout-wrapper">
-        @include('layout.header') <!-- Include your header -->
+        @include('layouts.header') <!-- Include your header -->
         <div class="main-content">
             <div class="page-content">
                 <div class="container-fluid">
@@ -53,7 +53,7 @@
                 <!-- container-fluid -->
             </div>
             <!-- End Page-content -->
-            @include('layout.footer') <!-- Include your footer -->
+            @include('layouts.footer') <!-- Include your footer -->
         </div>
         <!-- end main content-->
     </div>
