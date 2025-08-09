@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('order_number')->default(0);
             $table->timestamps();
 
-            $table->foreign('menu_id')->references('id')->on('menus')->onDelete('cascade');
+            $table->foreign('menu_id')->references('id')->on('menu_locations')->onDelete('cascade');
             $table->foreign('parent_id')->references('id')->on('menu_items')->onDelete('cascade');
         });
     }
