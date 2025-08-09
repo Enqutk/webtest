@@ -13,52 +13,88 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class SocialRefResource extends Resource
-{
+class SocialRefResource extends Resource {
     protected static ?string $model = SocialRef::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
-    {
+    public static function form( Form $form ): Form {
         return $form
-            ->schema([
-                //
-            ]);
+        ->schema( [
+            Forms\Components\TextInput::make( 'title' )
+            ->required()
+            ->maxLength( 255 ),
+            Forms\Components\TextInput::make( 'link' )
+            ->required()
+            ->maxLength( 255 ),
+            Forms\Components\Textarea::make( 'description' )
+            ->maxLength( 65535 ),
+            Forms\Components\TextInput::make( 'icon_class' )
+            ->maxLength( 255 ),
+            Forms\Components\TextInput::make( 'order' )
+            ->numeric()
+            ->default( 0 ),
+            Forms\Components\Select::make( 'status' )
+            ->options( [
+                'active' => 'Active',
+                'inactive' => 'Inactive',
+            ] )
+            ->default( 'active' )
+            ->required(),
+        ] );
     }
 
-    public static function table(Table $table): Table
-    {
+    public static function table( Table $table ): Table {
         return $table
-            ->columns([
-                //
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+        ->columns( [
+            Tables\Columns\TextColumn::make( 'id' )->sortable(),
+            Tables\Columns\TextColumn::make( 'title' )->searchable()->sortable(),
+            Tables\Columns\TextColumn::make( 'link' )->searchable(),
+            Tables\Columns\TextColumn::make( 'description' )->limit( 50 ),
+            Tables\Columns\TextColumn::make( 'icon_class' ),
+            Tables\Columns\TextColumn::make( 'order' )->sortable(),
+            Tables\Columns\TextColumn::make( 'status' )->sortable(),
+            Tables\Columns\TextColumn::make( 'created_at' )->dateTime()->sortable(),
+            Tables\Columns\TextColumn::make( 'updated_at' )->dateTime()->sortable(),
+            Tables\Columns\TextColumn::make( 'deleted_at' )->dateTime()->sortable()->toggleable( isToggledHiddenByDefault: true ),
+        ] )
+        ->filters( [
+            Tables\Filters\TrashedFilter::make(),
+            Tables\Filters\SelectFilter::make( 'status' )
+            ->options( [
+                'active' => 'Active',
+                'inactive' => 'Inactive',
+            ] ),
+        ] )
+        ->actions( [
+            Tables\Actions\EditAction::make(),
+        ] )
+        ->bulkActions( [
+            Tables\Actions\BulkActionGroup::make( [
+                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\RestoreBulkAction::make(),
+                Tables\Actions\ForceDeleteBulkAction::make(),
+            ] ),
+        ] )
+        ->defaultSort( 'order' );
     }
 
-    public static function getRelations(): array
-    {
+    public static function getEloquentQuery(): Builder {
+        return parent::getEloquentQuery()->withoutGlobalScopes( [
+            SoftDeletingScope::class,
+        ] );
+    }
+
+    public static function getRelations(): array {
         return [
             //
         ];
     }
 
-    public static function getPages(): array
-    {
+    public static function getPages(): array {
         return [
-            'index' => Pages\ListSocialRefs::route('/'),
-            'create' => Pages\CreateSocialRef::route('/create'),
-            'edit' => Pages\EditSocialRef::route('/{record}/edit'),
+            'index' => Pages\ListSocialRefs::route( '/' ),
+            'create' => Pages\CreateSocialRef::route( '/create' ),
+            'edit' => Pages\EditSocialRef::route( '/{record}/edit' ),
         ];
     }
 }
