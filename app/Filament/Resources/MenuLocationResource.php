@@ -13,6 +13,7 @@ use Filament\Tables\Table;
 use Filament\Tables\Filters\TextFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Str;
 
 class MenuLocationResource extends Resource
 {
@@ -26,11 +27,16 @@ class MenuLocationResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength(120),
+                    ->maxLength(120)
+                    ->reactive()
+                    ->afterStateUpdated(function ($state, callable $set) {
+                        $set('slug', Str::slug($state));
+                    }),
                 Forms\Components\TextInput::make('slug')
                     ->required()
                     ->maxLength(120)
-                    ->unique(MenuLocation::class, 'slug', ignoreRecord: true),
+                    ->unique(MenuLocation::class, 'slug', ignoreRecord: true)
+                    ->disabled(),
                 Forms\Components\Select::make('location')
                     ->options([
                         'navbar' => 'Navbar',
