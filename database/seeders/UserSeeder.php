@@ -9,11 +9,11 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        $admin = User::firstOrCreate(
+            $admin = User::firstOrCreate(
             ['email' => 'admin@admin.com'],
             [
                 'name' => 'Admin User',
-                'password' => bcrypt('12345678'),
+                'password' => \Illuminate\Support\Facades\Hash::make('12345678'),
             ]
         );
         $admin->assignRole('admin');
@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
             ['email' => 'moderator@moderator.com'],
             [
                 'name' => 'Moderator User',
-                'password' => bcrypt('12345678'),
+                'password' => \Illuminate\Support\Facades\Hash::make('12345678'),
             ]
         );
         $moderator->assignRole('moderator');
@@ -31,7 +31,7 @@ class UserSeeder extends Seeder
             ['email' => 'blogger@blogger.com'],
             [
                 'name' => 'Blogger User',
-                'password' => bcrypt('12345678'),
+                'password' => \Illuminate\Support\Facades\Hash::make('12345678'),
             ]
         );
         $blogger->assignRole('blogger');
