@@ -16,7 +16,7 @@ class EditSocialRef extends EditRecord {
         ];
     }
     protected function mutateFormDataBeforeSave( array $data ): array {
-        $data[ 'updated_by' ] = Auth::user()?->id;
+        $data[ 'updated_by' ] = Auth::user()->id;
         return $data;
     }
 }
