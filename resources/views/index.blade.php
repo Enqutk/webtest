@@ -1,11 +1,108 @@
 @extends('layout.app')
 
 @section('content')
+
+ 	<div class="pbmit-slider-area pbmit-slider-one">
+				<div class="swiper-slider" data-autoplay="true" data-loop="true" data-dots="false" data-arrows="true" data-columns="1" data-margin="0" data-effect="fade">
+					<div class="swiper-wrapper">
+						<!-- Slide1 -->
+						<div class="swiper-slide">
+							<div class="pbmit-slider-item">
+								<div class="pbmit-slider-bg" style="background-image: url(assets/images/banner-slider-img/slider1-01.jpg);"></div>
+								<div class="container">
+									<div class="pbmit-slider-content">
+										<h5 class="pbmit-slider-subtitle transform-right transform-delay-1">
+											Forging the Future
+										</h5>
+										<h2 class="pbmit-slider-title transform-right transform-delay-2">
+											Manufacturing <br>Your Vision
+										</h2>
+										<div class="d-lg-flex align-items-center justify-content-end">
+											<div class="pbmit-slider-desc transform-center transform-delay-3">Whether it’s small-scale custom work or large-scale<br> production we build with purpose, power & precision.</div>
+											<div class="pbmit-button ms-xl-5 ms-lg-3">
+												<div class="transform-bottom transform-delay-4">
+													<a href="about-us.html" class="pbmit-btn white">
+														<span class="pbmit-button-content-wrapper">
+															<span class="pbmit-button-icon">
+																<i class="pbmit-induyst-icon pbmit-induyst-icon-next"></i>
+															</span>
+															<span class="pbmit-button-text">Discover More</span>
+														</span>
+													</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Slide2 -->
+						<div class="swiper-slide">
+							<div class="pbmit-slider-item">
+								<div class="pbmit-slider-bg" style="background-image: url(images/banner-slider-img/slider1-02.jpg);"></div>
+								<div class="container">
+									<div class="pbmit-slider-content">
+										<h5 class="pbmit-slider-subtitle transform-right transform-delay-1">
+											Forging the Future
+										</h5>
+										<h2 class="pbmit-slider-title transform-right transform-delay-2">
+											Manufacturing <br>Your Vision
+										</h2>
+										<div class="d-lg-flex align-items-center justify-content-end">
+											<div class="pbmit-slider-desc transform-center transform-delay-3">Whether it’s small-scale custom work or large-scale<br> production we build with purpose, power & precision.</div>
+											<div class="pbmit-button ms-xl-5 ms-lg-3">
+												<div class="transform-bottom transform-delay-4">
+													<a href="about-us.html" class="pbmit-btn white">
+														<span class="pbmit-button-content-wrapper">
+															<span class="pbmit-button-icon">
+																<i class="pbmit-induyst-icon pbmit-induyst-icon-next"></i>
+															</span>
+															<span class="pbmit-button-text">Discover More</span>
+														</span>
+													</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Slide3 -->
+						<div class="swiper-slide">
+							<div class="pbmit-slider-item">
+								<div class="pbmit-slider-bg" style="background-image: url(images/banner-slider-img/slider1-03.jpg);"></div>
+								<div class="container">
+									<div class="pbmit-slider-content">
+										<h5 class="pbmit-slider-subtitle transform-right transform-delay-1">
+											Forging the Future
+										</h5>
+										<h2 class="pbmit-slider-title transform-right transform-delay-2">
+											Manufacturing <br>Your Vision
+										</h2>
+										<div class="d-lg-flex align-items-center justify-content-end">
+											<div class="pbmit-slider-desc transform-center transform-delay-3">Whether it’s small-scale custom work or large-scale<br> production we build with purpose, power & precision.</div>
+											<div class="pbmit-button ms-xl-5 ms-lg-3">
+												<div class="transform-bottom transform-delay-4">
+													<a href="about-us.html" class="pbmit-btn white">
+														<span class="pbmit-button-content-wrapper">
+															<span class="pbmit-button-icon">
+																<i class="pbmit-induyst-icon pbmit-induyst-icon-next"></i>
+															</span>
+															<span class="pbmit-button-text">Discover More</span>
+														</span>
+													</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 	<!-- page wrapper -->
 	<div class="page-wrapper" id="page">
-
-
-
 		<!-- page content -->
 		<div class="page-content">
 
