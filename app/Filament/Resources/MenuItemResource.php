@@ -3,15 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\MenuItemResource\Pages;
-use App\Filament\Resources\MenuItemResource\RelationManagers;
 use App\Models\MenuItem;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class MenuItemResource extends Resource
 {
@@ -28,6 +25,15 @@ class MenuItemResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('icon')
                     ->maxLength(100),
+                Forms\Components\Select::make('menu_id')
+                    ->relationship('menu', 'name')
+                    ->required()
+                    ->label('Menu Location'),
+
+                Forms\Components\Select::make('parent_id')
+                    ->relationship('parent', 'title')
+                    ->label('Parent Menu Item')
+                    ->nullable(),
                 Forms\Components\Select::make('link_type')
                     ->options([
                         'internal' => 'Internal',
