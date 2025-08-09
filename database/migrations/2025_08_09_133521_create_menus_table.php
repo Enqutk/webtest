@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->string('name', 120);
+            $table->string('slug', 120)->unique();
+            $table->enum('location', ['navbar', 'footer', 'sidebar', 'custom'])->default('navbar');
+            $table->text('description')->nullable();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 
