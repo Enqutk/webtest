@@ -23,42 +23,15 @@ class MenuItemResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('title')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('icon')
-                    ->maxLength(100),
-                Forms\Components\Select::make('link_type')
-                    ->options([
-                        'internal' => 'Internal',
-                        'external' => 'External',
-                    ])
-                    ->default('internal'),
-                Forms\Components\TextInput::make('url')
-                    ->maxLength(500),
-                Forms\Components\Select::make('target')
-                    ->options([
-                        '_self' => 'Self',
-                        '_blank' => 'Blank',
-                    ])
-                    ->default('_self'),
-                Forms\Components\TextInput::make('order_number')
-                    ->default(0),
-            ])->columns(2);
+                //
+            ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title')->label('Title'),
-                Tables\Columns\TextColumn::make('icon')->label('Icon'),
-                Tables\Columns\TextColumn::make('link_type')->label('Link Type'),
-                Tables\Columns\TextColumn::make('url')->label('URL'),
-                Tables\Columns\TextColumn::make('target')->label('Target'),
-                Tables\Columns\TextColumn::make('order_number')->label('Order Number'),
-                Tables\Columns\TextColumn::make('menu_id')->label('Menu'),
-                Tables\Columns\TextColumn::make('parent_id')->label('Parent '),
+                //
             ])
             ->filters([
                 //

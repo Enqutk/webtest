@@ -23,41 +23,35 @@ class MenuLocationResource extends Resource
     {
         return $form
             ->schema([
-                 Forms\Components\TextInput::make('name')
+                Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(120),
                 Forms\Components\TextInput::make('slug')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(120)
+                    ->unique(MenuLocation::class, 'slug', ignoreRecord: true),
                 Forms\Components\Select::make('location')
-                    ->required()
                     ->options([
-                        'header' => 'Header',
+                        'navbar' => 'Navbar',
                         'footer' => 'Footer',
                         'sidebar' => 'Sidebar',
-                    ]),
+                        'custom' => 'Custom',
+                    ])
+                    ->default('navbar'),
                 Forms\Components\Textarea::make('description')
-                    ->required()
-                    ->maxLength(500),
-            ]);
+                    ->nullable(),
+            ])->columns(1);
+            
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('slug'),
-                Tables\Columns\TextColumn::make('location'),
-                Tables\Columns\TextColumn::make('description'),
+                //
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('location')
-                    ->options([
-                        'navbar' => 'Navbar',
-                        'footer' => 'Footer',
-                        'sidebar' => 'Sidebar',
-                    ]),
+                //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
