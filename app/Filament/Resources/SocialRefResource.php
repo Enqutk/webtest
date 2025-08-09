@@ -64,13 +64,7 @@ class SocialRefResource extends Resource {
             Tables\Actions\EditAction::make(),
             Tables\Actions\DeleteAction::make(),
         ] )
-        ->bulkActions( [
-            Tables\Actions\BulkActionGroup::make( [
-                Tables\Actions\DeleteBulkAction::make(),
-                Tables\Actions\RestoreBulkAction::make(),
-                Tables\Actions\ForceDeleteBulkAction::make(),
-            ] ),
-        ] )
+      
         ->defaultSort( 'order' );
     }
 
