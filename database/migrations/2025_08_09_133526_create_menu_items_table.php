@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('title', 255);
             $table->string('icon', 100)->nullable();
             $table->enum('link_type', ['internal', 'external'])->default('internal');
-            $table->unsignedBigInteger('content_id')->nullable();
             $table->string('url', 500)->nullable();
             $table->enum('target', ['_self', '_blank'])->default('_self');
             $table->integer('order_number')->default(0);
@@ -26,7 +25,6 @@ return new class extends Migration
 
             $table->foreign('menu_id')->references('id')->on('menus')->onDelete('cascade');
             $table->foreign('parent_id')->references('id')->on('menu_items')->onDelete('cascade');
-            $table->foreign('content_id')->references('id')->on('contents')->onDelete('set null');
         });
     }
 
