@@ -6,13 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SocialRef extends Model {
-    public static function statusOptions(): array {
+  use  SoftDeletes;
+     public static function statusOptions(): array {
         return [
             'active' => 'Active',
             'inactive' => 'Inactive',
         ];
     }
-    use SoftDeletes;
+    
 
     protected $table = 'social_refs';
 

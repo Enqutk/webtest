@@ -15,8 +15,8 @@ class EditSocialRef extends EditRecord {
             Actions\DeleteAction::make(),
         ];
     }
-    protected function mutateFormDataBeforeSave( array $data ): array {
-        $data[ 'updated_by' ] = Auth::user()->id;
+    protected function mutateFormDataBeforeSave( array $data ): array { 
+        $data[ 'updated_by' ] = Auth::id();
         return $data;
     }
 }
