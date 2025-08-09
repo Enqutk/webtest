@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Menu_location extends Model
+class MenuLocation extends Model
 {
     protected $fillable = [
         'name', 

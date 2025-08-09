@@ -23,22 +23,7 @@ class MenuResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('slug')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Select::make('location')
-                    ->required()
-                    ->options([
-                        'header' => 'Header',
-                        'footer' => 'Footer',
-                        'sidebar' => 'Sidebar',
-                    ]),
-                Forms\Components\Textarea::make('description')
-                    ->required()
-                    ->maxLength(500),
+               
             ]);
     }
 
