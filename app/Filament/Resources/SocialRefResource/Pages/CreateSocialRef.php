@@ -11,8 +11,8 @@ class CreateSocialRef extends CreateRecord
 {
     protected static string $resource = SocialRefResource::class;
     protected function mutateFormDataBeforeCreate( array $data ): array {
-        $data[ 'created_by' ] = Auth::user()?->id;
-        $data[ 'updated_by' ] = Auth::user()?->id;
+        $data[ 'created_by' ] = Auth::user()->id;
+        $data[ 'updated_by' ] = Auth::user()->id;
         return $data;
     }
 }
