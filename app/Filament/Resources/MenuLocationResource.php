@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Tables\Filters\TextFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -48,10 +49,19 @@ class MenuLocationResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('name')->label('Name'),
+                Tables\Columns\TextColumn::make('slug')->label('Slug'),
+                Tables\Columns\TextColumn::make('location')->label('Location'),
+                Tables\Columns\TextColumn::make('description')->label('Description'),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('location')
+                    ->options([
+                        'navbar' => 'Navbar',
+                        'footer' => 'Footer',
+                        'sidebar' => 'Sidebar',
+                    ]),
+                    
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
