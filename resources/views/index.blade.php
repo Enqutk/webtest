@@ -14,29 +14,29 @@
 		<!-- CSS
 			============================================ -->
 		<!-- Bootstrap CSS -->
-		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="assets/css/bootstrap.min.css">
 		<!-- Fontawesome -->
-		<link rel="stylesheet" href="css/fontawesome.css">
+		<link rel="stylesheet" href="assets/css/fontawesome.css">
 		<!-- Pbmit Induyst Icon -->
-		<link rel="stylesheet" href="fonts/pbmit-induyst-icon/pbmit_induyst.css">
+		<link rel="stylesheet" href="assets/fonts/pbmit-induyst-icon/pbmit_induyst.css">
 		<!-- Base Icons -->
-		<link rel="stylesheet" href="css/pbminfotech-base-icons.css">
+		<link rel="stylesheet" href="assets/css/pbminfotech-base-icons.css">
 		<!-- Themify Icons -->
-		<link rel="stylesheet" href="css/themify-icons.css">
+		<link rel="stylesheet" href="assets/css/themify-icons.css">
 		<!-- Slick -->
-		<link rel="stylesheet" href="css/swiper.min.css">
+		<link rel="stylesheet" href="assets/css/swiper.min.css">
 		<!-- Magnific -->
-		<link rel="stylesheet" href="css/magnific-popup.css">
+		<link rel="stylesheet" href="assets/css/magnific-popup.css">
 		<!-- AOS -->
-		<link rel="stylesheet" href="css/aos.css">
+		<link rel="stylesheet" href="assets/css/aos.css">
 		<!-- Shortcode CSS -->
-		<link rel="stylesheet" href="css/shortcode.css">
+		<link rel="stylesheet" href="assets/css/shortcode.css">
 		<!-- Base CSS -->
-		<link rel="stylesheet" href="css/base.css">
+		<link rel="stylesheet" href="assets/css/base.css">
 		<!-- Style CSS -->
-		<link rel="stylesheet" href="css/style.css">
+		<link rel="stylesheet" href="assets/css/style.css">
 		<!-- Responsive CSS -->
-		<link rel="stylesheet" href="css/responsive.css">
+		<link rel="stylesheet" href="assets/css/responsive.css">
 	</head>
 	<body>
 
@@ -54,8 +54,8 @@
 								<div class="site-branding">
 									<h1 class="site-title">
 										<a href="index.html">
-											<img class="pbmit-main-logo" src="images/logo-white.svg" alt="Induyst">
-											<img class="pbmit-sticky-logo" src="images/logo.svg" alt="Induyst">
+											<img class="pbmit-main-logo" src="assets/images/logo-white.svg" alt="Induyst">
+											<img class="pbmit-sticky-logo" src="assets/images/logo.svg" alt="Induyst">
 										</a>
 									</h1>
 								</div>
