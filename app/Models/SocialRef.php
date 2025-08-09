@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SocialRef extends Model {
+    public static function statusOptions(): array {
+        return [
+            'active' => 'Active',
+            'inactive' => 'Inactive',
+        ];
+    }
     use SoftDeletes;
 
     protected $table = 'social_refs';
@@ -29,11 +35,11 @@ class SocialRef extends Model {
         'order' => 'integer',
     ];
 
-    public function createdBy() {
+    public function createdBy(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
         return $this->belongsTo( User::class, 'created_by' );
     }
 
-    public function updatedBy() {
+    public function updatedBy(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
         return $this->belongsTo( User::class, 'updated_by' );
     }
 }
