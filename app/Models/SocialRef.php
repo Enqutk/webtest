@@ -16,14 +16,24 @@ class SocialRef extends Model {
         'description',
         'icon_class',
         'order',
-        'status'
+        'status',
+        'created_by',
+        'updated_by',
     ];
 
     protected $casts = [
-  
+
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
         'order' => 'integer',
     ];
+
+    public function createdBy() {
+        return $this->belongsTo( User::class, 'created_by' );
+    }
+
+    public function updatedBy() {
+        return $this->belongsTo( User::class, 'updated_by' );
+    }
 }
