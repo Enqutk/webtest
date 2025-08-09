@@ -12,20 +12,23 @@ class GenericPolicy
 
       public function view(User $user, object $model)
     {
-        return $user->hasPermissionTo('read-' . Str::snake(class_basename($model)));
+        return $user->hasPermissionTo('read-'  . Str::kebab(class_basename($model)));
     }
 
-    public function create(User $user, $model)
+    public function create(User $user, object $model)
     {
         return $user->hasPermissionTo('create-' . Str::kebab(class_basename($model)));
     }
-
-    public function update(User $user, $model)
+    public function edit(User $user, object $model)
+    {
+        return $user->hasPermissionTo('update-' . Str::kebab(class_basename($model)));
+    }
+    public function update(User $user, object $model)
     {
         return $user->hasPermissionTo('update-' . Str::kebab(class_basename($model)));
     }
 
-    public function delete(User $user, $model)
+    public function delete(User $user, object $model)
     {
         return $user->hasPermissionTo('delete-' . Str::kebab(class_basename($model)));
     }
