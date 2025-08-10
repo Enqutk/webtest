@@ -13,6 +13,8 @@ class EditSocialRef extends EditRecord {
     protected function getHeaderActions(): array {
         return [
             Actions\DeleteAction::make(),
+            Actions\ForceDeleteAction::make(),
+            Actions\RestoreAction::make(),
         ];
     }
     protected function mutateFormDataBeforeSave( array $data ): array { 
