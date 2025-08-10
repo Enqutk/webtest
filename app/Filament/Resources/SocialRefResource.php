@@ -46,14 +46,18 @@ class SocialRefResource extends Resource {
         ->columns( [
             Tables\Columns\TextColumn::make( 'id' )->sortable(),
             Tables\Columns\TextColumn::make( 'title' )->searchable()->sortable(),
-            Tables\Columns\TextColumn::make( 'link' )->searchable()->url(fn ($record) => $record->link, true),
+            Tables\Columns\TextColumn::make( 'link' )->searchable()->url( fn ( $record ) => $record->link, true ),
             Tables\Columns\TextColumn::make( 'description' )->limit( 50 ),
             Tables\Columns\TextColumn::make( 'icon_class' ),
             Tables\Columns\TextColumn::make( 'order' )->sortable(),
             Tables\Columns\TextColumn::make( 'status' )->sortable(),
-            Tables\Columns\TextColumn::make( 'created_at' )->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-            Tables\Columns\TextColumn::make( 'updated_at' )->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-            Tables\Columns\TextColumn::make( 'deleted_at' )->dateTime()->sortable()->nullable()->toggleable( isToggledHiddenByDefault: true ),
+            Tables\Columns\TextColumn::make( 'created_at' )->dateTime()->sortable()->toggleable( isToggledHiddenByDefault: true ),
+            Tables\Columns\TextColumn::make( 'updated_at' )->dateTime()->sortable()->toggleable( isToggledHiddenByDefault: true ),
+            Tables\Columns\TextColumn::make( 'deleted_at' )
+            ->dateTime()
+            ->sortable()
+            ->toggleable( isToggledHiddenByDefault: true )
+            ->formatStateUsing( fn ( $state ) => $state ? $state : '' ),
         ] )
         ->filters( [
             Tables\Filters\TrashedFilter::make(),
@@ -64,7 +68,7 @@ class SocialRefResource extends Resource {
             Tables\Actions\EditAction::make(),
             Tables\Actions\DeleteAction::make(),
         ] )
-      
+
         ->defaultSort( 'order' );
     }
 
