@@ -11,6 +11,14 @@ class SocialRef extends Model
 {
     use SoftDeletes;
 
+    public static function statusOptions(): array
+    {
+        return [
+            StatusEnum::ACTIVE->value => 'Active',
+            StatusEnum::INACTIVE->value => 'Inactive',
+        ];
+    }
+
     protected $table = 'social_refs';
 
     /**
@@ -54,3 +62,4 @@ class SocialRef extends Model
         return $this->belongsTo(User::class, 'updated_by');
     }
 }
+ 
