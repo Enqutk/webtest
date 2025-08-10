@@ -10,9 +10,10 @@ use Illuminate\Support\Facades\Auth;
 class CreateSocialRef extends CreateRecord
 {
     protected static string $resource = SocialRefResource::class;
-    protected function mutateFormDataBeforeCreate( array $data ): array {
-        $data[ 'created_by' ] = Auth::id();
-        $data[ 'updated_by' ] = Auth::id();
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        $data['created_by'] = Auth::id();
+        $data['updated_by'] = Auth::id();
         return $data;
     }
 }

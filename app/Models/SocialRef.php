@@ -13,10 +13,11 @@ class SocialRef extends Model
 
     public static function statusOptions(): array
     {
-        return [
-            StatusEnum::ACTIVE->value => 'Active',
-            StatusEnum::INACTIVE->value => 'Inactive',
-        ];
+        $options = [];
+        foreach (StatusEnum::cases() as $case) {
+            $options[$case->value] = ucfirst($case->value);
+        }
+        return $options;
     }
 
     protected $table = 'social_refs';
