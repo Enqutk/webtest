@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Enums\StatusEnum;
 
 class SocialRefResource extends Resource {
     protected static ?string $model = SocialRef::class;
@@ -33,7 +34,9 @@ class SocialRefResource extends Resource {
             ->maxLength( 255 ),
             Forms\Components\TextInput::make( 'order' )
             ->numeric()
-            ->default( 0 ),
+            ->default( 1 )
+            ->minValue( 1 )
+            ->rules( [ 'integer', 'min:1' ] ),
             Forms\Components\Select::make( 'status' )
             ->options( SocialRef::statusOptions() )
             ->default( 'active' )
@@ -62,7 +65,10 @@ class SocialRefResource extends Resource {
         ->filters( [
             Tables\Filters\TrashedFilter::make(),
             Tables\Filters\SelectFilter::make( 'status' )
-            ->options( SocialRef::statusOptions() ),
+            ->options(collect(StatusEnum::cases())
+    ->mapWithKeys(fn($case) => [$case->value => ucfirst($case->value)])
+    ->toArray())
+
         ] )
         ->actions( [
             Tables\Actions\EditAction::make(),
