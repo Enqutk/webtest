@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
+use App\Enums\StatusEnum;
 return new class extends Migration
 {
     /**
@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('link');
             $table->text('description')->nullable();
             $table->string('icon_class')->nullable();
-            $table->unsignedInteger('order')->default(0);
-            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->unsignedInteger('order')->default(1);
+            $table->enum('status', array_column(StatusEnum::cases(), 'value'))->default(StatusEnum::ACTIVE->value);
             $table->timestamps();
             $table->softDeletes();
             $table->foreignId('created_by')->constrained('users');

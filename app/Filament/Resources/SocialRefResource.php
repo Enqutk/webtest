@@ -65,9 +65,7 @@ class SocialRefResource extends Resource {
         ->filters( [
             Tables\Filters\TrashedFilter::make(),
             Tables\Filters\SelectFilter::make( 'status' )
-            ->options(collect(StatusEnum::cases())
-    ->mapWithKeys(fn($case) => [$case->value => ucfirst($case->value)])
-    ->toArray())
+            ->options(SocialRef::statusOptions())
 
         ] )
         ->actions( [
