@@ -49,8 +49,8 @@ class EntityResource extends Resource {
             ->nullable(),
             Forms\Components\TextInput::make( 'order' )
             ->numeric()
-            ->default( 0 )
-            ->minValue( 0 ),
+            ->default( 1 )
+            ->minValue( 1),
             Forms\Components\Select::make( 'status' )
             ->options( StatusEnum::class )
             ->default( 'active' )
