@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Enums\StatusEnum; // Add this line if StatusEnum is defined in app/Enums/StatusEnum.php
 
 return new class extends Migration
 {
@@ -20,10 +21,11 @@ return new class extends Migration
             $table->longText('img_path');
             $table->string('link');
             $table->unsignedInteger('order')->default(0);
-            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->enum('status', array_column(StatusEnum::cases(), 'value'))->default(StatusEnum::active->value);
             $table->timestamps();
-            $table->foreignId('created_by')->constrained('users');
-            $table->foreignId('updated_by')->nullable()->constrained('users');
+            $table->softDeletes();
+            $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');
             $table->index('status');
             $table->index('order');
         });
