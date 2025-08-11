@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\OrganizationResource\Pages;
 
 use App\Filament\Resources\OrganizationResource;
+use App\Models\Organization;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
@@ -11,7 +12,7 @@ class EditOrganization extends EditRecord
     public function mount($record = null): void
     {
         if ($record === null) {
-            $record = \App\Models\Organization::first()?->getKey();
+            $record = Organization::first()?->getKey();
         }
         parent::mount($record);
     }
