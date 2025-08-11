@@ -34,8 +34,7 @@ class HeroResource extends Resource
                     ->image()
                     ->required(),
                 Forms\Components\TextInput::make('link')
-                    ->required()
-                    ->url(),
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('order')
                     ->numeric()
                     ->default(1)
