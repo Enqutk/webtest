@@ -11,10 +11,12 @@ class EditOrganization extends EditRecord
 {
     public function mount($record = null): void
     {
-        if ($record === null) {
-            $record = Organization::first()?->getKey();
-        }
-        parent::mount($record);
+        $organization = \App\Models\Organization::firstOrCreate([], [
+            'title' => 'Your Organization',
+            'status' => 'active',
+        ]);
+
+        parent::mount($organization->getKey());
     }
     protected static string $resource = OrganizationResource::class;
 

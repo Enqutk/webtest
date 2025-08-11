@@ -91,9 +91,12 @@ class OrganizationResource extends Resource
         ];
     }
 
-    public static function getRecord(): ? Organization
+      public static function getRecord(): Organization
     {
-        // Always return the first (and only) organization
-        return Organization::first();
+        // Always return the first organization, creating it if it doesn't exist.
+        return Organization::firstOrCreate([], [
+            'title' => 'Your Organization',
+            'status' => 'active',
+        ]);
     }
 }
