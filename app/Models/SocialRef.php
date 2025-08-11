@@ -7,15 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class SocialRef extends Model
-{
+class SocialRef extends Model {
     use SoftDeletes;
 
-    public static function statusOptions(): array
-    {
+    public static function statusOptions(): array {
         $options = [];
-        foreach (StatusEnum::cases() as $case) {
-            $options[$case->value] = ucfirst($case->value);
+        foreach ( StatusEnum::cases() as $case ) {
+            $options[ $case->value ] = ucfirst( $case->value );
         }
         return $options;
     }
@@ -23,8 +21,8 @@ class SocialRef extends Model
     protected $table = 'social_refs';
 
     /**
-     * Mass assignable attributes.
-     */
+    * Mass assignable attributes.
+    */
     protected $fillable = [
         'title',
         'link',
@@ -37,8 +35,8 @@ class SocialRef extends Model
     ];
 
     /**
-     * Attribute casting.
-     */
+    * Attribute casting.
+    */
     protected $casts = [
         'status'      => StatusEnum::class,
         'order'       => 'integer',
@@ -48,19 +46,18 @@ class SocialRef extends Model
     ];
 
     /**
-     * Creator relationship.
-     */
-    public function createdBy(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'created_by');
+    * Creator relationship.
+    */
+
+    public function createdBy(): BelongsTo {
+        return $this->belongsTo( User::class, 'created_by' );
     }
 
     /**
-     * Updater relationship.
-     */
-    public function updatedBy(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'updated_by');
+    * Updater relationship.
+    */
+
+    public function updatedBy(): BelongsTo {
+        return $this->belongsTo( User::class, 'updated_by' );
     }
 }
- 

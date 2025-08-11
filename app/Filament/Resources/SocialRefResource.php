@@ -14,12 +14,14 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Enums\StatusEnum;
 
-class SocialRefResource extends Resource {
+class SocialRefResource extends Resource
+{
     protected static ?string $model = SocialRef::class;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form( Form $form ): Form {
-         return $form
+    public static function form(Form $form): Form
+    {
+        return $form
             ->schema([
                 Forms\Components\TextInput::make('title')
                     ->required()
@@ -50,13 +52,13 @@ class SocialRefResource extends Resource {
             ->columns([
                 Tables\Columns\TextColumn::make('id')->sortable(),
                 Tables\Columns\TextColumn::make('title')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('link')->searchable()->url(fn ($record) => $record->link, true),
+                Tables\Columns\TextColumn::make('link')->searchable()->url(fn($record) => $record->link, true),
                 Tables\Columns\TextColumn::make('description')->limit(50),
                 Tables\Columns\TextColumn::make('icon_class'),
                 Tables\Columns\TextColumn::make('order')->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
-                    ->color(fn (\App\Enums\StatusEnum $state): string => match ($state) {
+                    ->color(fn(\App\Enums\StatusEnum $state): string => match ($state) {
                         \App\Enums\StatusEnum::active => 'success',
                         \App\Enums\StatusEnum::inactive => 'danger',
                     })
@@ -89,23 +91,26 @@ class SocialRefResource extends Resource {
             ])
             ->defaultSort('order');
     }
-    public static function getEloquentQuery(): Builder {
-        return parent::getEloquentQuery()->withoutGlobalScopes( [
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->withoutGlobalScopes([
             SoftDeletingScope::class,
-        ] );
+        ]);
     }
 
-    public static function getRelations(): array {
+    public static function getRelations(): array
+    {
         return [
             //
         ];
     }
 
-    public static function getPages(): array {
+    public static function getPages(): array
+    {
         return [
-            'index' => Pages\ListSocialRefs::route( '/' ),
-            'create' => Pages\CreateSocialRef::route( '/create' ),
-            'edit' => Pages\EditSocialRef::route( '/{record}/edit' ),
+            'index' => Pages\ListSocialRefs::route('/'),
+            'create' => Pages\CreateSocialRef::route('/create'),
+            'edit' => Pages\EditSocialRef::route('/{record}/edit'),
         ];
     }
 }
