@@ -12,7 +12,6 @@ class MenuItem extends Model
         'title',
         'icon',
         'link_type',
-        'content_id',
         'url',
         'target',
         'order_number'

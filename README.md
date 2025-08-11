@@ -68,7 +68,7 @@ php artisan serve
 Visit [http://localhost:8000](http://localhost:8000) in your browser.
 
 The database seeder (`php artisan db:seed`) creates the following test accounts with the password `12345678`:
-- **Admin:** `abel@admin.com`
+- **Admin:** `admin@admin.com`
 - **blogger:** `blogger@blogger.com`
 - **moderator:** `moderator@moderator.com`
 

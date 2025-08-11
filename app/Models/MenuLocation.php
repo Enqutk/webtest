@@ -12,9 +12,7 @@ class MenuLocation extends Model
         'location', 
         'description'
     ];
-
-
-
+    
     public function items()
     {
         return $this->hasMany(MenuItem::class, 'menu_id');

@@ -17,8 +17,7 @@ return new class extends Migration
             $table->string('slug', 120)->unique();
             $table->enum('location', ['navbar', 'footer', 'sidebar', 'custom'])->default('navbar');
             $table->text('description')->nullable();
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+            $table->timestamps();
         });
     }
 
