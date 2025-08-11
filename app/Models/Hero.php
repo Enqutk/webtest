@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\HasUserStamps;
 
 class Hero extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasUserStamps;
 
     protected static function booted(): void
     {
