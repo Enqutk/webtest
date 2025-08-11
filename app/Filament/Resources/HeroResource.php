@@ -28,7 +28,10 @@ class HeroResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Textarea::make('description')
                     ->required(),
-                Forms\Components\Textarea::make('img_path')
+                Forms\Components\FileUpload::make('img_path')
+                    ->directory('heroes')
+                    ->disk('public') // or 'local' for storage/app
+                    ->preserveFilenames()
                     ->required(),
                 Forms\Components\TextInput::make('link')
                     ->required()
