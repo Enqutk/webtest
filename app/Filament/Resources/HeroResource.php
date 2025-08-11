@@ -11,7 +11,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Enums\StatusEnum; // Add this line if StatusEnum exists in App\Enums
+use App\Enums\StatusEnum;
 
 class HeroResource extends Resource
 {
@@ -30,7 +30,7 @@ class HeroResource extends Resource
                     ->required(),
                 Forms\Components\FileUpload::make('img_path')
                     ->directory('heroes')
-                    ->disk('public') // or 'local' for storage/app
+                    ->disk('public')
                     ->required(),
                 Forms\Components\TextInput::make('link')
                     ->required()
