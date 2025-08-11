@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('organization_contacts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('organization_id')
+              ->constrained('organizations')
+              ->onDelete('cascade');
+            $table->enum('type', ['phone', 'fax', 'email']);
+            $table->string('value', 255);
             $table->timestamps();
         });
     }
