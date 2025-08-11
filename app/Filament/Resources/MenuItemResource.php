@@ -69,17 +69,20 @@ class MenuItemResource extends Resource
                         $indent = $record->parent ? '  ⤷ ' : '';
                         return $indent . $state;
                     })
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('parent.title')
                     ->label('Parent')
                     ->default('')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('menu.name')
                     ->label('Menu Location')
                     ->default('N/A')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('link_type')
                     ->label('Link Type'),
@@ -90,6 +93,13 @@ class MenuItemResource extends Resource
                 Tables\Columns\TextColumn::make('order_number')
                     ->label('Order Number')
                     ->sortable(),
+
+                Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('deleted_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('menu_id')
@@ -97,7 +107,9 @@ class MenuItemResource extends Resource
                     ->label('Menu Location'),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
