@@ -69,17 +69,20 @@ class MenuItemResource extends Resource
                         $indent = $record->parent ? '  ⤷ ' : '';
                         return $indent . $state;
                     })
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('parent.title')
                     ->label('Parent')
                     ->default('')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('menu.name')
                     ->label('Menu Location')
                     ->default('N/A')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('link_type')
                     ->label('Link Type'),
@@ -90,6 +93,7 @@ class MenuItemResource extends Resource
                 Tables\Columns\TextColumn::make('order_number')
                     ->label('Order Number')
                     ->sortable(),
+                
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('menu_id')
