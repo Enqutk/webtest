@@ -6,6 +6,11 @@ use App\Filament\Resources\TeamResource\Pages;
 use App\Models\Team;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -22,26 +27,26 @@ class TeamResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('first_name')
+                TextInput::make('first_name')
                     ->label('First Name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('last_name')
+                TextInput::make('last_name')
                     ->label('Last Name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('title')
+                TextInput::make('title')
                     ->label('Title')
                     ->maxLength(255),
-                Forms\Components\Textarea::make('description')
+                Textarea::make('description')
                     ->label('Description'),
-                Forms\Components\FileUpload::make('image_path')
+                FileUpload::make('image_path')
                     ->disk('public')
                     ->directory('team-images')
                     ->image()
                     ->label('Upload Image'),
 
-                Forms\Components\Select::make('status')
+                Select::make('status')
                     ->label('Status')
                     ->options([
                         'active' => 'Active',
@@ -49,7 +54,7 @@ class TeamResource extends Resource
                         'archived' => 'Archived',
                     ])
                     ->default('active'),
-                Forms\Components\Toggle::make('founder')
+                Toggle::make('founder')
                     ->label('Founder'),
             ]);
     }
@@ -68,9 +73,9 @@ class TeamResource extends Resource
                 Tables\Columns\IconColumn::make('founder')
                     ->boolean(),
                 Tables\Columns\ImageColumn::make('image_path')
-                    ->disk('public')
-                    ->label('Image')
-                    ->square(),
+    ->disk('public')
+    ->label('Image')
+    ->square(),
 
 
                 Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
