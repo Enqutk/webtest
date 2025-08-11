@@ -40,7 +40,6 @@ class MenuLocationResource extends Resource
                         'navbar' => 'Navbar',
                         'footer' => 'Footer',
                         'sidebar' => 'Sidebar',
-                        'custom' => 'Custom',
                     ])
                     ->default('navbar'),
                 Forms\Components\Textarea::make('description')

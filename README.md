@@ -15,7 +15,7 @@
 
 ```bash
 git clone https://github.com/tetercreatives/veritasafrika.git
-cd Veritasafrika
+cd veritasafrika
 ```
 
 ### 2. Install Dependencies
