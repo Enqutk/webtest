@@ -51,10 +51,17 @@ class MenuLocationResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->label('Name'),
-                Tables\Columns\TextColumn::make('slug')->label('Slug'),
-                Tables\Columns\TextColumn::make('location')->label('Location'),
-                Tables\Columns\TextColumn::make('description')->label('Description'),
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('slug')
+                    ->label('Slug')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('location')
+                    ->label('Location')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('description')
+                    ->label('Description'),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('location')
