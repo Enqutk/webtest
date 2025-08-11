@@ -27,6 +27,6 @@ class EditOrganization extends EditRecord
     protected function getRedirectUrl(): string
     {
         // Always redirect to the singleton edit page
-        return static::$resource::getUrl('edit');
+        return static::$resource::getUrl('index');
     }
 }

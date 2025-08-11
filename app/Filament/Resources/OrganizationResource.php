@@ -92,7 +92,6 @@ class OrganizationResource extends Resource
     {
         return [
             'index' => Pages\EditOrganization::route('/'),
-            'edit' => Pages\EditOrganization::route('/1/edit'),
         ];
     }
 
