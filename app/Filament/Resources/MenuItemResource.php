@@ -73,7 +73,7 @@ class MenuItemResource extends Resource
 
                 Tables\Columns\TextColumn::make('parent.title')
                     ->label('Parent')
-                    ->default('N/A')
+                    ->default('')
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('menu.name')
