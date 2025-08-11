@@ -68,17 +68,19 @@ class MenuItemResource extends Resource
                     ->formatStateUsing(function ($state, $record) {
                         $indent = $record->parent ? '  ⤷ ' : '';
                         return $indent . $state;
-                    }),
-                Tables\Columns\TextColumn::make('parent_id')
+                    })
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('parent.title')
                     ->label('Parent')
-                    ->formatStateUsing(function ($state, $record) {
-                        return $record->parent ? $record->parent->title : 'None';
-                    }),
-                Tables\Columns\TextColumn::make('menu_id')
+                    ->default('N/A')
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('menu.name')
                     ->label('Menu Location')
-                    ->formatStateUsing(function ($state, $record) {
-                        return $record->menu ? $record->menu->name : 'None';
-                    }),
+                    ->default('N/A')
+                    ->searchable(),
+
                 Tables\Columns\TextColumn::make('link_type')
                     ->label('Link Type'),
                 Tables\Columns\TextColumn::make('url')
@@ -86,7 +88,8 @@ class MenuItemResource extends Resource
                 Tables\Columns\TextColumn::make('target')
                     ->label('Target'),
                 Tables\Columns\TextColumn::make('order_number')
-                    ->label('Order Number'),
+                    ->label('Order Number')
+                    ->sortable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('menu_id')
