@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 120);
             $table->string('slug', 120)->unique();
-            $table->enum('location', ['navbar', 'footer', 'sidebar', 'custom'])->default('navbar');
+            $table->enum('location', ['navbar', 'footer', 'sidebar'])->default('navbar');
             $table->text('description')->nullable();
             $table->timestamps();
         });
