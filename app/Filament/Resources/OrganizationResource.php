@@ -33,7 +33,6 @@ class OrganizationResource extends Resource
                     ->schema([
                         Forms\Components\TextInput::make('address')
                             ->label('Address')
-                            ->required()
                             ->maxLength(255),
                         Forms\Components\TextInput::make('map_url')
                             ->label('Map URL')
@@ -54,14 +53,11 @@ class OrganizationResource extends Resource
                                 'fri' => 'Friday',
                                 'sat' => 'Saturday',
                                 'sun' => 'Sunday',
-                            ])
-                            ->required(),
+                            ]),
                         Forms\Components\TimePicker::make('from')
-                            ->label('From')
-                            ->required(),
+                            ->label('From'),
                         Forms\Components\TimePicker::make('to')
                             ->label('To')
-                            ->required(),
                     ])
                     ->columns(3)
                     ->minItems(1)

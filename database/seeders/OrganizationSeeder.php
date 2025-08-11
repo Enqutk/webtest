@@ -15,7 +15,13 @@ class OrganizationSeeder extends Seeder
             'title' => 'Demo Organization',
             'po_box' => 'PO Box 12345',
             'address' => '123 Demo Street, Demo City, Country',
-            'opening_hours' => 'Mon-Fri: 9am-5pm',
+            'opening_hours' => [
+                [
+                    'days' => ['mon', 'tue', 'wed', 'thu', 'fri'],
+                    'from' => '09:00:00',
+                    'to' => '17:00:00',
+                ],
+            ],
             'map_url' => 'https://maps.example.com/demo-org',
             'status' => 'active',
             'created_at' => now(),
