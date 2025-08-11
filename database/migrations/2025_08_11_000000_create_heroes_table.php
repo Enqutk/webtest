@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('title');
             $table->longText('description');
             $table->string('img_path');
-            $table->string('link');
+            $table->text('link');
             $table->unsignedInteger('order')->default(1);
             $table->enum('status', array_column(StatusEnum::cases(), 'value'))->default(StatusEnum::active->value);
             $table->timestamps();
