@@ -2,9 +2,18 @@
 
 namespace App\Enums;
 
-enum EntityTypeEnum: string 
+enum EntityTypeEnum: string
 {
     case client = 'client';
     case partner = 'partner';
     case award = 'award';
+
+    public static function options(): array
+    {
+        return [
+            self::client->value => 'client',
+            self::partner->value => 'partner',
+            self::award->value => 'award',
+        ];
+    }
 }
