@@ -47,10 +47,11 @@ class EntityResource extends Resource {
             Forms\Components\Textarea::make( 'description' )
             ->maxLength( 65535 )
             ->nullable(),
-            Forms\Components\TextInput::make( 'order' )
-            ->numeric()
-            ->default( 1 )
-            ->minValue( 1),
+            Forms\Components\TextInput::make('order')
+                ->numeric()
+                ->default(1)
+                ->minValue(1)
+                ->unique(),
             Forms\Components\Select::make( 'status' )
             ->options( StatusEnum::class )
             ->default( 'active' )
