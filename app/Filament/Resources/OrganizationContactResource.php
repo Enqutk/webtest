@@ -19,7 +19,7 @@ class OrganizationContactResource extends Resource
     protected static ?string $navigationGroup = 'Setting';
     protected static ?int $navigationSort = 4;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-phone';
 
     public static function form(Form $form): Form
     {
