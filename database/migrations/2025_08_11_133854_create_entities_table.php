@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('link')->nullable();
             $table->string('image_path')->nullable();
             $table->text('description')->nullable();
-            $table->integer('order')->default(0);
+            $table->integer('order')->default(1);
             $table->string('status')->default(StatusEnum::active->value);
             $table->timestamps();
             $table->softDeletes();
