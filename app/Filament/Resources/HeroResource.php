@@ -26,11 +26,12 @@ class HeroResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Textarea::make('description')
+                Forms\Components\RichEditor::make('description')
                     ->required(),
                 Forms\Components\FileUpload::make('img_path')
                     ->directory('heroes')
                     ->disk('public')
+                    ->image()
                     ->required(),
                 Forms\Components\TextInput::make('link')
                     ->required()
@@ -53,7 +54,7 @@ class HeroResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')->sortable(),
                 Tables\Columns\TextColumn::make('title')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('description')->limit(50),
+                Tables\Columns\TextColumn::make('description')->limit(50)->tooltip(fn ($record) => $record->description),
                 Tables\Columns\ImageColumn::make('img_path')
                     ->disk('public')
                     ->square()
