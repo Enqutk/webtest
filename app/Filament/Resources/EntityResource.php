@@ -28,7 +28,7 @@ class EntityResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Select::make('type')
-                    ->options(collect(EntityTypeEnum::cases())->mapWithKeys(fn($case) => [$case->value => ucfirst($case->name)]))
+                    ->options(EntityTypeEnum::class)
                     ->required(),
                 Forms\Components\TextInput::make('link')
                     ->maxLength(255)
@@ -85,7 +85,7 @@ class EntityResource extends Resource
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
                 Tables\Filters\SelectFilter::make('type')
-                    ->options(collect(EntityTypeEnum::cases())->mapWithKeys(fn($case) => [$case->value => ucfirst($case->name)])),
+                    ->options(EntityTypeEnum::class),
                 Tables\Filters\SelectFilter::make('status')
                     ->options([
                         StatusEnum::active->value => 'Active',
