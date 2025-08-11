@@ -31,7 +31,6 @@ class HeroResource extends Resource
                 Forms\Components\FileUpload::make('img_path')
                     ->directory('heroes')
                     ->disk('public') // or 'local' for storage/app
-                    ->preserveFilenames()
                     ->required(),
                 Forms\Components\TextInput::make('link')
                     ->required()
@@ -55,8 +54,11 @@ class HeroResource extends Resource
                 Tables\Columns\TextColumn::make('id')->sortable(),
                 Tables\Columns\TextColumn::make('title')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('description')->limit(50),
-                Tables\Columns\TextColumn::make('img_path'),
-                Tables\Columns\TextColumn::make('link')->searchable()->url(fn ($record) => $record->link)->openUrlInNewTab(),
+                Tables\Columns\ImageColumn::make('img_path')
+                    ->disk('public')
+                    ->square()
+                    ->size(50),
+                Tables\Columns\TextColumn::make('link')->searchable()->url(fn($record) => $record->link)->openUrlInNewTab(),
                 Tables\Columns\TextColumn::make('order')->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
@@ -99,6 +101,12 @@ class HeroResource extends Resource
         return [
             //
         ];
+    }
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->withoutGlobalScopes([
+            SoftDeletingScope::class,
+        ]);
     }
 
     public static function getPages(): array
