@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SocialRefResource\Pages;
-use App\Filament\Resources\SocialRefResource\RelationManagers;
 use App\Models\SocialRef;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -37,8 +36,7 @@ class SocialRefResource extends Resource
                 Forms\Components\TextInput::make('order')
                     ->numeric()
                     ->default(1)
-                    ->minValue(1)
-                    ->rules(['integer', 'min:1']),
+                    ->minValue(1),
                 Forms\Components\Select::make('status')
                     ->options(StatusEnum::class)
                     ->default(StatusEnum::active)
@@ -58,9 +56,9 @@ class SocialRefResource extends Resource
                 Tables\Columns\TextColumn::make('order')->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
-                    ->color(fn(\App\Enums\StatusEnum $state): string => match ($state) {
-                        \App\Enums\StatusEnum::active => 'success',
-                        \App\Enums\StatusEnum::inactive => 'danger',
+                    ->color(fn(StatusEnum $state): string => match ($state) {
+                        StatusEnum::active => 'success',
+                        StatusEnum::inactive => 'danger',
                     })
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
