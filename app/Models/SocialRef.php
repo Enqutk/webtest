@@ -9,15 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SocialRef extends Model {
     use SoftDeletes;
-
-    public static function statusOptions(): array {
-        $options = [];
-        foreach ( StatusEnum::cases() as $case ) {
-            $options[ $case->value ] = ucfirst( $case->value );
-        }
-        return $options;
-    }
-
     protected $table = 'social_refs';
 
     /**
@@ -49,15 +40,17 @@ class SocialRef extends Model {
     * Creator relationship.
     */
 
-    public function createdBy(): BelongsTo {
-        return $this->belongsTo( User::class, 'created_by' );
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     /**
     * Updater relationship.
     */
 
-    public function updatedBy(): BelongsTo {
-        return $this->belongsTo( User::class, 'updated_by' );
+    public function updatedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 }
