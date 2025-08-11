@@ -18,6 +18,8 @@ use Illuminate\Support\Str;
 class MenuLocationResource extends Resource
 {
     protected static ?string $model = MenuLocation::class;
+    protected static ?string $navigationGroup = 'Menus';
+
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 

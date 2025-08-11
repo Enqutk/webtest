@@ -13,6 +13,8 @@ use Filament\Tables\Table;
 class MenuItemResource extends Resource
 {
     protected static ?string $model = MenuItem::class;
+    protected static ?string $navigationGroup = 'Menus';
+
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
