@@ -18,9 +18,9 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->longText('description');
-            $table->longText('img_path');
+            $table->string('img_path');
             $table->string('link');
-            $table->unsignedInteger('order')->default(0);
+            $table->unsignedInteger('order')->default(1);
             $table->enum('status', array_column(StatusEnum::cases(), 'value'))->default(StatusEnum::active->value);
             $table->timestamps();
             $table->softDeletes();
