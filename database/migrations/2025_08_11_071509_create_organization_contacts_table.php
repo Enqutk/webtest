@@ -19,6 +19,7 @@ return new class extends Migration
             $table->enum('type', ['phone', 'fax', 'email']);
             $table->string('value', 255);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
