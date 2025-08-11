@@ -85,6 +85,7 @@ public static function form(Form $form): Form
     {
         return [
             'index' => Pages\EditOrganization::route('/'),
+            'edit' => Pages\EditOrganization::route('/1/edit'),
         ];
     }
 
