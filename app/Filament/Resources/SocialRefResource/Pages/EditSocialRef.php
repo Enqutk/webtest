@@ -5,10 +5,11 @@ namespace App\Filament\Resources\SocialRefResource\Pages;
 use App\Filament\Resources\SocialRefResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
-use Illuminate\Support\Facades\Auth;
+use App\Filament\Traits\SetsCreatedAndUpdatedBy;
 
 class EditSocialRef extends EditRecord
 {
+    use SetsCreatedAndUpdatedBy;
     protected static string $resource = SocialRefResource::class;
 
     protected function getHeaderActions(): array
@@ -18,10 +19,5 @@ class EditSocialRef extends EditRecord
             Actions\ForceDeleteAction::make(),
             Actions\RestoreAction::make(),
         ];
-    }
-    protected function mutateFormDataBeforeSave(array $data): array
-    {
-        $data['updated_by'] = Auth::id();
-        return $data;
     }
 }
