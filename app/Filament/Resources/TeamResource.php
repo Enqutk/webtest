@@ -36,11 +36,11 @@ class TeamResource extends Resource
                 Forms\Components\Textarea::make('description')
                     ->label('Description'),
                 Forms\Components\FileUpload::make('image_path')
-                    ->label('Image')
+                    ->disk('public')
+                    ->directory('team-images')
                     ->image()
-                    ->directory('images/teams')
-                    ->maxSize(1024)
-                    ->columnSpanFull(),
+                    ->label('Upload Image'),
+
                 Forms\Components\Select::make('status')
                     ->label('Status')
                     ->options([
@@ -68,17 +68,18 @@ class TeamResource extends Resource
                 Tables\Columns\IconColumn::make('founder')
                     ->boolean(),
                 Tables\Columns\ImageColumn::make('image_path')
-                    ->label('Image')
                     ->disk('public')
-                    ->size(50)
-                    ->circular(),
+                    ->label('Image')
+                    ->square(),
+
+
                 Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-               
+
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
