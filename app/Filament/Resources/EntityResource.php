@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\EntityResource\Pages;
-use App\Filament\Resources\EntityResource\RelationManagers;
 use App\Models\Entity;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -11,7 +10,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use App\Enums\EntityTypeEnum;
-use App\Traits\HasUserStamps;
 use App\Enums\StatusEnum;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -30,11 +28,7 @@ class EntityResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Select::make('type')
-                    ->options([
-                        EntityTypeEnum::client->value => 'Client',
-                        EntityTypeEnum::partner->value => 'Partner',
-                        EntityTypeEnum::award->value => 'Award',
-                    ])
+                    ->options(collect(EntityTypeEnum::cases())->mapWithKeys(fn ($case) => [$case->value => ucfirst($case->name)]))
                     ->required(),
                 Forms\Components\TextInput::make('link')
                     ->maxLength(255)
@@ -54,7 +48,7 @@ class EntityResource extends Resource
                     ->numeric()
                     ->default(1)
                     ->minValue(1)
-                    ->unique()
+                    ->unique(ignoreRecord: true)
                     ->required(),
                 Forms\Components\Select::make('status')
                     ->options(StatusEnum::class)
@@ -124,7 +118,12 @@ class EntityResource extends Resource
             //
         ];
     }
-
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->withoutGlobalScopes([
+            SoftDeletingScope::class,
+        ]);
+    }
     public static function getPages(): array
     {
         return [
