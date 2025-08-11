@@ -44,7 +44,10 @@ class TeamResource extends Resource
                     ->disk('public')
                     ->directory('team-images')
                     ->image()
-                    ->label('Upload Image'),
+                    ->label('Upload Image')
+                    ->imagePreviewHeight('150') // Show preview in form
+                    ->previewable(),            // Make it previewable
+
 
                 Select::make('status')
                     ->label('Status')
