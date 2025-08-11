@@ -19,4 +19,12 @@ class OrganizationContact extends Model
     {
         return $this->belongsTo(Organization::class);
     }
+    public static function getTypeOptions(): array
+    {
+        return [
+            'phone' => 'Phone',
+            'fax' => 'Fax',
+            'email' => 'Email',
+        ];
+    }
 }

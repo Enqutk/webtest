@@ -25,11 +25,7 @@ class OrganizationContactResource extends Resource
                 Forms\Components\Select::make('type')
                     ->label('Contact Type')
                     ->required()
-                    ->options([
-                        'phone' => 'Phone',
-                        'fax' => 'Fax',
-                        'email' => 'Email',
-                    ]),
+                    ->options(OrganizationContact::getTypeOptions()),
                 Forms\Components\TextInput::make('value')
                     ->label('Contact Value')
                     ->required()
