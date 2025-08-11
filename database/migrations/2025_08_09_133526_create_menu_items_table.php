@@ -20,7 +20,7 @@ return new class extends Migration
             $table->enum('link_type', ['internal', 'external'])->default('internal');
             $table->string('url', 500)->nullable();
             $table->enum('target', ['_self', '_blank'])->default('_self');
-            $table->integer('order_number')->default(0);
+            $table->integer('order_number')->default(1);
             $table->timestamps();
 
             $table->foreign('menu_id')->references('id')->on('menu_locations')->onDelete('cascade');

@@ -53,7 +53,6 @@ class MenuItemResource extends Resource
                 Forms\Components\TextInput::make('order_number')
                     ->numeric()
                     ->minValue(1)
-                    ->default(1),
             ])->columns(2);
             
     }
