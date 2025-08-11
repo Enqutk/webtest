@@ -26,7 +26,7 @@ class HeroResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\RichEditor::make('description')
+                Forms\Components\TextInput::make('description')
                     ->required(),
                 Forms\Components\FileUpload::make('img_path')
                     ->directory('heroes')
