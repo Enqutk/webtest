@@ -40,6 +40,7 @@ class TeamResource extends Resource
                 Forms\Components\FileUpload::make('image_path')
                     ->label('Image')
                     ->image()
+                    ->directory('images/teams')
                     ->maxSize(1024)
                     ->columnSpanFull(),
                 Forms\Components\Select::make('status')
