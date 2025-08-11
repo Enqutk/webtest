@@ -6,9 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Enums\EntityTypeEnum;
 use App\Enums\StatusEnum;
+use App\Traits\HasUserStamps;
 
 class Entity extends Model {
-    use SoftDeletes;
+    use SoftDeletes, HasUserStamps;
 
     protected $fillable = [
         'name',
