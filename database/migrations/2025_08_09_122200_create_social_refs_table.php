@@ -20,10 +20,10 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('icon_class')->nullable();
             $table->unsignedInteger('order')->default(1);
-            $table->enum('status', array_column(StatusEnum::cases(), 'value'))->default(StatusEnum::ACTIVE->value);
+            $table->enum('status', array_column(StatusEnum::cases(), 'value'))->default(StatusEnum::active->value);
             $table->timestamps();
             $table->softDeletes();
-            $table->foreignId('created_by')->constrained('users');
+            $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');
             $table->index('status');
             $table->index('order');
