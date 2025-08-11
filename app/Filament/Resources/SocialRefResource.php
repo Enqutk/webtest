@@ -50,7 +50,7 @@ class SocialRefResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')->sortable(),
                 Tables\Columns\TextColumn::make('title')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('link')->searchable()->url(fn($record) => $record->link, true),
+                Tables\Columns\TextColumn::make('link')->searchable()->url('link')->openUrlInNewTab(),
                 Tables\Columns\TextColumn::make('description')->limit(50),
                 Tables\Columns\TextColumn::make('icon_class'),
                 Tables\Columns\TextColumn::make('order')->sortable(),
