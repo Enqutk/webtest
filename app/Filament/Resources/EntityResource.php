@@ -10,6 +10,9 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use App\Enums\EntityTypeEnum;
+use App\Traits\HasUserStamps;
+use App\Enums\StatusEnum;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -25,11 +28,11 @@ class EntityResource extends Resource {
             ->required()
             ->maxLength( 255 ),
             Forms\Components\Select::make( 'type' )
-            ->options( [
-                'client' => 'Client',
-                'partner' => 'Partner',
-                'award' => 'Award',
-            ] )
+            ->options([
+                EntityTypeEnum::client->value => 'Client',
+                EntityTypeEnum::partner->value => 'Partner',
+                EntityTypeEnum::award->value => 'Award',
+            ])
             ->required(),
             Forms\Components\TextInput::make( 'link' )
             ->maxLength( 255 )
@@ -49,10 +52,7 @@ class EntityResource extends Resource {
             ->default( 0 )
             ->minValue( 0 ),
             Forms\Components\Select::make( 'status' )
-            ->options( [
-                'active' => 'Active',
-                'inactive' => 'Inactive',
-            ] )
+            ->options( StatusEnum::class )
             ->default( 'active' )
             ->required(),
         ] );
@@ -71,36 +71,45 @@ class EntityResource extends Resource {
             ->url( fn ( $record ) => $record->image_path ? asset( 'storage/entities/' . basename( $record->image_path ) ) : null ),
             Tables\Columns\TextColumn::make( 'link' )->url( fn ( $record ) => $record->link )->openUrlInNewTab( true )->searchable(),
             Tables\Columns\TextColumn::make( 'order' )->sortable(),
-            Tables\Columns\TextColumn::make( 'status' )
-            ->badge()
-            ->color( fn( $state ) => $state === 'active' ? 'success' : 'danger' )
-            ->sortable(),
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(fn(StatusEnum $state): string => match ($state) {
+                        StatusEnum::active => 'success',
+                        StatusEnum::inactive => 'danger',
+                    })
+                    ->sortable(),
             Tables\Columns\TextColumn::make( 'created_at' )->dateTime()->sortable()->toggleable( isToggledHiddenByDefault: true ),
             Tables\Columns\TextColumn::make( 'updated_at' )->dateTime()->sortable()->toggleable( isToggledHiddenByDefault: true ),
             Tables\Columns\TextColumn::make( 'deleted_at' )->dateTime()->sortable()->toggleable( isToggledHiddenByDefault: true ),
         ] )
         ->filters( [
             Tables\Filters\TrashedFilter::make(),
-            Tables\Filters\SelectFilter::make( 'type' )
-            ->options( [
-                'client' => 'Client',
-                'partner' => 'Partner',
-                'award' => 'Award',
-            ] ),
-            Tables\Filters\SelectFilter::make( 'status' )
-            ->options( [
-                'active' => 'Active',
-                'inactive' => 'Inactive',
-            ] ),
+            Tables\Filters\SelectFilter::make('type')
+                ->options([
+                    EntityTypeEnum::client->value => 'Client',
+                    EntityTypeEnum::partner->value => 'Partner',
+                    EntityTypeEnum::award->value => 'Award',
+                ]),
+            Tables\Filters\SelectFilter::make('status')
+                ->options([
+                    StatusEnum::active->value => 'Active',
+                    StatusEnum::inactive->value => 'Inactive',
+                ]),
         ] )
-        ->actions( [
-            Tables\Actions\EditAction::make(),
-        ] )
-        ->bulkActions( [
-            Tables\Actions\BulkActionGroup::make( [
-                Tables\Actions\DeleteBulkAction::make(),
-            ] ),
-        ] );
+            ->actions([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ForceDeleteAction::make(),
+                Tables\Actions\RestoreAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
+                ]),
+            ])
+            ->defaultSort('order');
     }
 
     public static function getRelations(): array {
