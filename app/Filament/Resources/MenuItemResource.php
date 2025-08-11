@@ -88,6 +88,9 @@ class MenuItemResource extends Resource
                     ->label('Order Number'),
             ])
             ->filters([
+                Tables\Filters\SelectFilter::make('menu_id')
+                    ->relationship('menu', 'name')
+                    ->label('Menu Location'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
