@@ -58,7 +58,7 @@ class HeroResource extends Resource
                     ->disk('public')
                     ->square()
                     ->size(50),
-                Tables\Columns\TextColumn::make('link')->searchable()->url(fn($record) => $record->link)->openUrlInNewTab(),
+                Tables\Columns\TextColumn::make('link')->searchable()->url('link')->openUrlInNewTab(true),
                 Tables\Columns\TextColumn::make('order')->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
