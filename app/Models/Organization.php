@@ -24,4 +24,17 @@ class Organization extends Model
     {
         return $this->hasMany(OrganizationContact::class);
     }
+    
+    public static function getDayOptions(): array
+    {
+        return [
+            'mon' => 'Monday',
+            'tue' => 'Tuesday',
+            'wed' => 'Wednesday',
+            'thu' => 'Thursday',
+            'fri' => 'Friday',
+            'sat' => 'Saturday',
+            'sun' => 'Sunday',
+        ];
+    }
 }

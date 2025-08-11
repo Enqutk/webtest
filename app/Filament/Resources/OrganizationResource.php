@@ -45,15 +45,7 @@ class OrganizationResource extends Resource
                         Forms\Components\Select::make('days')
                             ->label('Days')
                             ->multiple()
-                            ->options([
-                                'mon' => 'Monday',
-                                'tue' => 'Tuesday',
-                                'wed' => 'Wednesday',
-                                'thu' => 'Thursday',
-                                'fri' => 'Friday',
-                                'sat' => 'Saturday',
-                                'sun' => 'Sunday',
-                            ]),
+                            ->options(Organization::getDayOptions()),
                         Forms\Components\TimePicker::make('from')
                             ->label('From'),
                         Forms\Components\TimePicker::make('to')
