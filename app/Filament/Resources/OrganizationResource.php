@@ -41,38 +41,19 @@ public static function form(Form $form): Form
             Forms\Components\Textarea::make('opening_hours')
                 ->label('Opening Hours')
                 ->rows(2),
-            Forms\Components\Textarea::make('status')
+            Forms\Components\Select::make('status')
                 ->label('Status')
-                ->rows(2),
+                ->options([
+                    'active' => 'Active',
+                    'inactive' => 'Inactive',
+                ])
+                ->required(),
             Forms\Components\TextInput::make('created_at')
                 ->label('Created At')
-                ->required()
                 ->disabled(),
-
-            // Phone Contact
-            Forms\Components\Fieldset::make('Phone Contact')
-                ->schema([
-                    Forms\Components\TextInput::make('phone_contact')
-                        ->label('Phone')
-                        ->maxLength(100),
-                ]),
-
-            // Fax Contact
-            Forms\Components\Fieldset::make('Fax Contact')
-                ->schema([
-                    Forms\Components\TextInput::make('fax_contact')
-                        ->label('Fax')
-                        ->maxLength(100),
-                ]),
-
-            // Email Contact
-            Forms\Components\Fieldset::make('Email Contact')
-                ->schema([
-                    Forms\Components\TextInput::make('email_contact')
-                        ->label('Email')
-                        ->email()
-                        ->maxLength(100),
-                ]),
+            Forms\Components\TextInput::make('updated_at')
+                ->label('Updated At')
+                ->disabled()
         ]);
     }
 
