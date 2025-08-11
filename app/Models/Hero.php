@@ -6,10 +6,20 @@ use App\Enums\StatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 
 class Hero extends Model
 {
     use SoftDeletes;
+
+    protected static function booted(): void
+    {
+        static::deleting(function (Hero $hero) {
+            if ($hero->isForceDeleting()) {
+                Storage::disk('public')->delete($hero->img_path);
+            }
+        });
+    }
 
     protected $table = 'heroes';
 
