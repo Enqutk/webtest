@@ -52,12 +52,13 @@ class HeroResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')->sortable(),
                 Tables\Columns\TextColumn::make('title')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('description')->limit(50)->tooltip(fn ($record) => $record->description),
+                Tables\Columns\TextColumn::make('description')->limit(50)->tooltip(fn($record) => $record->description),
                 Tables\Columns\ImageColumn::make('img_path')
                     ->disk('public')
                     ->square()
-                    ->size(50),
-                Tables\Columns\TextColumn::make('link')->searchable()->url(fn ($record) => $record->link)->openUrlInNewTab(true),
+                    ->size(50)
+                    ->url(fn($record) => $record->img_path ? asset('storage/heroes/' . basename($record->img_path)) : null),
+                Tables\Columns\TextColumn::make('link')->searchable()->url(fn($record) => $record->link)->openUrlInNewTab(true),
                 Tables\Columns\TextColumn::make('order')->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
