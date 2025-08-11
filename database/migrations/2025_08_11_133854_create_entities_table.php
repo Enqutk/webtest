@@ -16,14 +16,12 @@ return new class extends Migration
         Schema::create('entities', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('type')->default(EntityTypeEnum::Client->value);
+            $table->string('type')->default(EntityTypeEnum::client->value);
             $table->string('link')->nullable();
             $table->string('image_path')->nullable();
             $table->text('description')->nullable();
             $table->integer('order')->default(0);
             $table->string('status')->default(StatusEnum::active->value);
-            $table->unsignedBigInteger('created_by')->nullable();
-            $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
