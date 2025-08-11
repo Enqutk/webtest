@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('img_path');
             $table->string('link', 2048);
             $table->unsignedInteger('order')->default(1);
-            $table->enum('status', array_column(StatusEnum::cases(), 'value'))->default(StatusEnum::active->value);
+            $table->string('status')->default(StatusEnum::active->value);
             $table->timestamps();
             $table->softDeletes();
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
