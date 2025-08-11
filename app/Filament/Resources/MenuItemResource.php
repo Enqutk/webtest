@@ -54,7 +54,6 @@ class MenuItemResource extends Resource
                     ->numeric()
                     ->minValue(1)
             ])->columns(2);
-            
     }
 
     public static function table(Table $table): Table
@@ -63,7 +62,7 @@ class MenuItemResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->label('Title')
-                    ->formatStateUsing(function ($state , $record) {
+                    ->formatStateUsing(function ($state, $record) {
                         $indent = $record->parent ? '  ⤷ ' : '';
                         return $indent . $state;
                     }),

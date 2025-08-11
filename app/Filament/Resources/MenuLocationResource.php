@@ -45,7 +45,6 @@ class MenuLocationResource extends Resource
                 Forms\Components\Textarea::make('description')
                     ->nullable(),
             ])->columns(1);
-            
     }
 
     public static function table(Table $table): Table
@@ -64,7 +63,7 @@ class MenuLocationResource extends Resource
                         'footer' => 'Footer',
                         'sidebar' => 'Sidebar',
                     ]),
-                    
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
