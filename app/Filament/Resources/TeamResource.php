@@ -3,15 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TeamResource\Pages;
-use App\Filament\Resources\TeamResource\RelationManagers;
 use App\Models\Team;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TeamResource extends Resource
 {
@@ -67,8 +64,10 @@ class TeamResource extends Resource
                 Tables\Columns\TextColumn::make('status')->sortable(),
                 Tables\Columns\BooleanColumn::make('founder'),
                 Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable(),
-            ])
-            ->filters([
+                Tables\Columns\TextColumn::make('status')->sortable(),
+                Tables\Columns\IconColumn::make('founder')
+                    ->boolean(),
+                Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
