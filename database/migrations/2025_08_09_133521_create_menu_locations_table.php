@@ -18,6 +18,7 @@ return new class extends Migration
             $table->enum('location', ['navbar', 'footer', 'sidebar'])->default('navbar');
             $table->text('description')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
