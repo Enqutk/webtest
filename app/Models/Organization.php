@@ -17,6 +17,7 @@ class Organization extends Model
 
     protected $casts = [
         'status' => 'string',
+        'opening_hours' => 'array', 
     ];
 
     public function contacts()

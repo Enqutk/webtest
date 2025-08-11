@@ -38,9 +38,33 @@ public static function form(Form $form): Form
                         ->url()
                         ->maxLength(255),
                 ]),
-            Forms\Components\Textarea::make('opening_hours')
+            Forms\Components\Repeater::make('opening_hours')
                 ->label('Opening Hours')
-                ->rows(2),
+                ->schema([
+                    Forms\Components\Select::make('days')
+                        ->label('Days')
+                        ->multiple()
+                        ->options([
+                            'mon' => 'Monday',
+                            'tue' => 'Tuesday',
+                            'wed' => 'Wednesday',
+                            'thu' => 'Thursday',
+                            'fri' => 'Friday',
+                            'sat' => 'Saturday',
+                            'sun' => 'Sunday',
+                        ])
+                        ->required(),
+                    Forms\Components\TimePicker::make('from')
+                        ->label('From')
+                        ->required(),
+                    Forms\Components\TimePicker::make('to')
+                        ->label('To')
+                        ->required(),
+                ])
+                ->columns(3)
+                ->minItems(1)
+                ->addActionLabel('Add Opening Hours'),
+
             Forms\Components\Select::make('status')
                 ->label('Status')
                 ->options([
