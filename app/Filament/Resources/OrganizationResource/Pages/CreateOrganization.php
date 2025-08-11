@@ -4,15 +4,9 @@ namespace App\Filament\Resources\OrganizationResource\Pages;
 
 use App\Filament\Resources\OrganizationResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use Filament\Resources\Pages\CreateRecord;
 
-class ListOrganizations extends ListRecords
+class CreateOrganization extends CreateRecord
 {
     protected static string $resource = OrganizationResource::class;
-
-    protected function getHeaderActions(): array
-    {
-        return [
-        ];
-    }
 }

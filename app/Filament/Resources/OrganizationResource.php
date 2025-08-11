@@ -16,93 +16,64 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class OrganizationResource extends Resource
 {
     protected static ?string $model = Organization::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('title')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('po_box')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('address')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('opening_hours')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('map_url')
-                    ->url()
-                    ->maxLength(255),
-                Forms\Components\Select::make('status')
-                    ->options([
-                        'active' => 'Active',
-                        'inactive' => 'Inactive',
-                    ])
-                    ->default('active')
+                Forms\Components\Grid::make(2)
+                    ->schema([
+                        Forms\Components\TextInput::make('title')
+                            ->label('Title')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('po_box')
+                            ->label('Short Title')
+                            ->maxLength(100),
+                    ]),
+                Forms\Components\Grid::make(2)
+                    ->schema([
+                        Forms\Components\TextInput::make('address')
+                            ->label('System Creator')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('map_url')
+                            ->label('Creator Website')
+                            ->url()
+                            ->maxLength(255),
+                    ]),
+                Forms\Components\Textarea::make('opening_hours')
+                    ->label('Meta Keywords')
+                    ->rows(2)
+                    ->helperText('Comma-separated list of keywords'),
+                Forms\Components\Textarea::make('status')
+                    ->label('Meta Description')
+                    ->rows(2),
+                Forms\Components\TextInput::make('created_at')
+                    ->label('System Version')
+                    ->default('1.0.0')
                     ->required(),
-            ])->columns(2)
+            ])
+            ->columns(1)
             ->statePath('organization');
     }
 
-    public static function table(Table $table): Table
+    public static function shouldRegisterNavigation(): bool
     {
-        return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('title')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('po_box')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('address')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('opening_hours')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('map_url')
-                    ->url(fn ($record) => $record->map_url)
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('status')
-                    ->label('Status')
-                    ->sortable(),
-            ])->filters([
-                //
-            ])->actions([
-                //
-            ])->bulkActions([
-                //
-            ])->emptyStateActions([
-                //
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
+        return true;
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListOrganizations::route('/'),
-            'edit' => Pages\EditOrganization::route('/{record}/edit'),
+            'index' => Pages\EditOrganization::route('/'),
         ];
+    }
+
+    public static function getRecord(): ?\App\Models\Organization
+    {
+        // Always return the first (and only) organization
+        return \App\Models\Organization::first();
     }
 }
