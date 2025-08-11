@@ -73,11 +73,9 @@ class TeamResource extends Resource
                 Tables\Columns\IconColumn::make('founder')
                     ->boolean(),
                 Tables\Columns\ImageColumn::make('image_path')
-    ->disk('public')
-    ->label('Image')
-    ->square(),
-
-
+                    ->disk('public')
+                    ->label('Image')
+                    ->circular(),
                 Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deleted_at')
