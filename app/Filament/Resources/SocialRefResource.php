@@ -38,8 +38,8 @@ class SocialRefResource extends Resource {
                     ->minValue(1)
                     ->rules(['integer', 'min:1']),
                 Forms\Components\Select::make('status')
-                    ->options(SocialRef::statusOptions())
-                    ->default('active')
+                    ->options(StatusEnum::class)
+                    ->default(StatusEnum::active)
                     ->required(),
             ]);
     }
@@ -54,7 +54,13 @@ class SocialRefResource extends Resource {
                 Tables\Columns\TextColumn::make('description')->limit(50),
                 Tables\Columns\TextColumn::make('icon_class'),
                 Tables\Columns\TextColumn::make('order')->sortable(),
-                Tables\Columns\TextColumn::make('status')->sortable(),
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(fn (\App\Enums\StatusEnum $state): string => match ($state) {
+                        \App\Enums\StatusEnum::active => 'success',
+                        \App\Enums\StatusEnum::inactive => 'danger',
+                    })
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deleted_at')
@@ -65,7 +71,7 @@ class SocialRefResource extends Resource {
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
                 Tables\Filters\SelectFilter::make('status')
-                    ->options(SocialRef::statusOptions()),
+                    ->options(StatusEnum::class),
 
             ])
             ->actions([
