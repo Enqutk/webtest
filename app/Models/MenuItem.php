@@ -19,7 +19,7 @@ class MenuItem extends Model
 
     public function menu()
     {
-        return $this->belongsTo(MenuLocation::class);
+        return $this->belongsTo(MenuLocation::class , 'menu_id');
     }
 
     public function parent()
