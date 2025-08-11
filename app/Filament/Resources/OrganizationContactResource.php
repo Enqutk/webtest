@@ -29,6 +29,8 @@ class OrganizationContactResource extends Resource
                 Forms\Components\TextInput::make('value')
                     ->label('Contact Value')
                     ->required()
+                    ->email(fn (\Filament\Forms\Get $get) => $get('type') === 'email')
+                    ->tel(fn (\Filament\Forms\Get $get) => $get('type') === 'phone')
                     ->maxLength(255),
             ])->columns(2);
     }
