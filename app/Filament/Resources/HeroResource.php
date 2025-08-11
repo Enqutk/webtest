@@ -26,7 +26,7 @@ class HeroResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('description')
+                Forms\Components\TextArea::make('description')
                     ->required(),
                 Forms\Components\FileUpload::make('img_path')
                     ->directory('heroes')
@@ -35,8 +35,7 @@ class HeroResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('link')
                     ->required()
-                    ->url()
-                    ->maxLength(255),
+                    ->url(),
                 Forms\Components\TextInput::make('order')
                     ->numeric()
                     ->default(1)
