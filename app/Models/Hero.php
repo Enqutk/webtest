@@ -15,6 +15,15 @@ class Hero extends Model
 
     protected static function booted(): void
     {
+        static::updating(function (Hero $hero) {
+            if ($hero->isDirty('img_path')) {
+                $oldImagePath = $hero->getOriginal('img_path');
+                if ($oldImagePath) {
+                    Storage::disk('public')->delete($oldImagePath);
+                }
+            }
+        });
+
         static::deleting(function (Hero $hero) {
             if ($hero->isForceDeleting()) {
                 Storage::disk('public')->delete($hero->img_path);
