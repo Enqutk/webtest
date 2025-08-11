@@ -24,8 +24,6 @@ class OrganizationSeeder extends Seeder
             ],
             'map_url' => 'https://maps.example.com/demo-org',
             'status' => 'active',
-            'created_at' => now(),
-            'updated_at' => now(),
         ]);
 
         OrganizationContact::create([

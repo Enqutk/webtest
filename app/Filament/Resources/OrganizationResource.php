@@ -91,7 +91,7 @@ class OrganizationResource extends Resource
         ];
     }
 
-    public static function getRecord(): ?\App\Models\Organization
+    public static function getRecord(): ? Organization
     {
         // Always return the first (and only) organization
         return Organization::first();
