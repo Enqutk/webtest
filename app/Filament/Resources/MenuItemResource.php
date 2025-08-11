@@ -41,8 +41,11 @@ class MenuItemResource extends Resource
                         'internal' => 'Internal',
                         'external' => 'External',
                     ])
-                    ->default('internal'),
+                    ->default('internal')
+                    ->reactive(),
                 Forms\Components\TextInput::make('url')
+                    ->requiredIf('link_type', 'external')
+                    ->url()
                     ->maxLength(500),
                 Forms\Components\Select::make('target')
                     ->options([
