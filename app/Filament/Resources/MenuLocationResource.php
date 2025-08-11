@@ -15,9 +15,9 @@ class MenuLocationResource extends Resource
 {
     protected static ?string $model = MenuLocation::class;
     protected static ?string $navigationGroup = 'Menus';
-
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?int $navigationSort = 1;
+    protected static ?string $navigationLabel = 'Menu';
+    protected static ?string $navigationIcon = 'heroicon-o-bars-3';
 
     public static function form(Form $form): Form
     {
