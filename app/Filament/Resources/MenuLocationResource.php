@@ -38,7 +38,7 @@ class MenuLocationResource extends Resource
                     ->required()
                     ->maxLength(120)
                     ->unique(MenuLocation::class, 'slug', ignoreRecord: true)
-                    ->disabled(),
+                    ->readOnly(),
                 Forms\Components\Select::make('location')
                     ->options([
                         'navbar' => 'Navbar',

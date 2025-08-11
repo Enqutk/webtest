@@ -62,12 +62,30 @@ class MenuItemResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title')->label('Title'),
-                Tables\Columns\TextColumn::make('icon')->label('Icon'),
-                Tables\Columns\TextColumn::make('link_type')->label('Link Type'),
-                Tables\Columns\TextColumn::make('url')->label('URL'),
-                Tables\Columns\TextColumn::make('target')->label('Target'),
-                Tables\Columns\TextColumn::make('order_number')->label('Order Number'),
+                Tables\Columns\TextColumn::make('title')
+                    ->label('Title')
+                    ->formatStateUsing(function ($state , $record) {
+                        $indent = $record->parent ? '  ⤷ ' : '';
+                        return $indent . $state;
+                    }),
+                Tables\Columns\TextColumn::make('parent_id')
+                    ->label('Parent')
+                    ->formatStateUsing(function ($state, $record) {
+                        return $record->parent ? $record->parent->title : 'None';
+                    }),
+                Tables\Columns\TextColumn::make('menu_id')
+                    ->label('Menu Location')
+                    ->formatStateUsing(function ($state, $record) {
+                        return $record->menu ? $record->menu->name : 'None';
+                    }),
+                Tables\Columns\TextColumn::make('link_type')
+                    ->label('Link Type'),
+                Tables\Columns\TextColumn::make('url')
+                    ->label('URL'),
+                Tables\Columns\TextColumn::make('target')
+                    ->label('Target'),
+                Tables\Columns\TextColumn::make('order_number')
+                    ->label('Order Number'),
             ])
             ->filters([
             ])
