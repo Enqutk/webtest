@@ -55,8 +55,8 @@ class HeroResource extends Resource
                 Tables\Columns\TextColumn::make('id')->sortable(),
                 Tables\Columns\TextColumn::make('title')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('description')->limit(50),
-                Tables\Columns\TextColumn::make('img_path')->limit(50),
-                Tables\Columns\TextColumn::make('link')->searchable()->url('link')->openUrlInNewTab(),
+                Tables\Columns\TextColumn::make('img_path'),
+                Tables\Columns\TextColumn::make('link')->searchable()->url(fn ($record) => $record->link)->openUrlInNewTab(),
                 Tables\Columns\TextColumn::make('order')->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
