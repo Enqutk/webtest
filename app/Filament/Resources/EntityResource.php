@@ -39,7 +39,6 @@ class EntityResource extends Resource
                     ->disk('public')
                     ->image()
                     ->imagePreviewHeight('150')
-                    ->nullable()
                     ->required(),
                 Forms\Components\Textarea::make('description')
                     ->maxLength(65535)
