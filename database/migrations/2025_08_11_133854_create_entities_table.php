@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('type')->default(EntityTypeEnum::client->value);
-            $table->string('link')->nullable();
+            $table->string('link', 2048)->nullable();
             $table->text('description')->nullable();
             $table->integer('order')->default(1);
             $table->string('status')->default(StatusEnum::active->value);
