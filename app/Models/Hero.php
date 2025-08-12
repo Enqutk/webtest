@@ -32,18 +32,18 @@ class Hero extends Model implements HasMedia
         'order'       => 'integer',
     ];
 
-    public function createdBy(): BelongsTo
+    public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function updatedBy(): BelongsTo
+    public function updater(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
 
     public function registerMediaCollections(): void {
-        $this->addMediaCollection('images')
+        $this->addMediaCollection('image')
             ->singleFile()
             ->useDisk('public')
             ->registerMediaConversions(function () {
