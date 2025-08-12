@@ -8,35 +8,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\HasUserStamps;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Hero extends Model
+class Hero extends Model implements HasMedia
 {
-    use SoftDeletes, HasUserStamps;
+    use SoftDeletes, HasUserStamps, InteractsWithMedia;
 
-    protected static function booted(): void
-    {
-        static::updating(function (Hero $hero) {
-            if ($hero->isDirty('img_path')) {
-                $oldImagePath = $hero->getOriginal('img_path');
-                if ($oldImagePath) {
-                    Storage::disk('public')->delete($oldImagePath);
-                }
-            }
-        });
-
-        static::deleting(function (Hero $hero) {
-            if ($hero->isForceDeleting()) {
-                Storage::disk('public')->delete($hero->img_path);
-            }
-        });
-    }
 
     protected $table = 'heroes';
 
     protected $fillable = [
         'title',
         'description',
-        'img_path',
         'link',
         'order',
         'status',
@@ -60,5 +44,18 @@ class Hero extends Model
     public function updatedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function registerMediaCollections(): void {
+        $this->addMediaCollection('images')
+            ->singleFile()
+            ->useDisk('heroes')
+            // ->acceptsMimeTypes(['image/jpeg', 'image/png'])
+            ->registerMediaConversions(function () {
+                $this->addMediaConversion('thumb')
+                    ->width(150)
+                    ->height(150)
+                    ->sharpen(10);
+            });
     }
 }
