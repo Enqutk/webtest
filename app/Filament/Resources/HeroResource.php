@@ -12,6 +12,8 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Enums\StatusEnum;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 
 class HeroResource extends Resource
 {
@@ -28,9 +30,11 @@ class HeroResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Textarea::make('description')
                     ->required(),
-                Forms\Components\FileUpload::make('img_path')
-                    ->image()
+                Forms\Components\SpatieMediaLibraryFileUpload::make('images')
+                    ->image('thumb')
+                    ->imagePreviewHeight('150')
                     ->required(),
+
                 Forms\Components\TextInput::make('link')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('order')
@@ -52,11 +56,11 @@ class HeroResource extends Resource
                 Tables\Columns\TextColumn::make('id')->sortable(),
                 Tables\Columns\TextColumn::make('title')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('description')->limit(50)->tooltip(fn($record) => $record->description),
-                Tables\Columns\ImageColumn::make('img_path')
-                    ->disk('public')
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('images')
                     ->square()
                     ->size(50)
-                    ->url(fn($record) => $record->img_path ? asset('storage/heroes/' . basename($record->img_path)) : null),
+                    ->url(fn($record) => $record->getFirstMediaUrl('images', 'thumb') ?: null),
+
                 Tables\Columns\TextColumn::make('link')->searchable()->url(fn($record) => $record->link)->openUrlInNewTab(true),
                 Tables\Columns\TextColumn::make('order')->sortable(),
                 Tables\Columns\TextColumn::make('status')
