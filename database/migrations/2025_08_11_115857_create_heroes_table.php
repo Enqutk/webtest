@@ -12,7 +12,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('heroes', function (Blueprint $table) {
             $table->id();
@@ -26,7 +26,7 @@ return new class extends Migration
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');
             $table->index('status');
-            $table->index('order')->unique();
+            $table->index('order');
         });
     }
 
