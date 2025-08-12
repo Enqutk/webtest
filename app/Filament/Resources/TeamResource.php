@@ -40,7 +40,7 @@ class TeamResource extends Resource
                     ->maxLength(255),
                 Textarea::make('description')
                     ->label('Description'),
-              Forms\Components\FileUpload::make('image_path')
+                Forms\Components\FileUpload::make('image_path')
                     ->directory('images/teams')
                     ->disk('public')
                     ->image()
