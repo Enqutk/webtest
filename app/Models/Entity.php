@@ -34,12 +34,14 @@ class Entity extends Model implements HasMedia
 
     // Relationships
 
-    public function creator():BelongsTo {
-        return $this->belongsTo( User::class, 'created_by' );
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function updater(): BelongsTo {
-        return $this->belongsTo( User::class, 'updated_by' );
+    public function updater(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
     public function registerMediaCollections(): void {
