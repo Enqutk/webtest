@@ -18,13 +18,10 @@ return new class extends Migration
             $table->string('last_name', 120)->nullable();
             $table->string('title', 190)->nullable();
             $table->text('description')->nullable();
-            $table->string('image_path')->nullable();
-
+            $table->string('image')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->boolean('founder')->default(false);
-
             $table->integer('order')->default(0);
-
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
 

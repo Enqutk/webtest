@@ -17,7 +17,7 @@ class Team extends Model implements HasMedia
         'last_name',
         'title',
         'description',
-        'image_path',
+        'image',
         'status',
         'founder',
         'order',
