@@ -51,7 +51,7 @@ class EntityResource extends Resource
                     ->required(),
                 Forms\Components\Select::make('status')
                     ->options(StatusEnum::class)
-                    ->default('active')
+                    ->default(StatusEnum::active)
                     ->required(),
             ]);
     }
