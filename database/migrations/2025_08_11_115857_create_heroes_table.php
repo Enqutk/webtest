@@ -25,7 +25,6 @@ return new class extends Migration
             $table->softDeletes();
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');
-            $table->index('type');
             $table->index('status');
             $table->index('order');
         });
