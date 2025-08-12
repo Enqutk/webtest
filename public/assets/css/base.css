@@ -18,7 +18,7 @@ INDEX:
 
 
 :root {
-	--pbmit-global-color: #ffc34e;
+	--pbmit-global-color: #00A0D1;
 	--pbmit-secondary-color: #16222d;
 	--pbmit-light-color: #ecf0f4;
 	--pbmit-body-color: #fff;
@@ -27,7 +27,7 @@ INDEX:
 	--pbmit-blackish-color: #16222d;
 	--pbmit-blackish-color-rgb: 22, 34, 45;
 	--pbmit-link-color-normal: #16222d;
-	--pbmit-link-color-hover: #ffc34e;
+	--pbmit-link-color-hover: #00A0D1;
 	--pbmit-global-color-rgb: 255, 195, 78;
 	--pbmit-responsive-breakpoint: 1200px;
 
