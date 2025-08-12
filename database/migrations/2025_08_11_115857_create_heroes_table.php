@@ -18,7 +18,6 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->longText('description');
-            $table->string('img_path');
             $table->string('link', 2048);
             $table->unsignedInteger('order')->default(1);
             $table->string('status')->default(StatusEnum::active->value);
