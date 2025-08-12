@@ -60,6 +60,51 @@ return [
             'report' => false,
         ],
 
+        'heroes' => [
+            'driver' => 'local',
+            'root' => public_path('heros'),
+            'url' => env('APP_URL').'/heros',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
+        'services' => [
+            'driver' => 'local',
+            'root' => public_path('services'),
+            'url' => env('APP_URL').'/services',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
+        'teams' => [
+            'driver' => 'local',
+            'root' => public_path('teams'),
+            'url' => env('APP_URL').'/teams',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
+        'posts' => [
+            'driver' => 'local',
+            'root' => public_path('posts'),
+            'url' => env('APP_URL').'/posts',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
+        'entities' => [
+            'driver' => 'local',
+            'root' => public_path('entities'),
+            'url' => env('APP_URL').'/entities',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
     ],
 
     /*
