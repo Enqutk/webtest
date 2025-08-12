@@ -36,8 +36,8 @@ class EntityResource extends Resource
                     ->maxLength(255)
                     ->url()
                     ->nullable(),
-                Forms\Components\SpatieMediaLibraryFileUpload::make('images')
-                    ->image('thumb') 
+                Forms\Components\SpatieMediaLibraryFileUpload::make('image')
+                    ->image()
                     ->imagePreviewHeight('150')
                     ->required(),
                 Forms\Components\Textarea::make('description')
@@ -63,11 +63,10 @@ class EntityResource extends Resource
                 Tables\Columns\TextColumn::make('id')->sortable(),
                 Tables\Columns\TextColumn::make('name')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('type')->badge()->sortable(),
-                Tables\Columns\SpatieMediaLibraryImageColumn::make('images')
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('image')
                     ->square()
                     ->size(50)
-                    ->url(fn($record) => $record->getFirstMediaUrl('images', 'thumb') ?: null),
-
+                    ->url(fn($record) => $record->getFirstMediaUrl('image', 'thumb') ?: null),
                 Tables\Columns\TextColumn::make('link')->url(fn($record) => $record->link)->openUrlInNewTab(true)->searchable(),
                 Tables\Columns\TextColumn::make('order')->sortable(),
                 Tables\Columns\TextColumn::make('status')
