@@ -69,14 +69,12 @@ class TeamResource extends Resource
                 Tables\Columns\TextColumn::make('last_name')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('title')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('status')->sortable(),
-                Tables\Columns\BooleanColumn::make('founder'),
                 Tables\Columns\TextColumn::make('status')->sortable(),
                 Tables\Columns\IconColumn::make('founder')
                     ->boolean(),
                 Tables\Columns\ImageColumn::make('image_path')
                     ->disk('public')
                     ->circular()
-                    ->size(50)
                     ->url(fn($record) => $record->image_path ? asset('storage/images/teams/' . basename($record->image_path)) : null),
                 Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
@@ -85,6 +83,11 @@ class TeamResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
+            ])
+            ->filters([
+                Tables\Filters\TernaryFilter::make('founder')
+                    ->label('Founder')
+                    ->boolean(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
