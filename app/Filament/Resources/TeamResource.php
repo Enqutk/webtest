@@ -35,7 +35,6 @@ class TeamResource extends Resource
                     ->maxLength(120),
                 TextInput::make('last_name')
                     ->label('Last Name')
-                    ->required()
                     ->maxLength(120),
                 TextInput::make('title')
                     ->label('Title')
