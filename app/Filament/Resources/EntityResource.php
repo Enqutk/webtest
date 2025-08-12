@@ -86,9 +86,7 @@ class EntityResource extends Resource
                 Tables\Filters\SelectFilter::make('type')
                     ->options(EntityTypeEnum::class),
                 Tables\Filters\SelectFilter::make('status')
-                    ->options(
-                        (StatusEnum::class),
-                    ),
+                    ->options(StatusEnum::class),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
