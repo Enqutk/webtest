@@ -34,4 +34,12 @@ class Team extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+
+    public static function getStatusOptions(): array
+    {
+        return [
+            'active' => 'Active',
+            'inactive' => 'Inactive',
+        ];
+    }
 }

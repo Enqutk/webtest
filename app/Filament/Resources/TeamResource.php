@@ -46,14 +46,10 @@ class TeamResource extends Resource
                     ->image()
                     ->imagePreviewHeight('150')
                     ->required(),
-
                 Select::make('status')
                     ->label('Status')
-                    ->options([
-                        'active' => 'Active',
-                        'inactive' => 'Inactive',
-                        'archived' => 'Archived',
-                    ])
+                    ->options(Team::getStatusOptions())
+                    ->required()
                     ->default('active'),
                 Toggle::make('founder')
                     ->label('Founder'),
