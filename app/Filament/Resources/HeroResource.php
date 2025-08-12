@@ -31,7 +31,7 @@ class HeroResource extends Resource
                 Forms\Components\Textarea::make('description')
                     ->required(),
                 Forms\Components\SpatieMediaLibraryFileUpload::make('images')
-                    ->image('thumb')
+                    ->image()
                     ->imagePreviewHeight('150')
                     ->required(),
 
