@@ -45,8 +45,7 @@ class TeamResource extends Resource
                 SpatieMediaLibraryFileUpload::make('image_path')
                     ->collection('team-images')
                     ->directory('images/teams')
-                    ->hiddenLabel()
-                    ->acceptedFileTypes(['image/jpeg']),
+                    ->hiddenLabel(),
                 Select::make('status')
                     ->label('Status')
                     ->options(Team::getStatusOptions())
@@ -66,7 +65,7 @@ class TeamResource extends Resource
                 Tables\Columns\TextColumn::make('title')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('status')->sortable(),
                 Tables\Columns\IconColumn::make('founder')->boolean(),
-                SpatieMediaLibraryImageColumn::make('image_path')->collection('team-images')->conversion('thumb'),
+                SpatieMediaLibraryImageColumn::make('image_path')->collection('team-images')->size(50)->circular(),
                 Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('creator.name')->label('Created By')->sortable()->toggleable(isToggledHiddenByDefault: true),

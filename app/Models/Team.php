@@ -45,18 +45,14 @@ class Team extends Model implements HasMedia
             'inactive' => 'Inactive',
         ];
     }
-     public function registerMediaCollections(): void
-        {
-            $this
-                ->addMediaCollection('post-images')
-                ->useDisk('post-images')
-                ->acceptsMimeTypes(['image/jpeg'])
-                ->singleFile()
-                ->registerMediaConversions(function (Media $media): void {
-                    $this
-                        ->addMediaConversion('thumb')
-                        ->width(40)
-                        ->height(40);
-                });
-        }
+    public function registerMediaCollections(): void
+    {
+        $this
+            ->addMediaCollection('team-images')
+            ->useDisk('post-images')
+            ->acceptsMimeTypes(['image/jpeg'])
+            ->useFallbackUrl('/images/teams/default.jpg')
+            ->useFallbackPath(public_path('images/teams/default.jpg'))
+            ->singleFile();
+    }
 }
