@@ -13,6 +13,8 @@ use App\Enums\EntityTypeEnum;
 use App\Enums\StatusEnum;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 
 class EntityResource extends Resource
 {
@@ -34,10 +36,8 @@ class EntityResource extends Resource
                     ->maxLength(255)
                     ->url()
                     ->nullable(),
-                Forms\Components\FileUpload::make('image_path')
-                    ->directory('entities')
-                    ->disk('public')
-                    ->image()
+                Forms\Components\SpatieMediaLibraryFileUpload::make('images')
+                    ->image('thumb')  
                     ->imagePreviewHeight('150')
                     ->required(),
                 Forms\Components\Textarea::make('description')
@@ -63,11 +63,11 @@ class EntityResource extends Resource
                 Tables\Columns\TextColumn::make('id')->sortable(),
                 Tables\Columns\TextColumn::make('name')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('type')->badge()->sortable(),
-                Tables\Columns\ImageColumn::make('image_path')
-                    ->disk('public')
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('images')
                     ->square()
                     ->size(50)
-                    ->url(fn($record) => $record->image_path ? asset('storage/entities/' . basename($record->image_path)) : null),
+                    ->url(fn($record) => $record->getFirstMediaUrl('images', 'thumb') ?: null),
+
                 Tables\Columns\TextColumn::make('link')->url(fn($record) => $record->link)->openUrlInNewTab(true)->searchable(),
                 Tables\Columns\TextColumn::make('order')->sortable(),
                 Tables\Columns\TextColumn::make('status')
@@ -86,10 +86,9 @@ class EntityResource extends Resource
                 Tables\Filters\SelectFilter::make('type')
                     ->options(EntityTypeEnum::class),
                 Tables\Filters\SelectFilter::make('status')
-                    ->options([
-                        StatusEnum::active->value => 'Active',
-                        StatusEnum::inactive->value => 'Inactive',
-                    ]),
+                    ->options(
+                        (StatusEnum::class),
+                    ),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
