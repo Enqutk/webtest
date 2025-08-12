@@ -12,15 +12,21 @@ return new class extends Migration
             $table->id();
 
             $table->morphs('model');
-            $table->uuid()->nullable();
+            $table->uuid()->nullable()->unique();
             $table->string('collection_name');
             $table->string('name');
             $table->string('file_name');
-            $table->string('image_type')->nullable();
+            $table->string('mime_type')->nullable();
             $table->string('disk');
             $table->string('conversions_disk')->nullable();
             $table->unsignedBigInteger('size');
-            $table->timestamps();
+            $table->json('manipulations');
+            $table->json('custom_properties');
+            $table->json('generated_conversions');
+            $table->json('responsive_images');
+            $table->unsignedInteger('order_column')->nullable()->index();
+
+            $table->nullableTimestamps();
         });
     }
 };
