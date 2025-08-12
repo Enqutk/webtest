@@ -19,9 +19,6 @@ class Service extends Model implements HasMedia {
     protected $fillable = [
         'slug',
         'title',
-        'svg_path',
-        'image_1_path',
-        'image_2_path',
         'short_description',
         'quote',
         'description',
@@ -43,5 +40,17 @@ class Service extends Model implements HasMedia {
 
     public function updater(): BelongsTo {
         return $this->belongsTo( User::class, 'updated_by' );
+    }
+        public function registerMediaCollections(): void 
+    {
+        $this->addMediaCollection('image')
+            ->singleFile()
+            ->useDisk('public')
+            ->registerMediaConversions(function () {
+                $this->addMediaConversion('thumb')
+                    ->width(150)
+                    ->height(150)
+                    ->sharpen(10);
+            });
     }
 }
