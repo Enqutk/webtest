@@ -43,9 +43,9 @@ class TeamResource extends Resource
                 Textarea::make('description')
                     ->label('Description'),
                 SpatieMediaLibraryFileUpload::make('image_path')
+                    ->label('Image')
                     ->collection('team-images')
-                    ->directory('images/teams')
-                    ->hiddenLabel(),
+                    ->directory('images/teams'),
                 Select::make('status')
                     ->label('Status')
                     ->options(Team::getStatusOptions())

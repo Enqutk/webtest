@@ -36,14 +36,16 @@ class Team extends Model implements HasMedia
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
-
+    
     public static function getStatusOptions(): array
     {
-        return [
-            'active' => 'Active',
-            'inactive' => 'Inactive',
-        ];
+        $options = [];
+        foreach (\App\Enums\StatusEnum::cases() as $case) {
+            $options[$case->value] = ucfirst($case->name);
+        }
+        return $options;
     }
+
      public function registerMediaCollections(): void
         {
             $this
