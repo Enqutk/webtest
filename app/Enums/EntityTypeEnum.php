@@ -11,9 +11,9 @@ enum EntityTypeEnum: string
     public static function options(): array
     {
         return [
-            self::client->value => 'client',
-            self::partner->value => 'partner',
-            self::award->value => 'award',
+            self::client->value => 'Client',
+            self::partner->value => 'Partner',
+            self::award->value => 'Award',
         ];
     }
 }
