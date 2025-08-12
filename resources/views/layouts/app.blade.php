@@ -63,7 +63,7 @@
     <!-- JAVASCRIPT -->
 @stack('scripts') <!-- This will include any scripts pushed to the stack -->
 
-<script data-cfasync="false" src="../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="js/jquery.min.js"></script>
+    <script src="assets/js/jquery.min.js"></script>
 	<!-- Popper JS -->
 	<script src="assets/js/popper.min.js"></script>
 	<!-- Bootstrap JS -->

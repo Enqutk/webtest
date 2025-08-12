@@ -325,7 +325,7 @@
 	border-color: #DDDDDD;
 }
 .about-two-img{
-	background-image: url(../images/homepage-2/about-img.jpg);
+	/* background-image: url(../images/homepage-2/about-img.jpg); */
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -486,7 +486,7 @@
 	background-blend-mode: lighten;
 }
 .video-section-two .video-play-bg{
-	background-image: url(../images/homepage-2/bg/play-bg.jpg);
+	/* background-image: url(../images/homepage-2/bg/play-bg.jpg); */
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
