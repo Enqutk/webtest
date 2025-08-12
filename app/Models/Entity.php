@@ -11,7 +11,8 @@ use App\Enums\StatusEnum;
 use App\Traits\HasUserStamps;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Entity extends Model implements HasMedia {
+class Entity extends Model implements HasMedia 
+{
     use SoftDeletes, HasUserStamps, InteractsWithMedia;
 
     protected $fillable = [
