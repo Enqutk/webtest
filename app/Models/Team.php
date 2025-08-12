@@ -50,9 +50,8 @@ class Team extends Model implements HasMedia
      public function registerMediaCollections(): void
     {
         $this
-            ->addMediaCollection('team-image')
-            ->useDisk('post-images')
-            ->singleFile()
+            ->addMediaCollection('team-images')
+            ->useDisk('public')
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml']);
     }
 }
