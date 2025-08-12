@@ -11,8 +11,8 @@
 										<div class="site-branding">
 											<h1 class="site-title">
 												<a href="index.html">
-													<img class="pbmit-main-logo" src="./assets/images/logo/logo-01.png" alt="Induyst">
-													<img class="pbmit-sticky-logo" src="./assets/images/logo/logo-01.png" alt="Induyst">
+													<img class="pbmit-main-logo" src="./assets/images/logo/logo-04.png" alt="Induyst">
+													<img class="pbmit-sticky-logo" src="./assets/images/logo/logo-02.png" alt="Induyst">
 												</a>
 											</h1>
 										</div>
@@ -90,7 +90,7 @@
 						<!-- Slide1 -->
 						<div class="swiper-slide">
 							<div class="pbmit-slider-item">
-								<div class="pbmit-slider-bg" style="background-image: url(./assets/images/banner-slider-img/slider2-01.jpg);"></div>
+								<div class="pbmit-slider-bg" style="background-image: url(./assets/images/banner-slider-img/slider2-04.jpg);"></div>
 								<div class="container">
 									<div class="row">
 										<div class="col-md-8 col-1">
@@ -130,7 +130,7 @@
 						<!-- Slide2 -->
 						<div class="swiper-slide">
 							<div class="pbmit-slider-item">
-								<div class="pbmit-slider-bg" style="background-image: url(./assets/images/banner-slider-img/slider2-04.jpg);"></div>
+								<div class="pbmit-slider-bg" style="background-image: url(./assets/images/banner-slider-img/slider-07.png);"></div>
 								<div class="container">
 									<div class="row">
 										<div class="col-md-8 col-1">
@@ -168,7 +168,7 @@
 						<!-- Slide3 -->
 						<div class="swiper-slide">
 							<div class="pbmit-slider-item">
-								<div class="pbmit-slider-bg" style="background-image: url(./assets/images/banner-slider-img/slider3-04.jpg);"></div>
+								<div class="pbmit-slider-bg" style="background-image: url(./assets/images/banner-slider-img/slider-08.png);"></div>
 								<div class="container">
 									<div class="row">
 										<div class="col-md-9 col-lg-8 col-1">
