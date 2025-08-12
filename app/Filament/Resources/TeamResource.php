@@ -40,14 +40,12 @@ class TeamResource extends Resource
                     ->maxLength(255),
                 Textarea::make('description')
                     ->label('Description'),
-                FileUpload::make('image_path')
+              Forms\Components\FileUpload::make('image_path')
+                    ->directory('entities')
                     ->disk('public')
-                    ->directory('team-images')
                     ->image()
-                    ->label('Upload Image')
-                    ->imagePreviewHeight('150') // Show preview in form
-                    ->previewable(),            // Make it previewable
-
+                    ->imagePreviewHeight('150')
+                    ->required(),
 
                 Select::make('status')
                     ->label('Status')
@@ -77,8 +75,9 @@ class TeamResource extends Resource
                     ->boolean(),
                 Tables\Columns\ImageColumn::make('image_path')
                     ->disk('public')
-                    ->label('Image')
-                    ->circular(),
+                    ->circular()
+                    ->size(50)
+                    ->url(fn($record) => $record->image_path ? asset('storage/images/teams/' . basename($record->image_path)) : null),
                 Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deleted_at')
