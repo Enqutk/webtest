@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Team extends Model implements HasMedia
 {
@@ -25,7 +24,7 @@ class Team extends Model implements HasMedia
 
     protected $casts = [
         'founder' => 'boolean',
-        'status' => 'string',
+        'status' => \App\Enums\StatusEnum::class,
     ];
 
     public function creator()
@@ -45,14 +44,12 @@ class Team extends Model implements HasMedia
             'inactive' => 'Inactive',
         ];
     }
-    public function registerMediaCollections(): void
-    {
-        $this
-            ->addMediaCollection('team-images')
-            ->useDisk('post-images')
-            ->acceptsMimeTypes(['image/jpeg'])
-            ->useFallbackUrl('/images/teams/default.jpg')
-            ->useFallbackPath(public_path('images/teams/default.jpg'))
-            ->singleFile();
-    }
+     public function registerMediaCollections(): void
+        {
+            $this
+                ->addMediaCollection('team-image')
+                ->useDisk('post-images')
+                ->acceptsMimeTypes(['image/jpeg']);
+               
+        }
 }
