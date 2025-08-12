@@ -49,8 +49,7 @@ class Hero extends Model implements HasMedia
     public function registerMediaCollections(): void {
         $this->addMediaCollection('images')
             ->singleFile()
-            ->useDisk('heroes')
-            // ->acceptsMimeTypes(['image/jpeg', 'image/png'])
+            ->useDisk('public')
             ->registerMediaConversions(function () {
                 $this->addMediaConversion('thumb')
                     ->width(150)
