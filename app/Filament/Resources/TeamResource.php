@@ -30,22 +30,21 @@ class TeamResource extends Resource
                 TextInput::make('first_name')
                     ->label('First Name')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(120),
                 TextInput::make('last_name')
                     ->label('Last Name')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(120),
                 TextInput::make('title')
                     ->label('Title')
-                    ->maxLength(255),
+                    ->maxLength(190),
                 Textarea::make('description')
                     ->label('Description'),
                 Forms\Components\FileUpload::make('image_path')
                     ->directory('images/teams')
                     ->disk('public')
                     ->image()
-                    ->imagePreviewHeight('150')
-                    ->required(),
+                    ->imagePreviewHeight('180'),
                 Select::make('status')
                     ->label('Status')
                     ->options(Team::getStatusOptions())
@@ -70,7 +69,7 @@ class TeamResource extends Resource
                 Tables\Columns\ImageColumn::make('image_path')
                     ->disk('public')
                     ->circular()
-                    ->url(fn($record) => $record->image_path ? asset('storage/images/teams/' . basename($record->image_path)) : null),
+                    ->url(fn($record) => $record->image_path ? asset('storage/' . $record->image_path) : null),
                 Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deleted_at')
@@ -83,10 +82,10 @@ class TeamResource extends Resource
                 Tables\Filters\TernaryFilter::make('founder')
                     ->label('Founder')
                     ->boolean(),
-                    Tables\Filters\TrashedFilter::make(),
-                    Tables\Filters\SelectFilter::make('status')
-                        ->label('Status')
-                        ->options(Team::getStatusOptions()),
+                Tables\Filters\TrashedFilter::make(),
+                Tables\Filters\SelectFilter::make('status')
+                    ->label('Status')
+                    ->options(Team::getStatusOptions()),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
