@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\MediaLibrary\ModelNamePathGenerator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -46,18 +47,12 @@ class Team extends Model implements HasMedia
         return $options;
     }
 
-    public function registerMediaCollections(): void
+     public function registerMediaCollections(): void
     {
         $this
-            ->addMediaCollection('team-images')
-            ->acceptsMimeTypes(['image/jpeg']);
-    }
-
-    public function getMediaDirectory(string $collectionName): string
-    {
-        if ($collectionName === 'team-images') {
-            return 'images/teams';
-        }
-        return parent::getMediaDirectory($collectionName);
+            ->addMediaCollection('team-image')
+            ->useDisk('post-images')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml']);
     }
 }
