@@ -37,7 +37,7 @@ class EntityResource extends Resource
                     ->url()
                     ->nullable(),
                 Forms\Components\SpatieMediaLibraryFileUpload::make('images')
-                    ->image('thumb')  
+                    ->image('thumb') 
                     ->imagePreviewHeight('150')
                     ->required(),
                 Forms\Components\Textarea::make('description')
