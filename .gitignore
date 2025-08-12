@@ -1,3 +1,5 @@
+# Ignore published package views
+resources/views/vendor/
 *.log
 .DS_Store
 .env

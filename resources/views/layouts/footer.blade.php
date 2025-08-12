@@ -1,5 +1,5 @@
-	<!-- footer -->
-        <footer class="site-footer pbmit-footer-style-1 pbmit-bg-color-blackish">
+        <!-- footer -->
+		<footer class="site-footer pbmit-footer-style-1 pbmit-bg-color-blackish">
 			<div class="pbmit-footer-big-area-wrapper">
 				<div class="pbmit-footer-big-area">
 					<div class="container">
@@ -9,7 +9,7 @@
 							</div>
 							<div class="col-md-12 col-lg-6 text-lg-end">
 								<div class="pbmit-footer-logo">
-									<img class="pbmit-main-logo" src="images/logo-white.svg" alt="">
+									<img class="pbmit-main-logo" src="./assets/images/logo-white.svg" alt="">
 								</div>
 							</div>
 						</div>
@@ -24,7 +24,7 @@
 								<span>2220 Prestonno R02, Hopkins, Hoofddorp(HD), UK</span>	
 							</div>
 							<div class="col-md-12 col-lg-4 pbmit-footer-contact-box">
-								<span><a href="https://induyst-demo.pbminfotech.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="274448495346445367425f464a574b420944484a">[email&#160;protected]</a></span>
+								<span><a href="https://induyst-demo.pbminfotech.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d6b5b9b8a2b7b5a296b3aeb7bba6bab3f8b5b9bb">[email&#160;protected]</a></span>
 							</div>
 							<div class="col-md-12 col-lg-4 pbmit-footer-contact-box">
 								<span>+012 34-567-8901</span>
@@ -86,7 +86,7 @@
 						<div class="row">
 							<div class="col-md-6">
 								<div class="pbmit-footer-copyright-text-area"> Copyright © 2025 
-									<a href="#">Induyst</a>, All Rights Reserved.
+									<a href="#">Induyst [2nd Demo]</a>, All Rights Reserved.
 								</div>
 							</div>
 							<div class="col-md-6">
@@ -120,4 +120,4 @@
 				</div>
 			</div>
         </footer>
-		<!-- footer End -->
+        <!-- footer End -->

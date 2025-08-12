@@ -1,17 +1,16 @@
 <?php
 
-namespace App\Filament\Resources\SocialRefResource\Pages;
+namespace App\Filament\Resources\HeroResource\Pages;
 
-use App\Filament\Resources\SocialRefResource;
+use App\Filament\Resources\HeroResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
 
-class EditSocialRef extends EditRecord
+class EditHero extends EditRecord
 {
 
-    protected static string $resource = SocialRefResource::class;
-
+    protected static string $resource = HeroResource::class;
     protected function getHeaderActions(): array
     {
         return [
