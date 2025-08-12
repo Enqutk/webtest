@@ -27,7 +27,7 @@ return new class extends Migration
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');
             $table->index('status');
-            $table->index('order');
+            $table->index('order')->unique();
         });
     }
 

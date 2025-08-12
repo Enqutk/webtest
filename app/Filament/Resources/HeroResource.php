@@ -29,8 +29,6 @@ class HeroResource extends Resource
                 Forms\Components\Textarea::make('description')
                     ->required(),
                 Forms\Components\FileUpload::make('img_path')
-                    ->directory('heroes')
-                    ->disk('public')
                     ->image()
                     ->required(),
                 Forms\Components\TextInput::make('link')
@@ -38,7 +36,8 @@ class HeroResource extends Resource
                 Forms\Components\TextInput::make('order')
                     ->numeric()
                     ->default(1)
-                    ->minValue(1),
+                    ->minValue(1)
+                    ->unique(ignoreRecord: true),
                 Forms\Components\Select::make('status')
                     ->options(StatusEnum::class)
                     ->default(StatusEnum::active)
