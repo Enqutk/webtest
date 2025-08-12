@@ -1,16 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\SocialRefResource\Pages;
+namespace App\Filament\Resources\EntityResource\Pages;
 
-use App\Filament\Resources\SocialRefResource;
+use App\Filament\Resources\EntityResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-
-class EditSocialRef extends EditRecord
+class EditEntity extends EditRecord
 {
-
-    protected static string $resource = SocialRefResource::class;
+    protected static string $resource = EntityResource::class;
 
     protected function getHeaderActions(): array
     {
