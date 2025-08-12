@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Team extends Model
+class Team extends Model implements HasMedia
 {
-    use SoftDeletes;
+    use SoftDeletes, InteractsWithMedia;
 
     protected $fillable = [
         'first_name',
@@ -42,4 +45,18 @@ class Team extends Model
             'inactive' => 'Inactive',
         ];
     }
+     public function registerMediaCollections(): void
+        {
+            $this
+                ->addMediaCollection('post-images')
+                ->useDisk('post-images')
+                ->acceptsMimeTypes(['image/jpeg'])
+                ->singleFile()
+                ->registerMediaConversions(function (Media $media): void {
+                    $this
+                        ->addMediaConversion('thumb')
+                        ->width(40)
+                        ->height(40);
+                });
+        }
 }

@@ -12,8 +12,10 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 
 
 class TeamResource extends Resource
@@ -40,11 +42,11 @@ class TeamResource extends Resource
                     ->maxLength(190),
                 Textarea::make('description')
                     ->label('Description'),
-                Forms\Components\FileUpload::make('image_path')
+                SpatieMediaLibraryFileUpload::make('image_path')
+                    ->collection('team-images')
                     ->directory('images/teams')
-                    ->disk('public')
-                    ->image()
-                    ->imagePreviewHeight('180'),
+                    ->hiddenLabel()
+                    ->acceptedFileTypes(['image/jpeg']),
                 Select::make('status')
                     ->label('Status')
                     ->options(Team::getStatusOptions())
@@ -64,7 +66,7 @@ class TeamResource extends Resource
                 Tables\Columns\TextColumn::make('title')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('status')->sortable(),
                 Tables\Columns\IconColumn::make('founder')->boolean(),
-                Tables\Columns\ImageColumn::make('image_path')->label('Image')->disk('public')->circular()->url(fn($record) => $record->image_path ? asset('storage/' . $record->image_path) : null),
+                SpatieMediaLibraryImageColumn::make('image_path')->collection('team-images')->conversion('thumb'),
                 Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('creator.name')->label('Created By')->sortable()->toggleable(isToggledHiddenByDefault: true),
