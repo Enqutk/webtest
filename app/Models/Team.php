@@ -46,12 +46,18 @@ class Team extends Model implements HasMedia
         return $options;
     }
 
-     public function registerMediaCollections(): void
-        {
-            $this
-                ->addMediaCollection('team-image')
-                ->useDisk('post-images')
-                ->acceptsMimeTypes(['image/jpeg']);
-               
+    public function registerMediaCollections(): void
+    {
+        $this
+            ->addMediaCollection('team-images')
+            ->acceptsMimeTypes(['image/jpeg']);
+    }
+
+    public function getMediaDirectory(string $collectionName): string
+    {
+        if ($collectionName === 'team-images') {
+            return 'images/teams';
         }
+        return parent::getMediaDirectory($collectionName);
+    }
 }
