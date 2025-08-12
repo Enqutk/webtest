@@ -65,7 +65,6 @@ class TeamResource extends Resource
                 Tables\Columns\TextColumn::make('last_name')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('title')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('status')->sortable(),
-                Tables\Columns\TextColumn::make('status')->sortable(),
                 Tables\Columns\IconColumn::make('founder')
                     ->boolean(),
                 Tables\Columns\ImageColumn::make('image_path')
@@ -84,6 +83,10 @@ class TeamResource extends Resource
                 Tables\Filters\TernaryFilter::make('founder')
                     ->label('Founder')
                     ->boolean(),
+                    Tables\Filters\TrashedFilter::make(),
+                    Tables\Filters\SelectFilter::make('status')
+                        ->label('Status')
+                        ->options(Team::getStatusOptions()),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
