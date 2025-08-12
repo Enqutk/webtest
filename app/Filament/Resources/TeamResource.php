@@ -41,7 +41,7 @@ class TeamResource extends Resource
                 Textarea::make('description')
                     ->label('Description'),
               Forms\Components\FileUpload::make('image_path')
-                    ->directory('entities')
+                    ->directory('images/teams')
                     ->disk('public')
                     ->image()
                     ->imagePreviewHeight('150')
