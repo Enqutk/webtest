@@ -44,7 +44,8 @@ class Entity extends Model implements HasMedia
         return $this->belongsTo(User::class, 'updated_by');
     }
 
-    public function registerMediaCollections(): void {
+    public function registerMediaCollections(): void 
+    {
         $this->addMediaCollection('image')
             ->singleFile()
             ->useDisk('public')
