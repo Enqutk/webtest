@@ -22,6 +22,7 @@ return new class extends Migration
             $table->enum('target', ['_self', '_blank'])->default('_self');
             $table->integer('order_number')->default(1);
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('menu_id')->references('id')->on('menu_locations')->onDelete('cascade');
             $table->foreign('parent_id')->references('id')->on('menu_items')->onDelete('cascade');
