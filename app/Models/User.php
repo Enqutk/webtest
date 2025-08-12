@@ -46,4 +46,4 @@ class User extends Authenticatable
     {
         return $this->hasMany(Team::class, 'updated_by');
     }
-};
+}
