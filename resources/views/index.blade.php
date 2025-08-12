@@ -69,8 +69,12 @@
             buttonText="Discover More"
             buttonUrl="#"
         />
-    
+        <!-- CTA Section -->
+        <x-cta-section />
+        
         <x-service-section />
+
+    
 
         <!-- Video Section -->
         <x-video-section />
