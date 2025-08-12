@@ -9,6 +9,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use App\Enums\EntityTypeEnum;
 use App\Enums\StatusEnum;
 use App\Traits\HasUserStamps;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Entity extends Model implements HasMedia {
     use SoftDeletes, HasUserStamps, InteractsWithMedia;
@@ -32,19 +33,18 @@ class Entity extends Model implements HasMedia {
 
     // Relationships
 
-    public function creator(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
+    public function creator():BelongsTo {
         return $this->belongsTo( User::class, 'created_by' );
     }
 
-    public function updater(): \Illuminate\Database\Eloquent\Relations\BelongsTo {
+    public function updater(): BelongsTo {
         return $this->belongsTo( User::class, 'updated_by' );
     }
 
     public function registerMediaCollections(): void {
         $this->addMediaCollection('images')
             ->singleFile()
-            ->useDisk('entities')
-            // ->acceptsMimeTypes(['image/jpeg', 'image/png'])
+            ->useDisk('public')
             ->registerMediaConversions(function () {
                 $this->addMediaConversion('thumb')
                     ->width(150)
