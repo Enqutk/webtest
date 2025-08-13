@@ -51,7 +51,13 @@ class Team extends Model implements HasMedia
     {
         $this
             ->addMediaCollection('team-images')
-            ->useDisk('public')
-            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml']);
+            ->useDisk('teams')
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'])
+            ->registerMediaConversions(function () {
+                $this->addMediaConversion('thumb')
+                    ->width(150)
+                    ->height(150)
+                    ->sharpen(10);
+            });
     }
 }
