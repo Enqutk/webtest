@@ -178,48 +178,6 @@
     <!-- Fid End -->
 
     <!-- About Us Start -->
-    <section class="about-us-section-two">
-        <div class="container-fluid p-0">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="about-us-two-leftbox pbmit-bg-color-global">
-                        <div class="pbmit-custom-heading">
-                            <h4 class="pbmit-title">Trusted By Additional Than 450,000 Upbeat Individuals From Others</h4>
-                        </div>
-                        <a href="{{ route('contact') }}" class="pbmit-btn white">
-                            <span class="pbmit-button-content-wrapper">
-                                <span class="pbmit-button-icon">
-                                    <i class="pbmit-induyst-icon pbmit-induyst-icon-next"></i>
-                                </span>
-                                <span class="pbmit-button-text">Take a Tour</span>
-                            </span>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="about-us-two-rightbox pbmit-bg-color-light">
-                        <div class="pbmit-custom-heading">
-                            <h4 class="pbmit-title">Growth in revenue year over year by businesses using Our Company to
-                                unify their in-store and online sales.</h4>
-                        </div>
-                        <div class="pbminfotech-ele-fid-style-4">
-                            <div class="pbmit-fld-contents">
-                                <div class="pbmit-fld-wrap">
-                                    <div class="pbmit-fid-inner">
-                                        <span class="pbmit-fid-before"></span>
-                                        <span class="pbmit-number-rotate numinate" data-appear-animation="animateDigits"
-                                            data-from="0" data-to="350" data-interval="50" data-before=""
-                                            data-before-style="" data-after="" data-after-style="">350</span>
-                                        <span class="pbmit-fid"><span>M</span></span>
-                                    </div>
-                                    <div class="pbmit-heading-desc">our company value</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <x-cta-section />
     <!-- About Us End -->
 @endsection
