@@ -50,17 +50,13 @@ class Service extends Model implements HasMedia
             ->singleFile()
             ->useDisk('public');
 
-        $this->addMediaCollection('main_image')
-            ->singleFile()
-            ->useDisk('public')
-            ->registerMediaConversions(function () {
-                $this->addMediaConversion('thumb')
-                    ->width(150)
-                    ->height(150)
-                    ->sharpen(10);
-            });
+        $this->addImageCollectionWithThumb('main_image');
+        $this->addImageCollectionWithThumb('secondary_image');
+    }
 
-        $this->addMediaCollection('secondary_image')
+    private function addImageCollectionWithThumb(string $collectionName): void
+    {
+        $this->addMediaCollection($collectionName)
             ->singleFile()
             ->useDisk('public')
             ->registerMediaConversions(function () {
