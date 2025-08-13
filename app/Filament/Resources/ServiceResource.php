@@ -28,17 +28,17 @@ class ServiceResource extends Resource {
             ->unique( ignoreRecord: true ),
             Forms\Components\TextInput::make( 'title' )
             ->required(),
-            Forms\Components\SpatieMediaLibraryFileUpload::make( 'svg_path' )
-            ->collection( 'svg_path' )
+            Forms\Components\SpatieMediaLibraryFileUpload::make( 'svg' )
+            ->collection( 'svg' )
             ->image()
             ->acceptedFileTypes( [ 'image/svg+xml' ] )
             ->imagePreviewHeight( 150 ),
-            Forms\Components\SpatieMediaLibraryFileUpload::make( 'image_1_path' )
-            ->collection( 'image_1_path' )
+            Forms\Components\SpatieMediaLibraryFileUpload::make( 'image_1' )
+            ->collection( 'image_1' )
             ->image()
             ->imagePreviewHeight( 150 ),
-            Forms\Components\SpatieMediaLibraryFileUpload::make( 'image_2_path' )
-            ->collection( 'image_2_path' )
+            Forms\Components\SpatieMediaLibraryFileUpload::make( 'image_2' )
+            ->collection( 'image_2' )
             ->image()
             ->imagePreviewHeight( 150 ),
             Forms\Components\Textarea::make( 'short_description' )
