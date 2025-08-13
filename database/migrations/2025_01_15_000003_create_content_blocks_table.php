@@ -9,7 +9,6 @@ return new class extends Migration {
     {
         Schema::create('content_blocks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('page_id')->constrained('pages')->cascadeOnDelete();
             $table->foreignId('section_id')->constrained('page_sections')->cascadeOnDelete();
             $table->enum('type', ['text', 'image', 'video', 'list', 'timeline', 'gallery'])->default('text');
             $table->string('title')->nullable();
