@@ -22,10 +22,10 @@
 											<nav class="main-navigation pbmit-navbar main-menu navbar-expand-xl navbar-light" id="site-navigation">
 												<div>
 													<ul class="navigation clearfix" id="pbmit-top-menu">
-														<li><a href=".">Home</a></li>
-														<li><a href=".">About Us</a></li>
-														<li><a href=".">Service</a></li>
-														<li><a href=".">Contact Us</a></li>
+														<li><a href="{{ route('home') }}">Home</a></li>
+														<li><a href="{{ route('about') }}">About Us</a></li>
+														<li><a href="{{ route('services') }}">Service</a></li>
+														<li><a href="{{ route('contact') }}">Contact Us</a></li>
 													</ul>
 												</div>
 											</nav>
@@ -58,7 +58,7 @@
 										</ul>
 									</div>
 									<div class="pbmit-header-button">
-										<a href="contact-us.html" class="pbmit-btn">
+										<a href="{{ route('contact') }}" class="pbmit-btn">
 											<span class="pbmit-button-content-wrapper">
 												<span class="pbmit-button-icon">
 													<i class="pbmit-induyst-icon pbmit-induyst-icon-next"></i>
@@ -104,7 +104,7 @@
 												<p class="pbmit-slider-desc"><span>Veritas Afrika is a multi-disciplinary consultancy providing expert professional services in civil engineering and infrastructure development. </span></p>
 												<div class="pbmit-button d-flex align-items-center">
 													<div class="transform-bottom transform-delay-4">
-														<a href="about-us.html" class="pbmit-btn white">
+														<a href="{{ route('about') }}" class="pbmit-btn white">
 															<span class="pbmit-button-content-wrapper">
 																<span class="pbmit-button-icon">
 																	<i class="pbmit-induyst-icon pbmit-induyst-icon-next"></i>
@@ -115,7 +115,7 @@
 													</div>
 													<div class="ms-4 transform-delay-5">
 														<div class="second-btn">
-															<a class="pbmit-btn-style-text white" href="#">
+															<a class="pbmit-btn-style-text white" href="{{ route('services') }}">
 																<span class="pbmit-button-text">Explore Our Services</span>
 															</a>
 														</div>
