@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->longText('description');
-            $table->string('link', 2048);
+            $table->string('link', 2048)->nullable();
             $table->unsignedInteger('order')->default(1);
             $table->string('status')->default(StatusEnum::active->value);
             $table->timestamps();
