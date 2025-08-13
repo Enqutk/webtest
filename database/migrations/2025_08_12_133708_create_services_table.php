@@ -14,10 +14,7 @@ return new class extends Migration
         Schema::create('services', function (Blueprint $table) {
             $table->id();
             $table->string('slug')->unique();
-            $table->longText('title');
-            $table->longText('svg_path')->nullable();
-            $table->longText('image_1_path')->nullable();
-            $table->longText('image_2_path')->nullable();
+            $table->string('title');
             $table->string('short_description', 2000)->nullable();
             $table->longText('quote')->nullable();
             $table->longText('description')->nullable();
