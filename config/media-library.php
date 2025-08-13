@@ -59,7 +59,7 @@ return [
      *
      * This model is only used in Media Library Pro (https://medialibrary.pro)
      */
-    'temporary_upload_model' => Spatie\MediaLibraryPro\Models\TemporaryUpload::class,
+    // 'temporary_upload_model' => Spatie\MediaLibraryPro\Models\TemporaryUpload::class,
 
     /*
      * When enabled, Media Library Pro will only process temporary uploads that were uploaded
@@ -81,7 +81,7 @@ return [
     /*
      * The class that contains the strategy for determining a media file's path.
      */
-    'path_generator' => Spatie\MediaLibrary\Support\PathGenerator\DefaultPathGenerator::class,
+    'path_generator' => \App\Media\DynamicPathGenerator::class,
 
     /*
      * The class that contains the strategy for determining how to remove files.
@@ -90,11 +90,10 @@ return [
 
     /*
      * Here you can specify which path generator should be used for the given class.
+     * Not needed when using DynamicPathGenerator as it handles all models automatically.
      */
     'custom_path_generators' => [
-        \App\Models\Hero::class => \App\MediaLibrary\ModulePathGenerator::class,
-        \App\Models\Team::class => \App\MediaLibrary\ModulePathGenerator::class,
-        \App\Models\Entity::class => \App\MediaLibrary\ModulePathGenerator::class,
+        // All models now use the global DynamicPathGenerator
     ],
 
     /*
