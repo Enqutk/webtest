@@ -54,7 +54,6 @@ class PageSeeder extends Seeder
 
         // Create content blocks for Mission section
         ContentBlock::create([
-            'page_id' => $aboutPage->id,
             'section_id' => $missionSection->id,
             'type' => 'text',
             'title' => 'Mission Statement',
@@ -67,7 +66,6 @@ class PageSeeder extends Seeder
 
         // Create content blocks for Vision section
         ContentBlock::create([
-            'page_id' => $aboutPage->id,
             'section_id' => $visionSection->id,
             'type' => 'text',
             'title' => 'Vision Statement',
@@ -102,7 +100,6 @@ class PageSeeder extends Seeder
 
         // Create content blocks for Services section
         ContentBlock::create([
-            'page_id' => $servicesPage->id,
             'section_id' => $mainServicesSection->id,
             'type' => 'list',
             'title' => 'Service List',
