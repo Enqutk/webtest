@@ -15,6 +15,11 @@ class ModelNamePathGenerator implements PathGenerator
             return "heros/";
         }
         
+        // Special handling for Service model
+        if ($modelName === 'service') {
+            return "services/";
+        }
+        
         return "images/{$modelName}/";
     }
 
@@ -27,6 +32,11 @@ class ModelNamePathGenerator implements PathGenerator
             return "heros/conversions/";
         }
         
+        // Special handling for Service model
+        if ($modelName === 'service') {
+            return "services/conversions/";
+        }
+        
         return "images/{$modelName}/conversions/";
     }
 
@@ -37,6 +47,11 @@ class ModelNamePathGenerator implements PathGenerator
         // Special handling for Hero model
         if ($modelName === 'hero') {
             return "heros/responsive-images/";
+        }
+        
+        // Special handling for Service model
+        if ($modelName === 'service') {
+            return "services/responsive-images/";
         }
         
         return "images/{$modelName}/responsive-images/";
