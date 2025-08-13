@@ -32,7 +32,8 @@ class HeroResource extends Resource
                     ->maxLength(255),
                 Forms\Components\Textarea::make('description')
                     ->required(),
-                Forms\Components\SpatieMediaLibraryFileUpload::make('images')
+                Forms\Components\SpatieMediaLibraryFileUpload::make('image')
+                    ->collection('image')
                     ->image()
                     ->imagePreviewHeight('150')
                     ->required(),
@@ -58,7 +59,7 @@ class HeroResource extends Resource
                 Tables\Columns\TextColumn::make('id')->sortable(),
                 Tables\Columns\TextColumn::make('title')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('description')->limit(50)->tooltip(fn($record) => $record->description),
-                Tables\Columns\SpatieMediaLibraryImageColumn::make('images')
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('image')
                     ->square()
                     ->size(50),
 
