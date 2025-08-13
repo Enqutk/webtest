@@ -41,30 +41,7 @@ jobs:
     - name: Build assets
       run: npm run build
 
-    - name: Prepare deployment files
-      run: |
-        # Create a deployment directory
-        mkdir -p deploy
-        # Copy all Laravel files to deploy directory (only existing ones)
-        cp -r app bootstrap config database resources routes storage vendor artisan composer.json composer.lock .env.example deploy/
-        # Copy public folder contents to deploy directory root (for public_html)
-        # Handle storage directory conflict by copying files individually
-        cp -r public/assets deploy/ 2>/dev/null || true
-        cp -r public/teams deploy/ 2>/dev/null || true
-        cp -r public/entities deploy/ 2>/dev/null || true
-        cp -r public/posts deploy/ 2>/dev/null || true
-        cp -r public/services deploy/ 2>/dev/null || true
-        cp -r public/heros deploy/ 2>/dev/null || true
-        cp -r public/js deploy/ 2>/dev/null || true
-        cp -r public/css deploy/ 2>/dev/null || true
-        cp public/index.php deploy/ 2>/dev/null || true
-        cp public/.htaccess deploy/ 2>/dev/null || true
-        cp public/robots.txt deploy/ 2>/dev/null || true
-        cp public/favicon.ico deploy/ 2>/dev/null || true
-        # Set proper permissions
-        chmod -R 755 deploy/storage deploy/bootstrap/cache
-
-    - name: Deploy to cPanel public_html via FTP
+    - name: Deploy to cPanel via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
         server: ${{ secrets.FTP_SERVER }}
@@ -76,12 +53,8 @@ jobs:
           **/.vscode/**
           **/node_modules/**
           **/README.md*
-          **/deploy/**
-        local-dir: ./deploy/
-        server-dir: ./public_html
-
-    - name: Clean up deployment files
-      run: rm -rf deploy
+        local-dir: ./
+        server-dir: ./
 
     - name: Clear Laravel cache
       run: |
