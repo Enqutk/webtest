@@ -16,7 +16,7 @@ use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 class ServiceResource extends Resource {
     protected static ?string $model = Service::class;
     protected static ?string $navigationGroup = 'Other';
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 4;
     protected static ?string $navigationLabel = 'Services';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 

@@ -17,7 +17,7 @@ class SocialRefResource extends Resource
 {
     protected static ?string $model = SocialRef::class;
     protected static ?string $navigationGroup = 'Other';
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 1;
     protected static ?string $navigationLabel = 'Social Media';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 

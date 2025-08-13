@@ -20,7 +20,7 @@ class EntityResource extends Resource
 {
     protected static ?string $model = Entity::class;
     protected static ?string $navigationGroup = 'Other';
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 3;
     protected static ?string $navigationLabel = 'Entity';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
