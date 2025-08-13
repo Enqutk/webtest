@@ -11,8 +11,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Service extends Model implements HasMedia {
-
-       use SoftDeletes, HasUserStamps, InteractsWithMedia;
+    use SoftDeletes, HasUserStamps, InteractsWithMedia;
 
     protected $table = 'services';
 
@@ -41,9 +40,23 @@ class Service extends Model implements HasMedia {
     public function updater(): BelongsTo {
         return $this->belongsTo( User::class, 'updated_by' );
     }
-        public function registerMediaCollections(): void 
+    public function registerMediaCollections(): void 
     {
-        $this->addMediaCollection('image')
+        $this->addMediaCollection('svg')
+            ->singleFile()
+            ->useDisk('public');
+
+        $this->addMediaCollection('image_1')
+            ->singleFile()
+            ->useDisk('public')
+            ->registerMediaConversions(function () {
+                $this->addMediaConversion('thumb')
+                    ->width(150)
+                    ->height(150)
+                    ->sharpen(10);
+            });
+
+        $this->addMediaCollection('image_2')
             ->singleFile()
             ->useDisk('public')
             ->registerMediaConversions(function () {
