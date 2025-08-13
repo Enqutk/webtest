@@ -12,6 +12,8 @@ use Filament\Tables\Table;
 use App\Enums\StatusEnum;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use Filament\Forms\Set;
+use Illuminate\Support\Str;
 
 class ServiceResource extends Resource {
     protected static ?string $model = Service::class;
@@ -23,11 +25,14 @@ class ServiceResource extends Resource {
     public static function form( Form $form ): Form {
         return $form
         ->schema( [
+            Forms\Components\TextInput::make( 'title' )
+            ->required()
+            ->live( onBlur: true )
+            ->afterStateUpdated( fn( Set $set, ?string $state ) => $set( 'slug', Str::slug( $state ) ) ),
             Forms\Components\TextInput::make( 'slug' )
             ->required()
             ->unique( ignoreRecord: true ),
-            Forms\Components\TextInput::make( 'title' )
-            ->required(),
+
             Forms\Components\SpatieMediaLibraryFileUpload::make( 'svg' )
             ->image()
             ->acceptedFileTypes( [ 'image/svg+xml' ] )
@@ -67,8 +72,8 @@ class ServiceResource extends Resource {
         return $table
         ->columns( [
             Tables\Columns\TextColumn::make( 'id' )->sortable(),
+            Tables\Columns\TextColumn::make( 'title' )->searchable()->sortable(),
             Tables\Columns\TextColumn::make( 'slug' )->searchable()->sortable(),
-            Tables\Columns\TextColumn::make( 'title' )->searchable(),
             Tables\Columns\SpatieMediaLibraryImageColumn::make( 'svg' )
             ->collection( 'svg' )
             ->label( 'SVG' )
