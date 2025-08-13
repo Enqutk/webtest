@@ -60,8 +60,7 @@ class HeroResource extends Resource
                 Tables\Columns\TextColumn::make('description')->limit(50)->tooltip(fn($record) => $record->description),
                 Tables\Columns\SpatieMediaLibraryImageColumn::make('images')
                     ->square()
-                    ->size(50)
-                    ->url(fn($record) => $record->getFirstMediaUrl('images', 'thumb') ?: null),
+                    ->size(50),
 
                 Tables\Columns\TextColumn::make('link')->searchable()->url(fn($record) => $record->link)->openUrlInNewTab(true),
                 Tables\Columns\TextColumn::make('order')->sortable(),
