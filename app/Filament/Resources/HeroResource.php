@@ -18,6 +18,8 @@ use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 class HeroResource extends Resource
 {
     protected static ?string $model = Hero::class;
+    protected static ?string $navigationGroup = 'Other';
+    protected static ?int $navigationSort = 5;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
