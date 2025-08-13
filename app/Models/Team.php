@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\MediaLibrary\ModelNamePathGenerator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -51,7 +50,7 @@ class Team extends Model implements HasMedia
     {
         $this
             ->addMediaCollection('team-images')
-            ->useDisk('teams')
+
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'])
             ->registerMediaConversions(function () {
                 $this->addMediaConversion('thumb')
