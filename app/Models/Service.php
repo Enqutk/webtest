@@ -46,8 +46,7 @@ class Service extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('svg')
-            ->singleFile()
-            ->useDisk('public');
+            ->singleFile();
 
         $this->addImageCollectionWithThumb('main_image');
         $this->addImageCollectionWithThumb('secondary_image');
@@ -57,7 +56,7 @@ class Service extends Model implements HasMedia
     {
         $this->addMediaCollection($collectionName)
             ->singleFile()
-            ->useDisk('public')
+
             ->registerMediaConversions(function () {
                 $this->addMediaConversion('thumb')
                     ->width(150)

@@ -44,7 +44,6 @@ class Hero extends Model implements HasMedia
 
     public function registerMediaCollections(): void {
         $this->addMediaCollection('images')
-            ->useDisk('heroes')
             ->registerMediaConversions(function () {
                 $this->addMediaConversion('thumb')
                     ->width(150)
