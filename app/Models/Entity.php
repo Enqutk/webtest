@@ -48,7 +48,7 @@ class Entity extends Model implements HasMedia
     {
         $this->addMediaCollection('image')
             ->singleFile()
-            ->useDisk('entities')
+
             ->registerMediaConversions(function () {
                 $this->addMediaConversion('thumb')
                     ->width(150)
