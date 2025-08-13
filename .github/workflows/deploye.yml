@@ -41,7 +41,20 @@ jobs:
     - name: Build assets
       run: npm run build
 
-    - name: Deploy to cPanel via FTP
+    - name: Prepare deployment files
+      run: |
+        # Create a deployment directory
+        mkdir -p deploy
+        # Copy all Laravel files to deploy directory
+        cp -r app bootstrap config database lang resources routes storage vendor artisan composer.json composer.lock .env.example deploy/
+        # Copy public folder contents to deploy directory root (for public_html)
+        cp -r public/* deploy/
+        # Remove the public folder from deploy (since we copied its contents)
+        rm -rf deploy/public
+        # Set proper permissions
+        chmod -R 755 deploy/storage deploy/bootstrap/cache
+
+    - name: Deploy to cPanel public_html via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
         server: ${{ secrets.FTP_SERVER }}
@@ -53,8 +66,12 @@ jobs:
           **/.vscode/**
           **/node_modules/**
           **/README.md*
-        local-dir: ./
-        server-dir: ./
+          **/deploy/**
+        local-dir: ./deploy
+        server-dir: ./public_html
+
+    - name: Clean up deployment files
+      run: rm -rf deploy
 
     - name: Clear Laravel cache
       run: |
