@@ -10,7 +10,8 @@ use App\Traits\HasUserStamps;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Service extends Model implements HasMedia {
+class Service extends Model implements HasMedia
+{
     use SoftDeletes, HasUserStamps, InteractsWithMedia;
 
     protected $table = 'services';
@@ -33,20 +34,23 @@ class Service extends Model implements HasMedia {
         'status' => StatusEnum::class,
     ];
 
-    public function creator(): BelongsTo {
-        return $this->belongsTo( User::class, 'created_by' );
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function updater(): BelongsTo {
-        return $this->belongsTo( User::class, 'updated_by' );
+    public function updater(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
-    public function registerMediaCollections(): void 
+
+    public function registerMediaCollections(): void
     {
         $this->addMediaCollection('svg')
             ->singleFile()
             ->useDisk('public');
 
-        $this->addMediaCollection('image_1')
+        $this->addMediaCollection('main_image')
             ->singleFile()
             ->useDisk('public')
             ->registerMediaConversions(function () {
@@ -56,7 +60,7 @@ class Service extends Model implements HasMedia {
                     ->sharpen(10);
             });
 
-        $this->addMediaCollection('image_2')
+        $this->addMediaCollection('secondary_image')
             ->singleFile()
             ->useDisk('public')
             ->registerMediaConversions(function () {
