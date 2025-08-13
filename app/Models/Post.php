@@ -87,7 +87,7 @@ class Post extends Model implements HasMedia
         });
 
         static::updating(function ($post) {
-            if ($post->isDirty('title') && empty($post->slug)) {
+            if ($post->isDirty('title')) {
                 $post->slug = Str::slug($post->title);
             }
         });

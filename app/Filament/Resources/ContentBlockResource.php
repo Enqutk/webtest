@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ContentBlockResource\Pages;
 use App\Models\ContentBlock;
-use App\Models\Page;
 use App\Models\PageSection;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -29,30 +28,14 @@ class ContentBlockResource extends Resource
             ->schema([
                 Forms\Components\Section::make('Content Block Information')
                     ->schema([
-                        Forms\Components\Select::make('page_id')
-                            ->label('Page')
-                            ->options(Page::active()->pluck('title', 'id'))
-                            ->required()
-                            ->searchable()
-                            ->preload()
-                            ->reactive()
-                            ->afterStateUpdated(fn () => null),
-                        
                         Forms\Components\Select::make('section_id')
                             ->label('Page Section')
-                            ->options(function (callable $get) {
-                                $pageId = $get('page_id');
-                                if (!$pageId) {
-                                    return [];
-                                }
-                                return PageSection::where('page_id', $pageId)
-                                    ->active()
-                                    ->pluck('title', 'id');
-                            })
+                            ->options(PageSection::active()->with('page')->get()->mapWithKeys(function ($section) {
+                                return [$section->id => $section->page->title . ' → ' . $section->title];
+                            }))
                             ->required()
                             ->searchable()
-                            ->preload()
-                            ->disabled(fn (callable $get) => !$get('page_id')),
+                            ->preload(),
                         
                         Forms\Components\Select::make('type')
                             ->options([

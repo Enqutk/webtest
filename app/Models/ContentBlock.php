@@ -14,7 +14,6 @@ class ContentBlock extends Model implements HasMedia
     use SoftDeletes, HasUserStamps, InteractsWithMedia;
 
     protected $fillable = [
-        'page_id',
         'section_id',
         'type',
         'title',
@@ -38,9 +37,10 @@ class ContentBlock extends Model implements HasMedia
         return $this->belongsTo(PageSection::class, 'section_id');
     }
 
-    public function page(): BelongsTo
+    // Accessor for getting page through section
+    public function getPageAttribute()
     {
-        return $this->belongsTo(Page::class, 'page_id');
+        return $this->section?->page;
     }
 
     public function creator(): BelongsTo
