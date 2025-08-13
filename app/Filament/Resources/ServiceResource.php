@@ -33,12 +33,12 @@ class ServiceResource extends Resource {
             ->image()
             ->acceptedFileTypes( [ 'image/svg+xml' ] )
             ->imagePreviewHeight( 150 ),
-            Forms\Components\SpatieMediaLibraryFileUpload::make( 'image_1' )
-            ->collection( 'image_1' )
+            Forms\Components\SpatieMediaLibraryFileUpload::make( 'main_image' )
+            ->collection( 'main_image' )
             ->image()
             ->imagePreviewHeight( 150 ),
-            Forms\Components\SpatieMediaLibraryFileUpload::make( 'image_2' )
-            ->collection( 'image_2' )
+            Forms\Components\SpatieMediaLibraryFileUpload::make( 'secondary_image' )
+            ->collection( 'secondary_image' )
             ->image()
             ->imagePreviewHeight( 150 ),
             Forms\Components\Textarea::make( 'short_description' )
@@ -76,12 +76,13 @@ class ServiceResource extends Resource {
             ->collection( 'svg' )
             ->label( 'SVG' )
             ->size( 50 ),
-            Tables\Columns\SpatieMediaLibraryImageColumn::make( 'image_1' )
-            ->collection( 'image_1' )
+            Tables\Columns\SpatieMediaLibraryImageColumn::make( 'svg' )
+            ->label( 'SVG' )
+            ->size( 50 ),
+            Tables\Columns\SpatieMediaLibraryImageColumn::make( 'main_image' )
             ->label( 'Image 1' )
             ->size( 50 ),
-            Tables\Columns\SpatieMediaLibraryImageColumn::make( 'image_2' )
-            ->collection( 'image_2' )
+            Tables\Columns\SpatieMediaLibraryImageColumn::make( 'secondary_image' )
             ->label( 'Image 2' )
             ->size( 50 ),
             Tables\Columns\TextColumn::make( 'short_description' )->limit( 50 ),
