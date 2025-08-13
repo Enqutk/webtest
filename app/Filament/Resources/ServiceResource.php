@@ -29,16 +29,13 @@ class ServiceResource extends Resource {
             Forms\Components\TextInput::make( 'title' )
             ->required(),
             Forms\Components\SpatieMediaLibraryFileUpload::make( 'svg' )
-            ->collection( 'svg' )
             ->image()
             ->acceptedFileTypes( [ 'image/svg+xml' ] )
             ->imagePreviewHeight( 150 ),
             Forms\Components\SpatieMediaLibraryFileUpload::make( 'main_image' )
-            ->collection( 'main_image' )
             ->image()
             ->imagePreviewHeight( 150 ),
             Forms\Components\SpatieMediaLibraryFileUpload::make( 'secondary_image' )
-            ->collection( 'secondary_image' )
             ->image()
             ->imagePreviewHeight( 150 ),
             Forms\Components\Textarea::make( 'short_description' )
@@ -74,9 +71,6 @@ class ServiceResource extends Resource {
             Tables\Columns\TextColumn::make( 'title' )->searchable(),
             Tables\Columns\SpatieMediaLibraryImageColumn::make( 'svg' )
             ->collection( 'svg' )
-            ->label( 'SVG' )
-            ->size( 50 ),
-            Tables\Columns\SpatieMediaLibraryImageColumn::make( 'svg' )
             ->label( 'SVG' )
             ->size( 50 ),
             Tables\Columns\SpatieMediaLibraryImageColumn::make( 'main_image' )
