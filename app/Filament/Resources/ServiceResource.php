@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ServiceResource\Pages;
-use App\Filament\Resources\ServiceResource\RelationManagers;
 use App\Models\Service;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -11,8 +10,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use App\Enums\StatusEnum;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 
@@ -20,7 +17,7 @@ class ServiceResource extends Resource {
     protected static ?string $model = Service::class;
     protected static ?string $navigationGroup = 'Other';
     protected static ?int $navigationSort = 2;
-    protected static ?string $navigationLabel = 'services';
+    protected static ?string $navigationLabel = 'Services';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form( Form $form ): Form {
@@ -75,16 +72,16 @@ class ServiceResource extends Resource {
             Tables\Columns\TextColumn::make( 'id' )->sortable(),
             Tables\Columns\TextColumn::make( 'slug' )->searchable()->sortable(),
             Tables\Columns\TextColumn::make( 'title' )->searchable(),
-            Tables\Columns\SpatieMediaLibraryImageColumn::make( 'svg_path' )
-            ->collection( 'svg_path' )
+            Tables\Columns\SpatieMediaLibraryImageColumn::make( 'svg' )
+            ->collection( 'svg' )
             ->label( 'SVG' )
             ->size( 50 ),
-            Tables\Columns\SpatieMediaLibraryImageColumn::make( 'image_1_path' )
-            ->collection( 'image_1_path' )
+            Tables\Columns\SpatieMediaLibraryImageColumn::make( 'image_1' )
+            ->collection( 'image_1' )
             ->label( 'Image 1' )
             ->size( 50 ),
-            Tables\Columns\SpatieMediaLibraryImageColumn::make( 'image_2_path' )
-            ->collection( 'image_2_path' )
+            Tables\Columns\SpatieMediaLibraryImageColumn::make( 'image_2' )
+            ->collection( 'image_2' )
             ->label( 'Image 2' )
             ->size( 50 ),
             Tables\Columns\TextColumn::make( 'short_description' )->limit( 50 ),
@@ -121,11 +118,7 @@ class ServiceResource extends Resource {
             //
         ];
     }
-    public static function getEloquentQuery(): Builder {
-        return parent::getEloquentQuery()->withoutGlobalScopes( [
-            SoftDeletingScope::class,
-        ] );
-    }
+
     public static function getPages(): array {
         return [
             'index' => Pages\ListServices::route( '/' ),
