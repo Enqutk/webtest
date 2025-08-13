@@ -43,8 +43,7 @@ class TeamResource extends Resource
                     ->label('Description'),
                 SpatieMediaLibraryFileUpload::make('image')
                     ->label('Image')
-                    ->collection('team-images')
-                    ->directory('images/teams'),
+                    ->collection('team-images'),
                 Select::make('status')
                     ->label('Status')
                     ->options(Team::getStatusOptions())
