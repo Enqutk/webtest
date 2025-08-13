@@ -46,21 +46,7 @@ class Entity extends Model implements HasMedia
 
     public function registerMediaCollections(): void 
     {
-        $this->addMediaCollection('svg')
-            ->singleFile()
-            ->useDisk('public');
-
-        $this->addMediaCollection('main_image')
-            ->singleFile()
-            ->useDisk('public')
-            ->registerMediaConversions(function () {
-                $this->addMediaConversion('thumb')
-                    ->width(150)
-                    ->height(150)
-                    ->sharpen(10);
-            });
-
-        $this->addMediaCollection('secondary_image')
+        $this->addMediaCollection('image')
             ->singleFile()
             ->useDisk('public')
             ->registerMediaConversions(function () {
