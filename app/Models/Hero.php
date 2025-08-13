@@ -42,8 +42,11 @@ class Hero extends Model implements HasMedia
         return $this->belongsTo(User::class, 'updated_by');
     }
 
-    public function registerMediaCollections(): void {
-        $this->addMediaCollection('images')
+    public function registerMediaCollections(): void 
+    {
+        $this->addMediaCollection('image')
+            ->singleFile()
+
             ->registerMediaConversions(function () {
                 $this->addMediaConversion('thumb')
                     ->width(150)
