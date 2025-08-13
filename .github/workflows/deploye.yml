@@ -77,7 +77,7 @@ jobs:
           **/node_modules/**
           **/README.md*
           **/deploy/**
-        local-dir: ./deploy
+        local-dir: ./deploy/
         server-dir: ./public_html
 
     - name: Clean up deployment files
