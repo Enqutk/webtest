@@ -42,7 +42,7 @@ class ServiceResource extends Resource {
             ->image()
             ->imagePreviewHeight( 150 ),
             Forms\Components\Textarea::make( 'short_description' )
-            ->maxLength( 65535 )
+            ->maxLength( 2000 )
             ->nullable(),
             Forms\Components\Textarea::make( 'quote' )
             ->rows( 2 )
@@ -95,7 +95,7 @@ class ServiceResource extends Resource {
         ] )
         ->filters( [
             Tables\Filters\SelectFilter::make( 'status' )
-            ->options( \App\Enums\StatusEnum::class ),
+            ->options( StatusEnum::class ),
         ] )
         ->actions( [
             Tables\Actions\EditAction::make(),
