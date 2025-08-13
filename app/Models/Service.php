@@ -10,6 +10,7 @@ use App\Traits\HasUserStamps;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
+
 class Service extends Model implements HasMedia
 {
     use SoftDeletes, HasUserStamps, InteractsWithMedia;
@@ -25,8 +26,6 @@ class Service extends Model implements HasMedia
         'features',
         'order',
         'status',
-        'created_by',
-        'updated_by',
     ];
 
     protected $casts = [
