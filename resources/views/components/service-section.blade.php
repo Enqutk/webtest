@@ -28,24 +28,25 @@
                                             {!! $service->getFirstMedia('svg') ? file_get_contents($service->getFirstMediaPath('svg')) : '' !!}
                                         </div>
                                     </div>
-                                  
+
                                 </div>
                                 <div class="pbmit-service-content-wrap">
                                     <h3 class="pbmit-service-title">
-                                      {{ $service->title }}</a>
+                                        {{ $service->title }}</a>
                                     </h3>
                                     <div class="pbmit-service-description">
                                         <p>{{ $service->short_description }}</p>
                                     </div>
                                     <div class="pbmit-service-btn-wrapper">
                                         <div class="pbmit-service-btn">
-                                           
+                                            <a class="pbmit-button-inner"
+                                                href="{{ route('service.show', $service->slug) }}">
                                                 <span class="pbmit-button-text">Read More</span>
                                                 <i class="pbmit-base-icon-right-arrow"></i>
                                             </a>
                                         </div>
                                     </div>
-                                 
+
                                 </div>
                             </div>
                         </div>
