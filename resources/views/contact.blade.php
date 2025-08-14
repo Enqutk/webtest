@@ -50,46 +50,79 @@
         </div>
         <div class="row pt-3">
             <div class="col-md-6 full-width-1200">
+                <!-- Success/Error Messages -->
                 @if(session('success'))
-                    <div class="splash-screen-success" style="position: fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0, 128, 0, 0.33); z-index:9999; display:flex; align-items:center; justify-content:center;">
-                        <div style="background:#fff; padding:2rem 3rem; border-radius:10px; text-align:center;">
-                            <h2 style="color:green;">Message Sent Successfully!</h2>
-                            <p>{{ session('success') }}</p>
-                        </div>
+                    <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                    <script>
-                        setTimeout(function() {
-                            document.querySelector('.splash-screen-success').style.display = 'none';
-                        }, 3000);
-                    </script>
                 @endif
 
-                <form class="contact-form left-box" method="POST" id="contact-form" action="{{ route('contact.send', ['recipient' => $data['email'][0]]) }}">
+                @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+                @if($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <strong>Please fix the following errors:</strong>
+                        <ul class="mb-0 mt-2">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+                <form class="contact-form left-box" method="POST" id="contact-form" action="{{ route('contact.send', ['recipient' => 'contact@veritasafrika.com']) }}">
                     @csrf
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="text" class="form-control" placeholder="Full Name *" name="name" required>
+                            <input type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Full Name *" name="name" value="{{ old('name') }}" required>
+                            @error('name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-md-6">
-                            <input type="email" class="form-control" placeholder="Your Email *" name="email" required>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" placeholder="Your Email *" name="email" value="{{ old('email') }}" required>
+                            @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-md-6">
-                            <input type="number" class="form-control" placeholder="Your Phone *" name="phone" required>
+                            <input type="text" class="form-control @error('phone') is-invalid @enderror" placeholder="Your Phone *" name="phone" value="{{ old('phone') }}" required>
+                            @error('phone')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-md-6">
-                            <input type="text" class="form-control" placeholder="Subject *" name="subject" required>
+                            <input type="text" class="form-control @error('subject') is-invalid @enderror" placeholder="Subject *" name="subject" value="{{ old('subject') }}" required>
+                            @error('subject')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-md-12">
-                            <textarea name="message" cols="40" rows="10" class="form-control" placeholder="Comment *" required></textarea>
+                            <textarea name="message" cols="40" rows="10" class="form-control @error('message') is-invalid @enderror" placeholder="Comment *" required>{{ old('message') }}</textarea>
+                            @error('message')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-md-12">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox">
-                                <label class="form-check-label">Save my name, email, and website in this browser for the next time I comment.</label>
+                                <input class="form-check-input" type="checkbox" id="saveInfo">
+                                <label class="form-check-label" for="saveInfo">
+                                    Save my name, email, and website in this browser for the next time I comment.
+                                </label>
                             </div>
                         </div>
                     </div>
-                    <button class="pbmit-btn">
+                    <button class="pbmit-btn" type="submit">
                         <span class="form-btn-loader d-none">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100">
                                 <circle fill="#fff" stroke="#fff" stroke-width="15" r="15" cx="40" cy="50">
@@ -137,23 +170,12 @@
                                     <div class="pbmit-ihbox-contents">
                                         <div class="pbmit-heading-desc">
                                             @if(!empty($data['email']))
-                                            <a href="mailto:{{ $data['email'][0] }}" class="__cf_email__">{{ $data['email'][0] }}</a>
-                                            @endif
-                                            @if(isset($data['email'][1]))
-                                            <br>
-                                            <a href="mailto:{{ $data['email'][1] }}" class="__cf_email__">{{ $data['email'][1] }}</a>
-                                            @endif
-                                            @if(isset($data['email'][2]))
-                                            <br>
-                                            <a href="mailto:{{ $data['email'][2] }}" class="__cf_email__">{{ $data['email'][2] }}</a>
-                                            @endif
-                                            @if(isset($data['email'][3]))
-                                            <br>
-                                            <a href="mailto:{{ $data['email'][3] }}" class="__cf_email__">{{ $data['email'][3] }}</a>
-                                            @endif
-                                            @if(isset($data['email'][4]))
-                                            <br>
-                                            <a href="mailto:{{ $data['email'][4] }}" class="__cf_email__">{{ $data['email'][4] }}</a>
+                                                @foreach($data['email'] as $email)
+                                                    <a href="mailto:{{ $email }}" class="__cf_email__">{{ $email }}</a>
+                                                    @if(!$loop->last)<br>@endif
+                                                @endforeach
+                                            @else
+                                                <span class="text-muted">No email addresses configured</span>
                                             @endif
                                         </div>
                                     </div>
@@ -179,100 +201,98 @@
                                         </h2>
                                     </div>
                                     <div class="pbmit-ihbox-contents">
-                                        <div class="pbmit-heading-desc">{{ $data['address'] }}</div>
-                                    </div>
-                                </div>
-                            </div>
-                  
-                    </article>
-                    <article class="pbmit-miconheading-style-7 col-md-6">
-                        <div class="pbmit-ihbox-style-7">
-                            <div class="pbmit-ihbox-box">
-                                <div class="pbmit-ihbox-wrap">
-                                    <div class="pbmit-ihbox-icon">
-                                        <div class="pbmit-ihbox-icon-wrapper pbmit-icon-type-icon">
-                                            <svg id="Layer_3" height="512" viewBox="0 0 32 32" width="512" xmlns="http://www.w3.org/2000/svg" data-name="Layer 3">
-                                                <path d="m29.393 23.36c-.874-.733-6-3.979-6.852-3.83-.4.071-.706.412-1.525 1.389a11.687 11.687 0 0 1 -1.244 1.347 10.757 10.757 0 0 1 -2.374-.88 14.7 14.7 0 0 1 -6.784-6.786 10.757 10.757 0 0 1 -.88-2.374 11.687 11.687 0 0 1 1.347-1.244c.976-.819 1.318-1.123 1.389-1.525.149-.854-3.1-5.978-3.83-6.852-.306-.362-.584-.605-.94-.605-1.032 0-5.7 5.772-5.7 6.52 0 .061.1 6.07 7.689 13.791 7.721 7.589 13.73 7.689 13.791 7.689.748 0 6.52-4.668 6.52-5.7 0-.356-.243-.634-.607-.94z"></path>
-                                                <path d="m23 15h2a8.009 8.009 0 0 0 -8-8v2a6.006 6.006 0 0 1 6 6z"></path>
-                                                <path d="m28 15h2a13.015 13.015 0 0 0 -13-13v2a11.013 11.013 0 0 1 11 11z"></path>
-                                            </svg>
+                                        <div class="pbmit-heading-desc">
+                                            @if(!empty($data['address']))
+                                                {{ $data['address'] }}
+                                            @else
+                                                <span class="text-muted">No address configured</span>
+                                            @endif
                                         </div>
                                     </div>
-                                    <h2 class="pbmit-element-title">
-                                        Call US 24/7
-                                    </h2>
                                 </div>
-                                <div class="pbmit-ihbox-contents">
-                                    <div class="pbmit-heading-desc">
-                                        @if(!empty($data['phone']))
-                                        {{ $data['phone'][0] }}
-                                        @if(isset($data['phone'][1]))<br>
-                                        {{ $data['phone'][1] }}
-                                        @endif
-                                        @if(isset($data['phone'][2]))<br>
-                                        {{ $data['phone'][2] }}
-                                        @endif
-                                        @if(isset($data['phone'][3]))<br>
-                                        {{ $data['phone'][3] }}
-                                        @endif
-                                        @if(isset($data['phone'][4]))<br>
-                                        {{ $data['phone'][4] }}
-                                        @endif
+                            </div>
+                        </article>
+                        <article class="pbmit-miconheading-style-7 col-md-6">
+                            <div class="pbmit-ihbox-style-7">
+                                <div class="pbmit-ihbox-box">
+                                    <div class="pbmit-ihbox-wrap">
+                                        <div class="pbmit-ihbox-icon">
+                                            <div class="pbmit-ihbox-icon-wrapper pbmit-icon-type-icon">
+                                                <svg id="Layer_3" height="512" viewBox="0 0 32 32" width="512" xmlns="http://www.w3.org/2000/svg" data-name="Layer 3">
+                                                    <path d="m29.393 23.36c-.874-.733-6-3.979-6.852-3.83-.4.071-.706.412-1.525 1.389a11.687 11.687 0 0 1 -1.244 1.347 10.757 10.757 0 0 1 -2.374-.88 14.7 14.7 0 0 1 -6.784-6.786 10.757 10.757 0 0 1 -.88-2.374 11.687 11.687 0 0 1 1.347-1.244c.976-.819 1.318-1.123 1.389-1.525.149-.854-3.1-5.978-3.83-6.852-.306-.362-.584-.605-.94-.605-1.032 0-5.7 5.772-5.7 6.52 0 .061.1 6.07 7.689 13.791 7.721 7.589 13.73 7.689 13.791 7.689.748 0 6.52-4.668 6.52-5.7 0-.356-.243-.634-.607-.94z"></path>
+                                                    <path d="m23 15h2a8.009 8.009 0 0 0 -8-8v2a6.006 6.006 0 0 1 6 6z"></path>
+                                                    <path d="m28 15h2a13.015 13.015 0 0 0 -13-13v2a11.013 11.013 0 0 1 11 11z"></path>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <h2 class="pbmit-element-title">
+                                            Call US 24/7
+                                        </h2>
+                                    </div>
+                                    <div class="pbmit-ihbox-contents">
+                                        <div class="pbmit-heading-desc">
+                                            @if(!empty($data['phone']))
+                                                @foreach($data['phone'] as $phone)
+                                                    {{ $phone }}
+                                                    @if(!$loop->last)<br>@endif
+                                                @endforeach
+                                            @else
+                                                <span class="text-muted">No phone numbers configured</span>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </article>
-                    <article class="pbmit-miconheading-style-7 col-md-6">
-                        <div class="pbmit-ihbox-style-7">
-                            <div class="pbmit-ihbox-box">
-                                <div class="pbmit-ihbox-wrap">
-                                    <div class="pbmit-ihbox-icon">
-                                        <div class="pbmit-ihbox-icon-wrapper pbmit-icon-type-icon">
-                                            <svg version="1.1" id="pbmit_003" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="484.951px" height="484.951px" viewBox="0 0 484.951 484.951" style="enable-background:new 0 0 484.951 484.951;" xml:space="preserve">
-                                                <g>
-                                                    <g id="_x31_5_38_">
-                                                        <g>
-                                                            <path d="M118.505,115.332h6.938c10.544,0,19.091-8.55,19.091-19.091V43.558V23.852c0-10.541-8.547-19.09-19.091-19.09h-6.938 c-10.543,0-19.09,8.549-19.09,19.09v19.707v52.682C99.415,106.782,107.962,115.332,118.505,115.332z"></path>
-                                                            <path d="M363.373,114.859h6.938c10.543,0,19.09-8.549,19.09-19.091v-57.21v-15.18c0-10.54-8.547-19.089-19.09-19.089h-6.938 c-10.545,0-19.092,8.549-19.092,19.089v15.18v57.209C344.283,106.31,352.83,114.859,363.373,114.859z"></path>
-                                                            <path d="M453.916,43.558H404.92v57.209c0,19.084-15.525,29.61-34.607,29.61h-6.938c-19.084,0-34.609-15.526-34.609-34.61V43.558 H160.053V96.24c0,19.084-15.525,34.61-34.609,34.61h-6.938c-19.083,0-34.608-15.526-34.608-34.61V43.558H31.036 C13.923,43.558,0,57.481,0,74.595v375.03c0,17.114,13.923,31.037,31.036,31.037h422.88c17.113,0,31.035-13.923,31.035-31.037 V74.595C484.953,57.482,471.029,43.558,453.916,43.558z M453.916,449.625H31.037l-0.001-283.213h422.886l0.016,283.212 C453.936,449.624,453.93,449.625,453.916,449.625z"></path>
-                                                            <path d="M258.498,261.41h55.727c2.209,0,4-1.791,4-4v-48.255c0-2.209-1.791-4-4-4h-55.727c-2.209,0-4,1.791-4,4v48.255 C254.498,259.619,256.289,261.41,258.498,261.41z"></path>
-                                                            <path d="M349.443,261.41h55.727c2.209,0,4-1.791,4-4v-48.255c0-2.209-1.791-4-4-4h-55.727c-2.209,0-4,1.791-4,4v48.255 C345.443,259.619,347.234,261.41,349.443,261.41z"></path>
-                                                            <path d="M76.611,340.41h55.726c2.209,0,4-1.791,4-4v-48.256c0-2.209-1.791-4-4-4H76.611c-2.209,0-4,1.791-4,4v48.256 C72.611,338.619,74.402,340.41,76.611,340.41z"></path>
-                                                            <path d="M167.555,340.41h55.726c2.209,0,4-1.791,4-4v-48.256c0-2.209-1.791-4-4-4h-55.726c-2.209,0-4,1.791-4,4v48.256 C163.555,338.619,165.346,340.41,167.555,340.41z"></path>
-                                                            <path d="M258.499,340.41h55.726c2.209,0,4-1.791,4-4v-48.256c0-2.209-1.791-4-4-4h-55.726c-2.209,0-4,1.791-4,4v48.256 C254.499,338.619,256.29,340.41,258.499,340.41z"></path>
-                                                            <path d="M349.443,340.41h55.727c2.209,0,4-1.791,4-4v-48.256c0-2.209-1.791-4-4-4h-55.727c-2.209,0-4,1.791-4,4v48.256 C345.443,338.619,347.234,340.41,349.443,340.41z"></path>
-                                                            <path d="M132.337,363.154H76.612c-2.209,0-4,1.791-4,4v48.256c0,2.209,1.791,4,4,4h55.726c2.209,0,4-1.791,4-4v-48.256 C136.337,364.945,134.546,363.154,132.337,363.154z"></path>
-                                                            <path d="M223.282,363.154h-55.726c-2.209,0-4,1.791-4,4v48.256c0,2.209,1.791,4,4,4h55.726c2.209,0,4-1.791,4-4v-48.256 C227.282,364.945,225.491,363.154,223.282,363.154z"></path>
-                                                            <path d="M314.227,363.154H258.5c-2.209,0-4,1.791-4,4v48.256c0,2.209,1.791,4,4,4h55.727c2.209,0,4-1.791,4-4v-48.256 C318.227,364.945,316.436,363.154,314.227,363.154z"></path>
-                                                            <path d="M405.17,363.154h-55.727c-2.209,0-4,1.791-4,4v48.256c0,2.209,1.791,4,4,4h55.727c2.209,0,4-1.791,4-4v-48.256 C409.17,364.945,407.379,363.154,405.17,363.154z"></path>
+                        </article>
+                        <article class="pbmit-miconheading-style-7 col-md-6">
+                            <div class="pbmit-ihbox-style-7">
+                                <div class="pbmit-ihbox-box">
+                                    <div class="pbmit-ihbox-wrap">
+                                        <div class="pbmit-ihbox-icon">
+                                            <div class="pbmit-ihbox-icon-wrapper pbmit-icon-type-icon">
+                                                <svg version="1.1" id="pbmit_003" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="484.951px" height="484.951px" viewBox="0 0 484.951 484.951" style="enable-background:new 0 0 484.951 484.951;" xml:space="preserve">
+                                                    <g>
+                                                        <g id="_x31_5_38_">
+                                                            <g>
+                                                                <path d="M118.505,115.332h6.938c10.544,0,19.091-8.55,19.091-19.091V43.558V23.852c0-10.541-8.547-19.09-19.091-19.09h-6.938 c-10.543,0-19.09,8.549-19.09,19.09v19.707v52.682C99.415,106.782,107.962,115.332,118.505,115.332z"></path>
+                                                                <path d="M363.373,114.859h6.938c10.543,0,19.09-8.549,19.09-19.091v-57.21v-15.18c0-10.54-8.547-19.089-19.09-19.089h-6.938 c-10.545,0-19.092,8.549-19.092,19.089v15.18v57.209C344.283,106.31,352.83,114.859,363.373,114.859z"></path>
+                                                                <path d="M453.916,43.558H404.92v57.209c0,19.084-15.525,29.61-34.607,29.61h-6.938c-19.084,0-34.609-15.526-34.609-34.61V43.558 H160.053V96.24c0,19.084-15.525,34.61-34.609,34.61h-6.938c-19.083,0-34.608-15.526-34.608-34.61V43.558H31.036 C13.923,43.558,0,57.481,0,74.595v375.03c0,17.114,13.923,31.037,31.036,31.037h422.88c17.113,0,31.035-13.923,31.035-31.037 V74.595C484.953,57.482,471.029,43.558,453.916,43.558z M453.916,449.625H31.037l-0.001-283.213h422.886l0.016,283.212 C453.936,449.624,453.93,449.625,453.916,449.625z"></path>
+                                                                <path d="M258.498,261.41h55.727c2.209,0,4-1.791,4-4v-48.255c0-2.209-1.791-4-4-4h-55.727c-2.209,0-4,1.791-4,4v48.255 C254.498,259.619,256.289,261.41,258.498,261.41z"></path>
+                                                                <path d="M349.443,261.41h55.727c2.209,0,4-1.791,4-4v-48.255c0-2.209-1.791-4-4-4h-55.727c-2.209,0-4,1.791-4,4v48.255 C345.443,259.619,347.234,261.41,349.443,261.41z"></path>
+                                                                <path d="M76.611,340.41h55.726c2.209,0,4-1.791,4-4v-48.256c0-2.209-1.791-4-4-4H76.611c-2.209,0-4,1.791-4,4v48.256 C72.611,338.619,74.402,340.41,76.611,340.41z"></path>
+                                                                <path d="M167.555,340.41h55.726c2.209,0,4-1.791,4-4v-48.256c0-2.209-1.791-4-4-4h-55.726c-2.209,0-4,1.791-4,4v48.256 C163.555,338.619,165.346,340.41,167.555,340.41z"></path>
+                                                                <path d="M258.499,340.41h55.726c2.209,0,4-1.791,4-4v-48.256c0-2.209-1.791-4-4-4h-55.726c-2.209,0-4,1.791-4,4v48.256 C254.499,338.619,256.29,340.41,258.499,340.41z"></path>
+                                                                <path d="M349.443,340.41h55.727c2.209,0,4-1.791,4-4v-48.256c0-2.209-1.791-4-4-4h-55.727c-2.209,0-4,1.791-4,4v48.256 C345.443,338.619,347.234,340.41,349.443,340.41z"></path>
+                                                                <path d="M132.337,363.154H76.612c-2.209,0-4,1.791-4,4v48.256c0,2.209,1.791,4,4,4h55.726c2.209,0,4-1.791,4-4v-48.256 C136.337,364.945,134.546,363.154,132.337,363.154z"></path>
+                                                                <path d="M223.282,363.154h-55.726c-2.209,0-4,1.791-4,4v48.256c0,2.209,1.791,4,4,4h55.726c2.209,0,4-1.791,4-4v-48.256 C227.282,364.945,225.491,363.154,223.282,363.154z"></path>
+                                                                <path d="M314.227,363.154H258.5c-2.209,0-4,1.791-4,4v48.256c0,2.209,1.791,4,4,4h55.727c2.209,0,4-1.791,4-4v-48.256 C318.227,364.945,316.436,363.154,314.227,363.154z"></path>
+                                                                <path d="M405.17,363.154h-55.727c-2.209,0-4,1.791-4,4v48.256c0,2.209,1.791,4,4,4h55.727c2.209,0,4-1.791,4-4v-48.256 C409.17,364.945,407.379,363.154,405.17,363.154z"></path>
+                                                            </g>
                                                         </g>
                                                     </g>
-                                                </g>
-                                            </svg>
+                                                </svg>
+                                            </div>
                                         </div>
+                                        <h2 class="pbmit-element-title">
+                                            Working Days
+                                        </h2>
                                     </div>
-                                    <h2 class="pbmit-element-title">
-                                        Working Days
-                                    </h2>
-                                </div>
-                                <div class="pbmit-ihbox-contents">
-                                    <div class="pbmit-heading-desc">
-                                        @if(!empty($data['working_days']))
-                                        @foreach($data['working_days'] as $slot)
-                                        @if(isset($slot['days']) && isset($slot['from']) && isset($slot['to']))
-                                        <strong>{{ implode('-', $slot['days']) }}</strong>: {{ substr($slot['from'], 0, 5) }} - {{ substr($slot['to'], 0, 5) }}<br>
-                                        @endif
-                                        @endforeach
-                                        @else
-                                        <span>No working days/hours set.</span>
-                                        @endif
-                                        @endif
+                                    <div class="pbmit-ihbox-contents">
+                                        <div class="pbmit-heading-desc">
+                                            @if(!empty($data['working_days']))
+                                                @foreach($data['working_days'] as $slot)
+                                                    @if(isset($slot['days']) && isset($slot['from']) && isset($slot['to']))
+                                                        <strong>{{ implode('-', $slot['days']) }}</strong>: {{ substr($slot['from'], 0, 5) }} - {{ substr($slot['to'], 0, 5) }}<br>
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <span class="text-muted">No working hours configured</span>
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </article>
+                        </article>
                 </div>
                 </div>
                 <div class="pbmit-social-links-bg pbmit-bg-color-global">
@@ -330,15 +350,7 @@
                             loading="lazy"
                             referrerpolicy="no-referrer-when-downgrade">
                         </iframe>
-                        @else
-                        <div class="d-flex align-items-center justify-content-center h-100">
-                            <div class="text-center">
-                                <i class="fas fa-map-marker-alt" style="font-size: 3rem; color: #ccc;"></i>
-                                <h4 class="mt-3">Map location not set</h4>
-                            </div>
-                        </div>
                         @endif
-
                     </div>
                 </div>
             </div>
@@ -347,4 +359,54 @@
 </section>
 <!-- Map Section End -->
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const contactForm = document.getElementById('contact-form');
+    const submitBtn = contactForm.querySelector('button[type="submit"]');
+    const loader = submitBtn.querySelector('.form-btn-loader');
+    const buttonText = submitBtn.querySelector('.pbmit-button-content-wrapper');
+
+    contactForm.addEventListener('submit', function(e) {
+        // Show loading state
+        submitBtn.disabled = true;
+        loader.classList.remove('d-none');
+        buttonText.style.opacity = '0.5';
+
+        // Hide any existing alerts
+        const existingAlerts = contactForm.querySelectorAll('.alert');
+        existingAlerts.forEach(alert => alert.remove());
+    });
+
+    // Auto-hide alerts after 5 seconds
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            if (alert.parentNode) {
+                alert.remove();
+            }
+        }, 5000);
+    });
+
+    // Form validation enhancement
+    const inputs = contactForm.querySelectorAll('input[required], textarea[required]');
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.value.trim() === '') {
+                this.classList.add('is-invalid');
+            } else {
+                this.classList.remove('is-invalid');
+            }
+        });
+
+        input.addEventListener('input', function() {
+            if (this.value.trim() !== '') {
+                this.classList.remove('is-invalid');
+            }
+        });
+    });
+});
+</script>
+@endpush
 
