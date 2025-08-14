@@ -23,16 +23,63 @@
 					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box">
 						<span>{{ $data['address'] }}</span>
 					</div>
-					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box">
+					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box d-flex flex-column">
 						@if(!empty($data['email']))
-						<span><a href="mailto:{{$data['email'][0]}}"
+						<span>
+							<a href="mailto:{{$data['email'][0]}}"
 								class="__cf_email__"
-								data-cfemail="d6b5b9b8a2b7b5a296b3aeb7bba6bab3f8b5b9bb">{{ $data['email'][0] }}</a></span>
+								data-cfemail="d6b5b9b8a2b7b5a296b3aeb7bba6bab3f8b5b9bb">{{ $data['email'][0] }}
+							</a>
+						</span>
+						@endif
+						@if(isset($data['email'][1]))
+						<span>
+							<a href="mailto:{{$data['email'][1]}}"
+								class="__cf_email__"
+								data-cfemail="d6b5b9b8a2b7b5a296b3aeb7bba6bab3f8b5b9bb">{{ $data['email'][1] }}
+							</a>
+						</span>
+						@endif
+						@if(isset($data['email'][2]))
+						<span>
+							<a href="mailto:{{$data['email'][2]}}"
+								class="__cf_email__"
+								data-cfemail="d6b5b9b8a2b7b5a296b3aeb7bba6bab3f8b5b9bb">{{ $data['email'][2] }}
+							</a>
+						</span>
+						@endif
+						@if(isset($data['email'][3]))
+						<span>
+							<a href="mailto:{{$data['email'][3]}}"
+								class="__cf_email__"
+								data-cfemail="d6b5b9b8a2b7b5a296b3aeb7bba6bab3f8b5b9bb">{{ $data['email'][3] }}
+							</a>
+						</span>
+						@endif
+						@if(isset($data['email'][4]))
+						<span>
+							<a href="mailto:{{$data['email'][4]}}"
+								class="__cf_email__"
+								data-cfemail="d6b5b9b8a2b7b5a296b3aeb7bba6bab3f8b5b9bb">{{ $data['email'][4] }}
+							</a>
+						</span>
 						@endif
 					</div>
-					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box">
+					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box d-flex flex-column">
 						@if(!empty($data['phone']))
-						<span>{{ $data['phone'][0] }}</span>
+							<span>{{ $data['phone'][0] }}</span>
+						@endif
+						@if(isset($data['phone'][1]))
+							<span>{{ $data['phone'][1] }}</span>
+						@endif
+						@if(isset($data['phone'][2]))
+							<span>{{ $data['phone'][2] }}</span>
+						@endif
+						@if(isset($data['phone'][3]))
+							<span>{{ $data['phone'][3] }}</span>
+						@endif
+						@if(isset($data['phone'][4]))
+							<span>{{ $data['phone'][4] }}</span>
 						@endif
 					</div>
 				</div>
