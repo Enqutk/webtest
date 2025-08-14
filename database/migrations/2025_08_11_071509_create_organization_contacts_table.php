@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\StatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,9 +15,10 @@ return new class extends Migration
         Schema::create('organization_contacts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('organization_id')
-              ->constrained('organizations')
-              ->onDelete('cascade');
+                ->constrained('organizations')
+                ->onDelete('cascade');
             $table->enum('type', ['phone', 'fax', 'email']);
+            $table->string('status')->default(StatusEnum::active->value);
             $table->string('value', 255);
             $table->timestamps();
             $table->softDeletes();
