@@ -13,7 +13,7 @@
                                 <div class="site-branding">
                                     <h1 class="site-title">
                                         <a href="index.html">
-                                            <img class="pbmit-main-logo" src="./assets/images/logo/logo-04.png"
+                                            <img class="pbmit-main-logo" src=asset('assets/images/logo/logo-04.png"
                                                 alt="Induyst">
                                             <img class="pbmit-sticky-logo" src="./assets/images/logo/logo-02.png"
                                                 alt="Induyst">
