@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\HasUserStamps;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 
 class Service extends Model implements HasMedia
@@ -63,5 +64,18 @@ class Service extends Model implements HasMedia
                     ->height(150)
                     ->sharpen(10);
             });
+    }
+
+    protected function secondaryImageUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->getFirstMediaUrl('secondary_image'),
+        );
+    }
+    protected function mainImageUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->getFirstMediaUrl('main_image'),
+        );
     }
 }
