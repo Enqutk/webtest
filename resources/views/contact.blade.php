@@ -242,7 +242,7 @@
                                 height="400"
                                 frameborder="0"
                                 style="border:0"
-                                src="{{ $data['map'] }}"
+                                src="https://maps.app.goo.gl/ur8MPDtJBtFWUN9f9"
                                 allowfullscreen>
                             </iframe>
                         @else
