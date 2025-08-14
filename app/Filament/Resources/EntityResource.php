@@ -72,13 +72,11 @@ class EntityResource extends Resource
                SpatieMediaLibraryImageColumn::make('image')->collection('image')->circular()->size(50),
                TextColumn::make('link')->url(fn($record) => $record->link)->openUrlInNewTab(true)->searchable(),
                TextColumn::make('order')->sortable(),
-               TextColumn::make('status')
-                    ->badge()
+               TextColumn::make('status')->badge()
                     ->color(fn(StatusEnum $state): string => match ($state) {
                         StatusEnum::active => 'success',
                         StatusEnum::inactive => 'danger',
-                    })
-                    ->sortable(),
+                    }) ->sortable(),
                TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
                TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
                TextColumn::make('deleted_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),

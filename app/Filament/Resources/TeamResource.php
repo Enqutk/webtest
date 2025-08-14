@@ -60,18 +60,22 @@ class TeamResource extends Resource
     {
         return $table
             ->columns([
-               TextColumn::make('id')->sortable(),
-               TextColumn::make('first_name')->searchable()->sortable(),
-               TextColumn::make('last_name')->searchable()->sortable(),
-               TextColumn::make('title')->searchable()->sortable(),
-               TextColumn::make('status')->sortable(),
-               IconColumn::make('founder')->boolean(),
+                TextColumn::make('id')->sortable(),
+                TextColumn::make('first_name')->searchable()->sortable(),
+                TextColumn::make('last_name')->searchable()->sortable(),
+                TextColumn::make('title')->searchable()->sortable(),
+                TextColumn::make('status')->badge()
+                    ->color(fn(StatusEnum $state): string => match ($state) {
+                        StatusEnum::active => 'success',
+                        StatusEnum::inactive => 'danger',
+                    })->sortable(),
+                IconColumn::make('founder')->boolean(),
                 SpatieMediaLibraryImageColumn::make('image')->collection('team-images')->size(50)->circular(),
-               TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-               TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-               TextColumn::make('creator.name')->label('Created By')->sortable()->toggleable(isToggledHiddenByDefault: true),
-               TextColumn::make('updater.name')->label('Updated By')->sortable()->toggleable(isToggledHiddenByDefault: true),
-               TextColumn::make('deleted_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('creator.name')->label('Created By')->sortable()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updater.name')->label('Updated By')->sortable()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('deleted_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
 
             ])
             ->filters([
