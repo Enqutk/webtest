@@ -272,7 +272,7 @@
 <section class="section-lg">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-32 col-md-10 col-lg-8">
+            <div class="col-12 col-md-15 col-lg-10">
                 <div class="map-wrapper">
                     <div class="map-container" style="height: 400px; background-color: #f5f5f5;">
                         @if(!empty($data['map']))
@@ -281,7 +281,7 @@
                             height="400"
                             frameborder="0"
                             style="border:0"
-                            src="https://www.google.com/maps/embed?pb={{ $data['map'] }}"
+                            src="{{ $data['map'] }}"
                             allowfullscreen
                             loading="lazy"
                             referrerpolicy="no-referrer-when-downgrade">
