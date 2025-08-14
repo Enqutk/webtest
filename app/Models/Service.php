@@ -10,7 +10,7 @@ use App\Traits\HasUserStamps;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-
+use Illuminate\Support\Facades\Cache;
 
 class Service extends Model implements HasMedia
 {
@@ -81,15 +81,18 @@ class Service extends Model implements HasMedia
     protected function svgInline(): Attribute
     {
         return Attribute::make(
-            get: function () {
-                if ($media = $this->getFirstMedia('svg')) {
-                    $path = $media->getPath();
-                    if (file_exists($path)) {
-                        return file_get_contents($path);
+                        get: function () {
+                return Cache::rememberForever("service.{$this->id}.svg", function () {
+                    if ($media = $this->getFirstMedia('svg')) {
+                        $path = $media->getPath();
+                        if (file_exists($path)) {
+                            return file_get_contents($path);
+                        }
                     }
-                }
-                return '';
+                    return '';
+                });
             }
         );
     }
+    
 }
