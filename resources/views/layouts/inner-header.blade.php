@@ -53,8 +53,7 @@
 	                                        </span>
 	                                        <span class="pbmit-box-content">
 	                                            <span class="pbmit-header-box-title">Email address</span>
-	                                            <span class="pbmit-header-box-content"><span class="__cf_email__" data-cfemail="6f0100421d0a1f03162f0a170e021f030a410c0002">{{$data['email'][0]}}</span></span>
-	                                        </span>
+	                                            <span class="pbmit-header-box-content"><span class="__cf_email__" data-cfemail="6f0100421d0a1f03162f0a170e021f030a410c0002">{{$data['email'][0] ?? ''}}</span></span>
 	                                    </a>
 	                                </div>
 	                            </div>
@@ -88,7 +87,6 @@
 	                                            <li><a href="{{ route('services') }}">Service</a></li>
 	                                            <li><a href="{{ route('contact') }}">Contact Us</a></li>
 	                                        </ul>
-
 	                                    </div>
 	                                </nav>
 	                            </div>
