@@ -24,12 +24,16 @@
 						<span>{{ $data['address'] }}</span>
 					</div>
 					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box">
+						@if(!empty($data['email']))
 						<span><a href="mailto:{{$data['email'][0]}}"
 								class="__cf_email__"
 								data-cfemail="d6b5b9b8a2b7b5a296b3aeb7bba6bab3f8b5b9bb">{{ $data['email'][0] }}</a></span>
+						@endif
 					</div>
 					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box">
+						@if(!empty($data['phone']))
 						<span>{{ $data['phone'][0] }}</span>
+						@endif
 					</div>
 				</div>
 			</div>
