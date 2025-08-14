@@ -91,7 +91,11 @@ class ServiceResource extends Resource {
             ->size( 50 ),
             Tables\Columns\TextColumn::make( 'short_description' )->limit( 50 ),
             Tables\Columns\TextColumn::make( 'order' )->sortable(),
-            Tables\Columns\TextColumn::make( 'status' )->badge(),
+            Tables\Columns\TextColumn::make('status')->badge()
+                    ->color(fn(StatusEnum $state): string => match ($state) {
+                        StatusEnum::active => 'success',
+                        StatusEnum::inactive => 'danger',
+                    })->sortable(),
             Tables\Columns\TextColumn::make( 'created_at' )->dateTime()->sortable()->toggleable( isToggledHiddenByDefault: true ),
             Tables\Columns\TextColumn::make( 'updated_at' )->dateTime()->sortable()->toggleable( isToggledHiddenByDefault: true ),
             Tables\Columns\TextColumn::make( 'creator.name' )->label( 'Created By' )->sortable()->toggleable( isToggledHiddenByDefault: true ),
