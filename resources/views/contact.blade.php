@@ -229,7 +229,6 @@
     </div>
 </section>
 <!-- Contact End -->
-
 <!-- Map Section Start -->
 <section class="section-lg">
     <div class="container-fluid p-0">
@@ -237,13 +236,23 @@
             <div class="col-12">
                 <div class="map-wrapper">
                     <div class="map-container" style="height: 400px; background-color: #f5f5f5;">
-                        <div class="d-flex align-items-center justify-content-center h-100">
-                            <div class="text-center">
-                                <i class="pbmit-induyst-icon pbmit-induyst-icon-location-1" style="font-size: 3rem; color: #ccc;"></i>
-                                <h4 class="mt-3">Interactive Map</h4>
-                                {{ $data['map'] }}
+                        @if(!empty($data['map']))
+                            <iframe
+                                width="100%"
+                                height="400"
+                                frameborder="0"
+                                style="border:0"
+                                src="{{ $data['map'] }}"
+                                allowfullscreen>
+                            </iframe>
+                        @else
+                            <div class="d-flex align-items-center justify-content-center h-100">
+                                <div class="text-center">
+                                    <i class="fas fa-map-marker-alt" style="font-size: 3rem; color: #ccc;"></i>
+                                    <h4 class="mt-3">Map location not set</h4>
+                                </div>
                             </div>
-                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
