@@ -30,6 +30,8 @@ class HeroResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\TextInput::make('subtitle')
+                    ->maxLength(255),
                 Forms\Components\Textarea::make('description')
                     ->required(),
                 Forms\Components\SpatieMediaLibraryFileUpload::make('image')
@@ -38,8 +40,10 @@ class HeroResource extends Resource
                     ->imagePreviewHeight('150')
                     ->required(),
 
-                Forms\Components\TextInput::make('link')
-                    ->maxLength(255),
+                Forms\Components\TextInput::make('button_link')
+                    ->maxLength(2048),
+                Forms\Components\TextInput::make('text_link')
+                    ->maxLength(2048),
                 Forms\Components\TextInput::make('order')
                     ->numeric()
                     ->default(1)
@@ -58,12 +62,14 @@ class HeroResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')->sortable(),
                 Tables\Columns\TextColumn::make('title')->searchable()->sortable(),
+                Tables\Columns\TextColumn::make('subtitle')->searchable()->limit(50),
                 Tables\Columns\TextColumn::make('description')->limit(50)->tooltip(fn($record) => $record->description),
                 Tables\Columns\SpatieMediaLibraryImageColumn::make('image')
+                    ->collection('image')
                     ->square()
                     ->size(50),
-
-                Tables\Columns\TextColumn::make('link')->searchable()->url(fn($record) => $record->link)->openUrlInNewTab(true),
+                Tables\Columns\TextColumn::make('button_link')->searchable()->url(fn($record) => $record->button_link)->openUrlInNewTab(true),
+                Tables\Columns\TextColumn::make('text_link')->searchable()->url(fn($record) => $record->text_link)->openUrlInNewTab(true),
                 Tables\Columns\TextColumn::make('order')->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
