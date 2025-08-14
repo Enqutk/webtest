@@ -246,7 +246,7 @@
                                         @if(!empty($data['working_days']))
                                         @foreach($data['working_days'] as $slot)
                                         @if(isset($slot['days']) && isset($slot['from']) && isset($slot['to']))
-                                        <strong>{{ implode(', ', $slot['days']) }}</strong>: {{ substr($slot['from'], 0, 5) }} - {{ substr($slot['to'], 0, 5) }}<br>
+                                        <strong>{{ implode('-', $slot['days']) }}</strong>: {{ substr($slot['from'], 0, 5) }} - {{ substr($slot['to'], 0, 5) }}<br>
                                         @endif
                                         @endforeach
                                         @else
@@ -259,7 +259,7 @@
                         </div>
                     </article>
                 </div>
-                  </div>
+                </div>
                 <div class="pbmit-social-links-bg pbmit-bg-color-global">
                     <div class="row align-items-center">
                         <div class="col-md-6">
