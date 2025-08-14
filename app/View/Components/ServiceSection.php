@@ -9,14 +9,16 @@ use App\Models\Service;
 use App\Enums\StatusEnum;
 
 class ServiceSection extends Component
-{   public $services;
+{
+    public $services;
+
     /**
      * Create a new component instance.
      */
-    public function __construct() {
-        $this->services = Service::where( 'status', StatusEnum::active )->orderBy( 'order' )->get();
+    public function __construct()
+    {
+        $this->services = Service::where('status', StatusEnum::active)->orderBy('order')->get();
     }
-
 
     /**
      * Get the view / contents that represent the component.
@@ -26,6 +28,5 @@ class ServiceSection extends Component
         return view('components.service-section');
     }
 }
-
 
 
