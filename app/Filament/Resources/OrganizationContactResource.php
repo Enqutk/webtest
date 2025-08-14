@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Enums\StatusEnum;
 use App\Filament\Resources\OrganizationContactResource\Pages;
+use App\Models\Organization;
 use App\Models\OrganizationContact;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -36,7 +37,7 @@ class OrganizationContactResource extends Resource
                 Forms\Components\Select::make('status')
                     ->label('Status')
                     ->options(StatusEnum::class)
-                    ->default(StatusEnum::active)
+                    ->default(StatusEnum::active),
             ])->columns(2);
     }
 

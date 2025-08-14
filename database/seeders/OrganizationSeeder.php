@@ -27,19 +27,16 @@ class OrganizationSeeder extends Seeder
         ]);
 
         OrganizationContact::create([
-            'organization_id' => $organization->id,
             'type' => 'phone',
             'value' => '+1234567890',
         ]);
 
         OrganizationContact::create([
-            'organization_id' => $organization->id,
             'type' => 'fax',
             'value' => '+1234567891',
         ]);
 
         OrganizationContact::create([
-            'organization_id' => $organization->id,
             'type' => 'email',
             'value' => 'info@demo.org',
         ]);
