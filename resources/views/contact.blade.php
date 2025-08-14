@@ -174,8 +174,11 @@
                                     </h2>
                                 </div>
                                 <div class="pbmit-ihbox-contents">
-                                    <div class="pbmit-heading-desc">{{ $data['phone'][0] }} <br>
-                                        {{ isset($data['phone'][1]) ? $data['phone'][1] : '' }}
+                                    <div class="pbmit-heading-desc">
+                                        {{ $data['phone'][0] }}
+                                        @if(isset($data['phone'][1]))<br>
+                                        {{ $data['phone'][1] }}
+                                        @endif
                                     </div>
                                 </div>
                             </div>
