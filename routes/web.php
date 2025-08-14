@@ -12,6 +12,7 @@ Route::get('/about', function () {
 Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
+Route::post('/contact/send/{recipient}', [ContactController::class, 'send'])->name('contact.send');
 
 Route::get('/our-services', function () {
     return view('services');
