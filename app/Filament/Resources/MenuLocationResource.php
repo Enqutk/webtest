@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Enums\Location;
+use App\Enums\LocationEnum;
 use App\Filament\Resources\MenuLocationResource\Pages;
 use App\Models\MenuLocation;
 use Filament\Forms;
@@ -37,7 +38,7 @@ class MenuLocationResource extends Resource
                     ->unique(MenuLocation::class, 'slug', ignoreRecord: true)
                     ->readOnly(),
                 Forms\Components\Select::make('location')
-                    ->options(Location::class)
+                    ->options(LocationEnum::class)
                     ->required(),
                 Forms\Components\Textarea::make('description')
                     ->nullable(),
@@ -72,11 +73,8 @@ class MenuLocationResource extends Resource
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('location')
-                    ->options([
-                        'navbar' => 'Navbar',
-                        'footer' => 'Footer',
-                        'sidebar' => 'Sidebar',
-                    ]),
+                    ->options(LocationEnum::cases())
+                    ->label('Location')
 
             ])
             ->actions([

@@ -17,7 +17,7 @@ class MenuLocation extends Model
         'description'
     ];
     protected $casts = [
-        'location' => \App\Enums\Location::class,
+        'location' => \App\Enums\LocationEnum::class,
     ];
     
     public function items()
