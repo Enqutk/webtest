@@ -110,8 +110,12 @@
                                         </h2>
                                     </div>
                                     <div class="pbmit-ihbox-contents">
-                                        <div class="pbmit-heading-desc"><a href="mailto:{{ $data['email'][0] }}" class="__cf_email__" data-cfemail="52313d3c2633312612372a333f223e377c313d3f">{{ $data['email'][0] }}</a> <br>
-                                            <a href="mailto:{{ $data['email'][1] }}" class="__cf_email__" data-cfemail="8ce2e3fee9fce0f5ccfff9fcfce3fef8e9f4ede1a2efe3e1">{{ $data['email'][1] }}</a>
+                                        <div class="pbmit-heading-desc">
+                                            <a href="mailto:{{ $data['email'][0] }}" class="__cf_email__">{{ $data['email'][0] }}</a>
+                                            @if(isset($data['email'][1]))
+                                                <br>
+                                                <a href="mailto:{{ $data['email'][1] }}" class="__cf_email__">{{ $data['email'][1] }}</a>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -131,7 +135,7 @@
                                         </h2>
                                     </div>
                                     <div class="pbmit-ihbox-contents">
-                                        <div class="pbmit-heading-desc">Hia cinema, JubaSouth Sudan
+                                        <div class="pbmit-heading-desc">{{ $address }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -151,8 +155,8 @@
                                         </h2>
                                     </div>
                                     <div class="pbmit-ihbox-contents">
-                                        <div class="pbmit-heading-desc">+211 923 2 41 605 <br>
-                                            +27 749 505 555
+                                        <div class="pbmit-heading-desc">{{ $data['phone'][0] }} <br>
+                                           {{ isset($data['phone'][1]) ? $data['phone'][1] : '' }}
                                         </div>
                                     </div>
                                 </div>
