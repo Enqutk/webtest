@@ -18,11 +18,17 @@ class ContactController extends Controller
             'message' => 'required|string',
         ]);
 
-        Mail::send('emails.contact', $validated, function($mail) use ($validated, $recipient) {
-            $mail->to($recipient)
-                 ->subject($validated['subject'])
-                 ->replyTo($validated['email'], $validated['name']);
-        });
+        Mail::raw(
+            "Name: {$validated['name']}\n" .
+            "Email: {$validated['email']}\n" .
+            "Phone: {$validated['phone']}\n" .
+            "Message:\n{$validated['message']}",
+            function ($mail) use ($validated, $recipient) {
+                $mail->to($recipient)
+                    ->subject($validated['subject'])
+                    ->replyTo($validated['email'], $validated['name']);
+            }
+        );
 
         return back()->with('success', 'Your message has been sent!');
     }

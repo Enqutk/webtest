@@ -51,6 +51,7 @@
         <div class="row pt-3">
             <div class="col-md-6 full-width-1200">
                 <form class="contact-form left-box" method="POST" id="contact-form" action="{{ route('contact.send', ['recipient' => $data['email'][0]]) }}">
+                    @csrf
                     <div class="row">
                         <div class="col-md-6">
                             <input type="text" class="form-control" placeholder="Full Name *" name="name" required>
