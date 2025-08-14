@@ -38,7 +38,7 @@ class MenuLocationResource extends Resource
                     ->unique(MenuLocation::class, 'slug', ignoreRecord: true)
                     ->readOnly(),
                 Forms\Components\Select::make('location')
-                    ->options(LocationEnum::class)
+                    ->options(collect(LocationEnum::cases())->mapWithKeys(fn($case) => [$case->value => $case->name])->toArray())
                     ->required(),
                 Forms\Components\Textarea::make('description')
                     ->nullable(),
@@ -73,7 +73,7 @@ class MenuLocationResource extends Resource
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('location')
-                    ->options(LocationEnum::cases())
+                    ->options(collect(LocationEnum::cases())->mapWithKeys(fn($case) => [$case->value => $case->name])->toArray())
                     ->label('Location')
 
             ])
