@@ -168,7 +168,7 @@
                                     </div>
                                 </div>
                             </div>
-                    </div>
+                  
                     </article>
                     <article class="pbmit-miconheading-style-7 col-md-6">
                         <div class="pbmit-ihbox-style-7">
@@ -259,6 +259,7 @@
                         </div>
                     </article>
                 </div>
+                  </div>
                 <div class="pbmit-social-links-bg pbmit-bg-color-global">
                     <div class="row align-items-center">
                         <div class="col-md-6">
