@@ -50,6 +50,20 @@
         </div>
         <div class="row pt-3">
             <div class="col-md-6 full-width-1200">
+                @if(session('success'))
+                    <div class="splash-screen-success" style="position: fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0, 128, 0, 0.33); z-index:9999; display:flex; align-items:center; justify-content:center;">
+                        <div style="background:#fff; padding:2rem 3rem; border-radius:10px; text-align:center;">
+                            <h2 style="color:green;">Message Sent Successfully!</h2>
+                            <p>{{ session('success') }}</p>
+                        </div>
+                    </div>
+                    <script>
+                        setTimeout(function() {
+                            document.querySelector('.splash-screen-success').style.display = 'none';
+                        }, 3000);
+                    </script>
+                @endif
+
                 <form class="contact-form left-box" method="POST" id="contact-form" action="{{ route('contact.send', ['recipient' => $data['email'][0]]) }}">
                     @csrf
                     <div class="row">
