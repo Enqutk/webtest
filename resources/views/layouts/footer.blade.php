@@ -21,7 +21,7 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box">
-						<span>{{ $address }}</span>
+						<span>{{ $data['address'] }}</span>
 					</div>
 					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box">
 						<span><a href="mailto:{{$data['email'][0]}}"
