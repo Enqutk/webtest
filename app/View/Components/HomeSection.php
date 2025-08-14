@@ -15,7 +15,8 @@ class HomeSection extends Component {
     * Create a new component instance.
     */
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->heroes = Hero::where( 'status', StatusEnum::active )->orderBy( 'order' )->get();
     }
 
@@ -23,7 +24,8 @@ class HomeSection extends Component {
     * Get the view / contents that represent the component.
     */
 
-    public function render(): View|Closure|string {
+    public function render(): View|Closure|string
+    {
         return view( 'components.home-section' );
     }
 }
