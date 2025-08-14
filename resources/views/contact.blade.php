@@ -135,7 +135,7 @@
                                         </h2>
                                     </div>
                                     <div class="pbmit-ihbox-contents">
-                                        <div class="pbmit-heading-desc">{{ $address }}</div>
+                                        <div class="pbmit-heading-desc">{{ $data['address'] }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -241,7 +241,7 @@
                             <div class="text-center">
                                 <i class="pbmit-induyst-icon pbmit-induyst-icon-location-1" style="font-size: 3rem; color: #ccc;"></i>
                                 <h4 class="mt-3">Interactive Map</h4>
-                                <p>Map integration can be added here</p>
+                                {{ $data['map'] }}
                             </div>
                         </div>
                     </div>
