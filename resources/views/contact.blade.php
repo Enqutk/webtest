@@ -131,8 +131,7 @@
                                         </h2>
                                     </div>
                                     <div class="pbmit-ihbox-contents">
-                                        <div class="pbmit-heading-desc">85 Preston,,Angle Maine <br>
-                                            Hoofddorp Noord- 2132a
+                                        <div class="pbmit-heading-desc">Hia cinema, JubaSouth Sudan
                                         </div>
                                     </div>
                                 </div>
@@ -152,8 +151,8 @@
                                         </h2>
                                     </div>
                                     <div class="pbmit-ihbox-contents">
-                                        <div class="pbmit-heading-desc">+012 34-567-8901 <br>
-                                            +91 987-6543-201
+                                        <div class="pbmit-heading-desc">+211 923 2 41 605 <br>
+                                            +27 749 505 555
                                         </div>
                                     </div>
                                 </div>
