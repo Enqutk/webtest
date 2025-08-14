@@ -24,7 +24,7 @@
 						<span>{{ $address }}</span>
 					</div>
 					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box">
-						<span><a href="https://induyst-demo.pbminfotech.com/cdn-cgi/l/email-protection"
+						<span><a href="mailto:{{$data['email']}}"
 								class="__cf_email__"
 								data-cfemail="d6b5b9b8a2b7b5a296b3aeb7bba6bab3f8b5b9bb">{{ $data['email'] }}</a></span>
 					</div>
