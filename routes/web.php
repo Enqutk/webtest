@@ -1,7 +1,4 @@
 <?php
-
-use App\Models\Organization;
-use App\Models\OrganizationContact;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
