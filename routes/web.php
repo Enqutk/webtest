@@ -4,7 +4,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ServiceController;
 
 Route::get('/', function () {
-    return view('index');
+    $services = \App\Models\Service::where('status', \App\Enums\StatusEnum::active)
+        ->orderBy('order')
+        ->take(6)
+        ->get();
+    
+    return view('index', compact('services'));
 })->name('home');
 
 Route::get('/about', function () {
