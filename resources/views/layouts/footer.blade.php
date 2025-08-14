@@ -21,15 +21,15 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box">
-						<span>Hia cinema, JubaSouth Sudan</span>
+						<span>{{ $address }}</span>
 					</div>
 					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box">
 						<span><a href="https://induyst-demo.pbminfotech.com/cdn-cgi/l/email-protection"
 								class="__cf_email__"
-								data-cfemail="d6b5b9b8a2b7b5a296b3aeb7bba6bab3f8b5b9bb">[email&#160;protected]</a></span>
+								data-cfemail="d6b5b9b8a2b7b5a296b3aeb7bba6bab3f8b5b9bb">{{ $data['email'] }}</a></span>
 					</div>
 					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box">
-						<span>+211 923 2 41 605</span>
+						<span>{{ $data['phone'] }}</span>
 					</div>
 				</div>
 			</div>
