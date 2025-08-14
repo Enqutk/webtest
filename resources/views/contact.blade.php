@@ -176,8 +176,16 @@
                                         </h2>
                                     </div>
                                     <div class="pbmit-ihbox-contents">
-                                        <div class="pbmit-heading-desc">{{ $data['working_days'] }}<br>
-                                            {{ $data['working_hours'] }}
+                                        <div class="pbmit-heading-desc">
+                                            @if(!empty($data['working_days']))
+                                                @foreach($data['working_days'] as $slot)
+                                                    @if(isset($slot['days']) && isset($slot['from']) && isset($slot['to']))
+                                                        <strong>{{ implode(', ', $slot['days']) }}</strong>: {{ substr($slot['from'], 0, 5) }} - {{ substr($slot['to'], 0, 5) }}<br>
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <span>No working days/hours set.</span>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

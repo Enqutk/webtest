@@ -37,14 +37,13 @@ class AppServiceProvider extends ServiceProvider
         $working_hours = [];
 
         if ($organization) {
-            $working_days = $organization->working_days ?? [];
-            $working_hours = $organization->working_hours ?? [];
+            $working_days = $organization->opening_hours ?? [];
         }
         $email = OrganizationContact::where('type', 'email')->pluck('value')->toArray();
         $phone = OrganizationContact::where('type', 'phone')->pluck('value')->toArray();
         $fax = OrganizationContact::where('type', 'fax')->pluck('value')->toArray();
         $data = ['email' => $email, 'phone' => $phone, 'fax' => $fax] + 
-                ['working_days' => $working_days, 'working_hours' => $working_hours];
+                ['working_days' => $working_days];
         $view->with(compact('address', 'data'));
     });
 
