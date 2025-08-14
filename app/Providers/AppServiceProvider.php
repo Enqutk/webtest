@@ -31,17 +31,17 @@ class AppServiceProvider extends ServiceProvider
 
 
     View::composer(['index', 'about','contact', 'services'], function ($view) {
-        $address = Organization::first()->address ?? null;
         $organization = Organization::first();
-        if ($organization) {
-            $working_days = $organization->opening_hours ?? [];
-        }
-        $map = Organization::first()->map_url ?? null;
+
+        $address = $organization->address ?? null;
+        $working_days = $organization->opening_hours ?? [];
+        $map = $organization->map_url ?? null;
+
         $email = OrganizationContact::where('type', 'email')->pluck('value')->toArray();
         $phone = OrganizationContact::where('type', 'phone')->pluck('value')->toArray();
         $fax = OrganizationContact::where('type', 'fax')->pluck('value')->toArray();
         $data = ['email' => $email, 'phone' => $phone, 'fax' => $fax] + 
-                ['address' => $address, 'working_days' => $working_days ?? [], 'map' => $map];
+                ['address' => $address, 'working_days' => $working_days, 'map' => $map];
         $view->with(compact('data'));
     });
 
