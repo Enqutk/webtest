@@ -17,7 +17,7 @@ class HomeSection extends Component {
 
     public function __construct()
     {
-        $this->heroes = Hero::where( 'status', StatusEnum::active )->orderBy( 'order' )->get();
+        $this->heroes = Hero::where( 'status', StatusEnum::active )->orderBy( 'order' )->take(5)->get();
     }
 
     /**
