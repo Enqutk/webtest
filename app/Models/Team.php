@@ -25,6 +25,7 @@ class Team extends Model implements HasMedia
     ];
 
     protected $casts = [
+        'order' => 'integer',
         'founder' => 'boolean',
         'status' => \App\Enums\StatusEnum::class,
     ];
