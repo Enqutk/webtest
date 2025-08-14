@@ -177,10 +177,12 @@
                                 </div>
                                 <div class="pbmit-ihbox-contents">
                                     <div class="pbmit-heading-desc">
+                                        @if(!empty($data['phone']))
                                         {{ $data['phone'][0] }}
                                         @if(isset($data['phone'][1]))<br>
                                         {{ $data['phone'][1] }}
                                         @endif
+                                        @endiff
                                     </div>
                                 </div>
                             </div>
