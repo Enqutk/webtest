@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\StatusEnum;
 use App\Filament\Resources\TeamResource\Pages;
 use App\Models\Team;
 use Filament\Forms;
@@ -45,9 +46,9 @@ class TeamResource extends Resource
                     ->label('Image')
                     ->collection('team-images'),
                 Select::make('status')
-                    ->label('Status')
-                    ->options(Team::getStatusOptions())
-                    ->default('active'),
+                    ->options(StatusEnum::class)
+                    ->default(StatusEnum::active)
+                    ->required(),
                 Toggle::make('founder')
                     ->label('Founder'),
             ]);
@@ -78,7 +79,7 @@ class TeamResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
                 Tables\Filters\SelectFilter::make('status')
                     ->label('Status')
-                    ->options(Team::getStatusOptions()),
+                    ->options(StatusEnum::class)
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

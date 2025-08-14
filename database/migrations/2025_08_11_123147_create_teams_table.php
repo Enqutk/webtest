@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('teams', function (Blueprint $table) {
             $table->bigIncrements('id');
-
             $table->string('first_name', 120);
             $table->string('last_name', 120)->nullable();
             $table->string('title', 190)->nullable();
@@ -24,7 +23,6 @@ return new class extends Migration
             $table->integer('order')->default(0);
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
-
             $table->timestamps();
             $table->softDeletes();
         });
