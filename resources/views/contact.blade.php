@@ -183,7 +183,6 @@
                                         @if(isset($data['phone'][1]))<br>
                                         {{ $data['phone'][1] }}
                                         @endif
-                                        @endiff
                                     </div>
                                 </div>
                             </div>
