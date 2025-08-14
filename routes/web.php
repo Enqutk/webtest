@@ -20,8 +20,5 @@ Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
 
-Route::get('/our-services', function () {
-    return view('services');
-})->name('services');
-
-Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('service.show');
+Route::get('/our-services', [ServiceController::class, 'index'])->name('services.index');
+Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('services.show');
