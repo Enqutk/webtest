@@ -42,7 +42,7 @@
                                             </span>							
                                             <span class="pbmit-box-content">
                                                 <span class="pbmit-header-box-title">Main Location</span>
-                                                <span class="pbmit-header-box-content">{{$address}}</span>
+                                                <span class="pbmit-header-box-content">{{$data['address']}}</span>
                                             </span>
                                         </a>				
                                     </div>
