@@ -1,7 +1,3 @@
-@php
-    use App\Models\Hero;
-    $heroes = Hero::where('status', \App\Enums\StatusEnum::active)->orderBy('order')->get();
-@endphp
 
 <div class="pbmit-slider-area pbmit-slider-two">
     <div class="swiper-slider" data-autoplay="true" data-loop="true" data-dots="false" data-arrows="true" data-columns="1"
