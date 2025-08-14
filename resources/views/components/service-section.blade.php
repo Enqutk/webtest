@@ -19,7 +19,7 @@
                                 <div class="pbmit-image-wrap">
                                     <div class="pbmit-featured-img-wrapper">
                                         <div class="pbmit-featured-wrapper">
-                                            <img src="{{ $service->getFirstMediaUrl('main_image') }}" class="img-fluid"
+                                            <img src="{{ $service->main_image_url }}" class="img-fluid"
                                                 alt="{{ $service->title }}">
                                         </div>
                                     </div>
