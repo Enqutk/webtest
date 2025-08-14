@@ -50,7 +50,7 @@
         </div>
         <div class="row pt-3">
             <div class="col-md-6 full-width-1200">
-                <form class="contact-form left-box" method="post" id="contact-form" action="https://induyst-demo.pbminfotech.com/html-demo/send-dummy.php">
+                <form class="contact-form left-box" method="POST" id="contact-form" action="{{ route('contact.send', ['recipient' => $data['email'][0]]) }}">
                     <div class="row">
                         <div class="col-md-6">
                             <input type="text" class="form-control" placeholder="Full Name *" name="name" required>
