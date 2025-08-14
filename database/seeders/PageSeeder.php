@@ -110,6 +110,5 @@ class PageSeeder extends Seeder
             'updated_by' => $user->id,
         ]);
 
-        $this->command->info('Sample pages, sections, and content blocks created successfully!');
     }
 }
