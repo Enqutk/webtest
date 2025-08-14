@@ -1,8 +1,6 @@
 @php
     use App\Models\Hero;
-    $heroes = Hero::where('status', \App\Enums\StatusEnum::active)
-        ->orderBy('order')
-        ->get();
+    $heroes = Hero::where('status', \App\Enums\StatusEnum::active)->orderBy('order')->get();
 @endphp
 
 <div class="pbmit-slider-area pbmit-slider-two">
@@ -11,8 +9,7 @@
         <div class="swiper-wrapper">
             @foreach ($heroes as $hero)
                 @php
-                    // Get the image for this specific hero (by ID, because Spatie links it automatically)
-                    $imageUrl = $hero->getFirstMediaUrl('image'));
+                    $imageUrl = $hero->getFirstMediaUrl('image');
                 @endphp
 
                 <div class="swiper-slide" id="hero-slide-{{ $hero->id }}">
