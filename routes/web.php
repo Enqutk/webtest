@@ -5,11 +5,7 @@ use App\Models\OrganizationContact;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    $address = Organization::first()->address;
-    $email = OrganizationContact::where('type', 'email')->first()->value ?? null;
-    $phone = OrganizationContact::where('type', 'phone')->first()->value ?? null;
-    $data = ['email' => $email, 'phone' => $phone];
-    return view('index', compact('address', 'data'));
+    return view('index');
 })->name('home');
 
 Route::get('/about', function () {
