@@ -32,10 +32,19 @@ class AppServiceProvider extends ServiceProvider
 
     View::composer(['index', 'contact', 'services'], function ($view) {
         $address = Organization::first()->address ?? null;
+        $organization = Organization::first();
+        $working_days = [];
+        $working_hours = [];
+
+        if ($organization) {
+            $working_days = $organization->working_days ?? [];
+            $working_hours = $organization->working_hours ?? [];
+        }
         $email = OrganizationContact::where('type', 'email')->pluck('value')->toArray();
         $phone = OrganizationContact::where('type', 'phone')->pluck('value')->toArray();
         $fax = OrganizationContact::where('type', 'fax')->pluck('value')->toArray();
-        $data = ['email' => $email, 'phone' => $phone, 'fax' => $fax];
+        $data = ['email' => $email, 'phone' => $phone, 'fax' => $fax] + 
+                ['working_days' => $working_days, 'working_hours' => $working_hours];
         $view->with(compact('address', 'data'));
     });
 

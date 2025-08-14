@@ -176,8 +176,8 @@
                                         </h2>
                                     </div>
                                     <div class="pbmit-ihbox-contents">
-                                        <div class="pbmit-heading-desc">Mon to Fri - 09am to 06pm <br>
-                                            Sat to Sun - Closed
+                                        <div class="pbmit-heading-desc">{{ $data['working_days'] }}<br>
+                                            {{ $data['working_hours'] }}
                                         </div>
                                     </div>
                                 </div>
