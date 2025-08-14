@@ -25,14 +25,14 @@
                                     </div>
                                     <div class="pbmit-service-icon-wrapper">
                                         <div class="pbmit-service-icon">
-                                            {!! $service->getFirstMedia('svg') ? file_get_contents($service->getFirstMediaPath('svg')) : '' !!}
+                                            {!! $service->svg_inline !!}
                                         </div>
                                     </div>
 
                                 </div>
                                 <div class="pbmit-service-content-wrap">
                                     <h3 class="pbmit-service-title">
-                                        {{ $service->title }}</a>
+                                        {{ $service->title }}
                                     </h3>
                                     <div class="pbmit-service-description">
                                         <p>{{ $service->short_description }}</p>
