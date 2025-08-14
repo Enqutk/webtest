@@ -9,4 +9,5 @@ class ServiceController extends Controller {
         $service = Service::where( 'slug', $slug )->firstOrFail();
         return view( 'services.service-detail', compact( 'service' ) );
     }
+    
 }
