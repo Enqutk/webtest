@@ -31,7 +31,7 @@
                                             </span>							
                                             <span class="pbmit-box-content">
                                                 <span class="pbmit-header-box-title">Need to talk</span>
-                                                <span class="pbmit-header-box-content">+211 923 2 41 605</span>
+                                                <span class="pbmit-header-box-content">{{ $data['phone'] }}</span>
                                             </span>
                                         </a>				
                                     </div>
@@ -42,18 +42,18 @@
                                             </span>							
                                             <span class="pbmit-box-content">
                                                 <span class="pbmit-header-box-title">Main Location</span>
-                                                <span class="pbmit-header-box-content">Hia cinema, JubaSouth Sudan</span>
+                                                <span class="pbmit-header-box-content">{{$address}}</span>
                                             </span>
                                         </a>				
                                     </div>
                                     <div class="pbmit-header-box pbmit-header-box-3">
-                                        <a href="https://induyst-demo.pbminfotech.com/cdn-cgi/l/email-protection#3658591b4453465a4f76534e575b465a531855595b">						
+                                        <a href="mailto:{{$data['email']}}">						
                                             <span class="pbmit-header-box-icon">
                                                 <i class="pbmit-induyst-icon pbmit-induyst-icon-mail"></i>
                                             </span>							
                                             <span class="pbmit-box-content">
                                                 <span class="pbmit-header-box-title">Email address</span>
-                                                <span class="pbmit-header-box-content"><span class="__cf_email__" data-cfemail="6f0100421d0a1f03162f0a170e021f030a410c0002">[email&#160;protected]</span></span>
+                                                <span class="pbmit-header-box-content"><span class="__cf_email__" data-cfemail="6f0100421d0a1f03162f0a170e021f030a410c0002">{{$data['email']}}</span></span>
                                             </span>
                                         </a>				
                                     </div>
