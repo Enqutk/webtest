@@ -37,9 +37,9 @@ class AppServiceProvider extends ServiceProvider
         $working_days = $organization->opening_hours ?? [];
         $map = $organization->map_url ?? null;
 
-        $email = OrganizationContact::where('type', 'email')->pluck('value')->toArray();
-        $phone = OrganizationContact::where('type', 'phone')->pluck('value')->toArray();
-        $fax = OrganizationContact::where('type', 'fax')->pluck('value')->toArray();
+        $email = OrganizationContact::where('type', 'email')->where('status', 'active')->pluck('value')->toArray();
+        $phone = OrganizationContact::where('type', 'phone')->where('status', 'active')->pluck('value')->toArray();
+        $fax = OrganizationContact::where('type', 'fax')->where('status', 'active')->pluck('value')->toArray();
         $data = ['email' => $email, 'phone' => $phone, 'fax' => $fax] + 
                 ['address' => $address, 'working_days' => $working_days, 'map' => $map];
         $view->with(compact('data'));
