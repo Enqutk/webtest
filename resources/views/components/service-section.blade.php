@@ -41,7 +41,7 @@
                                         <div class="pbmit-service-btn-wrapper">
                                             <div class="pbmit-service-btn">
                                                 <a class="pbmit-button-inner"
-                                                    href="{{ route('service.show', $service->slug) }}">
+                                                    href="{{ route('services.show', $service->slug) }}">
                                                     <span class="pbmit-button-text">Read More</span>
                                                     <i class="pbmit-base-icon-right-arrow"></i>
                                                 </a>
