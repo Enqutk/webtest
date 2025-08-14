@@ -127,7 +127,18 @@
                                             @if(isset($data['email'][1]))
                                             <br>
                                             <a href="mailto:{{ $data['email'][1] }}" class="__cf_email__">{{ $data['email'][1] }}</a>
-
+                                            @endif
+                                            @if(isset($data['email'][2]))
+                                            <br>
+                                            <a href="mailto:{{ $data['email'][2] }}" class="__cf_email__">{{ $data['email'][2] }}</a>
+                                            @endif
+                                            @if(isset($data['email'][3]))
+                                            <br>
+                                            <a href="mailto:{{ $data['email'][3] }}" class="__cf_email__">{{ $data['email'][3] }}</a>
+                                            @endif
+                                            @if(isset($data['email'][4]))
+                                            <br>
+                                            <a href="mailto:{{ $data['email'][4] }}" class="__cf_email__">{{ $data['email'][4] }}</a>
                                             @endif
                                         </div>
                                     </div>
@@ -182,6 +193,15 @@
                                         {{ $data['phone'][0] }}
                                         @if(isset($data['phone'][1]))<br>
                                         {{ $data['phone'][1] }}
+                                        @endif
+                                        @if(isset($data['phone'][2]))<br>
+                                        {{ $data['phone'][2] }}
+                                        @endif
+                                        @if(isset($data['phone'][3]))<br>
+                                        {{ $data['phone'][3] }}
+                                        @endif
+                                        @if(isset($data['phone'][4]))<br>
+                                        {{ $data['phone'][4] }}
                                         @endif
                                     </div>
                                 </div>
