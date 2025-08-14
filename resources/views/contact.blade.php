@@ -5,7 +5,7 @@
 @section('description', 'Get in touch with Veritas Afrika for expert civil engineering and infrastructure development services.')
 
 @section('content')
-<!-- Contact Start --> 
+<!-- Contact Start -->
 <section class="section-lgt">
     <div class="container">
         <div class="row align-items-center">
@@ -44,7 +44,7 @@
                             <h2 class="pbmit-fid-title"></h2>
                             <div class="pbmit-heading-desc">Trusted customers around the world</div>
                         </div>
-                    </div>		
+                    </div>
                 </div>
             </div>
         </div>
@@ -76,7 +76,17 @@
                     </div>
                     <button class="pbmit-btn">
                         <span class="form-btn-loader d-none">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100"><circle fill="#fff" stroke="#fff" stroke-width="15" r="15" cx="40" cy="50"><animate attributeName="opacity" calcMode="spline" dur="2" values="1;0;1;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.4"></animate></circle><circle fill="#fff" stroke="#fff" stroke-width="15" r="15" cx="100" cy="50"><animate attributeName="opacity" calcMode="spline" dur="2" values="1;0;1;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.2"></animate></circle><circle fill="#fff" stroke="#fff" stroke-width="15" r="15" cx="160" cy="50"><animate attributeName="opacity" calcMode="spline" dur="2" values="1;0;1;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="0"></animate></circle></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100">
+                                <circle fill="#fff" stroke="#fff" stroke-width="15" r="15" cx="40" cy="50">
+                                    <animate attributeName="opacity" calcMode="spline" dur="2" values="1;0;1;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.4"></animate>
+                                </circle>
+                                <circle fill="#fff" stroke="#fff" stroke-width="15" r="15" cx="100" cy="50">
+                                    <animate attributeName="opacity" calcMode="spline" dur="2" values="1;0;1;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.2"></animate>
+                                </circle>
+                                <circle fill="#fff" stroke="#fff" stroke-width="15" r="15" cx="160" cy="50">
+                                    <animate attributeName="opacity" calcMode="spline" dur="2" values="1;0;1;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="0"></animate>
+                                </circle>
+                            </svg>
                         </span>
                         <span class="pbmit-button-content-wrapper">
                             <span class="pbmit-button-icon">
@@ -113,8 +123,8 @@
                                         <div class="pbmit-heading-desc">
                                             <a href="mailto:{{ $data['email'][0] }}" class="__cf_email__">{{ $data['email'][0] }}</a>
                                             @if(isset($data['email'][1]))
-                                                <br>
-                                                <a href="mailto:{{ $data['email'][1] }}" class="__cf_email__">{{ $data['email'][1] }}</a>
+                                            <br>
+                                            <a href="mailto:{{ $data['email'][1] }}" class="__cf_email__">{{ $data['email'][1] }}</a>
                                             @endif
                                         </div>
                                     </div>
@@ -127,7 +137,12 @@
                                     <div class="pbmit-ihbox-wrap">
                                         <div class="pbmit-ihbox-icon">
                                             <div class="pbmit-ihbox-icon-wrapper pbmit-icon-type-icon">
-                                                <svg clip-rule="evenodd" fill-rule="evenodd" height="512" stroke-linejoin="round" stroke-miterlimit="2" viewBox="0 0 24 24" width="512" xmlns="http://www.w3.org/2000/svg"><g id="Icon"><path d="m12 1.25c-3.723 0-6.75 3.054-6.75 6.821 0 1.276.562 2.859 1.38 4.438 1.801 3.477 4.801 6.979 4.801 6.979.142.166.35.262.569.262s.427-.096.569-.262c0 0 3-3.502 4.801-6.979.818-1.579 1.38-3.162 1.38-4.438 0-3.767-3.027-6.821-6.75-6.821zm0 4c-1.518 0-2.75 1.232-2.75 2.75s1.232 2.75 2.75 2.75 2.75-1.232 2.75-2.75-1.232-2.75-2.75-2.75z"></path><path d="m16.784 17.377c.813.244 1.483.546 1.946.9.3.228.52.451.52.723 0 .16-.091.305-.219.45-.212.239-.527.454-.917.654-1.378.705-3.606 1.146-6.114 1.146s-4.736-.441-6.114-1.146c-.39-.2-.705-.415-.917-.654-.128-.145-.219-.29-.219-.45 0-.272.22-.495.52-.723.463-.354 1.133-.656 1.946-.9.396-.119.621-.538.502-.934-.119-.397-.538-.622-.934-.503-1.238.373-2.2.884-2.778 1.449-.508.495-.756 1.049-.756 1.611 0 .702.397 1.402 1.204 1.986 1.416 1.024 4.26 1.764 7.546 1.764s6.13-.74 7.546-1.764c.807-.584 1.204-1.284 1.204-1.986 0-.562-.248-1.116-.756-1.611-.578-.565-1.54-1.076-2.778-1.449-.396-.119-.815.106-.934.503-.119.396.106.815.502.934z"></path></g></svg>
+                                                <svg clip-rule="evenodd" fill-rule="evenodd" height="512" stroke-linejoin="round" stroke-miterlimit="2" viewBox="0 0 24 24" width="512" xmlns="http://www.w3.org/2000/svg">
+                                                    <g id="Icon">
+                                                        <path d="m12 1.25c-3.723 0-6.75 3.054-6.75 6.821 0 1.276.562 2.859 1.38 4.438 1.801 3.477 4.801 6.979 4.801 6.979.142.166.35.262.569.262s.427-.096.569-.262c0 0 3-3.502 4.801-6.979.818-1.579 1.38-3.162 1.38-4.438 0-3.767-3.027-6.821-6.75-6.821zm0 4c-1.518 0-2.75 1.232-2.75 2.75s1.232 2.75 2.75 2.75 2.75-1.232 2.75-2.75-1.232-2.75-2.75-2.75z"></path>
+                                                        <path d="m16.784 17.377c.813.244 1.483.546 1.946.9.3.228.52.451.52.723 0 .16-.091.305-.219.45-.212.239-.527.454-.917.654-1.378.705-3.606 1.146-6.114 1.146s-4.736-.441-6.114-1.146c-.39-.2-.705-.415-.917-.654-.128-.145-.219-.29-.219-.45 0-.272.22-.495.52-.723.463-.354 1.133-.656 1.946-.9.396-.119.621-.538.502-.934-.119-.397-.538-.622-.934-.503-1.238.373-2.2.884-2.778 1.449-.508.495-.756 1.049-.756 1.611 0 .702.397 1.402 1.204 1.986 1.416 1.024 4.26 1.764 7.546 1.764s6.13-.74 7.546-1.764c.807-.584 1.204-1.284 1.204-1.986 0-.562-.248-1.116-.756-1.611-.578-.565-1.54-1.076-2.778-1.449-.396-.119-.815.106-.934.503-.119.396.106.815.502.934z"></path>
+                                                    </g>
+                                                </svg>
                                             </div>
                                         </div>
                                         <h2 class="pbmit-element-title">
@@ -136,96 +151,120 @@
                                     </div>
                                     <div class="pbmit-ihbox-contents">
                                         <div class="pbmit-heading-desc">{{ $data['address'] }}</div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </article>
-                        <article class="pbmit-miconheading-style-7 col-md-6">
-                            <div class="pbmit-ihbox-style-7">
-                                <div class="pbmit-ihbox-box">
-                                    <div class="pbmit-ihbox-wrap">
-                                        <div class="pbmit-ihbox-icon">
-                                            <div class="pbmit-ihbox-icon-wrapper pbmit-icon-type-icon">
-                                                <svg id="Layer_3" height="512" viewBox="0 0 32 32" width="512" xmlns="http://www.w3.org/2000/svg" data-name="Layer 3"><path d="m29.393 23.36c-.874-.733-6-3.979-6.852-3.83-.4.071-.706.412-1.525 1.389a11.687 11.687 0 0 1 -1.244 1.347 10.757 10.757 0 0 1 -2.374-.88 14.7 14.7 0 0 1 -6.784-6.786 10.757 10.757 0 0 1 -.88-2.374 11.687 11.687 0 0 1 1.347-1.244c.976-.819 1.318-1.123 1.389-1.525.149-.854-3.1-5.978-3.83-6.852-.306-.362-.584-.605-.94-.605-1.032 0-5.7 5.772-5.7 6.52 0 .061.1 6.07 7.689 13.791 7.721 7.589 13.73 7.689 13.791 7.689.748 0 6.52-4.668 6.52-5.7 0-.356-.243-.634-.607-.94z"></path><path d="m23 15h2a8.009 8.009 0 0 0 -8-8v2a6.006 6.006 0 0 1 6 6z"></path><path d="m28 15h2a13.015 13.015 0 0 0 -13-13v2a11.013 11.013 0 0 1 11 11z"></path></svg>
-                                            </div>
-                                        </div>
-                                        <h2 class="pbmit-element-title">
-                                            Call US 24/7
-                                        </h2>
-                                    </div>
-                                    <div class="pbmit-ihbox-contents">
-                                        <div class="pbmit-heading-desc">{{ $data['phone'][0] }} <br>
-                                           {{ isset($data['phone'][1]) ? $data['phone'][1] : '' }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-                        <article class="pbmit-miconheading-style-7 col-md-6">
-                            <div class="pbmit-ihbox-style-7">
-                                <div class="pbmit-ihbox-box">
-                                    <div class="pbmit-ihbox-wrap">
-                                        <div class="pbmit-ihbox-icon">
-                                            <div class="pbmit-ihbox-icon-wrapper pbmit-icon-type-icon">
-                                                <svg version="1.1" id="pbmit_003" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="484.951px" height="484.951px" viewBox="0 0 484.951 484.951" style="enable-background:new 0 0 484.951 484.951;" xml:space="preserve"><g><g id="_x31_5_38_"><g><path d="M118.505,115.332h6.938c10.544,0,19.091-8.55,19.091-19.091V43.558V23.852c0-10.541-8.547-19.09-19.091-19.09h-6.938 c-10.543,0-19.09,8.549-19.09,19.09v19.707v52.682C99.415,106.782,107.962,115.332,118.505,115.332z"></path><path d="M363.373,114.859h6.938c10.543,0,19.09-8.549,19.09-19.091v-57.21v-15.18c0-10.54-8.547-19.089-19.09-19.089h-6.938 c-10.545,0-19.092,8.549-19.092,19.089v15.18v57.209C344.283,106.31,352.83,114.859,363.373,114.859z"></path><path d="M453.916,43.558H404.92v57.209c0,19.084-15.525,29.61-34.607,29.61h-6.938c-19.084,0-34.609-15.526-34.609-34.61V43.558 H160.053V96.24c0,19.084-15.525,34.61-34.609,34.61h-6.938c-19.083,0-34.608-15.526-34.608-34.61V43.558H31.036 C13.923,43.558,0,57.481,0,74.595v375.03c0,17.114,13.923,31.037,31.036,31.037h422.88c17.113,0,31.035-13.923,31.035-31.037 V74.595C484.953,57.482,471.029,43.558,453.916,43.558z M453.916,449.625H31.037l-0.001-283.213h422.886l0.016,283.212 C453.936,449.624,453.93,449.625,453.916,449.625z"></path><path d="M258.498,261.41h55.727c2.209,0,4-1.791,4-4v-48.255c0-2.209-1.791-4-4-4h-55.727c-2.209,0-4,1.791-4,4v48.255 C254.498,259.619,256.289,261.41,258.498,261.41z"></path><path d="M349.443,261.41h55.727c2.209,0,4-1.791,4-4v-48.255c0-2.209-1.791-4-4-4h-55.727c-2.209,0-4,1.791-4,4v48.255 C345.443,259.619,347.234,261.41,349.443,261.41z"></path><path d="M76.611,340.41h55.726c2.209,0,4-1.791,4-4v-48.256c0-2.209-1.791-4-4-4H76.611c-2.209,0-4,1.791-4,4v48.256 C72.611,338.619,74.402,340.41,76.611,340.41z"></path><path d="M167.555,340.41h55.726c2.209,0,4-1.791,4-4v-48.256c0-2.209-1.791-4-4-4h-55.726c-2.209,0-4,1.791-4,4v48.256 C163.555,338.619,165.346,340.41,167.555,340.41z"></path><path d="M258.499,340.41h55.726c2.209,0,4-1.791,4-4v-48.256c0-2.209-1.791-4-4-4h-55.726c-2.209,0-4,1.791-4,4v48.256 C254.499,338.619,256.29,340.41,258.499,340.41z"></path><path d="M349.443,340.41h55.727c2.209,0,4-1.791,4-4v-48.256c0-2.209-1.791-4-4-4h-55.727c-2.209,0-4,1.791-4,4v48.256 C345.443,338.619,347.234,340.41,349.443,340.41z"></path><path d="M132.337,363.154H76.612c-2.209,0-4,1.791-4,4v48.256c0,2.209,1.791,4,4,4h55.726c2.209,0,4-1.791,4-4v-48.256 C136.337,364.945,134.546,363.154,132.337,363.154z"></path><path d="M223.282,363.154h-55.726c-2.209,0-4,1.791-4,4v48.256c0,2.209,1.791,4,4,4h55.726c2.209,0,4-1.791,4-4v-48.256 C227.282,364.945,225.491,363.154,223.282,363.154z"></path><path d="M314.227,363.154H258.5c-2.209,0-4,1.791-4,4v48.256c0,2.209,1.791,4,4,4h55.727c2.209,0,4-1.791,4-4v-48.256 C318.227,364.945,316.436,363.154,314.227,363.154z"></path><path d="M405.17,363.154h-55.727c-2.209,0-4,1.791-4,4v48.256c0,2.209,1.791,4,4,4h55.727c2.209,0,4-1.791,4-4v-48.256 C409.17,364.945,407.379,363.154,405.17,363.154z"></path></g></g></g></svg>
-                                            </div>
-                                        </div>
-                                        <h2 class="pbmit-element-title">
-                                            Working Days
-                                        </h2>
-                                    </div>
-                                    <div class="pbmit-ihbox-contents">
-                                        <div class="pbmit-heading-desc">
-                                            @if(!empty($data['working_days']))
-                                                @foreach($data['working_days'] as $slot)
-                                                    @if(isset($slot['days']) && isset($slot['from']) && isset($slot['to']))
-                                                        <strong>{{ implode(', ', $slot['days']) }}</strong>: {{ substr($slot['from'], 0, 5) }} - {{ substr($slot['to'], 0, 5) }}<br>
-                                                    @endif
-                                                @endforeach
-                                            @else
-                                                <span>No working days/hours set.</span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
                     </div>
-                    <div class="pbmit-social-links-bg pbmit-bg-color-global">
-                        <div class="row align-items-center">
-                            <div class="col-md-6">
-                                <h6 class="pbmit-heading-title">Connect with social media :</h6>
+                    </article>
+                    <article class="pbmit-miconheading-style-7 col-md-6">
+                        <div class="pbmit-ihbox-style-7">
+                            <div class="pbmit-ihbox-box">
+                                <div class="pbmit-ihbox-wrap">
+                                    <div class="pbmit-ihbox-icon">
+                                        <div class="pbmit-ihbox-icon-wrapper pbmit-icon-type-icon">
+                                            <svg id="Layer_3" height="512" viewBox="0 0 32 32" width="512" xmlns="http://www.w3.org/2000/svg" data-name="Layer 3">
+                                                <path d="m29.393 23.36c-.874-.733-6-3.979-6.852-3.83-.4.071-.706.412-1.525 1.389a11.687 11.687 0 0 1 -1.244 1.347 10.757 10.757 0 0 1 -2.374-.88 14.7 14.7 0 0 1 -6.784-6.786 10.757 10.757 0 0 1 -.88-2.374 11.687 11.687 0 0 1 1.347-1.244c.976-.819 1.318-1.123 1.389-1.525.149-.854-3.1-5.978-3.83-6.852-.306-.362-.584-.605-.94-.605-1.032 0-5.7 5.772-5.7 6.52 0 .061.1 6.07 7.689 13.791 7.721 7.589 13.73 7.689 13.791 7.689.748 0 6.52-4.668 6.52-5.7 0-.356-.243-.634-.607-.94z"></path>
+                                                <path d="m23 15h2a8.009 8.009 0 0 0 -8-8v2a6.006 6.006 0 0 1 6 6z"></path>
+                                                <path d="m28 15h2a13.015 13.015 0 0 0 -13-13v2a11.013 11.013 0 0 1 11 11z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <h2 class="pbmit-element-title">
+                                        Call US 24/7
+                                    </h2>
+                                </div>
+                                <div class="pbmit-ihbox-contents">
+                                    <div class="pbmit-heading-desc">{{ $data['phone'][0] }} <br>
+                                        {{ isset($data['phone'][1]) ? $data['phone'][1] : '' }}
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-6 text-md-end text-center">
-                                <ul class="pbmit-social-links">
-                                    <li class="pbmit-social-li pbmit-social-facebook">
-                                        <a title="Facebook" href="#" target="_blank">
-                                            <span><i class="pbmit-base-icon-facebook-f"></i></span>
-                                        </a>
-                                    </li>
-                                    <li class="pbmit-social-li pbmit-social-twitter">
-                                        <a title="Twitter" href="#" target="_blank">
-                                            <span><i class="pbmit-base-icon-twitter-2"></i></span>
-                                        </a>
-                                    </li>
-                                    <li class="pbmit-social-li pbmit-social-youtube">
-                                        <a title="Youtube" href="#" target="_blank">
-                                            <span><i class="pbmit-base-icon-youtube-play"></i></span>
-                                        </a>
-                                    </li>
-                                    <li class="pbmit-social-li pbmit-social-instagram">
-                                        <a title="Instagram" href="#" target="_blank">
-                                            <span><i class="pbmit-base-icon-instagram"></i></span>
-                                        </a>
-                                    </li>
-                                </ul>
+                        </div>
+                    </article>
+                    <article class="pbmit-miconheading-style-7 col-md-6">
+                        <div class="pbmit-ihbox-style-7">
+                            <div class="pbmit-ihbox-box">
+                                <div class="pbmit-ihbox-wrap">
+                                    <div class="pbmit-ihbox-icon">
+                                        <div class="pbmit-ihbox-icon-wrapper pbmit-icon-type-icon">
+                                            <svg version="1.1" id="pbmit_003" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="484.951px" height="484.951px" viewBox="0 0 484.951 484.951" style="enable-background:new 0 0 484.951 484.951;" xml:space="preserve">
+                                                <g>
+                                                    <g id="_x31_5_38_">
+                                                        <g>
+                                                            <path d="M118.505,115.332h6.938c10.544,0,19.091-8.55,19.091-19.091V43.558V23.852c0-10.541-8.547-19.09-19.091-19.09h-6.938 c-10.543,0-19.09,8.549-19.09,19.09v19.707v52.682C99.415,106.782,107.962,115.332,118.505,115.332z"></path>
+                                                            <path d="M363.373,114.859h6.938c10.543,0,19.09-8.549,19.09-19.091v-57.21v-15.18c0-10.54-8.547-19.089-19.09-19.089h-6.938 c-10.545,0-19.092,8.549-19.092,19.089v15.18v57.209C344.283,106.31,352.83,114.859,363.373,114.859z"></path>
+                                                            <path d="M453.916,43.558H404.92v57.209c0,19.084-15.525,29.61-34.607,29.61h-6.938c-19.084,0-34.609-15.526-34.609-34.61V43.558 H160.053V96.24c0,19.084-15.525,34.61-34.609,34.61h-6.938c-19.083,0-34.608-15.526-34.608-34.61V43.558H31.036 C13.923,43.558,0,57.481,0,74.595v375.03c0,17.114,13.923,31.037,31.036,31.037h422.88c17.113,0,31.035-13.923,31.035-31.037 V74.595C484.953,57.482,471.029,43.558,453.916,43.558z M453.916,449.625H31.037l-0.001-283.213h422.886l0.016,283.212 C453.936,449.624,453.93,449.625,453.916,449.625z"></path>
+                                                            <path d="M258.498,261.41h55.727c2.209,0,4-1.791,4-4v-48.255c0-2.209-1.791-4-4-4h-55.727c-2.209,0-4,1.791-4,4v48.255 C254.498,259.619,256.289,261.41,258.498,261.41z"></path>
+                                                            <path d="M349.443,261.41h55.727c2.209,0,4-1.791,4-4v-48.255c0-2.209-1.791-4-4-4h-55.727c-2.209,0-4,1.791-4,4v48.255 C345.443,259.619,347.234,261.41,349.443,261.41z"></path>
+                                                            <path d="M76.611,340.41h55.726c2.209,0,4-1.791,4-4v-48.256c0-2.209-1.791-4-4-4H76.611c-2.209,0-4,1.791-4,4v48.256 C72.611,338.619,74.402,340.41,76.611,340.41z"></path>
+                                                            <path d="M167.555,340.41h55.726c2.209,0,4-1.791,4-4v-48.256c0-2.209-1.791-4-4-4h-55.726c-2.209,0-4,1.791-4,4v48.256 C163.555,338.619,165.346,340.41,167.555,340.41z"></path>
+                                                            <path d="M258.499,340.41h55.726c2.209,0,4-1.791,4-4v-48.256c0-2.209-1.791-4-4-4h-55.726c-2.209,0-4,1.791-4,4v48.256 C254.499,338.619,256.29,340.41,258.499,340.41z"></path>
+                                                            <path d="M349.443,340.41h55.727c2.209,0,4-1.791,4-4v-48.256c0-2.209-1.791-4-4-4h-55.727c-2.209,0-4,1.791-4,4v48.256 C345.443,338.619,347.234,340.41,349.443,340.41z"></path>
+                                                            <path d="M132.337,363.154H76.612c-2.209,0-4,1.791-4,4v48.256c0,2.209,1.791,4,4,4h55.726c2.209,0,4-1.791,4-4v-48.256 C136.337,364.945,134.546,363.154,132.337,363.154z"></path>
+                                                            <path d="M223.282,363.154h-55.726c-2.209,0-4,1.791-4,4v48.256c0,2.209,1.791,4,4,4h55.726c2.209,0,4-1.791,4-4v-48.256 C227.282,364.945,225.491,363.154,223.282,363.154z"></path>
+                                                            <path d="M314.227,363.154H258.5c-2.209,0-4,1.791-4,4v48.256c0,2.209,1.791,4,4,4h55.727c2.209,0,4-1.791,4-4v-48.256 C318.227,364.945,316.436,363.154,314.227,363.154z"></path>
+                                                            <path d="M405.17,363.154h-55.727c-2.209,0-4,1.791-4,4v48.256c0,2.209,1.791,4,4,4h55.727c2.209,0,4-1.791,4-4v-48.256 C409.17,364.945,407.379,363.154,405.17,363.154z"></path>
+                                                        </g>
+                                                    </g>
+                                                </g>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <h2 class="pbmit-element-title">
+                                        Working Days
+                                    </h2>
+                                </div>
+                                <div class="pbmit-ihbox-contents">
+                                    <div class="pbmit-heading-desc">
+                                        @if(!empty($data['working_days']))
+                                        @foreach($data['working_days'] as $slot)
+                                        @if(isset($slot['days']) && isset($slot['from']) && isset($slot['to']))
+                                        <strong>{{ implode(', ', $slot['days']) }}</strong>: {{ substr($slot['from'], 0, 5) }} - {{ substr($slot['to'], 0, 5) }}<br>
+                                        @endif
+                                        @endforeach
+                                        @else
+                                        <span>No working days/hours set.</span>
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
+                        </div>
+                    </article>
+                </div>
+                <div class="pbmit-social-links-bg pbmit-bg-color-global">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h6 class="pbmit-heading-title">Connect with social media :</h6>
+                        </div>
+                        <div class="col-md-6 text-md-end text-center">
+                            <ul class="pbmit-social-links">
+                                <li class="pbmit-social-li pbmit-social-facebook">
+                                    <a title="Facebook" href="#" target="_blank">
+                                        <span><i class="pbmit-base-icon-facebook-f"></i></span>
+                                    </a>
+                                </li>
+                                <li class="pbmit-social-li pbmit-social-twitter">
+                                    <a title="Twitter" href="#" target="_blank">
+                                        <span><i class="pbmit-base-icon-twitter-2"></i></span>
+                                    </a>
+                                </li>
+                                <li class="pbmit-social-li pbmit-social-youtube">
+                                    <a title="Youtube" href="#" target="_blank">
+                                        <span><i class="pbmit-base-icon-youtube-play"></i></span>
+                                    </a>
+                                </li>
+                                <li class="pbmit-social-li pbmit-social-instagram">
+                                    <a title="Instagram" href="#" target="_blank">
+                                        <span><i class="pbmit-base-icon-instagram"></i></span>
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </section>
 <!-- Contact End -->
@@ -237,22 +276,25 @@
                 <div class="map-wrapper">
                     <div class="map-container" style="height: 400px; background-color: #f5f5f5;">
                         @if(!empty($data['map']))
-                            <iframe
-                                width="100%"
-                                height="400"
-                                frameborder="0"
-                                style="border:0"
-                                src="https://maps.app.goo.gl/ur8MPDtJBtFWUN9f9"
-                                allowfullscreen>
-                            </iframe>
+                        <iframe
+                            width="100%"
+                            height="400"
+                            frameborder="0"
+                            style="border:0"
+                            src="https://www.google.com/maps/embed?pb=YOUR_EMBED_CODE_HERE"
+                            allowfullscreen
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
                         @else
-                            <div class="d-flex align-items-center justify-content-center h-100">
-                                <div class="text-center">
-                                    <i class="fas fa-map-marker-alt" style="font-size: 3rem; color: #ccc;"></i>
-                                    <h4 class="mt-3">Map location not set</h4>
-                                </div>
+                        <div class="d-flex align-items-center justify-content-center h-100">
+                            <div class="text-center">
+                                <i class="fas fa-map-marker-alt" style="font-size: 3rem; color: #ccc;"></i>
+                                <h4 class="mt-3">Map location not set</h4>
                             </div>
+                        </div>
                         @endif
+
                     </div>
                 </div>
             </div>
