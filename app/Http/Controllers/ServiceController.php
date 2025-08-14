@@ -3,10 +3,39 @@
 namespace App\Http\Controllers;
 
 use App\Models\Service;
+use App\Enums\StatusEnum;
+use Illuminate\Http\Request;
 
-class ServiceController extends Controller {
-    public function show(string $slug) {
-        $service = Service::where( 'slug', $slug )->firstOrFail();
-        return view( 'services.service-detail', compact( 'service' ) );
+class ServiceController extends Controller
+{
+    /**
+     * Display a listing of the services.
+     */
+    public function index()
+    {
+        $services = Service::where('status', StatusEnum::active)
+            ->orderBy('order')
+            ->get();
+
+        return view('services.index', compact('services'));
+    }
+
+    /**
+     * Display the specified service.
+     */
+    public function show(string $slug)
+    {
+        $service = Service::where('slug', $slug)
+            ->where('status', StatusEnum::active)
+            ->firstOrFail();
+
+        // Get related services (excluding current one)
+        $relatedServices = Service::where('status', StatusEnum::active)
+            ->where('id', '!=', $service->id)
+            ->orderBy('order')
+            ->take(3)
+            ->get();
+
+        return view('services.show', compact('service', 'relatedServices'));
     }
 }
