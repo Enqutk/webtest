@@ -72,7 +72,7 @@
         <!-- CTA Section -->
         <x-cta-section />
         
-        <x-service-section />
+        <x-service-section :services="$services" />
 
     
 
