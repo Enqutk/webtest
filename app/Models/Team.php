@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\HasMedia;
+use App\Traits\HasUserStamps;
+
 
 class Team extends Model implements HasMedia
 {
-    use SoftDeletes, InteractsWithMedia;
+    use SoftDeletes, InteractsWithMedia , HasUserStamps;
 
     protected $fillable = [
         'first_name',
@@ -36,15 +38,7 @@ class Team extends Model implements HasMedia
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
-    
-    public static function getStatusOptions(): array
-    {
-        $options = [];
-        foreach (\App\Enums\StatusEnum::cases() as $case) {
-            $options[$case->value] = ucfirst($case->name);
-        }
-        return $options;
-    }
+
 
      public function registerMediaCollections(): void
     {
