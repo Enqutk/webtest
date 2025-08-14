@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\StatusEnum;
 use App\Filament\Resources\OrganizationResource\Pages;
 use App\Models\Organization;
 use Filament\Forms;
@@ -56,11 +57,8 @@ class OrganizationResource extends Resource
                     ->addActionLabel('Add Opening Hours'),
 
                 Forms\Components\Select::make('status')
-                    ->label('Status')
-                    ->options([
-                        'active' => 'Active',
-                        'inactive' => 'Inactive',
-                    ])
+                    ->options(StatusEnum::class)
+                    ->default(StatusEnum::active)
                     ->required(),
                 Forms\Components\TextInput::make('created_at')
                     ->label('Created At')
