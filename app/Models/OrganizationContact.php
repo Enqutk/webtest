@@ -23,10 +23,7 @@ class OrganizationContact extends Model
 
     ];
 
-    public function organization()
-    {
-        return $this->belongsTo(Organization::class);
-    }
+  
     public static function getTypeOptions(): array
     {
         return [
