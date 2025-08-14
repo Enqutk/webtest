@@ -20,7 +20,7 @@
                                 <div class="col-md-8 col-1">
                                     <div class="pbmit-slider-content">
                                         <h5 class="pbmit-slider-subtitle transform-right-1 transform-delay-1">
-                                            <span>{{ $hero->description }}</span>
+                                            <span>{{ $hero->subtitle }}</span>
                                         </h5>
                                         <h2 class="pbmit-slider-title transform-left transform-delay-2">
                                             <span class="first">{{ $hero->title }}</span>
@@ -29,7 +29,7 @@
 
                                         <div class="pbmit-button d-flex align-items-center">
                                             <div class="transform-bottom transform-delay-4">
-                                                <a href="{{ $hero->link ?? '#' }}" class="pbmit-btn white">
+                                                <a href="{{ $hero->button_link ?? '#' }}" class="pbmit-btn white">
                                                     <span class="pbmit-button-content-wrapper">
                                                         <span class="pbmit-button-icon">
                                                             <i class="pbmit-induyst-icon pbmit-induyst-icon-next"></i>
@@ -40,7 +40,7 @@
                                             </div>
                                             <div class="ms-4 transform-delay-5">
                                                 <div class="second-btn">
-                                                    <a class="pbmit-btn-style-text white" href="#">
+                                                    <a class="pbmit-btn-style-text white" href="{{ $hero->text_link ?? '#' }}">
                                                         <span class="pbmit-button-text">Explore Our Services</span>
                                                     </a>
                                                 </div>
