@@ -16,6 +16,8 @@ class MenuSeeder extends Seeder
             'slug' => 'main-menu',
             'location' => 'navbar',
             'description' => 'Default main navigation menu',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ]);
 
         // Insert top-level menu items
@@ -28,6 +30,8 @@ class MenuSeeder extends Seeder
             'url' => '/home',
             'target' => '_self',
             'order_number' => 1,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ]);
 
         $aboutId = DB::table('menu_items')->insertGetId([
@@ -39,6 +43,8 @@ class MenuSeeder extends Seeder
             'url' => '/about',
             'target' => '_self',
             'order_number' => 2,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ]);
 
         // Submenus under About
