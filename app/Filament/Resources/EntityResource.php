@@ -69,10 +69,7 @@ class EntityResource extends Resource
                TextColumn::make('id')->sortable(),
                TextColumn::make('name')->searchable()->sortable(),
                TextColumn::make('type')->badge()->sortable(),
-               SpatieMediaLibraryImageColumn::make('image')
-                    ->collection('image')
-                    ->square()
-                    ->size(50),
+               SpatieMediaLibraryImageColumn::make('image')->collection('image')->circular()->size(50),
                TextColumn::make('link')->url(fn($record) => $record->link)->openUrlInNewTab(true)->searchable(),
                TextColumn::make('order')->sortable(),
                TextColumn::make('status')
