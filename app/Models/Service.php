@@ -81,7 +81,15 @@ class Service extends Model implements HasMedia
     protected function svgInline(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->getFirstMedia('svg') ? file_get_contents($this->getFirstMediaPath('svg')) : '',
+            get: function () {
+                if ($media = $this->getFirstMedia('svg')) {
+                    $path = $media->getPath();
+                    if (file_exists($path)) {
+                        return file_get_contents($path);
+                    }
+                }
+                return '';
+            }
         );
     }
 }
