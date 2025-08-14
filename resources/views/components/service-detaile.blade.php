@@ -7,8 +7,7 @@
         </div>
         <div class="row">
             <div class="col-lg-6 mb-4">
-                <img src="{{ $service->getFirstMediaUrl('secondary_image') }}" class="img-fluid"
-                    alt="{{ $service->title }}">
+                <img src="{{ $service->secondary_image_url }}" class="img-fluid" alt="{{ $service->title }}">
             </div>
             <div class="col-lg-6">
                 <div class="pbmit-service-description">
