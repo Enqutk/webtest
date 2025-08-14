@@ -110,8 +110,8 @@
                                         </h2>
                                     </div>
                                     <div class="pbmit-ihbox-contents">
-                                        <div class="pbmit-heading-desc"><a href="mailto:{{ $data['email'] }}" class="__cf_email__" data-cfemail="52313d3c2633312612372a333f223e377c313d3f">{{ $data['email'] }}</a> <br>
-                                            <a href="mailto:{{ $data['email'] }}" class="__cf_email__" data-cfemail="8ce2e3fee9fce0f5ccfff9fcfce3fef8e9f4ede1a2efe3e1">{{ $data['email'] }}</a>
+                                        <div class="pbmit-heading-desc"><a href="mailto:{{ $data['email'][0] }}" class="__cf_email__" data-cfemail="52313d3c2633312612372a333f223e377c313d3f">{{ $data['email'][0] }}</a> <br>
+                                            <a href="mailto:{{ $data['email'][1] }}" class="__cf_email__" data-cfemail="8ce2e3fee9fce0f5ccfff9fcfce3fef8e9f4ede1a2efe3e1">{{ $data['email'][1] }}</a>
                                         </div>
                                     </div>
                                 </div>
