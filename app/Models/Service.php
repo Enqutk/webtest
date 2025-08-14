@@ -78,4 +78,10 @@ class Service extends Model implements HasMedia
             get: fn () => $this->getFirstMediaUrl('main_image'),
         );
     }
+    protected function svgInline(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->getFirstMedia('svg') ? file_get_contents($this->getFirstMediaPath('svg')) : '',
+        );
+    }
 }
