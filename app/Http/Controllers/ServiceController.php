@@ -1,0 +1,12 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Service;
+
+class ServiceController extends Controller {
+    public function show( $slug ) {
+        $service = Service::where( 'slug', $slug )->firstOrFail();
+        return view( 'components.service-detaile', compact( 'service' ) );
+    }
+}
