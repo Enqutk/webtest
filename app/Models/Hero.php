@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\HasUserStamps;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Hero extends Model implements HasMedia
 {
@@ -55,5 +56,12 @@ class Hero extends Model implements HasMedia
                     ->height(150)
                     ->sharpen(10);
             });
+    }
+
+    protected function imageUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->getFirstMediaUrl('image'),
+        );
     }
 }
