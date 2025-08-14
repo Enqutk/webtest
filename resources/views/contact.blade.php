@@ -121,10 +121,12 @@
                                     </div>
                                     <div class="pbmit-ihbox-contents">
                                         <div class="pbmit-heading-desc">
+                                            @if(!empty($data['email']))
                                             <a href="mailto:{{ $data['email'][0] }}" class="__cf_email__">{{ $data['email'][0] }}</a>
                                             @if(isset($data['email'][1]))
                                             <br>
                                             <a href="mailto:{{ $data['email'][1] }}" class="__cf_email__">{{ $data['email'][1] }}</a>
+                                            @endif
                                             @endif
                                         </div>
                                     </div>
