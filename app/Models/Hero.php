@@ -19,8 +19,10 @@ class Hero extends Model implements HasMedia
 
     protected $fillable = [
         'title',
+        'subtitle',
         'description',
-        'link',
+        'button_link',
+        'text_link',
         'order',
         'status',
         'created_by',
