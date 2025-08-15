@@ -42,9 +42,11 @@
         @endphp
 
         <!-- Hero Features Section -->
-        <div style="margin-top: 40px;">
+        <div class="mt-5 mb-5">
             <x-hero-features :data="$data" />
         </div>
+
+        <hr>
 
         
 
