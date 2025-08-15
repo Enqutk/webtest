@@ -48,6 +48,7 @@
             @foreach($data['aboutFeatures'] as $about)
                 <x-about-section 
                     :features="$about['metadata'] ?? []"
+                    :slidePages="$about['list_items'] ?? []"
                     subtitle="{{ $about['subtitle'] ?? '' }}"
                     title="{{ $about['title'] ?? '' }}"
                     description="{{ $about['short_description'] ?? '' }}"
