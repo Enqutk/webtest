@@ -378,3 +378,53 @@
 </section>
 <!-- Map Section End -->
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const contactForm = document.getElementById('contact-form');
+    const submitBtn = contactForm.querySelector('button[type="submit"]');
+    const loader = submitBtn.querySelector('.form-btn-loader');
+    const buttonText = submitBtn.querySelector('.pbmit-button-content-wrapper');
+
+    contactForm.addEventListener('submit', function(e) {
+        // Show loading state
+        submitBtn.disabled = true;
+        loader.classList.remove('d-none');
+        buttonText.style.opacity = '0.5';
+
+        // Hide any existing alerts
+        const existingAlerts = contactForm.querySelectorAll('.alert');
+        existingAlerts.forEach(alert => alert.remove());
+    });
+
+    // Auto-hide alerts after 5 seconds
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            if (alert.parentNode) {
+                alert.remove();
+            }
+        }, 5000);
+    });
+
+    // Form validation enhancement
+    const inputs = contactForm.querySelectorAll('input[required], textarea[required]');
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.value.trim() === '') {
+                this.classList.add('is-invalid');
+            } else {
+                this.classList.remove('is-invalid');
+            }
+        });
+
+        input.addEventListener('input', function() {
+            if (this.value.trim() !== '') {
+                this.classList.remove('is-invalid');
+            }
+        });
+    });
+});
+</script>
+@endpush
