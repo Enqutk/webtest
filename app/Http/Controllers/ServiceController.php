@@ -28,12 +28,10 @@ class ServiceController extends Controller {
         ->where( 'status', StatusEnum::active )
         ->firstOrFail();
 
-        $allServices = Service::where( 'status', StatusEnum::active )
+        $relatedServices = Service::where( 'status', StatusEnum::active )
         ->orderBy( 'order' )
         ->get();
 
-        $service->features_list = $service->features ? explode( '\n', $service->features ) : [];
-
-        return view( 'services.show', compact( 'service', 'allServices' ) );
+        return view( 'services.show', compact( 'service', 'relatedServices' ) );
     }
 }
