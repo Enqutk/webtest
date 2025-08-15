@@ -5,7 +5,33 @@
     <div class="page-content">
 
         @php
-        // Blog posts can be made dynamic similarly if needed, but About Section is now fully dynamic from DB
+
+        $blogPosts = [
+            [
+                'title' => 'The Role of Energy Storage in the Transition to Renewables',
+                'excerpt' => 'When evaluating a single group or company, its dominant source of revenue is typically used&hellip;',
+                'image' => './assets/images/homepage-2/blog/blog-img-01.jpg',
+                'url' => 'blog-single-details.html',
+                'date' => '06',
+                'month' => 'Feb',
+                'author' => 'Alex joy',
+                'category' => 'Chemical',
+                'categoryUrl' => 'blog-classic.html',
+                'comments' => '3'
+            ],
+            [
+                'title' => 'Automation & Human-Robot Collab: The New Workforce',
+                'excerpt' => 'When evaluating a single group or company, its dominant source of revenue is typically used&hellip;',
+                'image' => './assets/images/homepage-2/blog/blog-img-06.jpg',
+                'url' => 'blog-single-details.html',
+                'date' => '06',
+                'month' => 'Feb',
+                'author' => 'Alex joy',
+                'category' => 'Engineering',
+                'categoryUrl' => 'blog-classic.html',
+                'comments' => '3'
+            ]
+        ];
         @endphp
 
         <!-- Hero Features Section -->
@@ -22,11 +48,11 @@
             @foreach($data['aboutFeatures'] as $about)
                 <x-about-section 
                     :features="$about['list_items'] ?? []"
-                    subtitle="{{ $about['subtitle'] ?? 'Who We Are' }}"
-                    title="{{ $about['title'] ?? 'Veritas Afrika Co.Ltd' }}"
-                    description="{{ $about['short_description'] ?? 'Veritas Afrika Co.Ltd is a multi-disciplinary company of professional consultants specializing in a wide range of civil engineering works. We provide expert services to government, non-government, and private-sector customers.' }}"
-                    buttonText="{{ $about['button_text'] ?? 'Discover More' }}"
-                    buttonUrl="{{ $about['button_url'] ?? '#' }}"
+                    subtitle="{{ $about['subtitle'] ?? '' }}"
+                    title="{{ $about['title'] ?? '' }}"
+                    description="{{ $about['short_description'] ?? '' }}"
+                    buttonText="Discover More"
+                    buttonUrl="#"
                 />
             @endforeach
         @endif

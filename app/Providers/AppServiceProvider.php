@@ -59,7 +59,8 @@ class AppServiceProvider extends ServiceProvider
 
             // Fetch About Us features block(s)
             $aboutFeatures = ContentBlock::where('is_active', true)
-                ->where('section_id', 1) // Assuming section_id 1 is for About Us features
+                ->where('title', 'Veritas Afrika Co.Ltd')
+                ->where('display_order', 2) 
                 ->get()
                 ->map(function ($block) {
                     $block->list_items = is_array($block->list_items)
