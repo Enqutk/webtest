@@ -30,6 +30,7 @@ class ServiceController extends Controller {
 
         $relatedServices = Service::where( 'status', StatusEnum::active )
         ->orderBy( 'order' )
+        ->take( 5 )
         ->get();
 
         return view( 'services.show', compact( 'service', 'relatedServices' ) );
