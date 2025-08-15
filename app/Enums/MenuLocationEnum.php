@@ -3,7 +3,7 @@
 namespace App\Enums;
 
 
-enum LocationEnum: string
+enum MenuLocationEnum: string
 {
     case Navbar = 'navbar';
     case Footer = 'footer';
