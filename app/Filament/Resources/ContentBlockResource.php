@@ -183,6 +183,9 @@ class ContentBlockResource extends Resource
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('display_order')
+                    ->sortable()
+                    ->label('Order'),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
