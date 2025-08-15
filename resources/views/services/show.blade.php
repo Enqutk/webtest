@@ -38,9 +38,8 @@
 
                     <div class="row g-4">
                         <div class="col-md-12">
-                            @if ($service->secondary_image_url)
-                                <img src="{{ $service->secondary_image_url }}" class="img-fluid"
-                                    alt="{{ $service->title }}">
+                            @if($service->secondary_image_url)
+                                <img src="{{ $service->secondary_image_url }}" class="img-fluid" alt="{{ $service->title }}">
                             @endif
                         </div>
 
@@ -56,8 +55,7 @@
                                     <ul class="list-unstyled">
                                         @foreach (json_decode($service->features) as $feature)
                                             <li class="mb-2 d-flex align-items-start">
-                                                <i
-                                                    class="pbmit-induyst-icon pbmit-induyst-icon-check me-2 text-success"></i>
+                                                <i class="pbmit-induyst-icon pbmit-induyst-icon-check me-2 text-success"></i>
                                                 <span>{{ $feature }}</span>
                                             </li>
                                         @endforeach
