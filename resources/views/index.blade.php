@@ -47,6 +47,7 @@
         @if(isset($data['aboutFeatures']) && count($data['aboutFeatures']) > 0)
             @foreach($data['aboutFeatures'] as $about)
                 <x-about-section 
+                    :image ="{{ $data['aboutFeatureImage'][0]->image ?? '' }}"
                     :features="$about['metadata'] ?? []"
                     :slidePages="$about['list_items'] ?? []"
                     subtitle="{{ $about['subtitle'] ?? '' }}"
