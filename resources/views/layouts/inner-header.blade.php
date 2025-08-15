@@ -91,7 +91,7 @@
                                         <ul class="navigation clearfix" id="pbmit-top-menu">
                                             <li><a href="{{ route('home') }}">Home</a></li>
                                             <li><a href="{{ route('about') }}">About Us</a></li>
-                                            <li><a href="{{ route('services') }}">Service</a></li>
+                                            <li><a href="{{ route('services.index') }}">Services</a></li>
                                             <li><a href="{{ route('contact') }}">Contact Us</a></li>
                                         </ul>
 
