@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 120);
             $table->string('slug', 120)->unique();
-            $table->string('location')->default((string) LocationEnum::Navbar->value);
+            $table->string('location')->default( LocationEnum::Navbar->value);
             $table->text('description')->nullable();
             $table->timestamps();
             $table->softDeletes();
