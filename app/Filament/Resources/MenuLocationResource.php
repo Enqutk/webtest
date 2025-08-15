@@ -39,7 +39,11 @@ class MenuLocationResource extends Resource
                     ->readOnly(),
                 Forms\Components\Select::make('location')
                     ->label('location')
-                    ->options(MenuLocationEnum::cases())
+                    ->options(
+                        collect(MenuLocationEnum::cases())
+                            ->mapWithKeys(fn($case) => [$case->value => $case->name])
+                            ->toArray()
+                    )
                     ->default(MenuLocationEnum::Navbar->value)
                     ->required(),
                 Forms\Components\Textarea::make('description')
