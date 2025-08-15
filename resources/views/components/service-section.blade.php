@@ -64,10 +64,6 @@
                 <p class="lead">We're currently preparing our service offerings. Please check back soon!</p>
             </div>
         @endif
-
-        <div class="pbmit-bottom-text text-center mt-5 pt-md-2">
-            Latest solutions, and decades of experience. <a href="#"><u>Explore All Services</u></a>
-        </div>
     </div>
 </section>
 <!-- Service end -->
