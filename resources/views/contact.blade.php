@@ -137,23 +137,12 @@
                                     <div class="pbmit-ihbox-contents">
                                         <div class="pbmit-heading-desc">
                                             @if(!empty($data['email']))
-                                            <a href="mailto:{{ $data['email'][0] }}" class="__cf_email__">{{ $data['email'][0] }}</a>
-                                            @endif
-                                            @if(isset($data['email'][1]))
-                                            <br>
-                                            <a href="mailto:{{ $data['email'][1] }}" class="__cf_email__">{{ $data['email'][1] }}</a>
-                                            @endif
-                                            @if(isset($data['email'][2]))
-                                            <br>
-                                            <a href="mailto:{{ $data['email'][2] }}" class="__cf_email__">{{ $data['email'][2] }}</a>
-                                            @endif
-                                            @if(isset($data['email'][3]))
-                                            <br>
-                                            <a href="mailto:{{ $data['email'][3] }}" class="__cf_email__">{{ $data['email'][3] }}</a>
-                                            @endif
-                                            @if(isset($data['email'][4]))
-                                            <br>
-                                            <a href="mailto:{{ $data['email'][4] }}" class="__cf_email__">{{ $data['email'][4] }}</a>
+                                                @foreach($data['email'] as $email)
+                                                    <a href="mailto:{{ $email }}" class="__cf_email__">{{ $email }}</a>
+                                                    @if(!$loop->last)<br>@endif
+                                                @endforeach
+                                            @else
+                                                <span class="text-muted">No email addresses configured</span>
                                             @endif
                                         </div>
                                     </div>
