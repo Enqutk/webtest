@@ -56,6 +56,8 @@ class AppServiceProvider extends ServiceProvider
                         : json_decode($block->list_items, true);
                     return $block;
                 });
+
+            // Fetch About Us features block(s)
             $aboutFeatures = ContentBlock::where('is_active', true)
                 ->where('section_id', 1) // Assuming section_id 1 is for About Us features
                 ->get()
@@ -63,13 +65,18 @@ class AppServiceProvider extends ServiceProvider
                     $block->list_items = is_array($block->list_items)
                         ? $block->list_items
                         : json_decode($block->list_items, true);
-                    return $block;
+                    return [
+                        'title' => $block->title,
+                        'subtitle' => $block->subtitle,
+                        'short_description' => $block->short_description,
+                        'list_items' => $block->list_items,
+                    ];
                 });
 
             $data = array_merge(
                 ['email' => $email, 'phone' => $phone, 'fax' => $fax],
                 ['address' => $address, 'working_days' => $working_days, 'map' => $map],
-                ['heroFeatures' => $heroFeatures]
+                ['heroFeatures' => $heroFeatures ,'aboutFeatures' => $aboutFeatures]
             );
 
             $view->with(compact('data'));
