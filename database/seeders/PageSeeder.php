@@ -69,20 +69,23 @@ class PageSeeder extends Seeder
             'section_id' => $featuresSection->id,
             'type' => 'list',
             'title' => 'Key Features',
-            'content' => '<ul>
-            <li>
-                <strong>Professionalism</strong><br>
-                Our team consists of experienced leaders recognized regionally and...
-            </li>
-            <li>
-                <strong>Client-Centric Approach</strong><br>
-                Getting our clients what they deserve is our mission. We prioritize...
-            </li>
-            <li>
-                <strong>Regional Impact</strong><br>
-                We address local development challenges using effective...
-            </li>
-            </ul>',
+            'content' => json_encode([
+            [
+                'title' => 'Professionalism',
+                'icon' => 'bi bi-shield-check', 
+                'description' => 'Our team consists of experienced leaders recognized regionally and...',
+            ],
+            [
+                'title' => 'Client-Centric Approach',
+                'icon' => 'bi bi-person-heart',
+                'description' => 'Getting our clients what they deserve is our mission. We prioritize...',
+            ],
+            [
+                'title' => 'Regional Impact',
+                'icon' => 'bi bi-globe',
+                'description' => 'We address local development challenges using effective...',
+            ],
+            ]),
             'display_order' => 1,
             'is_active' => true,
             'created_by' => $user->id,
