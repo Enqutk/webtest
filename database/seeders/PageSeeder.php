@@ -43,6 +43,16 @@ class PageSeeder extends Seeder
             'updated_by' => $user->id,
         ]);
 
+        $aboutFeatures = PageSection::create([
+            'page_id' => $homePage->id,
+            'title' => 'About Features',
+            'subtitle' => 'Who We Are',
+            'display_order' => 2,
+            'is_active' => true,
+            'created_by' => $user->id,
+            'updated_by' => $user->id,
+        ]);
+
         // Create content block for Home page features (as a list)
         ContentBlock::create([
             'section_id' => $heroFeatures->id,
@@ -70,6 +80,10 @@ class PageSeeder extends Seeder
             'created_by' => $user->id,
             'updated_by' => $user->id,
         ]);
+
+        // Create content block for About Us section
+        ContentBlock::create([
+            'section_id' => $aboutFeatures->id,
 
 
 
