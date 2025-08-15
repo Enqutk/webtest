@@ -80,7 +80,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @endif
-                
+
                 <form class="contact-form left-box" method="POST" id="contact-form" action="{{ route('contact.send', ['recipient' => $data['email'][0]]) }}">
                 @if($errors->any())
                     <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
@@ -95,32 +95,49 @@
                     </div>
                 @endif
 
-                <form class="contact-form left-box" method="POST" id="contact-form" action="{{ route('contact.send', ['recipient' => $data['email'][0]]) }}">
+                 <form class="contact-form left-box" method="POST" id="contact-form" action="{{ route('contact.send', ['recipient' => 'contact@veritasafrika.com']) }}">
                     @csrf
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="text" class="form-control" placeholder="Full Name *" name="name" required>
+                            <input type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Full Name *" name="name" value="{{ old('name') }}" required>
+                            @error('name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-md-6">
-                            <input type="email" class="form-control" placeholder="Your Email *" name="email" required>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" placeholder="Your Email *" name="email" value="{{ old('email') }}" required>
+                            @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-md-6">
-                            <input type="number" class="form-control" placeholder="Your Phone *" name="phone" required>
+                            <input type="text" class="form-control @error('phone') is-invalid @enderror" placeholder="Your Phone *" name="phone" value="{{ old('phone') }}" required>
+                            @error('phone')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-md-6">
-                            <input type="text" class="form-control" placeholder="Subject *" name="subject" required>
+                            <input type="text" class="form-control @error('subject') is-invalid @enderror" placeholder="Subject *" name="subject" value="{{ old('subject') }}" required>
+                            @error('subject')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-md-12">
-                            <textarea name="message" cols="40" rows="10" class="form-control" placeholder="Comment *" required></textarea>
+                            <textarea name="message" cols="40" rows="10" class="form-control @error('message') is-invalid @enderror" placeholder="Comment *" required>{{ old('message') }}</textarea>
+                            @error('message')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="col-md-12">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox">
-                                <label class="form-check-label">Save my name, email, and website in this browser for the next time I comment.</label>
+                                <input class="form-check-input" type="checkbox" id="saveInfo">
+                                <label class="form-check-label" for="saveInfo">
+                                    Save my name, email, and website in this browser for the next time I comment.
+                                </label>
                             </div>
                         </div>
                     </div>
-                    <button class="pbmit-btn">
+                    <button class="pbmit-btn" type="submit">
                         <span class="form-btn-loader d-none">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100">
                                 <circle fill="#fff" stroke="#fff" stroke-width="15" r="15" cx="40" cy="50">
