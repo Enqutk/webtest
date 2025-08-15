@@ -244,9 +244,15 @@
                                         </h2>
                                     </div>
                                     <div class="pbmit-ihbox-contents">
-                                        <div class="pbmit-heading-desc">Mon to Fri - 09am to 06pm <br>
-                                            Sat to Sun - Closed
-                                        </div>
+                                        @if(!empty($data['working_days']))
+                                                @foreach($data['working_days'] as $slot)
+                                                    @if(isset($slot['days']) && isset($slot['from']) && isset($slot['to']))
+                                                        <strong>{{ implode('-', $slot['days']) }}</strong>: {{ substr($slot['from'], 0, 5) }} - {{ substr($slot['to'], 0, 5) }}<br>
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <span class="text-muted">No working hours configured</span>
+                                            @endif
                                     </div>
                                 </div>
                             </div>
