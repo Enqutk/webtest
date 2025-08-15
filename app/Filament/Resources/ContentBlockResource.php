@@ -63,10 +63,31 @@ class ContentBlockResource extends Resource
 
                 Forms\Components\Section::make('Content')
                     ->schema([
+                        // Show a repeater for "List" type to allow dynamic features with icon, title, and description
+                        Forms\Components\Repeater::make('list_items')
+                            ->label('List Items')
+                            ->visible(fn(callable $get) => $get('type') === 'list')
+                            ->schema([
+                                Forms\Components\TextInput::make('title')
+                                    ->label('Title')
+                                    ->required()
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('icon')
+                                    ->label('Icon (SVG or class)')
+                                    ->maxLength(100)
+                                    ->helperText('Paste SVG, icon class, or image URL'),
+                                Forms\Components\Textarea::make('description')
+                                    ->label('Description')
+                                    ->maxLength(500)
+                                    ->rows(2),
+                            ])
+                            ->minItems(1)
+                            ->columnSpanFull(),
+
                         Forms\Components\RichEditor::make('content')
                             ->label('Content')
                             ->nullable()
-                            ->visible(fn(callable $get) => in_array($get('type'), ['text', 'list', 'timeline']))
+                            ->visible(fn(callable $get) => in_array($get('type'), ['text', 'timeline']))
                             ->columnSpanFull(),
 
                         Forms\Components\SpatieMediaLibraryFileUpload::make('images')
@@ -91,7 +112,7 @@ class ContentBlockResource extends Resource
                             ->nullable()
                             ->helperText('Store additional structured data for complex blocks')
                             ->columnSpanFull(),
-                    ]),
+                    ]), 
 
                 Forms\Components\Section::make('Settings')
                     ->schema([
