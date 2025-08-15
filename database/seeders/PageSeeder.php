@@ -61,17 +61,17 @@ class PageSeeder extends Seeder
             'list_items' =>[
             [
                 'title' => 'Professionalism',
-                'icon' => 'bi bi-shield-check', 
+                'icon' => 'bi bi-laptop', 
                 'description' => 'Our team consists of experienced leaders recognized regionally and...',
             ],
             [
                 'title' => 'Client-Centric Approach',
-                'icon' => 'bi bi-person-heart',
+                'icon' => 'bi bi-laptop',
                 'description' => 'Getting our clients what they deserve is our mission. We prioritize...',
             ],
             [
                 'title' => 'Regional Impact',
-                'icon' => 'bi bi-globe',
+                'icon' => 'bi bi-laptop',
                 'description' => 'We address local development challenges using effective...',
             ],
             ],
@@ -91,17 +91,17 @@ class PageSeeder extends Seeder
             'list_items' => [
                 [
                     'title' => 'Our Vision',
-                    'icon' => 'bi bi-shield-check',
+                    'icon' => 'bi bi-laptop',
                     'description' => 'Building long-term partnerships through responsiveness and reliability.',
                 ],
                 [
                     'title' => 'Our Solutions',
-                    'icon' => 'bi bi-person-heart',
+                    'icon' => 'bi bi-laptop',
                     'description' => ' Extensive, flexible services that tailored to address changing industry .',
                 ],
                 [
                     'title' => 'Our Question',
-                    'icon' => 'bi bi-globe',
+                    'icon' => 'bi bi-laptop',
                     'description' => 'What key challenges can we solve together to drive your business?',
                 ],
              
