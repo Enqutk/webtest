@@ -82,39 +82,6 @@
 </section>
 <!-- Service Detail End -->
 
-<!-- Related Services Start -->
-@if($relatedServices->count() > 0)
-<section class="section-lg pbmit-bg-color-light py-5">
-    <div class="container">
-        <div class="pbmit-heading-subheading text-center mb-5">
-            <h4 class="pbmit-subtitle text-muted">Other Services</h4>
-            <h2 class="pbmit-title fw-bold">Related Services</h2>
-        </div>
 
-        <div class="row g-4">
-            @foreach($relatedServices as $relatedService)
-                <div class="col-md-6 col-lg-4">
-                    <div class="service-card h-100 p-4 text-center bg-white rounded shadow-sm hover-shadow">
-                        <div class="service-icon mb-3">
-                            @if($relatedService->svg_inline)
-                                {!! $relatedService->svg_inline !!}
-                            @else
-                                <i class="pbmit-induyst-icon pbmit-induyst-icon-water-drop fs-1 text-primary"></i>
-                            @endif
-                        </div>
-                        <h3 class="service-title h5 fw-bold mb-2">{{ $relatedService->title }}</h3>
-                        <p class="text-muted mb-3">
-                            {{ \Illuminate\Support\Str::limit($relatedService->short_description, 100) }}
-                        </p>
-                        <a href="{{ route('services.show', $relatedService->slug) }}" class="btn btn-outline-primary btn-sm">
-                            Learn More <i class="pbmit-induyst-icon pbmit-induyst-icon-next ms-1"></i>
-                        </a>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-@endif
 <!-- Related Services End -->
 @endsection
