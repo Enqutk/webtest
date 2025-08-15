@@ -78,11 +78,15 @@ class AppServiceProvider extends ServiceProvider
                         'metadata' => $block->metadata,
                     ];
                 });
+             $aboutFeatureImage = ContentBlock::where('is_active', true)
+                ->where('title', 'Veritas Afrika Co.Ltd')
+                ->where('display_order', 3) 
+                ->get();
 
             $data = array_merge(
                 ['email' => $email, 'phone' => $phone, 'fax' => $fax],
                 ['address' => $address, 'working_days' => $working_days, 'map' => $map],
-                ['heroFeatures' => $heroFeatures ,'aboutFeatures' => $aboutFeatures]
+                ['heroFeatures' => $heroFeatures ,'aboutFeatures' => $aboutFeatures , 'aboutFeatureImage' => $aboutFeatureImage]
             );
 
             $view->with(compact('data'));
