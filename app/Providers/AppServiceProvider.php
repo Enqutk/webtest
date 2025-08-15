@@ -31,9 +31,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
 
-        View::composer(['index', 'about', 'contact', 'services'], function ($view) {
+        View::composer(['index', 'about', 'contact', 'services', 'hero-features'], function ($view) {
             $organization = Organization::first();
-
             $address = $organization->address ?? null;
             $working_days = $organization->opening_hours ?? [];
             $map = $organization->map_url ?? null;
@@ -50,9 +49,11 @@ class AppServiceProvider extends ServiceProvider
                 ->where('display_order', 1)
                 ->first();
 
-            $data = ['email' => $email, 'phone' => $phone, 'fax' => $fax] +
-                    ['address' => $address, 'working_days' => $working_days, 'map' => $map] +
-                    ['heroFeatures' => $heroFeatures];
+            $data = array_merge(
+                ['email' => $email, 'phone' => $phone, 'fax' => $fax],
+                ['address' => $address, 'working_days' => $working_days, 'map' => $map],
+                ['heroFeatures' => $heroFeatures]
+            );
 
             $view->with(compact('data'));
         });
