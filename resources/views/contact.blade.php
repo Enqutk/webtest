@@ -81,7 +81,7 @@
                     </div>
                 @endif
 
-                <form class="contact-form left-box" method="POST" id="contact-form" action="{{ route('contact.send', ['recipient' => $data['email'][0]]) }}">
+                              <form class="contact-form left-box" method="POST" id="contact-form" action="{{ route('contact.send', ['recipient' => $data['email'][0] ?? config('mail.from.address')]) }}">
                 @if($errors->any())
                     <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
                         <i class="fas fa-exclamation-circle me-2"></i>
