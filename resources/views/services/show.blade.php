@@ -38,8 +38,9 @@
 
                     <div class="row g-4">
                         <div class="col-md-12">
-                            @if($service->secondary_image_url)
-                                <img src="{{ $service->secondary_image_url }}" class="img-fluid" alt="{{ $service->title }}">
+                            @if ($service->secondary_image_url)
+                                <img src="{{ $service->secondary_image_url }}" class="img-fluid"
+                                    alt="{{ $service->title }}">
                             @endif
                         </div>
 
@@ -52,17 +53,9 @@
                             @if ($service->features)
                                 <div class="pbmit-service-features mb-4">
                                     <h5>Key Features</h5>
-                                    <ul class="list-unstyled">
-                                        @foreach (json_decode($service->features) as $feature)
-                                            <li class="mb-2 d-flex align-items-start">
-                                                <i class="pbmit-induyst-icon pbmit-induyst-icon-check me-2 text-success"></i>
-                                                <span>{{ $feature }}</span>
-                                            </li>
-                                        @endforeach
-                                    </ul>
+                                    <div>{!! \Purifier::clean($service->features) !!}</div>
                                 </div>
                             @endif
-
                             @if ($service->quote)
                                 <blockquote class="blockquote p-3 bg-light border-start border-primary border-4 rounded">
                                     <p class="mb-0 fst-italic">"{{ $service->quote }}"</p>
