@@ -137,12 +137,12 @@
                                     <div class="pbmit-ihbox-contents">
                                         <div class="pbmit-heading-desc">
                                             @if(!empty($data['email']))
-                                                @foreach($data['email'] as $email)
-                                                    <a href="mailto:{{ $email }}" class="__cf_email__">{{ $email }}</a>
-                                                    @if(!$loop->last)<br>@endif
-                                                @endforeach
+                                            @foreach($data['email'] as $email)
+                                            <a href="mailto:{{ $email }}" class="__cf_email__">{{ $email }}</a>
+                                            @if(!$loop->last)<br>@endif
+                                            @endforeach
                                             @else
-                                                <span class="text-muted">No email addresses configured</span>
+                                            <span class="text-muted">No email addresses configured</span>
                                             @endif
                                         </div>
                                     </div>
@@ -198,12 +198,12 @@
                                     <div class="pbmit-ihbox-contents">
                                         <div class="pbmit-heading-desc">
                                             @if(!empty($data['phone']))
-                                                @foreach($data['phone'] as $phone)
-                                                    {{ $phone }}
-                                                    @if(!$loop->last)<br>@endif
-                                                @endforeach
+                                            @foreach($data['phone'] as $phone)
+                                            {{ $phone }}
+                                            @if(!$loop->last)<br>@endif
+                                            @endforeach
                                             @else
-                                                <span class="text-muted">No phone numbers configured</span>
+                                            <span class="text-muted">No phone numbers configured</span>
                                             @endif
                                         </div>
                                     </div>
@@ -245,14 +245,14 @@
                                     </div>
                                     <div class="pbmit-ihbox-contents">
                                         @if(!empty($data['working_days']))
-                                                @foreach($data['working_days'] as $slot)
-                                                    @if(isset($slot['days']) && isset($slot['from']) && isset($slot['to']))
-                                                        <strong>{{ implode('-', $slot['days']) }}</strong>: {{ substr($slot['from'], 0, 5) }} - {{ substr($slot['to'], 0, 5) }}<br>
-                                                    @endif
-                                                @endforeach
-                                            @else
-                                                <span class="text-muted">No working hours configured</span>
-                                            @endif
+                                        @foreach($data['working_days'] as $slot)
+                                        @if(isset($slot['days']) && isset($slot['from']) && isset($slot['to']))
+                                        <strong>{{ implode('-', $slot['days']) }}</strong>: {{ substr($slot['from'], 0, 5) }} - {{ substr($slot['to'], 0, 5) }}<br>
+                                        @endif
+                                        @endforeach
+                                        @else
+                                        <span class="text-muted">No working hours configured</span>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
