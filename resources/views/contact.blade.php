@@ -50,18 +50,49 @@
         </div>
         <div class="row pt-3">
             <div class="col-md-6 full-width-1200">
+
+             <!-- Success/Error Messages -->
                 @if(session('success'))
-                <div class="splash-screen-success" style="position: fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0, 128, 0, 0.33); z-index:9999; display:flex; align-items:center; justify-content:center;">
-                    <div style="background:#fff; padding:2rem 3rem; border-radius:10px; text-align:center;">
-                        <h2 style="color:green;">Message Sent Successfully!</h2>
-                        <p>{{ session('success') }}</p>
+                    <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                </div>
-                <script>
-                    setTimeout(function() {
-                        document.querySelector('.splash-screen-success').style.display = 'none';
-                    }, 3000);
-                </script>
+                @endif
+
+                @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+                @if($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <strong>Please fix the following errors:</strong>
+                        <ul class="mb-0 mt-2">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+                
+                <form class="contact-form left-box" method="POST" id="contact-form" action="{{ route('contact.send', ['recipient' => $data['email'][0]]) }}">
+                @if($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <strong>Please fix the following errors:</strong>
+                        <ul class="mb-0 mt-2">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                 @endif
 
                 <form class="contact-form left-box" method="POST" id="contact-form" action="{{ route('contact.send', ['recipient' => $data['email'][0]]) }}">
