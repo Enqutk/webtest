@@ -18,6 +18,7 @@ class ContentBlock extends Model implements HasMedia
         'section_id',
         'type',
         'title',
+        'icon',
         'subtitle',
         'short_description',
         'content',

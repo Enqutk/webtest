@@ -13,6 +13,7 @@ return new class extends Migration {
             $table->foreignId('section_id')->constrained('page_sections')->cascadeOnDelete();
             $table->string('type')->default(ContentTypeEnum::Text->value);
             $table->string('title')->nullable();
+            $table->string('icon', 100)->nullable();
             $table->string('subtitle')->nullable();
             $table->text('short_description')->nullable();
             $table->longText('content')->nullable();
