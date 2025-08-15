@@ -84,8 +84,25 @@ class PageSeeder extends Seeder
         // Create content block for About Us section
         ContentBlock::create([
             'section_id' => $aboutFeatures->id,
-
-
-
+            'type' => 'list',
+            'title' => 'Veritas Afrika Co.Ltd',
+            'subtitle' => 'Who We Are',
+            'short_description' => "Veritas Afrika Co.Ltd is a multi-disciplinary company of professional consultants specializing in a wide range of civil engineering works. We provide expert services to government, non-government, and private-sector customers.",
+            'list_items' => [
+                [
+                    'title' => 'Professionalism',
+                ],
+                [
+                    'title' => 'Client-Centric Approach',
+                ],
+                [
+                    'title' => 'Regional Impact',
+                ],
+             ],
+            'display_order' => 2,
+            'is_active' => true,
+            'created_by' => $user->id,
+            'updated_by' => $user->id,
+        ]);
     }
 }
