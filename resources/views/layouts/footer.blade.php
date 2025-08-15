@@ -25,45 +25,13 @@
 					</div>
 					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box d-flex flex-column">
 						@if(!empty($data['email']))
-						<span>
-							<a href="mailto:{{$data['email'][0]}}"
-								class="__cf_email__"
-								data-cfemail="d6b5b9b8a2b7b5a296b3aeb7bba6bab3f8b5b9bb">{{ $data['email'][0] }}
-							</a>
-						</span>
-						@endif
-						@if(isset($data['email'][1]))
-						<span>
-							<a href="mailto:{{$data['email'][1]}}"
-								class="__cf_email__"
-								data-cfemail="d6b5b9b8a2b7b5a296b3aeb7bba6bab3f8b5b9bb">{{ $data['email'][1] }}
-							</a>
-						</span>
-						@endif
-						@if(isset($data['email'][2]))
-						<span>
-							<a href="mailto:{{$data['email'][2]}}"
-								class="__cf_email__"
-								data-cfemail="d6b5b9b8a2b7b5a296b3aeb7bba6bab3f8b5b9bb">{{ $data['email'][2] }}
-							</a>
-						</span>
-						@endif
-						@if(isset($data['email'][3]))
-						<span>
-							<a href="mailto:{{$data['email'][3]}}"
-								class="__cf_email__"
-								data-cfemail="d6b5b9b8a2b7b5a296b3aeb7bba6bab3f8b5b9bb">{{ $data['email'][3] }}
-							</a>
-						</span>
-						@endif
-						@if(isset($data['email'][4]))
-						<span>
-							<a href="mailto:{{$data['email'][4]}}"
-								class="__cf_email__"
-								data-cfemail="d6b5b9b8a2b7b5a296b3aeb7bba6bab3f8b5b9bb">{{ $data['email'][4] }}
-							</a>
-						</span>
-						@endif
+                                            @foreach($data['email'] as $email)
+                                            <a href="mailto:{{ $email }}" class="__cf_email__">{{ $email }}</a>
+                                            @if(!$loop->last)<br>@endif
+                                            @endforeach
+                                            @else
+                                            <span class="text-muted">No email addresses configured</span>
+                                            @endif
 					</div>
 					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box d-flex flex-column">
 						@if(!empty($data['phone']))
