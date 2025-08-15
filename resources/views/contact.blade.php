@@ -209,19 +209,12 @@
                                     <div class="pbmit-ihbox-contents">
                                         <div class="pbmit-heading-desc">
                                             @if(!empty($data['phone']))
-                                            {{ $data['phone'][0] }}
-                                            @endif
-                                            @if(isset($data['phone'][1]))<br>
-                                            {{ $data['phone'][1] }}
-                                            @endif
-                                            @if(isset($data['phone'][2]))<br>
-                                            {{ $data['phone'][2] }}
-                                            @endif
-                                            @if(isset($data['phone'][3]))<br>
-                                            {{ $data['phone'][3] }}
-                                            @endif
-                                            @if(isset($data['phone'][4]))<br>
-                                            {{ $data['phone'][4] }}
+                                                @foreach($data['phone'] as $phone)
+                                                    {{ $phone }}
+                                                    @if(!$loop->last)<br>@endif
+                                                @endforeach
+                                            @else
+                                                <span class="text-muted">No phone numbers configured</span>
                                             @endif
                                         </div>
                                     </div>
