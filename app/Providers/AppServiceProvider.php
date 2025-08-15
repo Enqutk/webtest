@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Enums\StatusEnum;
 use Illuminate\Support\ServiceProvider;
 use Spatie\MediaLibrary\Support\PathGenerator\PathGenerator;
 use App\MediaLibrary\ModelNamePathGenerator;
