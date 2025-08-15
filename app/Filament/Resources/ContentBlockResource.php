@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\ContentTypeEnum;
 use App\Filament\Resources\ContentBlockResource\Pages;
 use App\Models\ContentBlock;
 use App\Models\PageSection;
@@ -38,14 +39,9 @@ class ContentBlockResource extends Resource
                             ->preload(),
                         
                         Forms\Components\Select::make('type')
-                            ->options([
-                                'text' => 'Text Block',
-                                'image' => 'Image Block',
-                                'video' => 'Video Block',
-                                'list' => 'List Block',
-                                'timeline' => 'Timeline Block',
-                                'gallery' => 'Gallery Block',
-                            ])
+                            ->options(ContentTypeEnum::cases())
+                            ->default(ContentTypeEnum::Text->value)
+                            ->label('Type')
                             ->required()
                             ->reactive(),
                         
