@@ -51,14 +51,18 @@
         
 
         <!-- About Section -->
-        <x-about-section 
-            :features="$aboutFeatures"
-            subtitle="Who We Are"
-            title="Veritas Afrika Co.Ltd"
-            description="Veritas Afrika Co.Ltd is a multi-disciplinary company of professional consultants specializing in a wide range of civil engineering works. We provide expert services to government, non-government, and private-sector customers."
-            buttonText="Discover More"
-            buttonUrl="#"
-        />
+        @if(isset($data['aboutFeatures']) && count($data['aboutFeatures']) > 0)
+            @foreach($data['aboutFeatures'] as $about)
+                <x-about-section 
+                    :features="$about['list_items'] ?? []"
+                    subtitle="{{ $about['subtitle'] ?? '' }}"
+                    title="{{ $about['title'] ?? '' }}"
+                    description="{{ $about['short_description'] ?? '' }}"
+                    buttonText="Discover More"
+                    buttonUrl="#"
+                />
+            @endforeach
+        @endif
         <!-- CTA Section -->
         <x-cta-section />
         
