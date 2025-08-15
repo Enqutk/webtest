@@ -34,7 +34,7 @@ class ContactRepository
      * @param string $type
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getContactsByType(string $type)
+    public function getContactsByType(string $type) : \Illuminate\Database\Eloquent\Collection
     {
         return OrganizationContact::where('type', $type)
             ->where('status', StatusEnum::active)
