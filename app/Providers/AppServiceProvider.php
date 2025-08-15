@@ -56,6 +56,15 @@ class AppServiceProvider extends ServiceProvider
                         : json_decode($block->list_items, true);
                     return $block;
                 });
+            $aboutFeatures = ContentBlock::where('is_active', true)
+                ->where('section_id', 1) // Assuming section_id 1 is for About Us features
+                ->get()
+                ->map(function ($block) {
+                    $block->list_items = is_array($block->list_items)
+                        ? $block->list_items
+                        : json_decode($block->list_items, true);
+                    return $block;
+                });
 
             $data = array_merge(
                 ['email' => $email, 'phone' => $phone, 'fax' => $fax],
