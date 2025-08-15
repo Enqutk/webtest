@@ -47,7 +47,7 @@
         @if(isset($data['aboutFeatures']) && count($data['aboutFeatures']) > 0)
             @foreach($data['aboutFeatures'] as $about)
                 <x-about-section 
-                    :features="$about['list_items'] ?? []"
+                    :features="$about['metadata'] ?? []"
                     subtitle="{{ $about['subtitle'] ?? '' }}"
                     title="{{ $about['title'] ?? '' }}"
                     description="{{ $about['short_description'] ?? '' }}"

@@ -67,11 +67,15 @@ class AppServiceProvider extends ServiceProvider
                     $block->list_items = is_array($block->list_items)
                         ? $block->list_items
                         : json_decode($block->list_items, true);
+                    $block->metadata = is_array($block->metadata)
+                        ? $block->metadata
+                        : json_decode($block->metadata, true);
                     return [
                         'title' => $block->title,
                         'subtitle' => $block->subtitle,
                         'short_description' => $block->short_description,
                         'list_items' => $block->list_items,
+                        'metadata' => $block->metadata,
                     ];
                 });
 
