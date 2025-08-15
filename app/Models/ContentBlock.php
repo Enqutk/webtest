@@ -119,4 +119,9 @@ class ContentBlock extends Model implements HasMedia
     {
         return $this->type === 'gallery';
     }
+
+    public function getItemsAttribute($value)
+    {
+        return json_decode($value, true) ?? [];
+    }
 }

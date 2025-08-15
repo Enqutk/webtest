@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Enums\StatusEnum;
 use Illuminate\Support\ServiceProvider;
 use Spatie\MediaLibrary\Support\PathGenerator\PathGenerator;
 use App\MediaLibrary\ModelNamePathGenerator;
@@ -37,17 +38,24 @@ class AppServiceProvider extends ServiceProvider
             $working_days = $organization->opening_hours ?? [];
             $map = $organization->map_url ?? null;
 
-            $contactsByType = OrganizationContact::where('status', \App\Enums\StatusEnum::active)
+            $contactsByType = OrganizationContact::where('status',StatusEnum::active)
                 ->get()
                 ->groupBy('type');
             $email = $contactsByType->get('email', collect())->pluck('value')->all();
             $phone = $contactsByType->get('phone', collect())->pluck('value')->all();
             $fax = $contactsByType->get('fax', collect())->pluck('value')->all();
 
-            // Fetch homepage hero section content block
-            $heroFeatures = ContentBlock::where('title', 'Key Features')
-                ->where('display_order', 1)
-                ->first();
+
+            // Fetch all active hero feature blocks (adjust filter as needed)
+            $heroFeatures = ContentBlock::where('is_active', true)
+                ->where('title', 'Key-Features')
+                ->get()
+                ->map(function ($block) {
+                    $block->list_items = is_array($block->list_items)
+                        ? $block->list_items
+                        : json_decode($block->list_items, true);
+                    return $block;
+                });
 
             $data = array_merge(
                 ['email' => $email, 'phone' => $phone, 'fax' => $fax],
