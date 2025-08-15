@@ -91,17 +91,17 @@ class PageSeeder extends Seeder
             'list_items' => [
                 [
                     'title' => 'Our Vision',
-                    'icon' => 'bi bi-laptop',
+                    'icon' => 'bi bi-shield-check',
                     'description' => 'Building long-term partnerships through responsiveness and reliability.',
                 ],
                 [
                     'title' => 'Our Solutions',
-                    'icon' => 'bi bi-laptop',
+                    'icon' => 'bi bi-person-heart',
                     'description' => ' Extensive, flexible services that tailored to address changing industry .',
                 ],
                 [
                     'title' => 'Our Question',
-                    'icon' => 'bi bi-laptop',
+                    'icon' => 'bi bi-globe',
                     'description' => 'What key challenges can we solve together to drive your business?',
                 ],
              
