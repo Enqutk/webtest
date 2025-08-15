@@ -69,7 +69,7 @@ class PageSeeder extends Seeder
             'section_id' => $featuresSection->id,
             'type' => 'list',
             'title' => 'Key Features',
-            'content' => json_encode([
+            'list_items' =>[
             [
                 'title' => 'Professionalism',
                 'icon' => 'bi bi-shield-check', 
@@ -85,7 +85,7 @@ class PageSeeder extends Seeder
                 'icon' => 'bi bi-globe',
                 'description' => 'We address local development challenges using effective...',
             ],
-            ]),
+            ],
             'display_order' => 1,
             'is_active' => true,
             'created_by' => $user->id,
