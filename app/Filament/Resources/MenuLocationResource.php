@@ -74,7 +74,8 @@ class MenuLocationResource extends Resource
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('location')
-                    ->options(collect(LocationEnum::cases())->mapWithKeys(fn($case) => [$case->value => $case->name])->toArray())
+                    ->options(MenuLocationEnum::cases())
+                    ->default(MenuLocationEnum::Navbar->value)
                     ->label('Location')
 
             ])
