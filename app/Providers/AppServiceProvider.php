@@ -46,7 +46,9 @@ class AppServiceProvider extends ServiceProvider
             $fax = $contactsByType->get('fax', collect())->pluck('value')->all();
 
             // Fetch homepage hero section content block
-            $heroSection = ContentBlock::where('title', 'home_hero')->first();
+            $heroSection = ContentBlock::where('title', 'Key Features')
+                ->where('order', 1)
+                ->first();
 
             $data = ['email' => $email, 'phone' => $phone, 'fax' => $fax] +
                     ['address' => $address, 'working_days' => $working_days, 'map' => $map] +
