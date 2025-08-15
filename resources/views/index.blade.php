@@ -49,7 +49,7 @@
                 <x-about-section 
                     :features="$about['metadata'] ?? []"
                     :slidePages="$about['list_items'] ?? []"
-                    image="{{ $data['aboutFeatureImage'][0]['image'] ?? asset('assets/images/homepage-2/about-img-01.png') }}"
+                    image="{{ $data['aboutFeatureImageUrl']['images'] ?? '' }}"
                     subtitle="{{ $about['subtitle'] ?? '' }}"
                     title="{{ $about['title'] ?? '' }}"
                     description="{{ $about['short_description'] ?? '' }}"

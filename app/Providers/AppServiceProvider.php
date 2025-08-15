@@ -38,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
             $working_days = $organization->opening_hours ?? [];
             $map = $organization->map_url ?? null;
 
-            $contactsByType = OrganizationContact::where('status',StatusEnum::active)
+            $contactsByType = OrganizationContact::where('status', StatusEnum::active)
                 ->get()
                 ->groupBy('type');
             $email = $contactsByType->get('email', collect())->pluck('value')->all();
@@ -61,7 +61,7 @@ class AppServiceProvider extends ServiceProvider
             // Fetch About Us features block(s)
             $aboutFeatures = ContentBlock::where('is_active', true)
                 ->where('title', 'Veritas Afrika Co.Ltd')
-                ->where('display_order', 2) 
+                ->where('display_order', 2)
                 ->get()
                 ->map(function ($block) {
                     $block->list_items = is_array($block->list_items)
@@ -78,15 +78,19 @@ class AppServiceProvider extends ServiceProvider
                         'metadata' => $block->metadata,
                     ];
                 });
-             $aboutFeatureImage = ContentBlock::where('is_active', true)
+            $aboutFeatureImageBlock = ContentBlock::where('is_active', true)
                 ->where('title', 'Veritas Afrika Co.Ltd')
-                ->where('display_order', 3) 
-                ->get();
+                ->where('display_order', 3)
+                ->first();
+
+            $aboutFeatureImageUrl = $aboutFeatureImageBlock
+                ? $aboutFeatureImageBlock->getFirstMediaUrl('images')
+                : asset('assets/images/homepage-2/about-img-01.png');
 
             $data = array_merge(
                 ['email' => $email, 'phone' => $phone, 'fax' => $fax],
                 ['address' => $address, 'working_days' => $working_days, 'map' => $map],
-                ['heroFeatures' => $heroFeatures ,'aboutFeatures' => $aboutFeatures , 'aboutFeatureImage' => $aboutFeatureImage]
+                ['heroFeatures' => $heroFeatures, 'aboutFeatures' => $aboutFeatures, 'aboutFeatureImageUrl' => $aboutFeatureImageUrl]
             );
 
             $view->with(compact('data'));
