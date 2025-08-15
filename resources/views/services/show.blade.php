@@ -38,7 +38,10 @@
 
                     <div class="row g-4">
                         <div class="col-md-12">
-                            <img src="{{ $service->secondary_image_url }}" class="img-fluid" alt="{{ $service->title }}">
+                            @if ($service->secondary_image_url)
+                                <img src="{{ $service->secondary_image_url }}" class="img-fluid"
+                                    alt="{{ $service->title }}">
+                            @endif
                         </div>
 
                         <div class="col-md-12">
