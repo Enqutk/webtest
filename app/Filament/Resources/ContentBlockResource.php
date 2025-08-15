@@ -176,10 +176,6 @@ class ContentBlockResource extends Resource
                     ->size(40)
                     ->square(),
 
-                Tables\Columns\TextColumn::make('display_order')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean()
                     ->sortable(),
