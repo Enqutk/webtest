@@ -21,37 +21,30 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box">
-						 @if(!empty($data['address']))
-                                        {{ $data['address'] }}
-                                        @else
-                                        <span class="text-muted">No address configured</span>
-                                        @endif
+						@if(!empty($data['address']))
+						{{ $data['address'] }}
+						@else
+						<span class="text-muted">No address configured</span>
+						@endif
 					</div>
 					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box d-flex flex-column">
 						@if(!empty($data['email']))
-                                            @foreach($data['email'] as $email)
-                                            <a href="mailto:{{ $email }}" class="__cf_email__">{{ $email }}</a>
-                                            @if(!$loop->last)<br>@endif
-                                            @endforeach
-                                            @else
-                                            <span class="text-muted">No email addresses configured</span>
-                                            @endif
+						@foreach($data['email'] as $email)
+						<a href="mailto:{{ $email }}" class="__cf_email__">{{ $email }}</a>
+						@if(!$loop->last)<br>@endif
+						@endforeach
+						@else
+						<span class="text-muted">No email addresses configured</span>
+						@endif
 					</div>
 					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box d-flex flex-column">
 						@if(!empty($data['phone']))
-							<span>{{ $data['phone'][0] }}</span>
-						@endif
-						@if(isset($data['phone'][1]))
-							<span>{{ $data['phone'][1] }}</span>
-						@endif
-						@if(isset($data['phone'][2]))
-							<span>{{ $data['phone'][2] }}</span>
-						@endif
-						@if(isset($data['phone'][3]))
-							<span>{{ $data['phone'][3] }}</span>
-						@endif
-						@if(isset($data['phone'][4]))
-							<span>{{ $data['phone'][4] }}</span>
+						@foreach($data['phone'] as $phone)
+						{{ $phone }}
+						@if(!$loop->last)<br>@endif
+						@endforeach
+						@else
+						<span class="text-muted">No phone numbers configured</span>
 						@endif
 					</div>
 				</div>
