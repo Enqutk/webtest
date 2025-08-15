@@ -61,17 +61,17 @@ class PageSeeder extends Seeder
             'list_items' =>[
             [
                 'title' => 'Professionalism',
-                'icon' => 'bi bi-laptop', 
+                'icon' => 'bi bi-shield-check', 
                 'description' => 'Our team consists of experienced leaders recognized regionally and...',
             ],
             [
                 'title' => 'Client-Centric Approach',
-                'icon' => 'bi bi-laptop',
+                'icon' => 'bi bi-person-heart',
                 'description' => 'Getting our clients what they deserve is our mission. We prioritize...',
             ],
             [
                 'title' => 'Regional Impact',
-                'icon' => 'bi bi-laptop',
+                'icon' => 'bi bi-globe',
                 'description' => 'We address local development challenges using effective...',
             ],
             ],
