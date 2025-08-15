@@ -42,7 +42,9 @@
         @endphp
 
         <!-- Hero Features Section -->
-        <x-hero-features :data="$data" />
+        <div style="margin-top: 40px;">
+            <x-hero-features :data="$data" />
+        </div>
 
         
 
