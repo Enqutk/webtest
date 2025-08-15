@@ -23,7 +23,7 @@ class ContactRepository
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getActiveContacts()
+    public function getActiveContacts(): \Illuminate\Database\Eloquent\Collection
     {
         return OrganizationContact::where('status', StatusEnum::active)->get();
     }
