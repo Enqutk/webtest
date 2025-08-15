@@ -6,9 +6,6 @@ use App\Enums\StatusEnum;
 use Illuminate\Support\ServiceProvider;
 use Spatie\MediaLibrary\Support\PathGenerator\PathGenerator;
 use App\MediaLibrary\ModelNamePathGenerator;
-use App\Models\ContentBlock;
-use App\Models\Organization;
-use App\Models\OrganizationContact;
 use App\Services\OrganizationContentService;
 use Illuminate\Support\Facades\View;
 
