@@ -49,6 +49,7 @@ class AppServiceProvider extends ServiceProvider
             // Fetch all active hero feature blocks (adjust filter as needed)
             $heroFeatures = ContentBlock::where('is_active', true)
                 ->where('title', 'Key Features')
+                ->where('display_order', 1)
                 ->get()
                 ->map(function ($block) {
                     $block->list_items = is_array($block->list_items)
