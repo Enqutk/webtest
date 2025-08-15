@@ -78,16 +78,22 @@ class Service extends Model implements HasMedia
             get: fn () => $this->getFirstMediaUrl('main_image'),
         );
     }
-    protected function svgInline(): Attribute
+       protected function svgInline(): Attribute
     {
         return Attribute::make(
-                        get: function () {
-                return Cache::rememberForever("service.{$this->id}.svg", function () {
-                    if ($media = $this->getFirstMedia('svg')) {
-                        $path = $media->getPath();
-                        if (file_exists($path)) {
-                            return file_get_contents($path);
-                        }
+            get: function () {
+                $media = $this->getFirstMedia('svg');
+                if (!$media) {
+                    return '';
+                }
+
+                // Use the media's updated_at timestamp to bust the cache
+                $cacheKey = "service.{$this->id}.svg.{$media->updated_at->timestamp}";
+
+                return Cache::rememberForever($cacheKey, function () use ($media) {
+                    $path = $media->getPath();
+                    if (file_exists($path)) {
+                        return file_get_contents($path);
                     }
                     return '';
                 });
