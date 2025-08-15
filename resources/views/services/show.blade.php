@@ -37,11 +37,11 @@
                     </div>
 
                     <div class="row g-4">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <img src="{{ $service->secondary_image_url }}" class="img-fluid" alt="{{ $service->title }}">
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="pbmit-service-description mb-4">
                                 <h5 class="fw-bold">Description</h5>
                                 <p>{!! \Purifier::clean($service->description) !!}</p>
