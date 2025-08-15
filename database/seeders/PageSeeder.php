@@ -97,7 +97,12 @@ class PageSeeder extends Seeder
                 [
                     'title' => 'Our Solutions',
                     'icon' => 'bi bi-person-heart',
-                    'description' => 'Getting our clients what they deserve is our mission. We prioritize their needs and deliver tailored solutions.',
+                    'description' => ' Extensive, flexible services that tailored to address changing industry .',
+                ],
+                [
+                    'title' => 'Our Question',
+                    'icon' => 'bi bi-globe',
+                    'description' => 'What key challenges can we solve together to drive your business?',
                 ],
              
              ],
