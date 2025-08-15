@@ -21,7 +21,11 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box">
-						<span>{{ $data['address'] }}</span>
+						 @if(!empty($data['address']))
+                                        {{ $data['address'] }}
+                                        @else
+                                        <span class="text-muted">No address configured</span>
+                                        @endif
 					</div>
 					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box d-flex flex-column">
 						@if(!empty($data['email']))
