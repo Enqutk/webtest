@@ -5,11 +5,13 @@
 @section('description', $service->short_description)
 
 @section('content')
-<!-- Service Detail Start -->
-<section class="section-xxl fade-section py-5">
-    <div class="container">
-        <div class="row g-5">
-              <div class="col-md-12 col-xl-3 service-left-col sidebar">
+ 
+    <section class="site-content service-details">
+        <div class="container">
+            <div class="row">
+            
+                
+                <div class="col-md-12 col-xl-3 service-left-col sidebar">
                     <aside class="service-sidebar">
                         <aside class="widget post-list">
                             <div class="all-post-list">
@@ -27,7 +29,7 @@
                     </aside>
                 </div>
 
-            <!-- Main Content -->
+                   <!-- Main Content -->
             <div class="col-md-12 col-xl-9 service-right-col">
                 <div class="pbmit-heading-subheading mb-4">
                     <h4 class="pbmit-subtitle text-muted">Service Detail</h4>
@@ -78,10 +80,5 @@
                 </div>
             </div>
         </div>
-    </div>
-</section>
-<!-- Service Detail End -->
-
-
-<!-- Related Services End -->
+    </section>
 @endsection
