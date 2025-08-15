@@ -19,6 +19,17 @@ class PageSeeder extends Seeder
             $this->command->error('No users found. Please run UserSeeder first.');
             return;
         }
+        
+        // Create Home page
+        $homePage = Page::create([
+            'title' => 'Home',
+            'slug' => 'home',
+            'short_description' => 'Welcome to Veritas Afrika - Empowering Your Business',
+            'is_active' => true,
+            'display_order' => 0,
+            'created_by' => $user->id,
+            'updated_by' => $user->id,
+        ]);
 
         // Create About Us page
         $aboutPage = Page::create([
@@ -36,6 +47,42 @@ class PageSeeder extends Seeder
             'page_id' => $aboutPage->id,
             'title' => 'Our Mission',
             'subtitle' => 'Driving innovation and excellence',
+            'display_order' => 1,
+            'is_active' => true,
+            'created_by' => $user->id,
+            'updated_by' => $user->id,
+        ]);
+
+        // Create section for Home page (Features)
+        $featuresSection = PageSection::create([
+            'page_id' => $homePage->id,
+            'title' => 'Our Features',
+            'subtitle' => 'Why Choose Us',
+            'display_order' => 1,
+            'is_active' => true,
+            'created_by' => $user->id,
+            'updated_by' => $user->id,
+        ]);
+
+        // Create content block for Home page features (as a list)
+        ContentBlock::create([
+            'section_id' => $featuresSection->id,
+            'type' => 'list',
+            'title' => 'Key Features',
+            'content' => '<ul>
+            <li>
+                <strong>Professionalism</strong><br>
+                Our team consists of experienced leaders recognized regionally and...
+            </li>
+            <li>
+                <strong>Client-Centric Approach</strong><br>
+                Getting our clients what they deserve is our mission. We prioritize...
+            </li>
+            <li>
+                <strong>Regional Impact</strong><br>
+                We address local development challenges using effective...
+            </li>
+            </ul>',
             'display_order' => 1,
             'is_active' => true,
             'created_by' => $user->id,
