@@ -6,13 +6,12 @@ use App\Models\Service;
 use App\Enums\StatusEnum;
 use Illuminate\Database\Seeder;
 
-class ServiceSeeder extends Seeder
-{
+class ServiceSeeder extends Seeder {
     /**
-     * Run the database seeds.
-     */
-    public function run(): void
-    {
+    * Run the database seeds.
+    */
+
+    public function run(): void {
         $services = [
             [
                 'slug' => 'water-sanitation-systems',
@@ -20,7 +19,7 @@ class ServiceSeeder extends Seeder
                 'short_description' => 'We bring decades of expertise in designing and implementing pressurized water networks and open channel sewer systems.',
                 'quote' => 'Efficient water distribution and effective wastewater management',
                 'description' => 'Our solutions are tailored for both residential and industrial developments, ensuring efficient water distribution and effective wastewater management. From concept to completion, we deliver systems that meet regulatory standards and community needs.',
-                                'features' => '<ul><li>Pressurized Water Networks</li><li>Open Channel Sewer Systems</li><li>Residential Development Solutions</li><li>Industrial Development Solutions</li><li>Regulatory Compliance</li><li>Community Needs Assessment</li></ul>',
+                'features' => '<ul><li>Pressurized Water Networks</li><li>Open Channel Sewer Systems</li><li>Residential Development Solutions</li><li>Industrial Development Solutions</li><li>Regulatory Compliance</li><li>Community Needs Assessment</li></ul>',
                 'order' => 1,
                 'status' => StatusEnum::active,
             ],
@@ -56,8 +55,8 @@ class ServiceSeeder extends Seeder
             ],
         ];
 
-        foreach ($services as $serviceData) {
-            Service::create($serviceData);
+        foreach ( $services as $serviceData ) {
+            Service::create( $serviceData );
         }
     }
 }
