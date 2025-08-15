@@ -6,37 +6,34 @@ use App\Models\Service;
 use App\Enums\StatusEnum;
 use Illuminate\Http\Request;
 
-class ServiceController extends Controller
-{
+class ServiceController extends Controller {
     /**
-     * Display a listing of the services.
-     */
-    public function index()
-    {
-        $services = Service::where('status', StatusEnum::active)
-            ->orderBy('order')
-            ->get();
+    * Display a listing of the services.
+    */
 
-        return view('services.index', compact('services'));
+    public function index() {
+        $services = Service::where( 'status', StatusEnum::active )
+        ->orderBy( 'order' )
+        ->get();
+
+        return view( 'services.index', compact( 'services' ) );
     }
 
     /**
-     * Display the specified service.
-     */
-    public function show(string $slug)
-    {
-        $service = Service::where('slug', $slug)
-            ->where('status', StatusEnum::active)
-            ->firstOrFail();
+    * Display the specified service.
+    */
 
-        // Get related services (excluding current one)
-        $relatedServices = Service::where('status', StatusEnum::active)
-            ->where('id', '!=', $service->id)
-            ->orderBy('order')
-            ->take(3)
-            ->get();
+    public function show( string $slug ) {
+        $service = Service::where( 'slug', $slug )
+        ->where( 'status', StatusEnum::active )
+        ->firstOrFail();
 
-        return view('services.show', compact('service', 'relatedServices'));
+        $allServices = Service::where( 'status', StatusEnum::active )
+        ->orderBy( 'order' )
+        ->get();
+
+        $service->features_list = $service->features ? explode( '\n', $service->features ) : [];
+
+        return view( 'services.show', compact( 'service', 'allServices' ) );
     }
-    
 }
