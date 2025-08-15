@@ -11,8 +11,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Illuminate\Database\Eloquent\Builder;
 
 class ContentBlockResource extends Resource
@@ -75,7 +73,7 @@ class ContentBlockResource extends Resource
                                 Forms\Components\TextInput::make('icon')
                                     ->label('Icon (SVG or class)')
                                     ->maxLength(100)
-                                    ->helperText('Paste SVG, icon class, or image URL'),
+                                    ->helperText(' icon class '),
                                 Forms\Components\Textarea::make('description')
                                     ->label('Description')
                                     ->maxLength(500)

@@ -22,6 +22,7 @@ class ContentBlock extends Model implements HasMedia
         'subtitle',
         'short_description',
         'content',
+        'list_items',
         'metadata',
         'display_order',
         'is_active',
@@ -29,6 +30,7 @@ class ContentBlock extends Model implements HasMedia
 
     protected $casts = [
         'type' => ContentTypeEnum::class,
+        'list_items' => 'array',
         'metadata' => 'array',
         'display_order' => 'integer',
         'is_active' => 'boolean',
