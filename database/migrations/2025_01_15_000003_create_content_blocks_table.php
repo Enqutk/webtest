@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ContentTypeEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -10,7 +11,7 @@ return new class extends Migration {
         Schema::create('content_blocks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('section_id')->constrained('page_sections')->cascadeOnDelete();
-            $table->enum('type', ['text', 'image', 'video', 'list', 'timeline', 'gallery'])->default('text');
+            $table->string('type')->default(ContentTypeEnum::Text->value);
             $table->string('title')->nullable();
             $table->string('subtitle')->nullable();
             $table->text('short_description')->nullable();

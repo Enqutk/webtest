@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ContentTypeEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -26,6 +27,7 @@ class ContentBlock extends Model implements HasMedia
     ];
 
     protected $casts = [
+        'type' => ContentTypeEnum::class,
         'metadata' => 'array',
         'display_order' => 'integer',
         'is_active' => 'boolean',
