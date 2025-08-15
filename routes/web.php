@@ -2,15 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\HomeController;
 
-Route::get('/', function () {
-    $services = \App\Models\Service::where('status', \App\Enums\StatusEnum::active)
-        ->orderBy('order')
-        ->take(6)
-        ->get();
-    
-    return view('index', compact('services'));
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/about', function () {
     return view('about');
