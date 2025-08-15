@@ -8,11 +8,11 @@ use App\Models\Organization;
 use App\Models\OrganizationContact;
 use Illuminate\Support\Facades\Cache;
 
-class OrganizationContentService
+class HomeContentService
 {
-    public function getOrganizationContent()
+    public function getHomeContent()
     {
-        return Cache::remember('organization_content_data', 60 * 60, function () {
+        return Cache::remember('home_content_data', 60 * 60, function () {
             $organization = Organization::first();
             $address = $organization->address ?? null;
             $working_days = $organization->opening_hours ?? [];

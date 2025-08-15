@@ -6,7 +6,7 @@ use App\Enums\StatusEnum;
 use Illuminate\Support\ServiceProvider;
 use Spatie\MediaLibrary\Support\PathGenerator\PathGenerator;
 use App\MediaLibrary\ModelNamePathGenerator;
-use App\Services\OrganizationContentService;
+use App\Services\HomeContentService;
 use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
 
 
         View::composer(['index', 'about', 'contact', 'services'], function ($view) {
-            $data = app(OrganizationContentService::class)->getOrganizationContent();
+            $data = app(HomeContentService::class)->getHomeContent();
             $view->with(compact('data'));
         });
     }
