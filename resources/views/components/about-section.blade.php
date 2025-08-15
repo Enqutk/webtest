@@ -10,6 +10,9 @@
 <section class="section-lg">
     <div class="container">
         <div class="row">
+            <div class="col-md-12 col-xl-5 about-two-left-col">
+                <div class="about-two-img" style="background-image: url({{ asset('assets/images/homepage-2/about-img-01.png') }})"></div>
+            </div>
             <div class="col-md-12 col-xl-7 about-two-right-col">
                 <div class="about-two-content">
                     <div class="pbmit-heading-subheading">
@@ -28,7 +31,8 @@
                                             <span class="pbmit-icon-list-icon">
                                                 <i class="pbmit-induyst-icon pbmit-induyst-icon-check"></i>						
                                             </span>
-                                            <span class="pbmit-icon-list-text">{{ $feature }}</span>
+                                            <span class="pbmit-icon-list-text">{{ is_array($feature) ? ($feature['title'] ?? '') : $feature }}</span>
+
                                         </li>
                                         @endforeach
                                     </ul>
