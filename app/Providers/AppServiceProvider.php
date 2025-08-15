@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Spatie\MediaLibrary\Support\PathGenerator\PathGenerator;
 use App\MediaLibrary\ModelNamePathGenerator;
+use App\Models\ContentBlock;
 use App\Models\Organization;
 use App\Models\OrganizationContact;
 use Illuminate\Support\Facades\View;
@@ -43,8 +44,14 @@ class AppServiceProvider extends ServiceProvider
             $email = $contactsByType->get('email', collect())->pluck('value')->all();
             $phone = $contactsByType->get('phone', collect())->pluck('value')->all();
             $fax = $contactsByType->get('fax', collect())->pluck('value')->all();
+
+            // Fetch homepage hero section content block
+            $heroSection = ContentBlock::where('title', 'home_hero')->first();
+
             $data = ['email' => $email, 'phone' => $phone, 'fax' => $fax] +
-                ['address' => $address, 'working_days' => $working_days, 'map' => $map];
+                    ['address' => $address, 'working_days' => $working_days, 'map' => $map] +
+                    ['heroSection' => $heroSection];
+
             $view->with(compact('data'));
         });
     }

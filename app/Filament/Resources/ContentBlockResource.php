@@ -110,7 +110,7 @@ class ContentBlockResource extends Resource
                             ->nullable()
                             ->helperText('Store additional structured data for complex blocks')
                             ->columnSpanFull(),
-                    ]), 
+                    ]),
 
                 Forms\Components\Section::make('Settings')
                     ->schema([
@@ -121,8 +121,10 @@ class ContentBlockResource extends Resource
 
                         Forms\Components\TextInput::make('display_order')
                             ->numeric()
-                            ->default(0)
-                            ->helperText('Order for display (lower numbers appear first)'),
+                            ->default(1)
+                            ->minValue(1)
+                            ->unique(ignoreRecord: true)
+                            ->required(),
                     ])->columns(2),
             ]);
     }
