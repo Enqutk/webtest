@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
 
-        View::composer(['index', 'about', 'contact', 'services', ''], function ($view) {
+        View::composer(['index', 'about', 'contact', 'services'], function ($view) {
             $organization = Organization::first();
             $address = $organization->address ?? null;
             $working_days = $organization->opening_hours ?? [];
