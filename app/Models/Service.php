@@ -11,9 +11,10 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Builder;
 
-class Service extends Model implements HasMedia
-{
+class Service extends Model implements HasMedia {
     use SoftDeletes, HasUserStamps, InteractsWithMedia;
 
     protected $table = 'services';
@@ -34,71 +35,72 @@ class Service extends Model implements HasMedia
         'status' => StatusEnum::class,
     ];
 
-    public function creator(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'created_by');
+    public function creator(): BelongsTo {
+        return $this->belongsTo( User::class, 'created_by' );
     }
 
-    public function updater(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'updated_by');
+    public function updater(): BelongsTo {
+        return $this->belongsTo( User::class, 'updated_by' );
     }
 
-    public function registerMediaCollections(): void
-    {
-        $this->addMediaCollection('svg')
-            ->singleFile();
+    public function registerMediaCollections(): void {
+        $this->addMediaCollection( 'svg' )
+        ->singleFile();
 
-        $this->addImageCollectionWithThumb('main_image');
-        $this->addImageCollectionWithThumb('secondary_image');
+        $this->addImageCollectionWithThumb( 'main_image' );
+        $this->addImageCollectionWithThumb( 'secondary_image' );
     }
 
-    private function addImageCollectionWithThumb(string $collectionName): void
-    {
-        $this->addMediaCollection($collectionName)
-            ->singleFile()
+    private function addImageCollectionWithThumb( string $collectionName ): void {
+        $this->addMediaCollection( $collectionName )
+        ->singleFile()
 
-            ->registerMediaConversions(function () {
-                $this->addMediaConversion('thumb')
-                    ->width(150)
-                    ->height(150)
-                    ->sharpen(10);
-            });
-    }
+        ->registerMediaConversions( function () {
+            $this->addMediaConversion( 'thumb' )
+            ->width( 150 )
+            ->height( 150 )
+            ->sharpen( 10 );
+        }
+    );
+}
 
-    protected function secondaryImageUrl(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->getFirstMediaUrl('secondary_image'),
-        );
-    }
-    protected function mainImageUrl(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->getFirstMediaUrl('main_image'),
-        );
-    }
-       protected function svgInline(): Attribute
-    {
-        return Attribute::make(
-            get: function () {
-                $media = $this->getFirstMedia('svg');
-                if (!$media) {
-                    return '';
-                }
+protected function secondaryImageUrl(): Attribute {
+    return Attribute::make(
+        get: fn() => $this->getFirstMediaUrl( 'secondary_image' ),
+    );
+}
+protected function mainImageUrl(): Attribute {
+    return Attribute::make(
+        get: fn() => $this->getFirstMediaUrl( 'main_image' ),
+    );
+}
+protected function svgInline(): Attribute {
+    return Attribute::make(
+        get: function () {
+            $media = $this->getFirstMedia( 'svg' );
+            if ( !$media ) {
+                return '';
+            }
 
-                // Use the media's updated_at timestamp to bust the cache
+            // Use the media's updated_at timestamp to bust the cache
                 $cacheKey = "service.{$this->id}.svg.{$media->updated_at->timestamp}";
 
                 return Cache::rememberForever($cacheKey, function () use ($media) {
                     $path = $media->getPath();
-                    if (file_exists($path)) {
-                        return file_get_contents($path);
+                    if (Storage::disk($media->disk)->exists($path)) {
+                        return Storage::disk($media->disk)->get($path);
                     }
                     return '';
                 });
             }
         );
     }
-    
-}
+
+    public function scopeRelated(Builder $query, int $serviceId, int $limit = 5)
+    {
+        return $query->where('status', StatusEnum::active)
+            ->where('id', ' != ', $serviceId)
+            ->orderBy('order' )
+            ->take( $limit );
+        }
+    }
