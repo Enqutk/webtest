@@ -12,7 +12,7 @@
         <img src="{{ $post->main_image_url }}" alt="{{ $post->title }}" class="img-fluid mb-4">
 
         <div class="content mb-5">
-            {!! $post->content !!}
+            {!! clean($post->content) !!}
         </div>
 
         @if ($gallery->count() > 0)
