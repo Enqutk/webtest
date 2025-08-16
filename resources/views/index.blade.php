@@ -61,7 +61,7 @@
     @endforeach
     @endif
     <!-- CTA Section -->
-    <x-cta-section :content="$data['ctaSection']" :content2="$data['ctaSection2']" />
+    <x-cta-section :content="$data['ctaSection'] ?? []" :content2="$data['ctaSection2'] ?? []" />
 
     <x-service-section />
 
