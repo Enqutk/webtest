@@ -11,7 +11,7 @@
                 </div>
                 <div class="col-md-6 right-col">
                     <div class="text-md-end mt-md-0 mt-4">
-                        <a href="{{ $videoUrl }}" class="pbmit-video-play-btn pbmin-lightbox-video">
+                        <a href="{{ $videoUrl }}" class="venobox pbmit-video-play-btn" data-autoplay="true" data-vbtype="video">
                             <svg aria-hidden="true" class="e-font-icon-svg e-fas-play" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z"></path>
                             </svg>

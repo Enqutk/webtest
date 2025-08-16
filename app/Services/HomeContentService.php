@@ -33,7 +33,7 @@ class HomeContentService
                     'video-thumbnail',
                     'video-details',
                 ])
-                ->select(['id', 'slug', 'short_description', 'content', 'list_items', 'metadata', 'title' , 'subtitle' , 'icon' ])
+                ->select(['id', 'slug', 'short_description', 'content', 'list_items', 'metadata', 'title' , 'subtitle' , 'icon' ,'video_url' ])
                 ->with('media') // important to avoid N+1
                 ->get()
                 ->keyBy('slug');
