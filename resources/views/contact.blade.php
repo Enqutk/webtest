@@ -151,7 +151,7 @@
                 <div class="contact-form-right-box pbmit-bg-color-secondary">
                     <div class="row pbminfotech-gap-20px">
                         <article class="pbmit-miconheading-style-7 col-md-6">
-                            <div class="pbmit-ihbox-style-7">
+                            <div class="pbmit-ihbox-style-7 pbmit-ihbox-always-show">
                                 <div class="pbmit-ihbox-box">
                                     <div class="pbmit-ihbox-wrap">
                                         <div class="pbmit-ihbox-icon">
@@ -165,7 +165,7 @@
                                             </div>
                                         </div>
                                         <h2 class="pbmit-element-title">
-                                            Mail us 24/7
+                                            Call US 24/7
                                         </h2>
                                     </div>
                                     <div class="pbmit-ihbox-contents">
@@ -173,10 +173,9 @@
                                             @if(!empty($data['email']))
                                             @foreach($data['email'] as $email)
                                             <a href="mailto:{{ $email }}" class="__cf_email__">{{ $email }}</a>
-                                            @if(!$loop->last)<br>@endif
                                             @endforeach
                                             @else
-                                            <span class="text-muted">No email addresses configured</span>
+                                            <span class="text-muted">No email configured</span>
                                             @endif
                                         </div>
                                     </div>
@@ -184,7 +183,7 @@
                             </div>
                         </article>
                         <article class="pbmit-miconheading-style-7 col-md-6">
-                            <div class="pbmit-ihbox-style-7">
+                            <div class="pbmit-ihbox-style-7 pbmit-ihbox-always-show">
                                 <div class="pbmit-ihbox-box">
                                     <div class="pbmit-ihbox-wrap">
                                         <div class="pbmit-ihbox-icon">
@@ -201,13 +200,12 @@
                                             Our Location
                                         </h2>
                                     </div>
-                                    <div class="pbmit-ihbox-contents">
+                                    <div class="pbmit-ihbox-contents" style="opacity:1;visibility:visible;">
                                         @if(!empty($data['address']))
                                         {{ $data['address'] }}
                                         @else
                                         <span class="text-muted">No address configured</span>
                                         @endif
-
                                     </div>
                                 </div>
                             </div>
