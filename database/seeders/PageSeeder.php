@@ -53,6 +53,16 @@ class PageSeeder extends Seeder
             'updated_by' => $user->id,
         ]);
 
+        $ctaSection = PageSection::create([
+            'page_id' => $homePage->id,
+            'title' => 'Call to Action',
+            'subtitle' => 'Get in Touch',
+            'display_order' => 3,
+            'is_active' => true,
+            'created_by' => $user->id,
+            'updated_by' => $user->id,
+        ]);
+
         // Create content block for Home page features (as a list)
         ContentBlock::create([
             'section_id' => $heroFeatures->id,
@@ -116,6 +126,8 @@ class PageSeeder extends Seeder
             'created_by' => $user->id,
             'updated_by' => $user->id,
         ]);
+
+        // Create content block for About Us image
         ContentBlock::create([
             'section_id' => $aboutFeatures->id,
             'type' => 'image',
@@ -124,6 +136,20 @@ class PageSeeder extends Seeder
             'short_description' => "Veritas Afrika Co.Ltd is a multi-disciplinary company of professional consultants specializing in a wide range of civil engineering works. We provide expert services to government, non-government, and private-sector customers.",
             'content' => '',
             'display_order' => 3,
+            'is_active' => true,
+            'created_by' => $user->id,
+            'updated_by' => $user->id,
+        ]);
+
+        // Create Call to Action content block
+        ContentBlock::create([
+            'section_id' => $ctaSection->id,
+            'type' => 'text',
+            'title' => 'Call to Action',
+            'subtitle' => 'Get in Touch',
+            'short_description' => 'Contact us today to learn how we can help you achieve your goals.',
+            'content' => 'Ready to partner with a company committed to quality?',
+            'display_order' => 4,
             'is_active' => true,
             'created_by' => $user->id,
             'updated_by' => $user->id,
