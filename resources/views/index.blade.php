@@ -36,7 +36,7 @@
 
     <!-- Hero Features Section -->
     <div class="mt-5 mb-5">
-        <x-hero-features :features="$data['heroFeatures'] ? $data['heroFeatures']->list_items : []" />
+        <x-hero-features :features="$data['heroFeatures']?->list_items ?? []" />
     </div>
 
     <hr>
@@ -44,20 +44,20 @@
     <!-- About Section -->
     @if($data['aboutFeatures'])
         <x-about-section
-            :features="$data['aboutFeatures']->metadata ?? []"
-            :slidePages="$data['aboutFeatures']->list_items ?? []"
+            :features="$data['aboutFeatures']?->metadata ?? []"
+            :slidePages="$data['aboutFeatures']?->list_items ?? []"
             image="{{ $data['aboutFeatureImageUrl'] }}"
-            subtitle="{{ $data['aboutFeatures']->subtitle ?? '' }}"
-            title="{{ $data['aboutFeatures']->title ?? '' }}"
-            description="{{ $data['aboutFeatures']->short_description ?? '' }}"
+            subtitle="{{ $data['aboutFeatures']?->subtitle ?? '' }}"
+            title="{{ $data['aboutFeatures']?->title ?? '' }}"
+            description="{{ $data['aboutFeatures']?->short_description ?? '' }}"
             buttonText="Discover More"
             buttonUrl="#" />
     @endif
 
     <!-- CTA Section -->
     <x-cta-section
-        :content="$data['cta'] ?? ''"
-        :content2="$data['cta2'] ?? ''"
+        :content="$data['cta'] ?? []"
+        :content2="$data['cta2'] ?? []"
         :contentValue="$data['cta2Content'] ?? ''"
     />
 
@@ -65,12 +65,9 @@
 
     <!-- Video Section -->
     <x-video-section
-        :shortDescription="$data['videoSection']['short_description'] ?? ''"
-        :metadata="$data['videoSection']['metadata'] ?? []"
-        :videos="$data['videoSection']['videos'] ?? []"
-        :thumbnailShortDescription="$data['videoThumbnail']['short_description'] ?? ''"
-        :thumbnailMetadata="$data['videoThumbnail']['metadata'] ?? []"
-        :thumbnailImages="$data['videoThumbnail']['images'] ?? []"
+        :videoUrl="$data['videoSection'] ?? ''"
+        :videoThumbnail="$data['videoThumbnail'] ?? ''"
+        :videoDetails="$data['videoDetails'] ?? []"
     />
 
     <!-- Blog Section -->

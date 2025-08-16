@@ -12,11 +12,16 @@ class HomeContentService
 {
     public function getHomeContent()
     {
-        return Cache::remember('home_content_data', 3600, function () {
-            $organization = Organization::first();
-            $contacts = OrganizationContact::where('status', StatusEnum::active)->get()->groupBy('type');
+        $orgId = Organization::first()?->id ?? 'default';
 
-            // Fetch all needed blocks in one query
+        return Cache::remember("home_content_data_{$orgId}", 3600, function () {
+            $organization = Organization::select(['address', 'opening_hours', 'map_url'])->first();
+
+            $contacts = OrganizationContact::where('status', StatusEnum::active)
+                ->select(['type', 'value'])
+                ->get()
+                ->groupBy('type');
+
             $blocks = ContentBlock::where('is_active', true)
                 ->whereIn('slug', [
                     'key-features',
@@ -28,6 +33,8 @@ class HomeContentService
                     'video-thumbnail',
                     'video-details',
                 ])
+                ->select(['id', 'slug', 'short_description', 'content', 'list_items', 'metadata'])
+                ->with('media') // important to avoid N+1
                 ->get()
                 ->keyBy('slug');
 
@@ -45,17 +52,35 @@ class HomeContentService
                     ? $blocks->get('veritas-afrika-co-ltd-image')->getFirstMediaUrl('images')
                     : asset('assets/images/homepage-2/about-img-01.png'),
 
-                'cta' => $blocks->get('call-to-action-left')->short_description ?? '',
-                'cta2' => $blocks->get('call-to-action-right')->short_description ?? '',
+                'cta' => $blocks->get('call-to-action-left')
+                    ? [
+                        'short_description' => $blocks->get('call-to-action-left')->short_description,
+                        'image' => $blocks->get('call-to-action-left')->getFirstMediaUrl('images'),
+                    ]
+                    : [
+                        'short_description' => '',
+                        'image' => asset('assets/images/default-cta-image.png'),
+                    ],
+
+                'cta2' => $blocks->get('call-to-action-right')
+                    ? [
+                        'short_description' => $blocks->get('call-to-action-right')->short_description,
+                        'image' => $blocks->get('call-to-action-right')->getFirstMediaUrl('images'),
+                    ]
+                    : [
+                        'short_description' => '',
+                        'image' => asset('assets/images/default-cta-image.png'),
+                    ],
+
                 'cta2Content' => $blocks->get('call-to-action-right')->content ?? '',
 
-                'videoSection' => $blocks->get('video-section') ? [
-                    'videos' => $blocks->get('video-section')->video_urls,
-                ] : null,
+                'videoSection' => $blocks->get('video-section')
+                    ? $blocks->get('video-section')->getFirstMediaUrl('videos')
+                    : 'https://www.youtube.com/watch?v=x36EQP2og-k',
 
-                'videoThumbnail' => $blocks->get('video-thumbnail') ? [
-                    'images' => $blocks->get('video-thumbnail')->image_urls,
-                ] : null,
+                'videoThumbnail' => $blocks->get('video-thumbnail') 
+                    ? $blocks->get('video-thumbnail')->getFirstMediaUrl('images')
+                    : asset('assets/images/homepage-2/video-thumbnail.png'),
 
                 'videoDetails' => $blocks->get('video-details') ? [
                     'short_description' => $blocks->get('video-details')->short_description,
