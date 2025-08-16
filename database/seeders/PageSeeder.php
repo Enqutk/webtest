@@ -179,5 +179,12 @@ class PageSeeder extends Seeder
             'updated_by' => $user->id,
         ]);
 
+
+        // Create Video Section content block
+        ContentBlock::create([
+            'section_id' => $videoSection->id,
+            'type' => 'video',
+            'title' => 'Video Section',
+
     }
 }
