@@ -25,7 +25,7 @@
                                             <span class="pbmit-month">{{ $post->created_at?->format('M') }}</span>
                                         </span>
                                     </div>
-                                    <div class= "pbmit-meta-wraper">
+                                    <div class="pbmit-meta-wraper">
                                         <div class="pbmit-meta-author pbmit-meta-line">
                                             <span>{{ $post->creator?->name ?? '_' }}</span>
                                         </div>
