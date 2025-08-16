@@ -5,8 +5,8 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\HomeController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/blog', [HomeController::class, 'PostIndex'])->name('blog.index');
-Route::get('/blog/{slug}', [HomeController::class, 'PostShow'])->name('blog.show');
+Route::get('/blog', [HomeController::class, 'postIndex'])->name('blog.index');
+Route::get('/blog/{slug}', [HomeController::class, 'postShow'])->name('blog.show');
 Route::get('/about', function () {
     return view('about');
 })->name('about');
