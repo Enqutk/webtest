@@ -172,7 +172,7 @@
                                         <div class="pbmit-heading-desc">
                                             @if(!empty($data['email']))
                                             @foreach($data['email'] as $email)
-                                            <a href="mailto:{{ $email }}" class="__cf_email__">{{ $email }}</a>
+                                            {{ $email }}
                                             @endforeach
                                             @else
                                             <span class="text-muted">No email configured</span>
