@@ -56,7 +56,14 @@
                                 <h4 class="pbmit-subtitle">{{ $locationsTitle }}</h4>
                             </div>
                             <div class="map-img">
-                                {{$mapUrl}}
+                                @php
+                                    $decodedMapUrl = html_entity_decode($mapUrl);
+                                @endphp
+                                @if(Str::contains($decodedMapUrl, '<iframe'))
+                                    {!! $decodedMapUrl !!}
+                                @else
+                                    {{ $decodedMapUrl }}
+                                @endif
                         </div>
                     </div>
                 </div>
