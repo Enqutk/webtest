@@ -335,18 +335,19 @@
         <div class="row justify-content-center">
             <div class="col-12 col-md-15 col-lg-10">
                 <div class="map-wrapper">
-                    <div class="map-container" style="height: 400px; background-color: #f5f5f5;">
+                    <div class="map-container w-100" style="min-height: 300px; height: 40vh; max-height: 500px; background-color: #f5f5f5; position: relative;">
                         @if(!empty($data['map']))
-                            {!! $data['map'] !!}
+                            <div class="ratio ratio-16x9 h-100 w-100">
+                                {!! $data['map'] !!}
+                            </div>
                         @else
-                        <div class="d-flex align-items-center justify-content-center h-100">
+                        <div class="d-flex align-items-center justify-content-center h-100 w-100" style="min-height: 300px;">
                             <div class="text-center">
                                 <i class="fas fa-map-marker-alt" style="font-size: 3rem; color: #ccc;"></i>
                                 <h4 class="mt-3">Map location not set</h4>
                             </div>
                         </div>
                         @endif
-
                     </div>
                 </div>
             </div>

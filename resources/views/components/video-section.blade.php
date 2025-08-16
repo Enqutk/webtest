@@ -60,12 +60,11 @@
                                     $decodedMapUrl = html_entity_decode($mapUrl);
                                 @endphp
                                 @if(Str::contains($decodedMapUrl, '<iframe'))
-                                    {!! $decodedMapUrl !!}
+                                    {!! preg_replace('/<iframe([^>]*)width="[^"]*"([^>]*)height="[^"]*"([^>]*)>/i', '<iframe$1width="600"$2height="350"$3>', $decodedMapUrl) !!}
                                 @else
                                     {{ $decodedMapUrl }}
                                 @endif
-                        </div>
-                    </div>
+                            </div>  </div>
                 </div>
             </div>
         </div>
