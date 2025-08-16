@@ -1,7 +1,6 @@
 <div class="container">
     <div class="row">
-        @foreach($data['heroFeatures'] as $feature)
-        @foreach($feature->list_items as $item)
+        @foreach($features as $item)
         <div class="col-md-4 pbmit-column">
             <div class="pbmit-ihbox-style-4">
                 <div class="pbmit-ihbox-box">
@@ -20,7 +19,6 @@
                 </div>
             </div>
         </div>
-        @endforeach
         @endforeach
     </div>
 </div>

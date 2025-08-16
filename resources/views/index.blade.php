@@ -35,44 +35,43 @@
     @endphp
 
     <!-- Hero Features Section -->
-    @php
-    $features = collect($data['heroFeatures'])->pluck('list_items')->flatten(1)->all();
-    @endphp
     <div class="mt-5 mb-5">
-        <x-hero-features :data="$data" />
+        <x-hero-features :features="$data['heroFeatures'] ? $data['heroFeatures']->list_items : []" />
     </div>
 
     <hr>
 
-
-
     <!-- About Section -->
-    @if(isset($data['aboutFeatures']) && count($data['aboutFeatures']) > 0)
-    @foreach($data['aboutFeatures'] as $about)
-    <x-about-section
-        :features="$about['metadata'] ?? []"
-        :slidePages="$about['list_items'] ?? []"
-        image="{{ $data['aboutFeatureImageUrl'] }}"
-        subtitle="{{ $about['subtitle'] ?? '' }}"
-        title="{{ $about['title'] ?? '' }}"
-        description="{{ $about['short_description'] ?? '' }}"
-        buttonText="Discover More"
-        buttonUrl="#" />
-    @endforeach
+    @if($data['aboutFeatures'])
+        <x-about-section
+            :features="$data['aboutFeatures']->metadata ?? []"
+            :slidePages="$data['aboutFeatures']->list_items ?? []"
+            image="{{ $data['aboutFeatureImageUrl'] }}"
+            subtitle="{{ $data['aboutFeatures']->subtitle ?? '' }}"
+            title="{{ $data['aboutFeatures']->title ?? '' }}"
+            description="{{ $data['aboutFeatures']->short_description ?? '' }}"
+            buttonText="Discover More"
+            buttonUrl="#" />
     @endif
+
     <!-- CTA Section -->
     <x-cta-section
         :content="$data['cta'] ?? ''"
         :content2="$data['cta2'] ?? ''"
-        contentValue=" $data['cta2Content']"
+        :contentValue="$data['cta2Content'] ?? ''"
     />
 
     <x-service-section />
 
-
-
     <!-- Video Section -->
-    <x-video-section :data="$data['videoSection']" :thumbnail="$data['videoThumbnail']" />
+    <x-video-section
+        :shortDescription="$data['videoSection']['short_description'] ?? ''"
+        :metadata="$data['videoSection']['metadata'] ?? []"
+        :videos="$data['videoSection']['videos'] ?? []"
+        :thumbnailShortDescription="$data['videoThumbnail']['short_description'] ?? ''"
+        :thumbnailMetadata="$data['videoThumbnail']['metadata'] ?? []"
+        :thumbnailImages="$data['videoThumbnail']['images'] ?? []"
+    />
 
     <!-- Blog Section -->
     <x-blog-section
