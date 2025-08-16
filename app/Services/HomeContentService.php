@@ -66,7 +66,7 @@ class HomeContentService
                 : asset('assets/images/homepage-2/about-img-01.png');
 
             $ctaSection = ContentBlock::where('is_active', true)
-                ->where('title', 'Get in Touch') 
+                ->where('title', 'Call to Action') 
                 ->where('display_order', 4)
                 ->first();
 
