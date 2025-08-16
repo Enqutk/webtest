@@ -69,6 +69,7 @@ class HomeContentService
                 ->where('title', 'Call to Action') 
                 ->where('display_order', 4)
                 ->first();
+                
             $ctaSection2 = ContentBlock::where('is_active', true)
                 ->where('title', 'Call to Action') 
                 ->where('display_order', 5)
