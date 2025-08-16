@@ -53,7 +53,7 @@
                                             <!-- Content -->
                                             <div class="pbmit-firstletter">
 
-                                                {!! $post->content !!}
+                                                {!! \Purifier::clean($post->content) !!}
 
                                             </div>
 
