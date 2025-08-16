@@ -58,7 +58,7 @@ class HomeContentService
                 ] : null,
 
                 'videoDetails' => $blocks->get('video-details') ? [
-                    'short_description' => $blocks->get('video-details')->description,
+                    'short_description' => $blocks->get('video-details')->short_description,
                     'list_items' => $blocks->get('video-details')->list_items,
                     'metadata' => $blocks->get('video-details')->metadata,
                 ] : null,
