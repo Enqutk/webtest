@@ -154,5 +154,20 @@ class PageSeeder extends Seeder
             'created_by' => $user->id,
             'updated_by' => $user->id,
         ]);
+
+        // Create Call to Action-2 content block
+        ContentBlock::create([
+            'section_id' => $ctaSection->id,
+            'type' => 'text',
+            'title' => 'Call to Action',
+            'subtitle' => 'Get in Touch',
+            'short_description' => 'At Veritas Afrika, we are a multi-disciplinary company offering professional services in a wide range of civil engineering works.',
+            'content' => '100',
+            'display_order' => 5,
+            'is_active' => true,
+            'created_by' => $user->id,
+            'updated_by' => $user->id,
+        ]);
+
     }
 }
