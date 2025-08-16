@@ -1,16 +1,5 @@
 
-@props([
-    'videoUrl' => 'https://www.youtube.com/watch?v=x36EQP2og-k',
-    'videoThumbnail' => '',
-    'thumbnailShortDescription' => '',
-    'subtitle' => '',
-    'chartDescription' => '',
-    'industriesTitle' => '',
-    'industriesDescription' => '',
-    'industries' => [],
-    'locationsTitle' => 'OUR LOCATIONS',
-    'mapImage' => './assets/images/homepage-2/map.png',
-])
+
 <section class="video-section-two pbmit-bg-color-blackish">
     <div class="container-fluid p-0">
         <div class="video-play-bg" style="background-image: url('{{ $videoThumbnail }}');">
@@ -67,8 +56,7 @@
                                 <h4 class="pbmit-subtitle">{{ $locationsTitle }}</h4>
                             </div>
                             <div class="map-img">
-                                <img src="{{ $mapImage }}" class="img-fluid" alt="">
-                            </div>
+                                {{ $mapUrl }}
                         </div>
                     </div>
                 </div>
