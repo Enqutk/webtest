@@ -28,7 +28,7 @@
                     </div>
                     <div class="chart-wrap">
                         <div id="chart"></div>
-                        <p class="chart-sub-heading">{{ $chartDescription }}</p>
+                        <p class="chart-sub-heading">{{ $Description }}</p>
                     </div>
                 </div>
                 <div class="col-md-12 col-xl-9">
