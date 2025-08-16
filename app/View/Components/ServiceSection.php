@@ -15,9 +15,12 @@ class ServiceSection extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct($services = null)
     {
-        $this->services = Service::where('status', StatusEnum::active)->orderBy('order')->take(5)->get();
+        $this->services = $services;
+        if (is_null($this->services)) {
+            $this->services = Service::where('status', StatusEnum::active)->orderBy('order')->take(5)->get();
+        }
     }
 
     /**
