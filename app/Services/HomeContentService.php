@@ -77,7 +77,8 @@ class HomeContentService
             return array_merge(
                 ['email' => $email, 'phone' => $phone, 'fax' => $fax],
                 ['address' => $address, 'working_days' => $working_days, 'map' => $map],
-                ['heroFeatures' => $heroFeatures, 'aboutFeatures' => $aboutFeatures, 'aboutFeatureImageUrl' => $aboutFeatureImageUrl]
+                ['heroFeatures' => $heroFeatures, 'aboutFeatures' => $aboutFeatures, 'aboutFeatureImageUrl' => $aboutFeatureImageUrl],
+                ['ctaSection' => $ctaSection, 'ctaSection2' => $ctaSection2]
             );
         });
     }

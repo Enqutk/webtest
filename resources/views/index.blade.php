@@ -61,7 +61,7 @@
     @endforeach
     @endif
     <!-- CTA Section -->
-    <x-cta-section />
+    <x-cta-section / :data>
 
     <x-service-section />
 
