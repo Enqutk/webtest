@@ -74,11 +74,15 @@ class HomeContentService
                 ->where('display_order', 5)
                 ->first();
 
+            $cta = $ctaSection ? $ctaSection->short_description : '';
+            $cta2 = $ctaSection2 ? $ctaSection2->short_description : '';
+            $cta2Content = $ctaSection2 ? $ctaSection2->content : '';
+
             return array_merge(
                 ['email' => $email, 'phone' => $phone, 'fax' => $fax],
                 ['address' => $address, 'working_days' => $working_days, 'map' => $map],
                 ['heroFeatures' => $heroFeatures, 'aboutFeatures' => $aboutFeatures, 'aboutFeatureImageUrl' => $aboutFeatureImageUrl],
-                [ 'ctaSection'=> $ctaSection , 'ctaSection2' => $ctaSection2 ],
+                ['cta' => $cta, 'cta2' => $cta2, 'cta2Content' => $cta2Content]
             );
         });
     }
