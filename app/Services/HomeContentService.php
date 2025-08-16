@@ -12,133 +12,54 @@ class HomeContentService
 {
     public function getHomeContent()
     {
-        return Cache::remember('home_content_data', 60 * 60, function () {
+        return Cache::remember('home_content_data', 3600, function () {
             $organization = Organization::first();
-            $address = $organization->address ?? null;
-            $working_days = $organization->opening_hours ?? [];
-            $map = $organization->map_url ?? null;
+            $contacts = OrganizationContact::where('status', StatusEnum::active)->get()->groupBy('type');
 
-            $contactsByType = OrganizationContact::where('status', StatusEnum::active)
+            // Fetch all needed blocks in one query
+            $blocks = ContentBlock::where('is_active', true)
+                ->whereIn('slug', [
+                    'key-features',
+                    'about-company',
+                    'about-company-image',
+                    'cta-primary',
+                    'cta-secondary',
+                    'video-section',
+                    'video-thumbnail'
+                ])
                 ->get()
-                ->groupBy('type');
-            $email = $contactsByType->get('email', collect())->pluck('value')->all();
-            $phone = $contactsByType->get('phone', collect())->pluck('value')->all();
-            $fax = $contactsByType->get('fax', collect())->pluck('value')->all();
+                ->keyBy('slug');
 
-            $heroFeatures = ContentBlock::where('is_active', true)
-                ->where('title', 'Key Features') // Replace with slug for stability
-                ->where('display_order', 1)
-                ->get()
-                ->map(function ($block) {
-                    $block->list_items = is_array($block->list_items)
-                        ? $block->list_items
-                        : json_decode($block->list_items, true);
-                    return $block;
-                });
+            return [
+                'email'   => $contacts->get('email', collect())->pluck('value')->all(),
+                'phone'   => $contacts->get('phone', collect())->pluck('value')->all(),
+                'fax'     => $contacts->get('fax', collect())->pluck('value')->all(),
+                'address' => $organization->address ?? null,
+                'working_days' => $organization->opening_hours ?? [],
+                'map'     => $organization->map_url ?? null,
 
-            $aboutFeatures = ContentBlock::where('is_active', true)
-                ->where('title', 'Veritas Afrika Co.Ltd') // Replace with slug for stability
-                ->where('display_order', 2)
-                ->get()
-                ->map(function ($block) {
-                    $block->list_items = is_array($block->list_items)
-                        ? $block->list_items
-                        : json_decode($block->list_items, true);
-                    $block->metadata = is_array($block->metadata)
-                        ? $block->metadata
-                        : json_decode($block->metadata, true);
-                    return [
-                        'title' => $block->title,
-                        'subtitle' => $block->subtitle,
-                        'short_description' => $block->short_description,
-                        'list_items' => $block->list_items,
-                        'metadata' => $block->metadata,
-                    ];
-                });
+                'heroFeatures' => $blocks->get('key-features'),
+                'aboutFeatures' => $blocks->get('about-company'),
+                'aboutFeatureImageUrl' => $blocks->get('about-company-image')
+                    ? $blocks->get('about-company-image')->getFirstMediaUrl('images')
+                    : asset('assets/images/homepage-2/about-img-01.png'),
 
-            $aboutFeatureImageBlock = ContentBlock::where('is_active', true)
-                ->where('title', 'Veritas Afrika Co.Ltd') 
-                ->where('display_order', 3)
-                ->first();
+                'cta' => $blocks->get('cta-primary')->short_description ?? '',
+                'cta2' => $blocks->get('cta-secondary')->short_description ?? '',
+                'cta2Content' => $blocks->get('cta-secondary')->content ?? '',
 
-            $aboutFeatureImageUrl = $aboutFeatureImageBlock
-                ? $aboutFeatureImageBlock->getFirstMediaUrl('images')
-                : asset('assets/images/homepage-2/about-img-01.png');
+                'videoSection' => $blocks->get('video-section') ? [
+                    'short_description' => $blocks->get('video-section')->short_description,
+                    'metadata' => $blocks->get('video-section')->metadata,
+                    'videos' => $blocks->get('video-section')->video_urls,
+                ] : null,
 
-            $ctaSection = ContentBlock::where('is_active', true)
-                ->where('title', 'Call to Action') 
-                ->where('display_order', 4)
-                ->first();
-            $ctaSection2 = ContentBlock::where('is_active', true)
-                ->where('title', 'Call to Action') 
-                ->where('display_order', 5)
-                ->first();
-
-            $cta = $ctaSection ? $ctaSection->short_description : '';
-            $cta2 = $ctaSection2 ? $ctaSection2->short_description : '';
-            $cta2Content = $ctaSection2 ? $ctaSection2->content : '';
-
-            // Fetch Video Section content block
-            $videoSection = ContentBlock::where('is_active', true)
-                ->where('title', 'Video Section') 
-                ->where('display_order', 6)
-                ->first();
-
-            if ($videoSection) {
-                $videoSection->metadata = is_array($videoSection->metadata)
-                    ? $videoSection->metadata
-                    : json_decode($videoSection->metadata, true);
-
-                // Get all uploaded videos in the 'videos' collection
-                $videos = $videoSection->getMedia('videos')->map(function ($media) {
-                    return [
-                        'url' => $media->getUrl(),
-                    ];
-                })->toArray();
-
-                $videoSectionData = [
-                    'short_description' => $videoSection->short_description,
-                    'metadata' => $videoSection->metadata,
-                    'videos' => $videos,
-                ];
-            } else {
-                $videoSectionData = null;
-            }
-
-            // Fetch Video Thumbnail content block for Video section
-            $videoThumbnailSection = ContentBlock::where('is_active', true)
-                ->where('title', 'Video Thumbnail')
-                ->where('display_order', 7)
-                ->first();
-
-            if ($videoThumbnailSection) {
-                $videoThumbnailSection->metadata = is_array($videoThumbnailSection->metadata)
-                    ? $videoThumbnailSection->metadata
-                    : json_decode($videoThumbnailSection->metadata, true);
-
-                // Fetch all uploaded images in the 'images' collection
-                $images = $videoThumbnailSection->getMedia('images')->map(function ($media) {
-                    return [
-                        'url' => $media->getUrl(),
-                    ];
-                })->toArray();
-
-                $videoThumbnailData = [
-                    'short_description' => $videoThumbnailSection->short_description,
-                    'metadata' => $videoThumbnailSection->metadata,
-                    'images' => $images,
-                ];
-            } else {
-                $videoThumbnailData = null;
-            }
-
-            return array_merge(
-                ['email' => $email, 'phone' => $phone, 'fax' => $fax],
-                ['address' => $address, 'working_days' => $working_days, 'map' => $map],
-                ['heroFeatures' => $heroFeatures, 'aboutFeatures' => $aboutFeatures, 'aboutFeatureImageUrl' => $aboutFeatureImageUrl],
-                ['cta' => $cta, 'cta2' => $cta2, 'cta2Content' => $cta2Content],
-                ['videoSection' => $videoSectionData, 'videoThumbnail' => $videoThumbnailData]
-            );
+                'videoThumbnail' => $blocks->get('video-thumbnail') ? [
+                    'short_description' => $blocks->get('video-thumbnail')->short_description,
+                    'metadata' => $blocks->get('video-thumbnail')->metadata,
+                    'images' => $blocks->get('video-thumbnail')->image_urls,
+                ] : null,
+            ];
         });
     }
 }
