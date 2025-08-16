@@ -38,7 +38,7 @@ class OrganizationResource extends Resource
                         Forms\Components\TextInput::make('map_url')
                             ->label('Map URL')
                             ->nullable()
-                            ->maxLength(255),
+                            ->maxLength(4024),
                     ]),
                 Forms\Components\Repeater::make('opening_hours')
                     ->label('Opening Hours')
