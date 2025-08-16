@@ -78,11 +78,48 @@ class HomeContentService
             $cta2 = $ctaSection2 ? $ctaSection2->short_description : '';
             $cta2Content = $ctaSection2 ? $ctaSection2->content : '';
 
+            // Fetch Video Section content block
+            $videoSection = ContentBlock::where('is_active', true)
+                ->where('title', 'Video Section') 
+                ->where('display_order', 6)
+                ->first();
+
+            if ($videoSection) {
+                $videoSection->metadata = is_array($videoSection->metadata)
+                    ? $videoSection->metadata
+                    : json_decode($videoSection->metadata, true);
+                $videoSectionData = [
+                    'short_description' => $videoSection->short_description,
+                    'metadata' => $videoSection->metadata,
+                ];
+            } else {
+                $videoSectionData = null;
+            }
+
+            // Fetch Video Thumbnail content block for Video section
+            $videoThumbnailSection = ContentBlock::where('is_active', true)
+                ->where('title', 'Video Thumbnail')
+                ->where('display_order', 7)
+                ->first();
+
+            if ($videoThumbnailSection) {
+                $videoThumbnailSection->metadata = is_array($videoThumbnailSection->metadata)
+                    ? $videoThumbnailSection->metadata
+                    : json_decode($videoThumbnailSection->metadata, true);
+                $videoThumbnailData = [
+                    'short_description' => $videoThumbnailSection->short_description,
+                    'metadata' => $videoThumbnailSection->metadata,
+                ];
+            } else {
+                $videoThumbnailData = null;
+            }
+
             return array_merge(
                 ['email' => $email, 'phone' => $phone, 'fax' => $fax],
                 ['address' => $address, 'working_days' => $working_days, 'map' => $map],
                 ['heroFeatures' => $heroFeatures, 'aboutFeatures' => $aboutFeatures, 'aboutFeatureImageUrl' => $aboutFeatureImageUrl],
-                ['cta' => $cta, 'cta2' => $cta2, 'cta2Content' => $cta2Content]
+                ['cta' => $cta, 'cta2' => $cta2, 'cta2Content' => $cta2Content],
+                ['videoSection' => $videoSectionData, 'videoThumbnail' => $videoThumbnailData]
             );
         });
     }

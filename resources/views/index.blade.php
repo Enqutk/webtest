@@ -61,15 +61,10 @@
     @endforeach
     @endif
     <!-- CTA Section -->
-    @php
-    $ctaSection = $data['cta'] ?? '';
-    $ctaSection2 = $data['cta2'] ?? '';
-    $contentValue = $data['cta2Content'];
-    @endphp
     <x-cta-section
-        :content="$ctaSection"
-        :content2="$ctaSection2"
-        contentValue="$contentValue"
+        :content="$data['cta'] ?? ''"
+        :content2="$data['cta2'] ?? ''"
+        contentValue=" $data['cta2Content']"
     />
 
     <x-service-section />
@@ -77,7 +72,7 @@
 
 
     <!-- Video Section -->
-    <x-video-section />
+    <x-video-section :data="$data['videoSection']" :thumbnail="$data['videoThumbnail']" />
 
     <!-- Blog Section -->
     <x-blog-section
