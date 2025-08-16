@@ -88,9 +88,18 @@ class HomeContentService
                 $videoSection->metadata = is_array($videoSection->metadata)
                     ? $videoSection->metadata
                     : json_decode($videoSection->metadata, true);
+
+                // Get all uploaded videos in the 'videos' collection
+                $videos = $videoSection->getMedia('videos')->map(function ($media) {
+                    return [
+                        'url' => $media->getUrl(),
+                    ];
+                })->toArray();
+
                 $videoSectionData = [
                     'short_description' => $videoSection->short_description,
                     'metadata' => $videoSection->metadata,
+                    'videos' => $videos,
                 ];
             } else {
                 $videoSectionData = null;
@@ -106,9 +115,18 @@ class HomeContentService
                 $videoThumbnailSection->metadata = is_array($videoThumbnailSection->metadata)
                     ? $videoThumbnailSection->metadata
                     : json_decode($videoThumbnailSection->metadata, true);
+
+                // Fetch all uploaded images in the 'images' collection
+                $images = $videoThumbnailSection->getMedia('images')->map(function ($media) {
+                    return [
+                        'url' => $media->getUrl(),
+                    ];
+                })->toArray();
+
                 $videoThumbnailData = [
                     'short_description' => $videoThumbnailSection->short_description,
                     'metadata' => $videoThumbnailSection->metadata,
+                    'images' => $images,
                 ];
             } else {
                 $videoThumbnailData = null;
