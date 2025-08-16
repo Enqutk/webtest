@@ -7,6 +7,9 @@ use App\Http\Controllers\HomeController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/blog', [HomeController::class, 'postIndex'])->name('blog.index');
 Route::get('/blog/{slug}', [HomeController::class, 'postShow'])->name('blog.show');
+Route::get('/blog/category/{slug}', [HomeController::class, 'postsByCategory'])->name('blog.category');
+
+
 Route::get('/about', function () {
     return view('about');
 })->name('about');
