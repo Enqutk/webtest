@@ -22,6 +22,9 @@
                         <div class="pbmit-custom-heading">
                             <h4 class="pbmit-title">{{ $content2 }}</h4>
                         </div>
+                        @php
+                        $contentValue = 100;
+                        @endphp
                         <div class="pbminfotech-ele-fid-style-4">
                             <div class="pbmit-fld-contents">
                                 <div class="pbmit-fld-wrap">
