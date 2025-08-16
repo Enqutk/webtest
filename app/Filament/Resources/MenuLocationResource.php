@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\LocationEnum;
 use App\Enums\MenuLocationEnum;
 use App\Filament\Resources\MenuLocationResource\Pages;
 use App\Models\MenuLocation;
