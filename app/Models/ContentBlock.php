@@ -24,6 +24,7 @@ class ContentBlock extends Model implements HasMedia
         'short_description',
         'content',
         'list_items',
+        'video_url',
         'metadata',
         'display_order',
         'is_active',
@@ -69,9 +70,6 @@ class ContentBlock extends Model implements HasMedia
                     ->height(200)
                     ->sharpen(10);
             });
-
-        $this->addMediaCollection('videos')
-            ->acceptsMimeTypes(['video/mp4', 'video/webm', 'video/ogg']);
     }
 
     // Scopes

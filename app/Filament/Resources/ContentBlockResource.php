@@ -107,10 +107,9 @@ class ContentBlockResource extends Resource
                             ->visible(fn(callable $get) => in_array($get('type'), ['image', 'gallery']))
                             ->columnSpanFull(),
 
-                        Forms\Components\SpatieMediaLibraryFileUpload::make('videos')
-                            ->collection('videos')
-                            ->multiple()
-                            ->acceptedFileTypes(['video/mp4', 'video/webm', 'video/ogg'])
+                        Forms\Components\TextInput::make('videos')
+                            ->label('Video_url')
+                            ->placeholder('Enter video ')
                             ->visible(fn(callable $get) => $get('type') === 'video')
                             ->columnSpanFull(),
 
@@ -186,6 +185,9 @@ class ContentBlockResource extends Resource
                     ->label('Images')
                     ->size(40)
                     ->square(),
+                Tables\Columns\TextColumn::make('videos')
+                    ->label('video_url')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean()
