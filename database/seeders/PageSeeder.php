@@ -78,6 +78,7 @@ class PageSeeder extends Seeder
             'section_id' => $heroFeatures->id,
             'type' => 'list',
             'title' => 'Key Features',
+            'slug' => 'key-features',
             'list_items' =>[
             [
                 'title' => 'Professionalism',
@@ -106,6 +107,7 @@ class PageSeeder extends Seeder
             'section_id' => $aboutFeatures->id,
             'type' => 'list',
             'title' => 'Veritas Afrika Co.Ltd',
+            'slug' => 'veritas-afrika-co-ltd',
             'subtitle' => 'Who We Are',
             'short_description' => "Veritas Afrika Co.Ltd is a multi-disciplinary company of professional consultants specializing in a wide range of civil engineering works. We provide expert services to government, non-government, and private-sector customers.",
             'list_items' => [
@@ -141,7 +143,8 @@ class PageSeeder extends Seeder
         ContentBlock::create([
             'section_id' => $aboutFeatures->id,
             'type' => 'image',
-            'title' => 'Veritas Afrika Co.Ltd',
+            'title' => 'Veritas Afrika Co.Ltd image',
+            'slug' => 'veritas-afrika-co-ltd-image',
             'subtitle' => 'Who We Are',
             'short_description' => "Veritas Afrika Co.Ltd is a multi-disciplinary company of professional consultants specializing in a wide range of civil engineering works. We provide expert services to government, non-government, and private-sector customers.",
             'content' => 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
@@ -156,6 +159,7 @@ class PageSeeder extends Seeder
             'section_id' => $ctaSection->id,
             'type' => 'text',
             'title' => 'Call to Action',
+            'slug' => 'call-to-action',
             'subtitle' => 'Get in Touch',
             'short_description' => 'Ready to partner with a company committed to quality?',
             'content' => '',

@@ -46,7 +46,12 @@ class ContentBlockResource extends Resource
                         Forms\Components\TextInput::make('title')
                             ->maxLength(255)
                             ->nullable(),
-
+                        Forms\Components\TextInput::make('slug')
+                                ->required()
+                                ->maxLength(120)
+                                ->unique(ContentBlock::class, 'slug', ignoreRecord: true)
+                                ->readOnly(),
+                                
                         Forms\Components\TextInput::make('icon')
                             ->maxLength(100),
 
