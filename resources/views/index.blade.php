@@ -65,7 +65,7 @@
     <!-- Video Section -->
 
     <x-video-section
-        :videoUrl="$data['videoSection'] ?? ''"
+        :videoUrl="$data['videoSection']['video_url'] ?? ''"
         :videoThumbnail="$data['videoThumbnail'] ?? ''"
         :thumbnailShortDescription="$data['videoDetails']['short_description'] ?? ''"
         subtitle="Working Process"

@@ -74,9 +74,7 @@ class HomeContentService
 
                 'cta2Content' => $blocks->get('call-to-action-right')->content ?? '',
 
-                'videoSection' => $blocks->get('video-section')
-                    ? $blocks->get('video-section')->getFirstMediaUrl('videos')
-                    : 'https://www.youtube.com/watch?v=x36EQP2og-k',
+                'videoSection' => $blocks->get('video-section'),
 
                 'videoThumbnail' => $blocks->get('video-thumbnail') 
                     ? $blocks->get('video-thumbnail')->getFirstMediaUrl('images')
