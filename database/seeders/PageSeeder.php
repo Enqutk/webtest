@@ -144,7 +144,7 @@ class PageSeeder extends Seeder
             'title' => 'Veritas Afrika Co.Ltd',
             'subtitle' => 'Who We Are',
             'short_description' => "Veritas Afrika Co.Ltd is a multi-disciplinary company of professional consultants specializing in a wide range of civil engineering works. We provide expert services to government, non-government, and private-sector customers.",
-            'content' => '',
+            'content' => 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
             'display_order' => 3,
             'is_active' => true,
             'created_by' => $user->id,
