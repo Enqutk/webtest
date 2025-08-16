@@ -63,6 +63,16 @@ class PageSeeder extends Seeder
             'updated_by' => $user->id,
         ]);
 
+        $videoSection = PageSection::create([
+            'page_id' => $homePage->id,
+            'title' => 'Video Section',
+            'subtitle' => 'Watch Our Introduction',
+            'display_order' => 4,
+            'is_active' => true,
+            'created_by' => $user->id,
+            'updated_by' => $user->id,
+        ]);
+
         // Create content block for Home page features (as a list)
         ContentBlock::create([
             'section_id' => $heroFeatures->id,
