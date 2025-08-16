@@ -189,9 +189,24 @@ class PageSeeder extends Seeder
             'short_description' => 'Watch our introduction video to learn more about Veritas Afrika.',
             'content' => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', 
             'metadata' => [
-                'Working Process' => 'Company market share in the domestic market', 
+                'Working Process' => 'Company market share in the domestic market',
+                'Available To All Industries' => 'Our specialists offer manufacturing of complex machined precision parts, as well as turning and milling, to support a wide host of industries.',
             ],
             'display_order' => 6,
+            'is_active' => true,
+            'created_by' => $user->id,
+            'updated_by' => $user->id,
+        ]);
+
+        // Create image content block for Video section
+        ContentBlock::create([
+            'section_id' => $videoSection->id,
+            'type' => 'image',
+            'title' => 'Video Thumbnail',
+            'subtitle' => 'Watch Our Introduction',
+            'short_description' => 'Watch our introduction video to learn more about Veritas Afrika.',
+            'content' => 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+            'display_order' => 7,
             'is_active' => true,
             'created_by' => $user->id,
             'updated_by' => $user->id,

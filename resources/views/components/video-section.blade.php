@@ -6,7 +6,6 @@
     'industriesTitle' => 'Available To All Industries',
     'industriesDescription' => 'Our specialists offer manufacturing of complex machined precision parts, as well as turning and milling, to support a wide host of industries.',
     'industries' => ['Manufacturing', 'Pharmaceutical', 'Defense', 'Off-Road / Petroleum', 'Nuclear', 'Automotive'],
-    'locationsTitle' => 'OUR LOCATIONS',
     'mapImage' => './assiet/images/homepage-2/map.png'
 ])
 
@@ -63,7 +62,7 @@
                         </div>
                         <div class="col-md-12 col-xl-6">
                             <div class="pbmit-heading-subheading">
-                                <h4 class="pbmit-subtitle">{{ $locationsTitle }}</h4>
+                                <h4 class="pbmit-subtitle">OUR LOCATIONS</h4>
                             </div>
                             <div class="map-img">
                                 <img src="{{ $mapImage }}" class="img-fluid" alt="">
