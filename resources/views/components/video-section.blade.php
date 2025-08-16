@@ -1,12 +1,13 @@
 @props([
-    'title' => 'Serving with expertise in industries as one of World\'s leading Corporation!',
     'videoUrl' => 'https://www.youtube.com/watch?v=x36EQP2og-k',
     'subtitle' => 'Working Process',
     'chartDescription' => 'Company market share in the domestic market',
     'industriesTitle' => 'Available To All Industries',
     'industriesDescription' => 'Our specialists offer manufacturing of complex machined precision parts, as well as turning and milling, to support a wide host of industries.',
     'industries' => ['Manufacturing', 'Pharmaceutical', 'Defense', 'Off-Road / Petroleum', 'Nuclear', 'Automotive'],
-    'mapImage' => './assiet/images/homepage-2/map.png'
+    'locationsTitle' => 'OUR LOCATIONS',
+    'mapImage' => './assiet/images/homepage-2/map.png',
+    'thumbnailShortDescription' => '',
 ])
 
 <section class="video-section-two pbmit-bg-color-blackish">
@@ -15,7 +16,7 @@
             <div class="row align-items-center">
                 <div class="col-md-6 left-col">
                     <div class="pbmit-custom-heading">
-                        <h2 class="pbmit-title">{{ $title }}</h2>
+                        <h2 class="pbmit-title">{{ $thumbnailShortDescription }}</h2>
                     </div>
                 </div>
                 <div class="col-md-6 right-col">
@@ -62,7 +63,7 @@
                         </div>
                         <div class="col-md-12 col-xl-6">
                             <div class="pbmit-heading-subheading">
-                                <h4 class="pbmit-subtitle">OUR LOCATIONS</h4>
+                                <h4 class="pbmit-subtitle">{{ $locationsTitle }}</h4>
                             </div>
                             <div class="map-img">
                                 <img src="{{ $mapImage }}" class="img-fluid" alt="">
