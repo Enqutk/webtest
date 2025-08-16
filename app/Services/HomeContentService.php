@@ -69,6 +69,10 @@ class HomeContentService
                 ->where('title', 'Call to Action') 
                 ->where('display_order', 4)
                 ->first();
+            $ctaSection2 = ContentBlock::where('is_active', true)
+                ->where('title', 'Get in Touch') 
+                ->where('display_order', 5)
+                ->first();
 
             return array_merge(
                 ['email' => $email, 'phone' => $phone, 'fax' => $fax],
