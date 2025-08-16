@@ -95,12 +95,6 @@ class Post extends Model implements HasMedia
         });
     }
 
-    protected function galleryImageUrl(): Attribute
-    {
-        return Attribute::make(
-            get: fn() => $this->getFirstMediaUrl('gallery'),
-        );
-    }
     protected function mainImageUrl(): Attribute
     {
         return Attribute::make(
