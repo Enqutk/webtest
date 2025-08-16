@@ -70,6 +70,7 @@
         :thumbnailShortDescription="$data['videoDetails']['short_description'] ?? ''"
         subtitle="$data['videoSection']['subtitle'] ?? ''"
         Description="{{ $data['videoThumbnail']['short_description'] ?? '' }}"
+        chartDescription="{{ $data['videoDetails']['short_description'] ?? '' }}"
         industriesTitle="{{ $data['videoDetails']['list_items'][0]['title'] ?? '' }}"
         industriesDescription="{{ $data['videoDetails']['list_items'][0]['description'] ?? '' }}"
         :industries="array_values($data['videoDetails']['metadata'] ?? [])"
