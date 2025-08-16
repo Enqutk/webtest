@@ -18,7 +18,7 @@ class HomeController extends Controller
         return view('index', compact('services'));
     }
 
-    public function PostIndex()
+    public function postIndex()
     {
         $blogPosts = Post::with(['category', 'creator'])
             ->where('is_active', true)
@@ -29,7 +29,7 @@ class HomeController extends Controller
         return view('blog.index', compact('blogPosts'));
     }
 
-    public function PostShow($slug)
+    public function postShow($slug)
     {
         $post = Post::with(['category', 'creator'])
             ->where('slug', $slug)
