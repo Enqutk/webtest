@@ -69,17 +69,24 @@ class HomeContentService
                 ->where('title', 'Call to Action') 
                 ->where('display_order', 4)
                 ->first();
-                
             $ctaSection2 = ContentBlock::where('is_active', true)
                 ->where('title', 'Call to Action') 
                 ->where('display_order', 5)
                 ->first();
 
+            $ctaSectionShortDescription = $ctaSection ? $ctaSection->short_description : '';
+            $ctaSection2ShortDescription = $ctaSection2 ? $ctaSection2->short_description : '';
+            $ctaSection2Content = $ctaSection2 ? $ctaSection2->content : '';
+
             return array_merge(
                 ['email' => $email, 'phone' => $phone, 'fax' => $fax],
                 ['address' => $address, 'working_days' => $working_days, 'map' => $map],
                 ['heroFeatures' => $heroFeatures, 'aboutFeatures' => $aboutFeatures, 'aboutFeatureImageUrl' => $aboutFeatureImageUrl],
-                ['ctaSection' => $ctaSection, 'ctaSection2' => $ctaSection2]
+                [
+                    'ctaSectionShortDescription' => $ctaSectionShortDescription,
+                    'ctaSection2ShortDescription' => $ctaSection2ShortDescription,
+                    'ctaSection2Content' => $ctaSection2Content
+                ]
             );
         });
     }
