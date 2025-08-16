@@ -8,8 +8,8 @@
 
         <section class="site-content blog-details">
             <div class="container">
-                < class="row">
-                    <!-- Left Column -->
+                <div class="row">
+                    <!-- Main Content -->
                     <div class="col-md-9 blog-left-col">
                         <div class="row">
                             @if ($posts->count() > 0)
@@ -77,12 +77,12 @@
                             @endif
                         </div>
                     </div>
-
+                    <!-- Sidebar -->
                     <div class="col-md-3 blog-right-col">
                         @include('layouts.blog-sidebar')
                     </div>
+                </div>
             </div>
-    </div>
-    </section>
+        </section>
     </div>
 @endsection
