@@ -8,7 +8,8 @@ use Illuminate\View\Component;
 use App\Models\Hero;
 use App\Enums\StatusEnum;
 
-class HomeSection extends Component {
+class HomeSection extends Component
+ {
     public $heroes;
 
     /**
