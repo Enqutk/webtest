@@ -13,7 +13,7 @@
 ])
 <section class="video-section-two pbmit-bg-color-blackish">
     <div class="container-fluid p-0">
-        <div class="video-play-bg" style="background-image: url({{ asset('assets/images/bg/cta-02.png') }})">
+        <div class="video-play-bg" style="background-image: url('{{ $videoThumbnail }}');">
             <div class="row align-items-center">
                 <div class="col-md-6 left-col">
                     <div class="pbmit-custom-heading">
