@@ -9,7 +9,7 @@ use App\Models\Hero;
 use App\Enums\StatusEnum;
 
 class HomeSection extends Component
- {
+{
     public $heroes;
 
     /**
