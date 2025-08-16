@@ -5,7 +5,7 @@
                 <div class="col-md-6">
                     <div class="about-us-two-leftbox pbmit-bg-color-global">
                         <div class="pbmit-custom-heading">
-                            <h4 class="pbmit-title">Ready to partner with a company committed to quality? </h4>
+                            <h4 class="pbmit-title">{{ $title }} </h4>
                         </div>
                         <a href="contact-us.html" class="pbmit-btn white">
                             <span class="pbmit-button-content-wrapper">
