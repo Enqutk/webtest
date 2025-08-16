@@ -9,27 +9,23 @@ use App\Models\Post;
 
 class BlogSection extends Component
 {
-    public $posts;
-
     /**
      * Create a new component instance.
      */
-
-    public function __construct()
+    public function __construct(public $posts = null)
     {
-        $this->posts = Post::with(['category', 'creator'])
-            ->where('is_active', true)
-            ->latest()
-            ->take(6)
-            ->get();
     }
-
-    /**
-     * Get the view / contents that represent the component.
-     */
 
     public function render(): View|Closure|string
     {
+        if (is_null($this->posts)) {
+            $this->posts = Post::with(['category', 'creator'])
+                ->where('is_active', true)
+                ->latest()
+                ->take(6)
+                ->get();
+        }
+
         return view('components.blog-section');
     }
 }
