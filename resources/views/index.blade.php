@@ -73,7 +73,7 @@
         industriesTitle="{{ $data['videoDetails']['list_items'][0]['title'] ?? '' }}"
         industriesDescription="{{ $data['videoDetails']['list_items'][0]['description'] ?? '' }}"
         :industries="array_values($data['videoDetails']['metadata'] ?? [])"
-        locationsTitle="OUR LOCATIONS"
+        locationsTitle="OUR LOCATION"
         mapUrl="{{ $data['map'] ?? '' }}"
     />
 
