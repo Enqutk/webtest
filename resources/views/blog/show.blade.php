@@ -15,13 +15,13 @@
             {!! clean($post->content) !!}
         </div>
 
-        @if ($gallery->count() > 0)
+        @if ($post->getMedia('gallery')->count() > 0)
             <h3>Gallery</h3>
             <div class="row">
-                @foreach ($gallery as $image)
+                @foreach ($post->getMedia('gallery') as $media)
                     <div class="col-md-3 mb-3">
-                        <a href="{{ $image->getUrl() }}" target="_blank">
-                            <img src="{{ $post->gallery_image_url }}" class="img-fluid rounded" alt="Gallery Image">
+                        <a href="{{ $media->getUrl() }}" target="_blank">
+                            <img src="{{ $media->getUrl() }}" class="img-fluid rounded" alt="Gallery Image">
                         </a>
                     </div>
                 @endforeach
