@@ -20,10 +20,10 @@ class HomeContentService
             $blocks = ContentBlock::where('is_active', true)
                 ->whereIn('slug', [
                     'key-features',
-                    'about-company',
-                    'about-company-image',
-                    'cta-primary',
-                    'cta-secondary',
+                    'veritas-afrika-co-ltd',
+                    'veritas-afrika-co-ltd-image',
+                    'call-to-action-left',
+                    'call-to-action-right',
                     'video-section',
                     'video-thumbnail'
                 ])
@@ -39,14 +39,14 @@ class HomeContentService
                 'map'     => $organization->map_url ?? null,
 
                 'heroFeatures' => $blocks->get('key-features'),
-                'aboutFeatures' => $blocks->get('about-company'),
-                'aboutFeatureImageUrl' => $blocks->get('about-company-image')
-                    ? $blocks->get('about-company-image')->getFirstMediaUrl('images')
+                'aboutFeatures' => $blocks->get('veritas-afrika-co-ltd'),
+                'aboutFeatureImageUrl' => $blocks->get('veritas-afrika-co-ltd-image')
+                    ? $blocks->get('veritas-afrika-co-ltd-image')->getFirstMediaUrl('images')
                     : asset('assets/images/homepage-2/about-img-01.png'),
 
-                'cta' => $blocks->get('cta-primary')->short_description ?? '',
-                'cta2' => $blocks->get('cta-secondary')->short_description ?? '',
-                'cta2Content' => $blocks->get('cta-secondary')->content ?? '',
+                'cta' => $blocks->get('call-to-action-left')->short_description ?? '',
+                'cta2' => $blocks->get('call-to-action-right')->short_description ?? '',
+                'cta2Content' => $blocks->get('call-to-action-right')->content ?? '',
 
                 'videoSection' => $blocks->get('video-section') ? [
                     'short_description' => $blocks->get('video-section')->short_description,
