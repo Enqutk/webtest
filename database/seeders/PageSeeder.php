@@ -194,6 +194,7 @@ class PageSeeder extends Seeder
             'subtitle' => '',
             'short_description' => '',
             'content' => '',
+            'video_url' => 'https://www.youtube.com/watch?v=MDF2vmMFtQg&list=RDzHdAB4xj3GI&index=7',
             'display_order' => 6,
             'is_active' => true,
             'created_by' => $user->id,

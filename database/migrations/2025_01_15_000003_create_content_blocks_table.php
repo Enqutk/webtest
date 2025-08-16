@@ -18,8 +18,9 @@ return new class extends Migration {
             $table->string('subtitle')->nullable();
             $table->text('short_description')->nullable();
             $table->longText('content')->nullable();
-            $table->json('list_items')->nullable(); 
-            $table->json('metadata')->nullable(); 
+            $table->json('list_items')->nullable();
+            $table->string('video_url')->nullable();
+            $table->json('metadata')->nullable();
             $table->integer('display_order')->default(0);
             $table->boolean('is_active')->default(true);
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();

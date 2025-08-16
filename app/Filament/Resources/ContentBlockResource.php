@@ -107,8 +107,8 @@ class ContentBlockResource extends Resource
                             ->visible(fn(callable $get) => in_array($get('type'), ['image', 'gallery']))
                             ->columnSpanFull(),
 
-                        Forms\Components\TextInput::make('videos')
-                            ->label('Video_url')
+                        Forms\Components\TextInput::make('video_url')
+                            ->label('video_url')
                             ->placeholder('Enter video ')
                             ->visible(fn(callable $get) => $get('type') === 'video')
                             ->columnSpanFull(),
@@ -185,7 +185,7 @@ class ContentBlockResource extends Resource
                     ->label('Images')
                     ->size(40)
                     ->square(),
-                Tables\Columns\TextColumn::make('videos')
+                Tables\Columns\TextColumn::make('video_url')
                     ->label('video_url')
                     ->toggleable(isToggledHiddenByDefault: true),
 
