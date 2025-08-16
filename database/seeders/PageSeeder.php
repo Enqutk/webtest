@@ -187,7 +187,7 @@ class PageSeeder extends Seeder
             'title' => 'Video Section',
             'subtitle' => 'Watch Our Introduction',
             'short_description' => 'Watch our introduction video to learn more about Veritas Afrika.',
-            'content' => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', 
+            'content' => '', 
             'metadata' => [
                 'Working Process' => 'Company market share in the domestic market',
                 'Available To All Industries' => 'Our specialists offer manufacturing of complex machined precision parts, as well as turning and milling, to support a wide host of industries.',
@@ -205,7 +205,7 @@ class PageSeeder extends Seeder
             'title' => 'Video Thumbnail',
             'subtitle' => 'Watch Our Introduction',
             'short_description' => 'Serving with expertise in industries as one of World leading Corporation ',
-            'content' => 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+            'content' => '',
             'metadata' => [
                 'data1' => 'Manufacturing',
                 'data2' => 'Pharmaceutical',
