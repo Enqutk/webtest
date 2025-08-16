@@ -191,8 +191,8 @@ class PageSeeder extends Seeder
             'type' => 'video',
             'title' => 'Video Section',
             'slug' => 'video-section',
-            'subtitle' => '',
-            'short_description' => '',
+            'subtitle' => 'Working Process',
+            'short_description' => 'Company market share in the domestic market',
             'content' => '',
             'video_url' => 'https://www.youtube.com/watch?v=MDF2vmMFtQg&list=RDzHdAB4xj3GI&index=7',
             'display_order' => 6,
@@ -215,9 +215,6 @@ class PageSeeder extends Seeder
             'is_active' => true,
             'created_by' => $user->id,
             'updated_by' => $user->id,
-            'metadata' => [
-                'Working Process' => 'Company market share in the domestic market',
-            ],
         ]);
 
         // Create image content block for Video section
