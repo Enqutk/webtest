@@ -38,31 +38,8 @@
                             </div>
                         </div>
                         <div class="pbmit-right-box d-flex align-items-center">
-                            <div class="pbmit-header-social">
-                                <ul class="pbmit-social-links">
-                                    <li class="pbmit-social-li pbmit-social-facebook">
-                                        <a title="Facebook" href="#" target="_blank">
-                                            <span><i class="pbmit-base-icon-facebook-f"></i></span>
-                                        </a>
-                                    </li>
-                                    <li class="pbmit-social-li pbmit-social-twitter">
-                                        <a title="Twitter" href="#" target="_blank">
-                                            <span><i class="pbmit-base-icon-twitter-2"></i></span>
-                                        </a>
-                                    </li>
-                                    <li class="pbmit-social-li pbmit-social-youtube">
-                                        <a title="Youtube" href="#" target="_blank">
-                                            <span><i class="pbmit-base-icon-youtube-play"></i></span>
-                                        </a>
-                                    </li>
-                                    <li class="pbmit-social-li pbmit-social-instagram">
-                                        <a title="Instagram" href="#" target="_blank">
-                                            <span><i class="pbmit-base-icon-instagram"></i></span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="pbmit-header-button">
+                       <x-social-media />
+                        <div class="pbmit-header-button">
                                 <a href="{{ route('contact') }}" class="pbmit-btn">
                                     <span class="pbmit-button-content-wrapper">
                                         <span class="pbmit-button-icon">
@@ -83,7 +60,8 @@
                                     <i class="pbmit-base-icon-menu-1"></i>
                                 </button>
                             </div>
-                        </div>
+                       </div>
+                       
                     </div>
                 </div>
             </div>
