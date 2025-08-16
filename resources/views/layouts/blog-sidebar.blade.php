@@ -37,4 +37,21 @@
             @endforeach
         </ul>
     </div>
+
+    @if (!empty($post->tags))
+        <div class="widget widget-categories">
+            <h5 class="widget-title">Tags</h5>
+            <ul class="tagcloud d-flex flex-wrap align-items-center"
+                style="gap: 6px; list-style: none; padding-left: 0;">
+                @foreach (explode(',', $post->tags) as $i => $tag)
+                    <li>
+                        <span>{{ trim($tag) }}</span>
+                        @if ($i < count(explode(',', $post->tags)) - 1)
+                            <span class="mx-1">/</span>
+                        @endif
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 </aside>
