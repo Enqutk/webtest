@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Enums\StatusEnum;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use Illuminate\Support\Str;
+use Filament\Forms\Set;
 
 class PostResource extends Resource
 {
@@ -28,7 +30,8 @@ class PostResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('title')
                     ->required()
-                    ->maxLength(400),
+                    ->maxLength(400)
+                    ->afterStateUpdated( fn( Set $set, ?string $state ) => $set( 'slug', Str::slug( $state ) ) ),
                 Forms\Components\Select::make('category_id')
                     ->relationship('category', 'name')
                     ->required()
