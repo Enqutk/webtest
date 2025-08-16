@@ -185,6 +185,17 @@ class PageSeeder extends Seeder
             'section_id' => $videoSection->id,
             'type' => 'video',
             'title' => 'Video Section',
+            'subtitle' => 'Watch Our Introduction',
+            'short_description' => 'Watch our introduction video to learn more about Veritas Afrika.',
+            'content' => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', 
+            'metadata' => [
+                'Working Process' => 'Company market share in the domestic market', 
+            ],
+            'display_order' => 6,
+            'is_active' => true,
+            'created_by' => $user->id,
+            'updated_by' => $user->id,
+        ]);
 
     }
 }
