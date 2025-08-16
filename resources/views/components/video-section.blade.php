@@ -1,18 +1,16 @@
-@props([
-'title' => 'Serving with expertise in industries as one of World\'s leading Corporation!',
-'videoUrl' => 'https://www.youtube.com/watch?v=x36EQP2og-k',
-'subtitle' => 'Working Process',
-'chartDescription' => 'Company market share in the domestic market',
-'industriesTitle' => 'Available To All Industries',
-'industriesDescription' => 'Our specialists offer manufacturing of complex machined precision parts, as well as turning and milling, to support a wide host of industries.',
-'industries' => ['Manufacturing', 'Pharmaceutical', 'Defense', 'Off-Road / Petroleum', 'Nuclear', 'Automotive'],
-'locationsTitle' => 'OUR LOCATIONS',
-'mapImage' => './assiet/images/homepage-2/map.png',
-'thumbnailShortDescription' => '',
-'videoThumbnail' => [
-],
-])
 
+@props([
+    'videoUrl' => 'https://www.youtube.com/watch?v=x36EQP2og-k',
+    'videoThumbnail' => '',
+    'thumbnailShortDescription' => '',
+    'subtitle' => '',
+    'chartDescription' => '',
+    'industriesTitle' => '',
+    'industriesDescription' => '',
+    'industries' => [],
+    'locationsTitle' => 'OUR LOCATIONS',
+    'mapImage' => './assets/images/homepage-2/map.png',
+])
 <section class="video-section-two pbmit-bg-color-blackish">
     <div class="container-fluid p-0">
         <div class="video-play-bg" style="background-image: url({{ asset('assets/images/bg/cta-02.png') }})">
@@ -37,14 +35,11 @@
             <div class="row">
                 <div class="col-md-12 col-xl-3">
                     <div class="pbmit-heading-subheading">
-                        @if(isset($videoThumbnail['metadata']))
-                        @if(is_array($videoThumbnail['metadata']))
-                        <div>
-                            <span>{{ $videoThumbnail['metadata']['Field'] ?? '' }}</span>
-                            <span>{{ $videoThumbnail['metadata']['Value'] ?? '' }}</span>
-                        </div>
-                        @endif
-                        @endif
+                        <h4 class="pbmit-subtitle">{{ $subtitle }}</h4>
+                    </div>
+                    <div class="chart-wrap">
+                        <div id="chart"></div>
+                        <p class="chart-sub-heading">{{ $chartDescription }}</p>
                     </div>
                 </div>
                 <div class="col-md-12 col-xl-9">
@@ -59,7 +54,7 @@
                                     @foreach($industries as $industry)
                                     <li class="list-group-item">
                                         <span class="pbmit-icon-list-icon">
-                                            <i class="pbmit-induyst-icon pbmit-induyst-icon-check"></i>
+                                            <i class="pbmit-induyst-icon pbmit-induyst-icon-check"></i>						
                                         </span>
                                         <span class="pbmit-icon-list-text">{{ $industry }}</span>
                                     </li>
