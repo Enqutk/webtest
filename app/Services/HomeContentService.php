@@ -25,7 +25,8 @@ class HomeContentService
                     'call-to-action-left',
                     'call-to-action-right',
                     'video-section',
-                    'video-thumbnail'
+                    'video-thumbnail',
+                    'video-details',
                 ])
                 ->get()
                 ->keyBy('slug');
@@ -49,15 +50,17 @@ class HomeContentService
                 'cta2Content' => $blocks->get('call-to-action-right')->content ?? '',
 
                 'videoSection' => $blocks->get('video-section') ? [
-                    'short_description' => $blocks->get('video-section')->short_description,
-                    'metadata' => $blocks->get('video-section')->metadata,
                     'videos' => $blocks->get('video-section')->video_urls,
                 ] : null,
 
                 'videoThumbnail' => $blocks->get('video-thumbnail') ? [
-                    'short_description' => $blocks->get('video-thumbnail')->short_description,
-                    'metadata' => $blocks->get('video-thumbnail')->metadata,
                     'images' => $blocks->get('video-thumbnail')->image_urls,
+                ] : null,
+
+                'videoDetails' => $blocks->get('video-details') ? [
+                    'short_description' => $blocks->get('video-details')->description,
+                    'list_items' => $blocks->get('video-details')->list_items,
+                    'metadata' => $blocks->get('video-details')->metadata,
                 ] : null,
             ];
         });
