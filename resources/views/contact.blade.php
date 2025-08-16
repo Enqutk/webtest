@@ -337,7 +337,7 @@
                 <div class="map-wrapper">
                     <div class="map-container" style="height: 400px; background-color: #f5f5f5;">
                         @if(!empty($data['map']))
-                            {{ $data['map'] }}
+                            {!! $data['map'] !!}
                         @else
                         <div class="d-flex align-items-center justify-content-center h-100">
                             <div class="text-center">

@@ -56,7 +56,7 @@
                                 <h4 class="pbmit-subtitle">{{ $locationsTitle }}</h4>
                             </div>
                             <div class="map-img">
-                                {{ $mapUrl }}
+                                {{$mapUrl}}
                         </div>
                     </div>
                 </div>

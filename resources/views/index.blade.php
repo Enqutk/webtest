@@ -74,7 +74,7 @@
         industriesDescription="{{ $data['videoDetails']['list_items'][0]['description'] ?? '' }}"
         :industries="array_values($data['videoDetails']['metadata'] ?? [])"
         locationsTitle="OUR LOCATIONS"
-        mapUrl="{{ $data['map'] ?? '' }}"
+        mapUrl="{{!! $data['map']  ?? '' !!}}"
     />
 
     <!-- Blog Section -->
