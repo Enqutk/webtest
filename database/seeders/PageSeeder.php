@@ -215,8 +215,7 @@ class PageSeeder extends Seeder
             'created_by' => $user->id,
             'updated_by' => $user->id,
             'metadata' => [
-                'title' => 'Working Process',
-                'description' => 'Company market share in the domestic market',
+                'Working Process' => 'Company market share in the domestic market',
             ],
         ]);
 
