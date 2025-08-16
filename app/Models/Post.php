@@ -10,6 +10,7 @@ use App\Traits\HasUserStamps;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Post extends Model implements HasMedia
 {
@@ -51,6 +52,7 @@ class Post extends Model implements HasMedia
         return $this->belongsTo(User::class, 'updated_by');
     }
 
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('main_image')
@@ -60,7 +62,7 @@ class Post extends Model implements HasMedia
                     ->width(300)
                     ->height(200)
                     ->sharpen(10);
-                
+
                 $this->addMediaConversion('medium')
                     ->width(600)
                     ->height(400)
@@ -91,5 +93,18 @@ class Post extends Model implements HasMedia
                 $post->slug = Str::slug($post->title);
             }
         });
+    }
+
+    protected function galleryImageUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->getFirstMediaUrl('gallery'),
+        );
+    }
+    protected function mainImageUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->getFirstMediaUrl('main_image'),
+        );
     }
 }
