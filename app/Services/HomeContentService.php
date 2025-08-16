@@ -57,13 +57,18 @@ class HomeContentService
                 });
 
             $aboutFeatureImageBlock = ContentBlock::where('is_active', true)
-                ->where('title', 'Veritas Afrika Co.Ltd') // Replace with slug for stability
+                ->where('title', 'Veritas Afrika Co.Ltd') 
                 ->where('display_order', 3)
                 ->first();
 
             $aboutFeatureImageUrl = $aboutFeatureImageBlock
                 ? $aboutFeatureImageBlock->getFirstMediaUrl('images')
                 : asset('assets/images/homepage-2/about-img-01.png');
+
+            $ctaSection = ContentBlock::where('is_active', true)
+                ->where('title', 'Get in Touch') 
+                ->where('display_order', 4)
+                ->first();
 
             return array_merge(
                 ['email' => $email, 'phone' => $phone, 'fax' => $fax],
