@@ -244,7 +244,7 @@ class PageSeeder extends Seeder
                 'data5' => 'Nuclear',
                 'data6' => 'Automotive',
             ],
-            'display_order' => 7,
+            'display_order' => 8,
             'is_active' => true,
             'created_by' => $user->id,
             'updated_by' => $user->id,
