@@ -1,4 +1,5 @@
 @props([
+    'title' => 'Serving with expertise in industries as one of World\'s leading Corporation!',
     'videoUrl' => 'https://www.youtube.com/watch?v=x36EQP2og-k',
     'subtitle' => 'Working Process',
     'chartDescription' => 'Company market share in the domestic market',
@@ -33,32 +34,35 @@
         <div class="video-bottom-area">
             <div class="row">
                 <div class="col-md-12 col-xl-3">
-                    <div class="d-flex flex-row justify-content-between align-items-start gap-4">
-                        <!-- Subtitle and Description -->
-                        <div>
-                            <h4 class="pbmit-subtitle mb-2">{{ $subtitle }}</h4>
-                            <p class="chart-sub-heading mb-0">{{ $chartDescription }}</p>
-                        </div>
-                        <!-- Industries Title and Description -->
-                        <div>
-                            <h4 class="pbmit-subtitle mb-2">{{ $industriesTitle }}</h4>
-                            <div class="pbmit-heading-desc mb-0">{{ $industriesDescription }}</div>
-                            <ul class="list-group mt-3">
-                                @foreach($industries as $industry)
-                                <li class="list-group-item">
-                                    <span class="pbmit-icon-list-icon">
-                                        <i class="pbmit-induyst-icon pbmit-induyst-icon-check"></i>						
-                                    </span>
-                                    <span class="pbmit-icon-list-text">{{ $industry }}</span>
-                                </li>
-                                @endforeach
-                            </ul>
-                        </div>
+                    <div class="pbmit-heading-subheading">
+                        <h4 class="pbmit-subtitle">{{ $subtitle }}</h4>
+                    </div>
+                    <div class="chart-wrap">
+                        <div id="chart"></div>
+                        <p class="chart-sub-heading">{{ $chartDescription }}</p>
                     </div>
                 </div>
                 <div class="col-md-12 col-xl-9">
                     <div class="row">
-                        <div class="col-md-12 col-xl-6 offset-xl-6">
+                        <div class="col-md-12 col-xl-6">
+                            <div class="content-box">
+                                <div class="pbmit-heading-subheading">
+                                    <h4 class="pbmit-subtitle">{{ $industriesTitle }}</h4>
+                                    <div class="pbmit-heading-desc">{{ $industriesDescription }}</div>
+                                </div>
+                                <ul class="list-group">
+                                    @foreach($industries as $industry)
+                                    <li class="list-group-item">
+                                        <span class="pbmit-icon-list-icon">
+                                            <i class="pbmit-induyst-icon pbmit-induyst-icon-check"></i>						
+                                        </span>
+                                        <span class="pbmit-icon-list-text">{{ $industry }}</span>
+                                    </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-xl-6">
                             <div class="pbmit-heading-subheading">
                                 <h4 class="pbmit-subtitle">{{ $locationsTitle }}</h4>
                             </div>

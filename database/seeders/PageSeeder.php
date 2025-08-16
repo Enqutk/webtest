@@ -14,12 +14,12 @@ class PageSeeder extends Seeder
     {
         // Get the first user for created_by
         $user = User::first();
-        
+
         if (!$user) {
             $this->command->error('No users found. Please run UserSeeder first.');
             return;
         }
-        
+
         // Create Home page
         $homePage = Page::create([
             'title' => 'Home',
@@ -79,22 +79,22 @@ class PageSeeder extends Seeder
             'type' => 'list',
             'title' => 'Key Features',
             'slug' => 'key-features',
-            'list_items' =>[
-            [
-                'title' => 'Professionalism',
-                'icon' => 'bi bi-shield-check', 
-                'description' => 'Our team consists of experienced leaders recognized regionally and...',
-            ],
-            [
-                'title' => 'Client-Centric Approach',
-                'icon' => 'bi bi-person-heart',
-                'description' => 'Getting our clients what they deserve is our mission. We prioritize...',
-            ],
-            [
-                'title' => 'Regional Impact',
-                'icon' => 'bi bi-globe',
-                'description' => 'We address local development challenges using effective...',
-            ],
+            'list_items' => [
+                [
+                    'title' => 'Professionalism',
+                    'icon' => 'bi bi-shield-check',
+                    'description' => 'Our team consists of experienced leaders recognized regionally and...',
+                ],
+                [
+                    'title' => 'Client-Centric Approach',
+                    'icon' => 'bi bi-person-heart',
+                    'description' => 'Getting our clients what they deserve is our mission. We prioritize...',
+                ],
+                [
+                    'title' => 'Regional Impact',
+                    'icon' => 'bi bi-globe',
+                    'description' => 'We address local development challenges using effective...',
+                ],
             ],
             'display_order' => 1,
             'is_active' => true,
@@ -126,13 +126,13 @@ class PageSeeder extends Seeder
                     'icon' => 'bi bi-globe',
                     'description' => 'What key challenges can we solve together to drive your business?',
                 ],
-             
-             ],
-             'metadata' => [
-                 'data1' => 'Professionalism',
-                 'data2' => 'Client-Centric Approach',
-                 'data3' => 'Regional Impact',
-             ],
+
+            ],
+            'metadata' => [
+                'data1' => 'Professionalism',
+                'data2' => 'Client-Centric Approach',
+                'data3' => 'Regional Impact',
+            ],
             'display_order' => 2,
             'is_active' => true,
             'created_by' => $user->id,
@@ -193,7 +193,7 @@ class PageSeeder extends Seeder
             'slug' => 'video-section',
             'subtitle' => '',
             'short_description' => '',
-            'content' => '', 
+            'content' => '',
             'display_order' => 6,
             'is_active' => true,
             'created_by' => $user->id,
@@ -209,11 +209,15 @@ class PageSeeder extends Seeder
             'subtitle' => '',
             'short_description' => '',
             'content' => '',
-            
+
             'display_order' => 7,
             'is_active' => true,
             'created_by' => $user->id,
             'updated_by' => $user->id,
+            'metadata' => [
+                'title' => 'Working Process',
+                'description' => 'Company market share in the domestic market',
+            ],
         ]);
 
         // Create image content block for Video section
@@ -225,11 +229,6 @@ class PageSeeder extends Seeder
             'subtitle' => '',
             'short_description' => 'Serving with expertise in industries as one of World leading Corporation ',
             'list_items' => [
-                [
-                    'title' => 'Working Process',
-                    'icon' => '',
-                    'description' => 'Company market share in the domestic market',
-                ],
                 [
                     'title' => 'Available To All Industries',
                     'icon' => '',
@@ -249,8 +248,5 @@ class PageSeeder extends Seeder
             'created_by' => $user->id,
             'updated_by' => $user->id,
         ]);
-
-
-
     }
 }
