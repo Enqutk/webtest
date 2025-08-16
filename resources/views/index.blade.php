@@ -62,9 +62,9 @@
     @endif
     <!-- CTA Section -->
     <x-cta-section 
-        :content="$data['content'] ?? ''" 
-        :content2="$data['content2'] ?? ''" 
-        :contentValue="$data['content2Content'] ?? ''" />
+        :content="$data['cta'] ?? ''" 
+        :content2="$data['cta2'] ?? ''" 
+        :contentValue="$data['cta2Content'] ?? ''" />
 
     <x-service-section />
 
