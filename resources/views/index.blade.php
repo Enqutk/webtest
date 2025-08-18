@@ -3,40 +3,6 @@
 @section('content')
 <!-- Page Content -->
 <div class="page-content">
-
-    <!-- Hero Features Section -->
-    <div class="mt-5 mb-5">
-        <x-hero-features :features="$data['heroFeatures']?->list_items ?? []" />
-    </div>
-
-    @if($data['aboutFeatures'])
-    <x-about-section
-        :features="$data['aboutFeatures']?->metadata ?? []"
-        :slidePages="$data['aboutFeatures']?->list_items ?? []"
-        image="{{ $data['aboutFeatureImageUrl'] }}"
-        subtitle="{{ $data['aboutFeatures']?->subtitle ?? '' }}"
-        title="{{ $data['aboutFeatures']?->title ?? '' }}"
-        description="{{ $data['aboutFeatures']?->short_description ?? '' }}"
-        buttonText="Discover More"
-        buttonUrl="#" />
-    @endif
-    
-    <!-- CTA Section -->
-    <x-cta-section
-        :content="$data['cta'] ?? []"
-        :content2="$data['cta2'] ?? []"
-         />
-
-    <x-service-section :services="$services" />
-
-
-
-    <!-- Video Section -->
-    <x-video-section />
-
-    <!-- Blog Section -->
-    <x-blog-section />
-
     <!-- Hero Features Section -->
     <div class="mt-5 mb-5">
         <x-hero-features :features="$data['heroFeatures']?->list_items ?? []" />
@@ -60,9 +26,10 @@
     <!-- CTA Section -->
     <x-cta-section
         :content="$data['cta'] ?? []"
-        :content2="$data['cta2'] ?? []" />
+        :content2="$data['cta2'] ?? []"
+         />
 
-    <x-service-section />
+    <x-service-section :services="$services" />
 
     <!-- Video Section -->
 
@@ -76,13 +43,11 @@
         industriesDescription="{{ $data['videoDetails']['list_items'][0]['description'] ?? '' }}"
         :industries="array_values($data['videoDetails']['metadata'] ?? [])"
         locationsTitle="OUR LOCATION"
-        mapUrl="{{ $data['map'] ?? '' }}" />
+        mapUrl="{{ $data['map'] ?? '' }}"
+    />
 
     <!-- Blog Section -->
-    <x-blog-section
-        title="Latest News & Articles"
-        subtitle="Stay Updated"
-        :posts="$blogPosts" />
+    <x-blog-section />
 
 </div>
 <!-- Page Content End -->
