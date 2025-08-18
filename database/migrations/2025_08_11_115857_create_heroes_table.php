@@ -17,8 +17,10 @@ return new class extends Migration
         Schema::create('heroes', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('subtitle')->nullable();
             $table->longText('description');
-            $table->string('link', 2048)->nullable();
+            $table->string('button_link', 2048)->nullable();
+            $table->string('text_link', 2048)->nullable();
             $table->unsignedInteger('order')->default(1);
             $table->string('status')->default(StatusEnum::active->value);
             $table->timestamps();

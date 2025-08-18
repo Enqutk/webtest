@@ -3,10 +3,15 @@
 use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\BlogController;
 
-Route::get('/', function () {
-    return view('index');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
+Route::get('/blog/category/{slug}', [BlogController::class, 'postsByCategory'])->name('blog.category');
+
 
 Route::get('/about', function () {
     return view('about');
@@ -31,6 +36,5 @@ Route::get('/test-email', function () {
     }
 });
 
-Route::get('/our-services', function () {
-    return view('services');
-})->name('services');
+Route::get('/our-services', [ServiceController::class, 'index'])->name('services.index');
+Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('services.show');

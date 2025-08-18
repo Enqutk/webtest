@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             MenuSeeder::class,
             PostSeeder::class,
             PageSeeder::class,
-
+            ServiceSeeder::class,
         ]);
     }
 }

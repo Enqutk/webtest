@@ -53,12 +53,15 @@ class ServiceResource extends Resource {
             ->rows( 2 )
             ->maxLength( 65535 )
             ->nullable(),
-            Forms\Components\Textarea::make( 'description' )
-            ->maxLength( 65535 )
+
+            Forms\Components\RichEditor::make( 'description' )
+            ->columnSpanFull()
+            ->toolbarButtons( self::getRichEditorToolbarButtons() )
             ->nullable(),
-            Forms\Components\Textarea::make( 'features' )
-            ->maxLength( 65535 )
-            ->nullable(),
+
+            Forms\Components\RichEditor::make( 'features' )
+            ->columnSpanFull()
+            ->toolbarButtons( self::getRichEditorToolbarButtons() ),
             Forms\Components\TextInput::make( 'order' )
             ->numeric()
             ->default( 1 )
@@ -67,7 +70,8 @@ class ServiceResource extends Resource {
             ->required(),
             Forms\Components\Select::make( 'status' )
             ->options( StatusEnum::class )
-            ->default( StatusEnum::active ),
+            ->default( StatusEnum::active )
+            ->nullable(),
         ] );
     }
 
@@ -133,6 +137,23 @@ class ServiceResource extends Resource {
             'index' => Pages\ListServices::route( '/' ),
             'create' => Pages\CreateService::route( '/create' ),
             'edit' => Pages\EditService::route( '/{record}/edit' ),
+        ];
+    }
+
+    private static function getRichEditorToolbarButtons(): array {
+        return [
+            'bold',
+            'italic',
+            'underline',
+            'strike',
+            'link',
+            'bulletList',
+            'orderedList',
+            'h2',
+            'h3',
+            'h4',
+            'blockquote',
+            'codeBlock',
         ];
     }
 }

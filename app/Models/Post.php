@@ -10,6 +10,8 @@ use App\Traits\HasUserStamps;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Builder;
 
 class Post extends Model implements HasMedia
 {
@@ -51,6 +53,7 @@ class Post extends Model implements HasMedia
         return $this->belongsTo(User::class, 'updated_by');
     }
 
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('main_image')
@@ -60,7 +63,7 @@ class Post extends Model implements HasMedia
                     ->width(300)
                     ->height(200)
                     ->sharpen(10);
-                
+
                 $this->addMediaConversion('medium')
                     ->width(600)
                     ->height(400)
@@ -91,5 +94,26 @@ class Post extends Model implements HasMedia
                 $post->slug = Str::slug($post->title);
             }
         });
+    }
+
+    protected function mainImageUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->getFirstMediaUrl('main_image'),
+        );
+    }
+
+    public function getExcerptAttribute(): string
+    {
+        $content = $this->short_description ?? strip_tags($this->content);
+        return \Illuminate\Support\Str::limit($content, 100);
+    }
+
+    public function scopeLatestActive(Builder $query, int $limit = 6)
+    {
+        return $query->with(['category', 'creator'])
+            ->where('is_active', true)
+            ->latest()
+            ->take($limit);
     }
 }
