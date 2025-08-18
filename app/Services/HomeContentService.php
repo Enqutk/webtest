@@ -72,7 +72,6 @@ class HomeContentService
                         'image' => asset('assets/images/default-cta-image.png'),
                     ],
 
-                'cta2Content' => $blocks->get('call-to-action-right')->content ?? '',
 
                 'videoSection' => $blocks->get('video-section'),
 
