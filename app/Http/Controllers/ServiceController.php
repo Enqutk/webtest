@@ -8,16 +8,8 @@ use Illuminate\Http\Request;
 
 class ServiceController extends Controller
 {
-    /**
-     * Display a listing of the services.
-     */
+   
     public function index()
-    {
-        $services = Service::activeOrdered(6)
-            ->get();
-        return view('index', compact('services'));
-    }
-    public function servicesIndex()
     {
         $services = Service::where('status', StatusEnum::active)
             ->orderBy('order')
