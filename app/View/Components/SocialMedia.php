@@ -5,12 +5,12 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use App\Models\SocialRef;
-
+use App\Enums\StatusEnum;
 class SocialMedia extends Component {
     public $socialRefs;
 
     public function __construct() {
-        $this->socialRefs = SocialRef::where('status', \App\Enums\StatusEnum::active)
+        $this->socialRefs = SocialRef::where('status', StatusEnum::active)
             ->orderBy('order')
             ->get();
     }
