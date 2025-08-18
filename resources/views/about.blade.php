@@ -6,101 +6,21 @@
 
 @section('content')
     <!-- About Start -->
-    <section class="section-lgt">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12 col-xl-5 about-two-left-col">
-                    <div class="about-two-img" style="background-image: url({{ asset('assets/images/homepage-2/about-img-01.png') }})"></div>
-                </div>
-                <div class="col-md-12 col-xl-7 about-two-right-col">
-                    <div class="about-two-content">
-                        <div class="pbmit-heading-subheading">
-                            <h4 class="pbmit-subtitle">Why Choose us</h4>
-                            <h2 class="pbmit-title">We work for you since 1980 Industrial around the world.</h2>
-                        </div>
-                        <div class="inner-box">
-                            <div class="row">
-                                <div class="col-md-7">
-                                    <p>Veritas Afrika is a full-service consultancy company with extensive experience
-                                        serving industries such as civil engineering, infrastructure development, and water
-                                        management. Our mission is to deliver solutions that meet the highest standards of
-                                        quality and performance.</p>
-                                    <div class="list-group-wrap">
-                                        <ul class="list-group">
-                                            <li class="list-group-item">
-                                                <span class="pbmit-icon-list-icon">
-                                                    <i class="pbmit-induyst-icon pbmit-induyst-icon-check"></i>
-                                                </span>
-                                                <span class="pbmit-icon-list-text">Reliable Guarantees You Can Trust</span>
-                                            </li>
-                                            <li class="list-group-item">
-                                                <span class="pbmit-icon-list-icon">
-                                                    <i class="pbmit-induyst-icon pbmit-induyst-icon-check"></i>
-                                                </span>
-                                                <span class="pbmit-icon-list-text">Commitment to Eco-Friendly
-                                                    Materials</span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <a href="{{ route('contact') }}" class="pbmit-btn blackish">
-                                        <span class="pbmit-button-content-wrapper">
-                                            <span class="pbmit-button-icon">
-                                                <i class="pbmit-induyst-icon pbmit-induyst-icon-next"></i>
-                                            </span>
-                                            <span class="pbmit-button-text">Discover More</span>
-                                        </span>
-                                    </a>
-                                </div>
-                                <div class="col-md-5">
-                                    <div class="swiper-slider pbmit-column-one mt-md-0 mt-5" data-autoplay="false"
-                                        data-loop="true" data-dots="false" data-arrows="true" data-columns="1"
-                                        data-margin="30" data-effect="slide">
-                                        <div class="swiper-wrapper">
-                                            <!-- Slide1 -->
-                                            <article class="pbmit-miconheading-style-5 swiper-slide">
-                                                <div class="pbmit-ihbox-style-5">
-                                                    <div class="pbmit-ihbox-box">
-                                                        <div class="pbmit-ihbox-icon">
-                                                            <div class="pbmit-ihbox-icon-wrapper pbmit-icon-type-icon">
-                                                                <i class="pbmit-induyst-icon pbmit-induyst-icon-check"></i>
-                                                            </div>
-                                                        </div>
-                                                        <div class="pbmit-ihbox-contents">
-                                                            <h2 class="pbmit-element-title">Our Vision</h2>
-                                                            <div class="pbmit-heading-desc">Building long-term partnerships
-                                                                through responsiveness and reliability.</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </article>
-                                            <!-- Slide2 -->
-                                            <article class="pbmit-miconheading-style-5 swiper-slide">
-                                                <div class="pbmit-ihbox-style-5">
-                                                    <div class="pbmit-ihbox-box">
-                                                        <div class="pbmit-ihbox-icon">
-                                                            <div class="pbmit-ihbox-icon-wrapper pbmit-icon-type-icon">
-                                                                <i class="pbmit-induyst-icon pbmit-induyst-icon-next"></i>
-                                                            </div>
-                                                        </div>
-                                                        <div class="pbmit-ihbox-contents">
-                                                            <h2 class="pbmit-element-title">Our Solutions</h2>
-                                                            <div class="pbmit-heading-desc">Extensive, flexible services
-                                                                tailored to address changing industry needs.</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </article>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+     
+    @if($data['aboutFeatures'])
+    <x-about-section
+        :features="$data['aboutFeatures']?->metadata ?? []"
+        :slidePages="$data['aboutFeatures']?->list_items ?? []"
+        image="{{ $data['aboutFeatureImageUrl'] }}"
+        subtitle="{{ $data['aboutFeatures']?->subtitle ?? '' }}"
+        title="{{ $data['aboutFeatures']?->title ?? '' }}"
+        description="{{ $data['aboutFeatures']?->short_description ?? '' }}"
+        buttonText="Discover More"
+        buttonUrl="#" />
+    @endif
+
     <!-- About End -->
+
 
     <!-- Fid Start -->
     <section class="section-lg fade-section">
