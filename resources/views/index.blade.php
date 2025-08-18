@@ -58,7 +58,7 @@
     <x-cta-section
         :content="$data['cta'] ?? []"
         :content2="$data['cta2'] ?? []"
-        :contentValue="$data['cta2Content'] ?? ''" />
+         />
 
     <x-service-section />
 
