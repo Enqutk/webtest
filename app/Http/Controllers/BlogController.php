@@ -10,42 +10,45 @@ use Illuminate\Http\Request;
 
 class BlogController extends Controller
 {
-      public function Index() {
-        $blogPosts = Post::with( [ 'category', 'creator' ] )
-        ->where( 'is_active', true )
-        ->latest()
-        ->take( 6 )
-        ->get();
+    public function index()
+    {
+        $blogPosts = Post::with(['category', 'creator'])
+            ->where('is_active', true)
+            ->latest()
+            ->take(6)
+            ->get();
 
-        return view( 'blog.index', compact( 'blogPosts' ) );
+        return view('blog.index', compact('blogPosts'));
     }
 
-    public function Show( $slug ) {
-        $post = Post::with( [ 'category', 'creator' ] )
-        ->where( 'slug', $slug )
-        ->where( 'is_active', true )
-        ->firstOrFail();
-        $recentPosts = Post::latestActive( 5 )->get();
-        $categories = PostCategory::withCount( 'posts' )->get();
-        $gallery = $post->getMedia( 'gallery' );
+    public function show($slug)
+    {
+        $post = Post::with(['category', 'creator'])
+            ->where('slug', $slug)
+            ->where('is_active', true)
+            ->firstOrFail();
+        $recentPosts = Post::latestActive(5)->get();
+        $categories = PostCategory::withCount('posts')->get();
+        $gallery = $post->getMedia('gallery');
 
-        return view( 'blog.show', compact( 'post', 'gallery', 'categories', 'recentPosts' ) );
+        return view('blog.show', compact('post', 'gallery', 'categories', 'recentPosts'));
     }
 
-    public function postsByCategory( $slug ) {
+    public function postsByCategory($slug)
+    {
         // Get category by slug
-        $category = PostCategory::where( 'slug', $slug )->firstOrFail();
+        $category = PostCategory::where('slug', $slug)->firstOrFail();
 
-        $posts = Post::with( 'creator' )
-        ->where( 'category_id', $category->id )
-        ->where( 'is_active', true )
-        ->latest()
-        ->get();
+        $posts = Post::with('creator')
+            ->where('category_id', $category->id)
+            ->where('is_active', true)
+            ->latest()
+            ->get();
 
-        $categories = PostCategory::withCount( 'posts' )->get();
+        $categories = PostCategory::withCount('posts')->get();
 
-        $recentPosts = Post::where( 'is_active', true )->latest()->take( 5 )->get();
+        $recentPosts = Post::latestActive(5)->get();
 
-        return view( 'blog.category', compact( 'category', 'posts', 'categories', 'recentPosts' ) );
+        return view('blog.category', compact('category', 'posts', 'categories', 'recentPosts'));
     }
 }
