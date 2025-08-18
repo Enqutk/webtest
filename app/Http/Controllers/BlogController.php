@@ -1,0 +1,51 @@
+<?php
+
+namespace App\Http\Controllers;
+
+
+use App\Enums\StatusEnum;
+use App\Models\Post;
+use App\Models\PostCategory;
+use Illuminate\Http\Request;
+
+class BlogController extends Controller
+{
+      public function Index() {
+        $blogPosts = Post::with( [ 'category', 'creator' ] )
+        ->where( 'is_active', true )
+        ->latest()
+        ->take( 6 )
+        ->get();
+
+        return view( 'blog.index', compact( 'blogPosts' ) );
+    }
+
+    public function Show( $slug ) {
+        $post = Post::with( [ 'category', 'creator' ] )
+        ->where( 'slug', $slug )
+        ->where( 'is_active', true )
+        ->firstOrFail();
+        $recentPosts = Post::latestActive( 5 )->get();
+        $categories = PostCategory::withCount( 'posts' )->get();
+        $gallery = $post->getMedia( 'gallery' );
+
+        return view( 'blog.show', compact( 'post', 'gallery', 'categories', 'recentPosts' ) );
+    }
+
+    public function postsByCategory( $slug ) {
+        // Get category by slug
+        $category = PostCategory::where( 'slug', $slug )->firstOrFail();
+
+        $posts = Post::with( 'creator' )
+        ->where( 'category_id', $category->id )
+        ->where( 'is_active', true )
+        ->latest()
+        ->get();
+
+        $categories = PostCategory::withCount( 'posts' )->get();
+
+        $recentPosts = Post::where( 'is_active', true )->latest()->take( 5 )->get();
+
+        return view( 'blog.category', compact( 'category', 'posts', 'categories', 'recentPosts' ) );
+    }
+}
