@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('link', 2048)->nullable();
             $table->text('description')->nullable();
             $table->unsignedInteger('order')->default(1);
-            $table->string('status')->default(StatusEnum::active->value)->nullable();
+            $table->string('status')->default(StatusEnum::active->value);
             $table->timestamps();
             $table->softDeletes();
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
