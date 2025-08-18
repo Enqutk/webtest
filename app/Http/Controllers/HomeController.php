@@ -31,11 +31,7 @@ class HomeController extends Controller {
         ->where( 'slug', $slug )
         ->where( 'is_active', true )
         ->firstOrFail();
-        $recentPosts = Post::where( 'is_active', true )
-        ->where( 'id', '!=', $post->id )
-        ->latest()
-        ->take( 5 )
-        ->get();
+        $recentPosts = Post::latestActive( 5 )->get();
         $categories = PostCategory::withCount( 'posts' )->get();
         $gallery = $post->getMedia( 'gallery' );
 
