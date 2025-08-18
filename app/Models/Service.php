@@ -101,7 +101,7 @@ class Service extends Model implements HasMedia {
     // Add this scope to your Service model:
     public function scopeActiveOrdered(Builder $query, ?int $limit = null)
     {
-        $query->where('status', StatusEnum::active)->orderBy('order' );
+        $query->where('status', StatusEnum::active)->orderBy('order');
                 if ( $limit ) {
                     $query->take( $limit );
                 }
