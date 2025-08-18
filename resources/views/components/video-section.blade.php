@@ -1,5 +1,6 @@
-
-
+@php
+use Illuminate\Support\Str;
+@endphp
 <section class="video-section-two pbmit-bg-color-blackish">
     <div class="container-fluid p-0">
         <div class="video-play-bg" style="background-image: url('{{ $videoThumbnail }}');">
@@ -43,7 +44,7 @@
                                     @foreach($industries as $industry)
                                     <li class="list-group-item">
                                         <span class="pbmit-icon-list-icon">
-                                            <i class="pbmit-induyst-icon pbmit-induyst-icon-check"></i>						
+                                            <i class="pbmit-induyst-icon pbmit-induyst-icon-check"></i>
                                         </span>
                                         <span class="pbmit-icon-list-text">{{ $industry }}</span>
                                     </li>
@@ -57,16 +58,17 @@
                             </div>
                             <div class="map-img">
                                 @php
-                                    $decodedMapUrl = html_entity_decode($mapUrl);
+                                $decodedMapUrl = html_entity_decode($mapUrl);
                                 @endphp
                                 @if(Str::contains($decodedMapUrl, '<iframe'))
                                     {!! preg_replace('/<iframe([^>]*)width="[^"]*"([^>]*)height="[^"]*"([^>]*)>/i', '<iframe$1width="600"$2height="350"$3>', $decodedMapUrl) !!}
-                                @else
-                                    {{ $decodedMapUrl }}
-                                @endif
-                            </div>  </div>
+                                        @else
+                                        {{ $decodedMapUrl }}
+                                        @endif
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 </section>
