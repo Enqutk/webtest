@@ -53,28 +53,16 @@ class HomeController extends Controller
         $category = PostCategory::where('slug', $slug)->firstOrFail();
 
 
-        $posts = Post::where('category_id', $category->id)
+        $posts = Post::with('creator')
+            ->where('category_id', $category->id)
             ->where('is_active', true)
             ->latest()
             ->get();
-
 
         $categories = PostCategory::withCount('posts')->get();
 
         $recentPosts = Post::where('is_active', true)->latest()->take(5)->get();
 
         return view('blog.category', compact('category', 'posts', 'categories', 'recentPosts'));
-    }
-
-    public function search(Request $request)
-    {
-        $query = $request->input('q');
-
-        $posts = Post::where('title', 'like', "%{$query}%")
-            ->orWhere('content', 'like', "%{$query}%")
-            ->latest()
-            ->paginate(10);
-
-        return view('blog.search', compact('posts', 'query'));
     }
 }
