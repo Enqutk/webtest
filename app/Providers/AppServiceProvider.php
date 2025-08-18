@@ -34,4 +34,4 @@ class AppServiceProvider extends ServiceProvider
             $view->with(compact('data'));
         });
     }
-};
+}
