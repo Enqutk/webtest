@@ -6,7 +6,7 @@
 
 @section('content')
     <!-- About Start -->
-     
+
     @if($data['aboutFeatures'])
     <x-about-section
         :features="$data['aboutFeatures']?->metadata ?? []"
@@ -97,7 +97,10 @@
     </section>
     <!-- Fid End -->
 
-    <!-- About Us Start -->
-    <x-cta-section />
-    <!-- About Us End -->
+       <!-- CTA Section -->
+    <x-cta-section
+        :content="$data['cta'] ?? []"
+        :content2="$data['cta2'] ?? []"
+        :contentValue="$data['cta2Content'] ?? ''" />
+        
 @endsection
