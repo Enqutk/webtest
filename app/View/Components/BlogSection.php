@@ -17,9 +17,7 @@ class BlogSection extends Component {
 
     public function render(): View|Closure|string {
         if ( is_null( $this->posts ) ) {
-            $this->posts = Post::with( [ 'category', 'creator' ] )
-            ->latestActive()
-            ->take( 6 )
+            $this->posts = Post::latestActive()
             ->get();
         }
 
