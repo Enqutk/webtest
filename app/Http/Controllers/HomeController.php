@@ -10,10 +10,8 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller {
     public function index() {
-        $services = Service::where( 'status', StatusEnum::active )
-        ->orderBy( 'order' )
-        ->take( 6 )
-        ->get();
+        // Use the latestActive scope for cleaner, reusable code:
+        $services = Service::latestActive( 6 );
 
         return view( 'index', compact( 'services' ) );
     }
@@ -38,7 +36,7 @@ class HomeController extends Controller {
         ->latest()
         ->take( 5 )
         ->get();
-        $categories = PostCategory::all();
+        $categories = PostCategory::withCount( 'posts' )->get();
         $gallery = $post->getMedia( 'gallery' );
 
         return view( 'blog.show', compact( 'post', 'gallery', 'categories', 'recentPosts' ) );
