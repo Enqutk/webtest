@@ -8,19 +8,22 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BlogController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
-Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
-Route::get('/blog/category/{slug}', [BlogController::class, 'postsByCategory'])->name('blog.category');
-
 
 Route::get('/about', function () {
     return view('about');
 })->name('about');
 
+Route::get('/our-services', [ServiceController::class, 'index'])->name('services.index');
+Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('services.show');
+
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-
-
 Route::post('/contact/send/{recipient}', [ContactController::class, 'send'])->name('contact.send');
+
+Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
+Route::get('/blog/category/{slug}', [BlogController::class, 'postsByCategory'])->name('blog.category');
+
+
 
 // Test email route (remove in production)
 Route::get('/test-email', function () {
@@ -36,5 +39,3 @@ Route::get('/test-email', function () {
     }
 });
 
-Route::get('/our-services', [ServiceController::class, 'index'])->name('services.index');
-Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('services.show');

@@ -89,7 +89,7 @@
 													<a href="{{ route('about') }}">About Us</a>
 												</li>
 												<li class="{{ request()->routeIs('services') ? 'active' : '' }}">
-													<a href="{{ route('services') }}">Service</a>
+													<a href="{{ route('services.index') }}">Service</a>
 												</li>
 												<li class="{{ request()->routeIs('contact') ? 'active' : '' }}">
 													<a href="{{ route('contact') }}">Contact Us</a>
