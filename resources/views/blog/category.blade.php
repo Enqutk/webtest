@@ -56,7 +56,7 @@
                                                                     href="{{ route('blog.show', $post->slug) }}">{{ $post->title }}</a>
                                                             </h3>
                                                             <div class="pbminfotech-box-desc">
-                                                                {{ \Illuminate\Support\Str::limit($post->short_description ?? strip_tags($post->content), 100) }}&hellip;
+                                                                {{ $post->excerpt }}
                                                             </div>
                                                             <div class="pbmit-blog-btn">
                                                                 <a class="pbmit-button-inner"
