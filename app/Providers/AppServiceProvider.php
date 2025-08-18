@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
 
-        View::composer(['index', 'about', 'contact', 'services'], function ($view) {
+        View::composer(['index', 'about', 'contact', 'services.index','services.show'], function ($view) {
             $data = app(HomeContentService::class)->getHomeContent();
             $view->with(compact('data'));
         });
