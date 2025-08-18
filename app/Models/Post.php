@@ -101,4 +101,10 @@ class Post extends Model implements HasMedia
             get: fn() => $this->getFirstMediaUrl('main_image'),
         );
     }
+
+    public function getExcerptAttribute(): string
+    {
+        $content = $this->short_description ?? strip_tags($this->content);
+        return \Illuminate\Support\Str::limit($content, 100);
+    }
 }
