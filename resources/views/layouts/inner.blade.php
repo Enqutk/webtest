@@ -36,6 +36,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <!-- Responsive CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}">
+    <!-- icon  -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 
 <body>
