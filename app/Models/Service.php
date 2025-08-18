@@ -14,8 +14,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
 
-class Service extends Model implements HasMedia
-{
+class Service extends Model implements HasMedia {
     use SoftDeletes, HasUserStamps, InteractsWithMedia;
 
     protected $table = 'services';
@@ -36,58 +35,52 @@ class Service extends Model implements HasMedia
         'status' => StatusEnum::class,
     ];
 
-    public function creator(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'created_by');
+    public function creator(): BelongsTo {
+        return $this->belongsTo( User::class, 'created_by' );
     }
 
-    public function updater(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'updated_by');
+    public function updater(): BelongsTo {
+        return $this->belongsTo( User::class, 'updated_by' );
     }
 
-    public function registerMediaCollections(): void
-    {
-        $this->addMediaCollection('svg')
-            ->singleFile();
+    public function registerMediaCollections(): void {
+        $this->addMediaCollection( 'svg' )
+        ->singleFile();
 
-        $this->addImageCollectionWithThumb('main_image');
-        $this->addImageCollectionWithThumb('secondary_image');
+        $this->addImageCollectionWithThumb( 'main_image' );
+        $this->addImageCollectionWithThumb( 'secondary_image' );
     }
 
-    private function addImageCollectionWithThumb(string $collectionName): void
-    {
-        $this->addMediaCollection($collectionName)
-            ->singleFile()
+    private function addImageCollectionWithThumb( string $collectionName ): void {
+        $this->addMediaCollection( $collectionName )
+        ->singleFile()
 
-            ->registerMediaConversions(
-                function () {
-                    $this->addMediaConversion('thumb')
-                        ->width(150)
-                        ->height(150)
-                        ->sharpen(10);
-                }
-            );
-    }
+        ->registerMediaConversions(
 
-    protected function secondaryImageUrl(): Attribute
-    {
-        return Attribute::make(
-            get: fn() => $this->getFirstMediaUrl('secondary_image'),
+            function () {
+                $this->addMediaConversion( 'thumb' )
+                ->width( 150 )
+                ->height( 150 )
+                ->sharpen( 10 );
+            }
         );
     }
-    protected function mainImageUrl(): Attribute
-    {
+
+    protected function secondaryImageUrl(): Attribute {
         return Attribute::make(
-            get: fn() => $this->getFirstMediaUrl('main_image'),
+            get: fn() => $this->getFirstMediaUrl( 'secondary_image' ),
         );
     }
-    protected function svgInline(): Attribute
-    {
+    protected function mainImageUrl(): Attribute {
+        return Attribute::make(
+            get: fn() => $this->getFirstMediaUrl( 'main_image' ),
+        );
+    }
+    protected function svgInline(): Attribute {
         return Attribute::make(
             get: function () {
-                $media = $this->getFirstMedia('svg');
-                if (!$media) {
+                $media = $this->getFirstMedia( 'svg' );
+                if ( !$media ) {
                     return '';
                 }
 
@@ -104,4 +97,14 @@ class Service extends Model implements HasMedia
             }
         );
     }
-}
+
+    // Add this scope to your Service model:
+    public function scopeActiveOrdered(Builder $query, ?int $limit = null)
+    {
+        $query->where('status', StatusEnum::active)->orderBy('order' );
+                if ( $limit ) {
+                    $query->take( $limit );
+                }
+                return $query;
+            }
+        }
