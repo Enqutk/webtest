@@ -10,7 +10,7 @@
                         <a href="contact-us.html" class="pbmit-btn white">
                             <span class="pbmit-button-content-wrapper">
                                 <span class="pbmit-button-icon">
-                                    <i class->nullable()="pbmit-induyst-icon pbmit-induyst-icon-next"></i>
+                                    <i class="pbmit-induyst-icon pbmit-induyst-icon-next"></i>
                                 </span>
                                 <span class="pbmit-button-text">Contact Us Today</span>
                             </span>
@@ -28,7 +28,7 @@
                                 <div class="pbmit-fld-wrap">
                                     <div class="pbmit-fid-inner">
                                         <span class="pbmit-fid-before"></span>
-                                        <span class="pbmit-number-rotate numinate" data-appear-animation="animateDigits" data-from="0" data-to="{{ $content2['subtitle'] ?? '100' }}" data-interval="25" data-before="" data-before-style="" data-after="" data-after-style=""></span>
+                                        <span class="pbmit-number-rotate numinate" data-appear-animation="animateDigits" data-from="0" data-to="100" data-interval="25" data-before="" data-before-style="" data-after="" data-after-style=""></span>
                                     </div>
                                     <div class="pbmit-heading-desc">Projects Completed</div>
                                 </div>
