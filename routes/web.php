@@ -14,9 +14,7 @@ Route::get('/about', function () {
 
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 
-Route::get('/contact', function () {
-    return view('contact');
-})->name('contact');
+
 Route::post('/contact/send/{recipient}', [ContactController::class, 'send'])->name('contact.send');
 
 // Test email route (remove in production)
