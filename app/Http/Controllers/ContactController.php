@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Log;
 
 class ContactController extends Controller
 {
-    protected $contactService;
 
 
     public function index()
@@ -22,7 +21,7 @@ class ContactController extends Controller
         $validated = $request->validate([
             'name'    => 'required|string|max:255',
             'email'   => 'required|email',
-            'phone'   => 'required|string|min:7|max:20',
+            'phone'   => ['required', 'string', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'min:10'],
             'subject' => 'required|string|max:255',
             'message' => 'required|string',
         ]);
