@@ -56,7 +56,8 @@ class ServiceResource extends Resource {
 
             Forms\Components\RichEditor::make( 'description' )
             ->columnSpanFull()
-            ->toolbarButtons( self::getRichEditorToolbarButtons() ),
+            ->toolbarButtons( self::getRichEditorToolbarButtons() )
+            ->nullable(),
 
             Forms\Components\RichEditor::make( 'features' )
             ->columnSpanFull()
@@ -69,7 +70,8 @@ class ServiceResource extends Resource {
             ->required(),
             Forms\Components\Select::make( 'status' )
             ->options( StatusEnum::class )
-            ->default( StatusEnum::active ),
+            ->default( StatusEnum::active )
+            ->nullable(),
         ] );
     }
 
