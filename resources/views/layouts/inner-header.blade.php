@@ -15,12 +15,7 @@
 								</h1>
 							</div>
 							<div class="pbmit-header-text-box">
-								<span>We are creative and ready for challenges!
-									<a href="contact-us.html">
-										<span class="pbmit-text-btn">Join Now!</span>
-										<i class=" pbmit-base-icon-right-arrow"> </i>
-									</a>
-								</span>
+							
 							</div>
 							<div class="pbmit-header-info ml-auto d-flex align-items-center">
 								<div class="pbmit-header-info-inner">
