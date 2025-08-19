@@ -95,9 +95,9 @@
     <!-- Fid End -->
 
     <x-about-feature
-        image1="{{ $data['aboutFeatureImageUrl'] }}"
-        description1="{{ $data['aboutFeatures']?->short_description ?? '' }}"
-        image2="{{ $data['aboutFeatureImageUrl'] }}"
-        description2="{{ $data['aboutFeatures']?->short_description ?? '' }}"
+        image1="{{ $data['aboutSection1']['image'] }}"
+        description1="{{ $data['aboutSection1']['description'] }}"
+        image2="{{ $data['aboutSection2']['image'] }}"
+        description2="{{ $data['aboutSection2']['description'] }}"
          />
 @endsection
