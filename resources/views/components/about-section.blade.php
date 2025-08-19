@@ -7,7 +7,9 @@
             <div class="col-md-12 col-xl-7 about-two-right-col">
                 <div class="about-two-content">
                     <div class="pbmit-heading-subheading">
-                        <h5 class="">{{ $description }}</h5>
+                        <h4 class="pbmit-subtitle">{{ $subtitle }}</h4>
+                        <h2 class="pbmit-title">{{ $title }}</h2>
+                        <p class="">{{ $description }}</p>
                     </div>
                 </div>
             </div>
