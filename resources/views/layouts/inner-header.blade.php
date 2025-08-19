@@ -100,21 +100,6 @@
 									</nav>
 								</div>
 							</div>
-							<div class="pbmit-right-box d-flex align-items-center">
-								<div class="pbmit-header-social">
-									<x-social-media />
-								</div>
-								<div class="pbmit-header-button">
-									<a href="{{ route('contact') }}" class="pbmit-btn">
-										<span class="pbmit-button-content-wrapper">
-											<span class="pbmit-button-icon">
-												<i class="pbmit-induyst-icon pbmit-induyst-icon-next"></i>
-											</span>
-											<span class="pbmit-button-text">Get in Touch</span>
-										</span>
-									</a>
-								</div>
-							</div>
 						</div>
 					</div>
 				</div>
