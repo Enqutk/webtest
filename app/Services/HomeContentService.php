@@ -28,7 +28,7 @@ class HomeContentService
                     'veritas-afrika-co-ltd',
                     'veritas-afrika-co-ltd-image',
                     'about-section1',
-                    'about-section2',
+                    'about-section-2',
                     'video-section',
                     'video-thumbnail',
                     'video-details',

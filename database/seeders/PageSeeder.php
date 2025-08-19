@@ -31,6 +31,16 @@ class PageSeeder extends Seeder
             'updated_by' => $user->id,
         ]);
 
+        $aboutPage = Page::create([
+            'title' => 'About',
+            'slug' => 'about',
+            'short_description' => 'Learn more about Veritas Afrika Co.Ltd',
+            'is_active' => true,
+            'display_order' => 1,
+            'created_by' => $user->id,
+            'updated_by' => $user->id,
+        ]);
+
 
         // Create section for Home page (Features)
         $heroFeatures = PageSection::create([
@@ -57,6 +67,16 @@ class PageSeeder extends Seeder
             'page_id' => $homePage->id,
             'title' => 'Video Section',
             'subtitle' => 'Watch Our Introduction',
+            'display_order' => 3,
+            'is_active' => true,
+            'created_by' => $user->id,
+            'updated_by' => $user->id,
+        ]);
+
+        $aboutSection = PageSection::create([
+            'page_id' => $aboutPage->id,
+            'title' => 'About Us',
+            'subtitle' => 'Learn More About Us',
             'display_order' => 4,
             'is_active' => true,
             'created_by' => $user->id,
@@ -177,6 +197,34 @@ class PageSeeder extends Seeder
                 'data6' => 'Automotive',
             ],
             'display_order' => 8,
+            'is_active' => true,
+            'created_by' => $user->id,
+            'updated_by' => $user->id,
+        ]);
+
+        // Create content block for About Us section
+        ContentBlock::create([ 
+            'section_id' => $aboutSection->id,
+            'type' => 'image',
+            'title' => 'About Section 1',
+            'slug' => 'about-section-1',
+            'subtitle' => 'About Us',
+            'short_description' => "Veritas Afrika Co.Ltd is a multi-disciplinary company of professional consultants specializing in a wide range of civil engineering works. We provide expert services to government, non-government, and private-sector customers.",
+            'content' => '',
+            'display_order' => 1,
+            'is_active' => true,
+            'created_by' => $user->id,
+            'updated_by' => $user->id,
+        ]);
+        ContentBlock::create([ 
+            'section_id' => $aboutSection->id,
+            'type' => 'image',
+            'title' => 'About Section 2',
+            'slug' => 'about-section-2',
+            'subtitle' => 'About Us',
+            'short_description' => "professional consultants specializing in a wide range of civil engineering works. We provide expert services to government, non-government, and private-sector customers.",
+            'content' => '',
+            'display_order' => 1,
             'is_active' => true,
             'created_by' => $user->id,
             'updated_by' => $user->id,

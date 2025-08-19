@@ -19,9 +19,7 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             UserSeeder::class,
             OrganizationSeeder::class,
-            PostCategorySeeder::class,
             MenuSeeder::class,
-            PostSeeder::class,
             PageSeeder::class,
             ServiceSeeder::class,
         ]);
