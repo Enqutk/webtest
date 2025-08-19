@@ -16,7 +16,9 @@
                                         <h2 class="pbmit-slider-title transform-left transform-delay-2">
                                             <span class="first">{{ $hero->title }}</span>
                                         </h2>
-                                        <p class="pbmit-slider-desc"><span>{{ $hero->description }}</span></p>
+                                        <p class="pbmit-slider-title transform-left transform-delay-2">
+                                            <span>{{ $hero->description }}</span>
+                                        </p>
                                         
                                     </div> <!-- pbmit-slider-content -->
                                 </div>
