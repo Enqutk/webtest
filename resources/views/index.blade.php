@@ -23,12 +23,6 @@
         buttonUrl="#" />
     @endif
 
-    <!-- CTA Section -->
-    <x-cta-section
-        :content="$data['cta'] ?? []"
-        :content2="$data['cta2'] ?? []"
-         />
-
     <x-service-section :services="$services" />
 
     <!-- Video Section -->
@@ -45,10 +39,6 @@
         locationsTitle="OUR LOCATION"
         mapUrl="{{ $data['map'] ?? '' }}"
     />
-
-    <!-- Blog Section -->
-    <x-blog-section />
-
 </div>
 <!-- Page Content End -->
 @endsection
