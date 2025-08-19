@@ -17,26 +17,7 @@
                                             <span class="first">{{ $hero->title }}</span>
                                         </h2>
                                         <p class="pbmit-slider-desc"><span>{{ $hero->description }}</span></p>
-                                        <div class="pbmit-button d-flex align-items-center">
-                                            <div class="transform-bottom transform-delay-4">
-                                                <a href="{{ $hero->button_link ?? '#' }}" class="pbmit-btn white">
-                                                    <span class="pbmit-button-content-wrapper">
-                                                        <span class="pbmit-button-icon">
-                                                            <i class="pbmit-induyst-icon pbmit-induyst-icon-next"></i>
-                                                        </span>
-                                                        <span class="pbmit-button-text">Discover More</span>
-                                                    </span>
-                                                </a>
-                                            </div>
-                                            <div class="ms-4 transform-delay-5">
-                                                <div class="second-btn">
-                                                    <a class="pbmit-btn-style-text white"
-                                                        href="{{ $hero->text_link ?? '#' }}">
-                                                        <span class="pbmit-button-text">Explore Our Services</span>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        
                                     </div> <!-- pbmit-slider-content -->
                                 </div>
                             </div>
