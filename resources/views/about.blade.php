@@ -97,9 +97,5 @@
     </section>
     <!-- Fid End -->
 
-       <!-- CTA Section -->
-    <x-cta-section
-        :content="$data['cta'] ?? []"
-        :content2="$data['cta2'] ?? []"
-        />
+    <x-about-feature />
 @endsection
