@@ -53,16 +53,6 @@ class PageSeeder extends Seeder
             'updated_by' => $user->id,
         ]);
 
-        $ctaSection = PageSection::create([
-            'page_id' => $homePage->id,
-            'title' => 'Call to Action',
-            'subtitle' => 'Get in Touch',
-            'display_order' => 3,
-            'is_active' => true,
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
-        ]);
-
         $videoSection = PageSection::create([
             'page_id' => $homePage->id,
             'title' => 'Video Section',
@@ -110,29 +100,6 @@ class PageSeeder extends Seeder
             'slug' => 'veritas-afrika-co-ltd',
             'subtitle' => 'Who We Are',
             'short_description' => "Veritas Afrika Co.Ltd is a multi-disciplinary company of professional consultants specializing in a wide range of civil engineering works. We provide expert services to government, non-government, and private-sector customers.",
-            'list_items' => [
-                [
-                    'title' => 'Our Vision',
-                    'icon' => 'bi bi-shield-check',
-                    'description' => 'Building long-term partnerships through responsiveness and reliability.',
-                ],
-                [
-                    'title' => 'Our Solutions',
-                    'icon' => 'bi bi-person-heart',
-                    'description' => ' Extensive, flexible services that tailored to address changing industry .',
-                ],
-                [
-                    'title' => 'Our Question',
-                    'icon' => 'bi bi-globe',
-                    'description' => 'What key challenges can we solve together to drive your business?',
-                ],
-
-            ],
-            'metadata' => [
-                'data1' => 'Professionalism',
-                'data2' => 'Client-Centric Approach',
-                'data3' => 'Regional Impact',
-            ],
             'display_order' => 2,
             'is_active' => true,
             'created_by' => $user->id,
@@ -153,37 +120,6 @@ class PageSeeder extends Seeder
             'created_by' => $user->id,
             'updated_by' => $user->id,
         ]);
-
-        // Create Call to Action content block
-        ContentBlock::create([
-            'section_id' => $ctaSection->id,
-            'type' => 'image',
-            'title' => 'Call to Action left',
-            'slug' => 'call-to-action-left',
-            'subtitle' => 'Get in Touch',
-            'short_description' => 'Ready to partner with a company committed to quality?',
-            'content' => '',
-            'display_order' => 4,
-            'is_active' => true,
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
-        ]);
-
-        // Create Call to Action-2 content block
-        ContentBlock::create([
-            'section_id' => $ctaSection->id,
-            'type' => 'image',
-            'title' => 'Call to Action right',
-            'slug' => 'call-to-action-right',
-            'subtitle' => '100',
-            'short_description' => 'At Veritas Afrika, we are a multi-disciplinary company offering professional services in a wide range of civil engineering works.',
-            'content' => '',
-            'display_order' => 5,
-            'is_active' => true,
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
-        ]);
-
 
         // Create Video Section content block
         ContentBlock::create([
