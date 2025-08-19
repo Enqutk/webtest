@@ -13,14 +13,11 @@
     <!-- About Section -->
     @if($data['aboutFeatures'])
     <x-about-section
-        :features="$data['aboutFeatures']?->metadata ?? []"
-        :slidePages="$data['aboutFeatures']?->list_items ?? []"
         image="{{ $data['aboutFeatureImageUrl'] }}"
         subtitle="{{ $data['aboutFeatures']?->subtitle ?? '' }}"
         title="{{ $data['aboutFeatures']?->title ?? '' }}"
         description="{{ $data['aboutFeatures']?->short_description ?? '' }}"
-        buttonText="Discover More"
-        buttonUrl="#" />
+        />
     @endif
 
     <x-service-section :services="$services" />
