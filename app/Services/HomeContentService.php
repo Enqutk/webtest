@@ -27,8 +27,8 @@ class HomeContentService
                     'key-features',
                     'veritas-afrika-co-ltd',
                     'veritas-afrika-co-ltd-image',
-                    'call-to-action-left',
-                    'call-to-action-right',
+                    'about-section1',
+                    'about-section2',
                     'video-section',
                     'video-thumbnail',
                     'video-details',
@@ -51,28 +51,25 @@ class HomeContentService
                 'aboutFeatureImageUrl' => $blocks->get('veritas-afrika-co-ltd-image')
                     ? $blocks->get('veritas-afrika-co-ltd-image')->getFirstMediaUrl('images')
                     : asset('assets/images/homepage-2/about-img-01.png'),
-
-                'cta' => $blocks->get('call-to-action-left')
+                'aboutSection1' => $blocks->get('about-section1')
                     ? [
-                        'short_description' => $blocks->get('call-to-action-left')->short_description,
-                        'image' => $blocks->get('call-to-action-left')->getFirstMediaUrl('images'),
+                        'image' => $blocks->get('about-section1')->getFirstMediaUrl('images'),
+                        'description' => $blocks->get('about-section1')->short_description,
                     ]
                     : [
-                        'short_description' => '',
-                        'image' => asset('assets/images/default-cta-image.png'),
+                        'image' => asset('assets/images/homepage-2/about-img-01.png'),
+                        'description' => null,
                     ],
-
-                'cta2' => $blocks->get('call-to-action-right')
+                'aboutSection2' => $blocks->get('about-section2')
                     ? [
-                        'short_description' => $blocks->get('call-to-action-right')->short_description,
-                        'image' => $blocks->get('call-to-action-right')->getFirstMediaUrl('images'),
+                        'image' => $blocks->get('about-section2')->getFirstMediaUrl('images'),
+                        'description' => $blocks->get('about-section2')->short_description,
                     ]
                     : [
-                        'short_description' => '',
-                        'image' => asset('assets/images/default-cta-image.png'),
+                        'image' => asset('assets/images/homepage-2/about-img-02.png'),
+                        'description' => null,
                     ],
-
-
+             
                 'videoSection' => $blocks->get('video-section'),
 
                 'videoThumbnail' => $blocks->get('video-thumbnail') 
