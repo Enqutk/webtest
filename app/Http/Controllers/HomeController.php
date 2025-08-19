@@ -10,15 +10,8 @@ use Illuminate\Http\Request;
 class HomeController extends Controller {
     public function index() {
        
-        $services = Service::activeOrdered()->get();
-
-       
-        $blogPosts = Post::latestActive()->get();
-
-      
-        $categories = PostCategory::withCount( 'posts' )->get();
-        $recentPosts = Post::latestActive( 5 )->get();
-
-        return view( 'index', compact( 'services', 'blogPosts', 'categories', 'recentPosts' ) );
+        $services = Service::activeOrdered()->get();      
+  
+        return view( 'index', compact( 'services' ) );
     }
 }
