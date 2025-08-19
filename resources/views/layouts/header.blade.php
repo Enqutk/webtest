@@ -21,7 +21,7 @@
                                     </h1>
                                 </div>
                             </div>
-                            <div class="pbmit-menuarea d-flex align-items-center">
+                            <div class="pbmit-menuarea d-flex align-items-right">
                                 <div class="site-navigation">
                                     <nav class="main-navigation pbmit-navbar main-menu navbar-expand-xl navbar-light"
                                         id="site-navigation">
@@ -38,27 +38,14 @@
                             </div>
                         </div>
                         <div class="pbmit-right-box d-flex align-items-center">
-                       <x-social-media />
                         <div class="pbmit-header-button">
-                                <a href="{{ route('contact') }}" class="pbmit-btn">
-                                    <span class="pbmit-button-content-wrapper">
-                                        <span class="pbmit-button-icon">
-                                            <i class="pbmit-induyst-icon pbmit-induyst-icon-next"></i>
-                                        </span>
-                                        <span class="pbmit-button-text">Get in Touch</span>
-                                    </span>
-                                </a>
+                                
                             </div>
                             <div class="pbmit-header-search-btn">
-                                <a href="#" title="Search">
-                                    <i class="pbmit-base-icon-search-2"></i>
-                                </a>
+                               
                             </div>
                             <div class="pbmit-burger-menu-wrapper">
-                                <div class="pbmit-mobile-menu-bg"></div>
-                                <button id="menu-toggle" title="Menu Toggle" class="nav-menu-toggle">
-                                    <i class="pbmit-base-icon-menu-1"></i>
-                                </button>
+                             
                             </div>
                        </div>
                        
