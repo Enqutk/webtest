@@ -67,37 +67,34 @@
 								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-				<div class="pbmit-main-header-area">
-					<div class="container-fluid">
-						<div class="pbmit-header-content d-flex align-items-center justify-content-between pbmit-bg-color-white">
-							<div class="pbmit-menuarea d-flex align-items-center">
-								<div class="site-navigation">
-									<nav class="main-navigation pbmit-navbar main-menu navbar-expand-xl navbar-light" id="site-navigation">
-										<div>
-											<ul class="navigation clearfix" id="pbmit-top-menu">
-												<li class="{{ request()->routeIs('home') ? 'active' : '' }}">
-													<a href="{{ route('home') }}">Home</a>
-												</li>
-												<li class="{{ request()->routeIs('about') ? 'active' : '' }}">
-													<a href="{{ route('about') }}">About Us</a>
-												</li>
-												<li class="{{ request()->routeIs('services.index') ? 'active' : '' }}">
-													<a href="{{ route('services.index') }}">Service</a>
-												</li>
-												<li class="{{ request()->routeIs('contact') ? 'active' : '' }}">
-													<a href="{{ route('contact') }}">Contact Us</a>
-												</li>
-											</ul>
-
-										</div>
-									</nav>
+					<div class="pbmit-main-header-area" style="max-width: 1000px; margin: 0 auto; margin-top: 60px;">
+						<div class="container-fluid" style="max-width: 900px;">
+							<div class="pbmit-header-content d-flex align-items-center justify-content-center pbmit-bg-color-white">
+								<div class="pbmit-menuarea d-flex align-items-center justify-content-center" style="width: 100%;">
+									<div class="site-navigation" style="width: 100%;">
+										<nav class="main-navigation pbmit-navbar main-menu navbar-expand-xl navbar-light" id="site-navigation">
+											<div style="display: flex; justify-content: center; width: 100%;">
+												<ul class="navigation clearfix" id="pbmit-top-menu" style="display: flex; justify-content: center; width: 100%;">
+													<li class="{{ request()->routeIs('home') ? 'active' : '' }}">
+														<a href="{{ route('home') }}">Home</a>
+													</li>
+													<li class="{{ request()->routeIs('about') ? 'active' : '' }}">
+														<a href="{{ route('about') }}">About Us</a>
+													</li>
+													<li class="{{ request()->routeIs('services.index') ? 'active' : '' }}">
+														<a href="{{ route('services.index') }}">Service</a>
+													</li>
+													<li class="{{ request()->routeIs('contact') ? 'active' : '' }}">
+														<a href="{{ route('contact') }}">Contact Us</a>
+													</li>
+												</ul>
+											</div>
+										</nav>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
 			</div>
 		</div>
 	</header>
