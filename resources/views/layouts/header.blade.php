@@ -8,7 +8,10 @@
                 <div class="container-fluid">
                     <div
                         class="pbmit-header-content d-flex align-items-center justify-content-between pbmit-header-wrapper pbmit-bg-color-blackish">
-                        <div class="pbmit-header-menu-area d-flex justify-content-between align-items-center">
+                        
+                        <!-- Header Menu Area -->
+                        <div class="pbmit-header-menu-area d-flex w-100 justify-content-between align-items-center">
+                            
                             <!-- Logo Left -->
                             <div class="pbmit-logo-area">
                                 <div class="site-branding">
@@ -24,7 +27,7 @@
                             </div>
 
                             <!-- Nav Right -->
-                            <div class="pbmit-menuarea">
+                            <div class="pbmit-menuarea d-flex justify-content-end">
                                 <div class="site-navigation">
                                     <nav class="main-navigation pbmit-navbar main-menu navbar-expand-xl navbar-light"
                                         id="site-navigation">
@@ -37,7 +40,9 @@
                                     </nav>
                                 </div>
                             </div>
+
                         </div>
+                        <!-- End Header Menu Area -->
 
                     </div>
                 </div>
