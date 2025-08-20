@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\MenuLocationEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -15,6 +16,9 @@ class MenuLocation extends Model
         'slug', 
         'location', 
         'description'
+    ];
+    protected $casts = [
+        'location' => MenuLocationEnum::class,
     ];
     
     public function items()

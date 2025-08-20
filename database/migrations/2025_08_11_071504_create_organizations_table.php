@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('po_box', 100)->nullable();
             $table->text('address')->nullable();
             $table->text('opening_hours')->nullable();
-            $table->string('map_url', 255)->nullable()->comment('URL or embed code for a map');
+            $table->string('map_url', 8024)->nullable()->comment('Embed code for a map');
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });

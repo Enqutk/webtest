@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\ContentTypeEnum;
 use App\Filament\Resources\ContentBlockResource\Pages;
 use App\Models\ContentBlock;
 use App\Models\PageSection;
@@ -10,9 +11,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 class ContentBlockResource extends Resource
 {
@@ -36,27 +36,35 @@ class ContentBlockResource extends Resource
                             ->required()
                             ->searchable()
                             ->preload(),
-                        
+
                         Forms\Components\Select::make('type')
-                            ->options([
-                                'text' => 'Text Block',
-                                'image' => 'Image Block',
-                                'video' => 'Video Block',
-                                'list' => 'List Block',
-                                'timeline' => 'Timeline Block',
-                                'gallery' => 'Gallery Block',
-                            ])
+                            ->options(collect(ContentTypeEnum::cases())->mapWithKeys(fn($case) => [$case->value => ucfirst($case->name)]))
+                            ->default(ContentTypeEnum::Text->value)
+                            ->label('Type')
                             ->required()
                             ->reactive(),
-                        
+
                         Forms\Components\TextInput::make('title')
                             ->maxLength(255)
-                            ->nullable(),
-                        
+                            ->nullable()
+                            ->required()
+                            ->reactive()
+                            ->afterStateUpdated(function ($state, callable $set) {
+                                $set('slug', Str::slug($state));
+                            }),
+                        Forms\Components\TextInput::make('slug')
+                                ->required()
+                                ->maxLength(120)
+                                ->unique(ContentBlock::class, 'slug', ignoreRecord: true)
+                                ->readOnly(),
+
+                        Forms\Components\TextInput::make('icon')
+                            ->maxLength(100),
+
                         Forms\Components\TextInput::make('subtitle')
                             ->maxLength(255)
                             ->nullable(),
-                        
+
                         Forms\Components\Textarea::make('short_description')
                             ->maxLength(500)
                             ->nullable(),
@@ -64,27 +72,47 @@ class ContentBlockResource extends Resource
 
                 Forms\Components\Section::make('Content')
                     ->schema([
+                        // Show a repeater for "List" type to allow dynamic features with icon, title, and description
+                        Forms\Components\Repeater::make('list_items')
+                            ->label('List Items')
+                            ->visible(fn(callable $get) => $get('type') === 'list')
+                            ->schema([
+                                Forms\Components\TextInput::make('title')
+                                    ->label('Title')
+                                    ->required()
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('icon')
+                                    ->label('Icon (SVG or class)')
+                                    ->maxLength(100)
+                                    ->helperText(' icon class '),
+                                Forms\Components\Textarea::make('description')
+                                    ->label('Description')
+                                    ->maxLength(500)
+                                    ->rows(2),
+                            ])
+                            ->minItems(1)
+                            ->columnSpanFull(),
+
                         Forms\Components\RichEditor::make('content')
                             ->label('Content')
                             ->nullable()
-                            ->visible(fn (callable $get) => in_array($get('type'), ['text', 'list', 'timeline']))
+                            ->visible(fn(callable $get) => in_array($get('type'), ['text', 'timeline']))
                             ->columnSpanFull(),
-                        
+
                         Forms\Components\SpatieMediaLibraryFileUpload::make('images')
                             ->collection('images')
                             ->multiple()
                             ->image()
                             ->imagePreviewHeight(150)
-                            ->visible(fn (callable $get) => in_array($get('type'), ['image', 'gallery']))
+                            ->visible(fn(callable $get) => in_array($get('type'), ['image', 'gallery']))
                             ->columnSpanFull(),
-                        
-                        Forms\Components\SpatieMediaLibraryFileUpload::make('videos')
-                            ->collection('videos')
-                            ->multiple()
-                            ->acceptedFileTypes(['video/mp4', 'video/webm', 'video/ogg'])
-                            ->visible(fn (callable $get) => $get('type') === 'video')
+
+                        Forms\Components\TextInput::make('video_url')
+                            ->label('video_url')
+                            ->placeholder('Enter video ')
+                            ->visible(fn(callable $get) => $get('type') === 'video')
                             ->columnSpanFull(),
-                        
+
                         Forms\Components\KeyValue::make('metadata')
                             ->label('Additional Data')
                             ->keyLabel('Field')
@@ -100,11 +128,13 @@ class ContentBlockResource extends Resource
                             ->label('Active')
                             ->default(true)
                             ->helperText('Only active content blocks will be visible to visitors'),
-                        
+
                         Forms\Components\TextInput::make('display_order')
                             ->numeric()
-                            ->default(0)
-                            ->helperText('Order for display (lower numbers appear first)'),
+                            ->default(1)
+                            ->minValue(1)
+                            ->unique(ignoreRecord: true)
+                            ->required(),
                     ])->columns(2),
             ]);
     }
@@ -116,58 +146,61 @@ class ContentBlockResource extends Resource
                 Tables\Columns\TextColumn::make('id')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                
+
                 Tables\Columns\TextColumn::make('section.page.title')
                     ->label('Page')
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
-                
+
                 Tables\Columns\TextColumn::make('section.title')
                     ->label('Section')
                     ->searchable()
                     ->sortable(),
-                
-                Tables\Columns\BadgeColumn::make('type')
-                    ->colors([
-                        'primary' => 'text',
-                        'success' => 'image',
-                        'warning' => 'video',
-                        'info' => 'list',
-                        'danger' => 'timeline',
-                        'secondary' => 'gallery',
-                    ])
+
+                Tables\Columns\TextColumn::make('type')
+                    ->label('Type')
+                    ->color(fn(ContentTypeEnum $state): string => match ($state) {
+                        ContentTypeEnum::Text => 'primary',
+                        ContentTypeEnum::Image => 'info',
+                        ContentTypeEnum::Video => 'warning',
+                        ContentTypeEnum::List => 'success',
+                        ContentTypeEnum::Timeline => 'secondary',
+                        ContentTypeEnum::Gallery => 'danger',
+                    })
                     ->sortable(),
-                
+
                 Tables\Columns\TextColumn::make('title')
                     ->searchable()
                     ->sortable()
                     ->limit(30),
-                
+
                 Tables\Columns\TextColumn::make('short_description')
                     ->limit(50)
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                
+
                 Tables\Columns\SpatieMediaLibraryImageColumn::make('images')
                     ->collection('images')
                     ->label('Images')
                     ->size(40)
                     ->square(),
-                
-                Tables\Columns\TextColumn::make('display_order')
-                    ->sortable()
+                Tables\Columns\TextColumn::make('video_url')
+                    ->label('video_url')
                     ->toggleable(isToggledHiddenByDefault: true),
-                
+
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean()
                     ->sortable(),
-                
+                Tables\Columns\TextColumn::make('display_order')
+                    ->sortable()
+                    ->label('Order'),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                
+
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
@@ -181,7 +214,7 @@ class ContentBlockResource extends Resource
                     }))
                     ->searchable()
                     ->preload(),
-                
+
                 Tables\Filters\SelectFilter::make('type')
                     ->options([
                         'text' => 'Text Block',
@@ -191,7 +224,7 @@ class ContentBlockResource extends Resource
                         'timeline' => 'Timeline Block',
                         'gallery' => 'Gallery Block',
                     ]),
-                
+
                 Tables\Filters\TernaryFilter::make('is_active')
                     ->label('Status')
                     ->placeholder('All Blocks')
@@ -208,7 +241,7 @@ class ContentBlockResource extends Resource
                 ]),
             ])
             ->defaultSort('display_order')
-            ->modifyQueryUsing(fn (Builder $query) => $query->with(['section.page']));
+            ->modifyQueryUsing(fn(Builder $query) => $query->with(['section.page']));
     }
 
     public static function getRelations(): array

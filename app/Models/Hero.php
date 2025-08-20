@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\HasUserStamps;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Hero extends Model implements HasMedia
 {
@@ -19,8 +20,10 @@ class Hero extends Model implements HasMedia
 
     protected $fillable = [
         'title',
+        'subtitle',
         'description',
-        'link',
+        'button_link',
+        'text_link',
         'order',
         'status',
         'created_by',
@@ -42,13 +45,23 @@ class Hero extends Model implements HasMedia
         return $this->belongsTo(User::class, 'updated_by');
     }
 
-    public function registerMediaCollections(): void {
-        $this->addMediaCollection('images')
+    public function registerMediaCollections(): void 
+    {
+        $this->addMediaCollection('image')
+            ->singleFile()
+
             ->registerMediaConversions(function () {
                 $this->addMediaConversion('thumb')
                     ->width(150)
                     ->height(150)
                     ->sharpen(10);
             });
+    }
+
+    protected function imageUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->getFirstMediaUrl('image'),
+        );
     }
 }

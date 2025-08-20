@@ -21,15 +21,31 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box">
-						<span>Hia cinema, JubaSouth Sudan</span>
+						@if(!empty($data['address']))
+						{{ $data['address'] }}
+						@else
+						<span class="text-muted">No address configured</span>
+						@endif
 					</div>
-					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box">
-						<span><a href="https://induyst-demo.pbminfotech.com/cdn-cgi/l/email-protection"
-								class="__cf_email__"
-								data-cfemail="d6b5b9b8a2b7b5a296b3aeb7bba6bab3f8b5b9bb">[email&#160;protected]</a></span>
+					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box d-flex flex-column">
+						@if(!empty($data['email']))
+						@foreach($data['email'] as $email)
+						<a href="mailto:{{ $email }}" class="__cf_email__">{{ $email }}</a>
+						@if(!$loop->last)<br>@endif
+						@endforeach
+						@else
+						<span class="text-muted">No email addresses configured</span>
+						@endif
 					</div>
-					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box">
-						<span>+211 923 2 41 605</span>
+					<div class="col-md-12 col-lg-4 pbmit-footer-contact-box d-flex flex-column">
+						@if(!empty($data['phone']))
+						@foreach($data['phone'] as $phone)
+						{{ $phone }}
+						@if(!$loop->last)<br>@endif
+						@endforeach
+						@else
+						<span class="text-muted">No phone numbers configured</span>
+						@endif
 					</div>
 				</div>
 			</div>
@@ -94,28 +110,7 @@
 					</div>
 					<div class="col-md-6">
 						<div class=" pbmit-footer-social-area">
-							<ul class="pbmit-social-links">
-								<li class="pbmit-social-li pbmit-social-facebook">
-									<a title="Facebook" href="#" target="_blank">
-										<span><i class="pbmit-base-icon-facebook-f"></i></span>
-									</a>
-								</li>
-								<li class="pbmit-social-li pbmit-social-twitter">
-									<a title="Twitter" href="#" target="_blank">
-										<span><i class="pbmit-base-icon-twitter-2"></i></span>
-									</a>
-								</li>
-								<li class="pbmit-social-li pbmit-social-youtube">
-									<a title="Youtube" href="#" target="_blank">
-										<span><i class="pbmit-base-icon-youtube-play"></i></span>
-									</a>
-								</li>
-								<li class="pbmit-social-li pbmit-social-instagram">
-									<a title="Instagram" href="#" target="_blank">
-										<span><i class="pbmit-base-icon-instagram"></i></span>
-									</a>
-								</li>
-							</ul>
+						  <x-social-media />
 						</div>
 					</div>
 				</div>

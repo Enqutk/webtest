@@ -53,12 +53,15 @@ class ServiceResource extends Resource {
             ->rows( 2 )
             ->maxLength( 65535 )
             ->nullable(),
-            Forms\Components\Textarea::make( 'description' )
-            ->maxLength( 65535 )
+
+            Forms\Components\RichEditor::make( 'description' )
+            ->columnSpanFull()
+            ->toolbarButtons( self::getRichEditorToolbarButtons() )
             ->nullable(),
-            Forms\Components\Textarea::make( 'features' )
-            ->maxLength( 65535 )
-            ->nullable(),
+
+            Forms\Components\RichEditor::make( 'features' )
+            ->columnSpanFull()
+            ->toolbarButtons( self::getRichEditorToolbarButtons() ),
             Forms\Components\TextInput::make( 'order' )
             ->numeric()
             ->default( 1 )
@@ -67,7 +70,8 @@ class ServiceResource extends Resource {
             ->required(),
             Forms\Components\Select::make( 'status' )
             ->options( StatusEnum::class )
-            ->default( StatusEnum::active ),
+            ->default( StatusEnum::active )
+            ->nullable(),
         ] );
     }
 
@@ -91,7 +95,11 @@ class ServiceResource extends Resource {
             ->size( 50 ),
             Tables\Columns\TextColumn::make( 'short_description' )->limit( 50 ),
             Tables\Columns\TextColumn::make( 'order' )->sortable(),
-            Tables\Columns\TextColumn::make( 'status' )->badge(),
+            Tables\Columns\TextColumn::make('status')->badge()
+                    ->color(fn(StatusEnum $state): string => match ($state) {
+                        StatusEnum::active => 'success',
+                        StatusEnum::inactive => 'danger',
+                    })->sortable(),
             Tables\Columns\TextColumn::make( 'created_at' )->dateTime()->sortable()->toggleable( isToggledHiddenByDefault: true ),
             Tables\Columns\TextColumn::make( 'updated_at' )->dateTime()->sortable()->toggleable( isToggledHiddenByDefault: true ),
             Tables\Columns\TextColumn::make( 'creator.name' )->label( 'Created By' )->sortable()->toggleable( isToggledHiddenByDefault: true ),
@@ -129,6 +137,23 @@ class ServiceResource extends Resource {
             'index' => Pages\ListServices::route( '/' ),
             'create' => Pages\CreateService::route( '/create' ),
             'edit' => Pages\EditService::route( '/{record}/edit' ),
+        ];
+    }
+
+    private static function getRichEditorToolbarButtons(): array {
+        return [
+            'bold',
+            'italic',
+            'underline',
+            'strike',
+            'link',
+            'bulletList',
+            'orderedList',
+            'h2',
+            'h3',
+            'h4',
+            'blockquote',
+            'codeBlock',
         ];
     }
 }

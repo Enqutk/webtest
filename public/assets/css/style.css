@@ -1840,6 +1840,20 @@ aside.widget.widget-tag-cloud a:hover:before,
 	border-top: 1px solid rgba(var(--pbmit-blackish-color-rgb),0.10);
     margin-top: 35px;
 }
+.navigation li a {
+    position: relative;
+    padding-bottom: 5px;
+    transition: all 0.3s ease;
+}
+
+.navigation li.active a::after {
+    content: "";
+    position: absolute;
+    height: 2px;
+    width: 100%;
+    background-color: #00b3ff; /* Change to your theme color */
+}
+
 .post-navigation .nav-links {
     margin-top: 0;
     padding: 40px 0 8px;

@@ -15,6 +15,10 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
 
 class EntityResource extends Resource
 {
@@ -29,34 +33,32 @@ class EntityResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Select::make('type')
+                Select::make('type')
                     ->options(EntityTypeEnum::class)
                     ->required(),
-                Forms\Components\TextInput::make('link')
+                TextInput::make('link')
                     ->maxLength(255)
                     ->url()
                     ->nullable(),
-                Forms\Components\SpatieMediaLibraryFileUpload::make('image')
+                SpatieMediaLibraryFileUpload::make('image')
                     ->collection('image')
                     ->image()
-                    ->imagePreviewHeight('150')
-                    ->required(),
-                Forms\Components\Textarea::make('description')
+                    ->imagePreviewHeight('150'),
+                Textarea::make('description')
                     ->maxLength(65535)
                     ->nullable(),
-                Forms\Components\TextInput::make('order')
+                TextInput::make('order')
                     ->numeric()
                     ->default(1)
                     ->minValue(1)
                     ->unique(ignoreRecord: true)
                     ->required(),
-                Forms\Components\Select::make('status')
+                Select::make('status')
                     ->options(StatusEnum::class)
-                    ->default(StatusEnum::active)
-                    ->required(),
+                    ->default(StatusEnum::active),
             ]);
     }
 
@@ -64,25 +66,22 @@ class EntityResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')->sortable(),
-                Tables\Columns\TextColumn::make('name')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('type')->badge()->sortable(),
-                Tables\Columns\SpatieMediaLibraryImageColumn::make('image')
-                    ->collection('image')
-                    ->square()
-                    ->size(50),
-                Tables\Columns\TextColumn::make('link')->url(fn($record) => $record->link)->openUrlInNewTab(true)->searchable(),
-                Tables\Columns\TextColumn::make('order')->sortable(),
-                Tables\Columns\TextColumn::make('status')
-                    ->badge()
+               TextColumn::make('id')->sortable(),
+               TextColumn::make('name')->searchable()->sortable(),
+               TextColumn::make('type')->badge()->sortable(),
+               SpatieMediaLibraryImageColumn::make('image')->collection('image')->circular()->size(50),
+               TextColumn::make('link')->url(fn($record) => $record->link)->openUrlInNewTab(true)->searchable(),
+               TextColumn::make('order')->sortable(),
+               TextColumn::make('status')->badge()
                     ->color(fn(StatusEnum $state): string => match ($state) {
                         StatusEnum::active => 'success',
                         StatusEnum::inactive => 'danger',
-                    })
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
+                    }) ->sortable(),
+               TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
+               TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
+               TextColumn::make('deleted_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
+               TextColumn::make('creator.name')->label('Created By')->sortable()->toggleable(isToggledHiddenByDefault: true),
+               TextColumn::make('updater.name')->label('Updated By')->sortable()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),

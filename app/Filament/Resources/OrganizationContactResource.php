@@ -2,7 +2,9 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\StatusEnum;
 use App\Filament\Resources\OrganizationContactResource\Pages;
+use App\Models\Organization;
 use App\Models\OrganizationContact;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -32,6 +34,10 @@ class OrganizationContactResource extends Resource
                     ->email(fn (\Filament\Forms\Get $get) => $get('type') === 'email')
                     ->tel(fn (\Filament\Forms\Get $get) => $get('type') === 'phone')
                     ->maxLength(255),
+                Forms\Components\Select::make('status')
+                    ->label('Status')
+                    ->options(StatusEnum::class)
+                    ->default(StatusEnum::active),
             ])->columns(2);
     }
 
@@ -47,6 +53,11 @@ class OrganizationContactResource extends Resource
                     ->label('Contact Value')
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('status')->badge()
+                    ->color(fn(StatusEnum $state): string => match ($state) {
+                        StatusEnum::active => 'success',
+                        StatusEnum::inactive => 'danger',
+                    })->sortable(),
             ])
             ->filters([
                 //

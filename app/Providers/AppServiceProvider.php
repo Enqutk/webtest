@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Spatie\MediaLibrary\Support\PathGenerator\PathGenerator;
 use App\MediaLibrary\ModelNamePathGenerator;
+use App\Services\HomeContentService;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +26,12 @@ class AppServiceProvider extends ServiceProvider
         // Register custom path generator globally for Spatie Media Library
         app()->bind(PathGenerator::class, function () {
             return new ModelNamePathGenerator();
+        });
+
+
+        View::composer(['index', 'about', 'contact', 'services.index','services.show'], function ($view) {
+            $data = app(HomeContentService::class)->getHomeContent();
+            $view->with(compact('data'));
         });
     }
 }

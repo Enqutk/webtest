@@ -1,5 +1,7 @@
 <?php
 
+use App\Enums\LocationEnum;
+use App\Enums\MenuLocationEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 120);
             $table->string('slug', 120)->unique();
-            $table->enum('location', ['navbar', 'footer', 'sidebar'])->default('navbar');
+            $table->string('location')->default( MenuLocationEnum::Navbar->value);
             $table->text('description')->nullable();
             $table->timestamps();
             $table->softDeletes();

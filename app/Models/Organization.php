@@ -20,10 +20,6 @@ class Organization extends Model
         'opening_hours' => 'array', 
     ];
 
-    public function contacts()
-    {
-        return $this->hasMany(OrganizationContact::class);
-    }
     
     public static function getDayOptions(): array
     {
