@@ -33,7 +33,7 @@ class HomeContentService
                     'video-thumbnail',
                     'video-details',
                 ])
-                ->select(['id', 'slug', 'short_description', 'content', 'list_items', 'metadata', 'title' , 'subtitle' , 'icon' ,'video_url' ])
+                ->select(['id', 'slug', 'short_description', 'content', 'list_items', 'metadata', 'title', 'subtitle', 'icon', 'video_url'])
                 ->with('media') // important to avoid N+1
                 ->get()
                 ->keyBy('slug');
@@ -54,12 +54,14 @@ class HomeContentService
                 'aboutSection1' => $blocks->get('about-section-1')
                     ? [
                         'image' => $blocks->get('about-section-1')->getFirstMediaUrl('images'),
-                        'description' => $blocks->get('about-section-1')->content,
+                        'description' => $blocks->get('about-section-1')->content, 
+                       
                     ]
                     : [
                         'image' => asset('assets/images/homepage-2/about-img-01.png'),
                         'description' => null,
                     ],
+
                 'aboutSection2' => $blocks->get('about-section-2')
                     ? [
                         'image' => $blocks->get('about-section-2')->getFirstMediaUrl('images'),
@@ -69,10 +71,10 @@ class HomeContentService
                         'image' => asset('assets/images/homepage-2/about-img-02.png'),
                         'description' => null,
                     ],
-             
+
                 'videoSection' => $blocks->get('video-section'),
 
-                'videoThumbnail' => $blocks->get('video-thumbnail') 
+                'videoThumbnail' => $blocks->get('video-thumbnail')
                     ? $blocks->get('video-thumbnail')->getFirstMediaUrl('images')
                     : asset('assets/images/homepage-2/video-thumbnail.png'),
 
