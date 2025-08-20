@@ -7,7 +7,7 @@
             <div class="col-md-12 col-xl-7 about-two-right-col">
                 <div class="about-two-content">
                     <div class="pbmit-heading-subheading">
-                        <h5 class="">{{ $description1 }}</h5>
+                        <h6 class="">{{ $description1 }}</h6>
                     </div>
                 </div>
             </div>
@@ -17,7 +17,7 @@
             <div class="col-md-12 col-xl-7 about-two-right-col">
                 <div class="about-two-content">
                     <div class="pbmit-heading-subheading">
-                        <h5 class="">{{ $description2 }}</h5>
+                        <h6 class="">{{ $description2 }}</h6>
                     </div>
                 </div>
             </div>
