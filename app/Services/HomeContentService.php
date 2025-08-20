@@ -38,6 +38,10 @@ class HomeContentService
                 ->get()
                 ->keyBy('slug');
 
+            $aboutFeaturesBlock = $blocks->get('veritas-afrika-co-ltd');
+            $aboutSection1Block = $blocks->get('about-section-1');
+            $aboutSection2Block = $blocks->get('about-section-2');
+
             return [
                 'email'   => $contacts->get('email', collect())->pluck('value')->all(),
                 'phone'   => $contacts->get('phone', collect())->pluck('value')->all(),
@@ -47,34 +51,28 @@ class HomeContentService
                 'map'     => $organization->map_url ?? null,
 
                 'heroFeatures' => $blocks->get('key-features'),
-                'aboutFeatures' => $blocks->get('veritas-afrika-co-ltd')
+                'aboutFeatures' => $aboutFeaturesBlock
                     ? [
-                        'image' => $blocks->get('veritas-afrika-co-ltd')->getFirstMediaUrl('images'),
-                        'title' => $blocks->get('veritas-afrika-co-ltd')->title,
-                        'subtitle' => $blocks->get('veritas-afrika-co-ltd')->subtitle,
-                        'description' => html_entity_decode($blocks->get('veritas-afrika-co-ltd')->content),
-
+                        'image' => $aboutFeaturesBlock->getFirstMediaUrl('images'),
+                        'title' => $aboutFeaturesBlock->title,
+                        'subtitle' => $aboutFeaturesBlock->subtitle,
+                        'description' => html_entity_decode($aboutFeaturesBlock->content),
                     ]
                     : null,
-                'aboutSection1' => $blocks->get('about-section-1')
-                    ? [
-                        'image' => $blocks->get('about-section-1')->getFirstMediaUrl('images'),
-                        'description' => html_entity_decode($blocks->get('about-section-1')->content),
-                    ]
-                    : [
-                        'image' => asset('assets/images/homepage-2/about-img-01.png'),
-                        'description' => null,
-                    ],
 
-                'aboutSection2' => $blocks->get('about-section-2')
+                'aboutSection1' => $aboutSection1Block
                     ? [
-                        'image' => $blocks->get('about-section-2')->getFirstMediaUrl('images'),
-                        'description' => html_entity_decode($blocks->get('about-section-2')->content),
+                        'image' => $aboutSection1Block->getFirstMediaUrl('images'),
+                        'description' => html_entity_decode($aboutSection1Block->content),
                     ]
-                    : [
-                        'image' => asset('assets/images/homepage-2/about-img-02.png'),
-                        'description' => null,
-                    ],
+                    : null,
+
+                'aboutSection2' => $aboutSection2Block
+                    ? [
+                        'image' => $aboutSection2Block->getFirstMediaUrl('images'),
+                        'description' => html_entity_decode($aboutSection2Block->content),
+                    ]
+                    : null,
 
                 'videoSection' => $blocks->get('video-section'),
 
