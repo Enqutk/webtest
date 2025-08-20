@@ -94,11 +94,12 @@ class ContentBlockResource extends Resource
                             ->columnSpanFull(),
 
                         Forms\Components\Tabs::make('Content Input')
+                            ->visible(fn(callable $get) => in_array($get('type'), ['text', 'timeline', 'image', 'video', 'gallery', 'list']))
                             ->tabs([
                                 Forms\Components\Tabs\Tab::make('Rich Editor')
                                     ->schema([
                                         Forms\Components\RichEditor::make('content')
-                                            ->label('Content')
+                                            ->label('Content (WYSIWYG)')
                                             ->nullable()
                                             ->columnSpanFull(),
                                     ]),
