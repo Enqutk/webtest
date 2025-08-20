@@ -3,12 +3,12 @@
 @section('content')
 <!-- Page Content -->
 <div class="page-content mb-4">
-    <!-- Hero Features Section -->
+    {{-- <!-- Hero Features Section -->
     <div class="mt-5 mb-5">
         <x-hero-features :features="$data['heroFeatures']?->list_items ?? []" />
-    </div>
+    </div> --}}
 
-    <hr>
+    {{-- <hr> --}}
 
     <!-- About Section -->
     @if($data['aboutFeatures'])
