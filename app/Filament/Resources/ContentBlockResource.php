@@ -53,10 +53,10 @@ class ContentBlockResource extends Resource
                                 $set('slug', Str::slug($state));
                             }),
                         Forms\Components\TextInput::make('slug')
-                                ->required()
-                                ->maxLength(120)
-                                ->unique(ContentBlock::class, 'slug', ignoreRecord: true)
-                                ->readOnly(),
+                            ->required()
+                            ->maxLength(120)
+                            ->unique(ContentBlock::class, 'slug', ignoreRecord: true)
+                            ->readOnly(),
 
                         Forms\Components\TextInput::make('icon')
                             ->maxLength(100),
@@ -93,11 +93,25 @@ class ContentBlockResource extends Resource
                             ->minItems(1)
                             ->columnSpanFull(),
 
-                        Forms\Components\RichEditor::make('content')
-                            ->label('Content')
-                            ->nullable()
-                            ->visible(fn(callable $get) => in_array($get('type'), ['text', 'timeline']))
-                            ->columnSpanFull(),
+                        Forms\Components\Tabs::make('Content Input')
+                            ->visible(fn(callable $get) => in_array($get('type'), ['text', 'timeline', 'image', 'video', 'gallery', 'list']))
+                            ->tabs([
+                                Forms\Components\Tabs\Tab::make('Rich Editor')
+                                    ->schema([
+                                        Forms\Components\RichEditor::make('content')
+                                            ->label('Content (WYSIWYG)')
+                                            ->nullable()
+                                            ->columnSpanFull(),
+                                    ]),
+                                Forms\Components\Tabs\Tab::make('Raw HTML')
+                                    ->schema([
+                                        Forms\Components\Textarea::make('content')
+                                            ->label('Content (Raw HTML)')
+                                            ->rows(8)
+                                            ->nullable()
+                                            ->columnSpanFull(),
+                                    ]),
+                            ]),
 
                         Forms\Components\SpatieMediaLibraryFileUpload::make('images')
                             ->collection('images')

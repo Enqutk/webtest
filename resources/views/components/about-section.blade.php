@@ -9,7 +9,7 @@
                     <div class="pbmit-heading-subheading">
                         <h4 class="pbmit-subtitle">{{ $subtitle }}</h4>
                         <h2 class="pbmit-title">{{ $title }}</h2>
-                        <p class="">{{ $description }}</p>
+                         {!! $description !!}
                     </div>
                 </div>
             </div>
