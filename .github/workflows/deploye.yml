@@ -55,12 +55,12 @@ jobs:
         local-dir: ./
         server-dir: ./
 
-    # - name: Clear Laravel cache
-    #   run: |
-    #     php artisan config:clear
-    #     php artisan cache:clear
-    #     php artisan view:clear
-    #     php artisan route:clear
+    - name: Clear Laravel cache
+      run: |
+        php artisan config:clear
+        php artisan cache:clear
+        php artisan view:clear
+        php artisan route:clear
 
   notify:
     needs: deploy
