@@ -96,7 +96,6 @@ class ContentBlockResource extends Resource
                         Forms\Components\RichEditor::make('content')
                             ->label('Content')
                             ->nullable()
-                            ->visible(fn(callable $get) => in_array($get('type'), ['text', 'timeline']))
                             ->columnSpanFull(),
 
                         Forms\Components\SpatieMediaLibraryFileUpload::make('images')
