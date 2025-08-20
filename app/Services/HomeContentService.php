@@ -47,10 +47,15 @@ class HomeContentService
                 'map'     => $organization->map_url ?? null,
 
                 'heroFeatures' => $blocks->get('key-features'),
-                'aboutFeatures' => $blocks->get('veritas-afrika-co-ltd'),
-                'aboutFeatureImageUrl' => $blocks->get('veritas-afrika-co-ltd-image')
-                    ? $blocks->get('veritas-afrika-co-ltd-image')->getFirstMediaUrl('images')
-                    : asset('assets/images/homepage-2/about-img-01.png'),
+                'aboutFeatures' => $blocks->get('veritas-afrika-co-ltd')
+                    ? [
+                        'image' => $blocks->get('veritas-afrika-co-ltd')->getFirstMediaUrl('images'),
+                        'title' => $blocks->get('veritas-afrika-co-ltd')->title,
+                        'subtitle' => $blocks->get('veritas-afrika-co-ltd')->subtitle,
+                        'description' => html_entity_decode($blocks->get('veritas-afrika-co-ltd')->content),
+
+                    ]
+                    : null,
                 'aboutSection1' => $blocks->get('about-section-1')
                     ? [
                         'image' => $blocks->get('about-section-1')->getFirstMediaUrl('images'),

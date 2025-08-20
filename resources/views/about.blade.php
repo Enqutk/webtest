@@ -9,10 +9,10 @@
 
 @if($data['aboutFeatures'])
 <x-about-section
-    image="{{ $data['aboutFeatureImageUrl'] }}"
-    subtitle="{{ $data['aboutFeatures']?->subtitle ?? '' }}"
-    title="{{ $data['aboutFeatures']?->title ?? '' }}"
-    description="{{ $data['aboutFeatures']?->short_description ?? '' }}" />
+    :image="$data['aboutFeatures']['image']"
+    :subtitle="$data['aboutFeatures']['subtitle']"
+    :title="$data['aboutFeatures']['title']"
+    :description="$data['aboutFeatures']['description']" />
 @endif
 
 <!-- About End -->
@@ -27,5 +27,5 @@
     :image2="$data['aboutSection2']['image']"
     :description2="$data['aboutSection2']['description']" />
 
-    
+
 @endsection
