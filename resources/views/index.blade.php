@@ -13,11 +13,10 @@
     <!-- About Section -->
     @if($data['aboutFeatures'])
     <x-about-section
-        image="{{ $data['aboutFeatureImageUrl'] }}"
-        subtitle="{{ $data['aboutFeatures']?->subtitle ?? '' }}"
-        title="{{ $data['aboutFeatures']?->title ?? '' }}"
-        description="{{ $data['aboutFeatures']?->short_description ?? '' }}"
-        />
+        :image="$data['aboutFeatures']['image']"
+        :subtitle="$data['aboutFeatures']['subtitle']"
+        :title="$data['aboutFeatures']['title']"
+        :description="$data['aboutFeatures']['description']" />
     @endif
 
     <x-service-section :services="$services" />
@@ -26,16 +25,15 @@
 
     <x-video-section
         :videoUrl="$data['videoSection']['video_url'] ?? ''"
+        subtitle="{{ $data['videoSection']['subtitle'] ?? '' }}"
         :videoThumbnail="$data['videoThumbnail'] ?? ''"
         :thumbnailShortDescription="$data['videoDetails']['short_description'] ?? ''"
-        subtitle="{{ $data['videoSection']['subtitle'] ?? '' }}"
         chartDescription="{{ $data['videoSection']['short_description'] ?? '' }}"
         industriesTitle="{{ $data['videoDetails']['list_items'][0]['title'] ?? '' }}"
         industriesDescription="{{ $data['videoDetails']['list_items'][0]['description'] ?? '' }}"
         :industries="array_values($data['videoDetails']['metadata'] ?? [])"
         locationsTitle="OUR LOCATION"
-        mapUrl="{{ $data['map'] ?? '' }}"
-    />
+        mapUrl="{{ $data['map'] ?? '' }}" />
 </div>
 <!-- Page Content End -->
 @endsection
