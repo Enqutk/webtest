@@ -54,7 +54,7 @@ class HomeContentService
                 'aboutSection1' => $blocks->get('about-section-1')
                     ? [
                         'image' => $blocks->get('about-section-1')->getFirstMediaUrl('images'),
-                        'description' => $blocks->get('about-section-1')->short_description,
+                        'description' => $blocks->get('about-section-1')->content,
                     ]
                     : [
                         'image' => asset('assets/images/homepage-2/about-img-01.png'),
@@ -63,7 +63,7 @@ class HomeContentService
                 'aboutSection2' => $blocks->get('about-section-2')
                     ? [
                         'image' => $blocks->get('about-section-2')->getFirstMediaUrl('images'),
-                        'description' => $blocks->get('about-section-2')->short_description,
+                        'description' => $blocks->get('about-section-2')->content,
                     ]
                     : [
                         'image' => asset('assets/images/homepage-2/about-img-02.png'),
