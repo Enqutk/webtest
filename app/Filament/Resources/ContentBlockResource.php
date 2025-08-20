@@ -93,10 +93,24 @@ class ContentBlockResource extends Resource
                             ->minItems(1)
                             ->columnSpanFull(),
 
-                        Forms\Components\RichEditor::make('content')
-                            ->label('Content')
-                            ->nullable()
-                            ->columnSpanFull(),
+                        Forms\Components\Tabs::make('Content Input')
+                            ->tabs([
+                                Forms\Components\Tabs\Tab::make('Rich Editor')
+                                    ->schema([
+                                        Forms\Components\RichEditor::make('content')
+                                            ->label('Content (WYSIWYG)')
+                                            ->nullable()
+                                            ->columnSpanFull(),
+                                    ]),
+                                Forms\Components\Tabs\Tab::make('Raw HTML')
+                                    ->schema([
+                                        Forms\Components\Textarea::make('content')
+                                            ->label('Content (Raw HTML)')
+                                            ->rows(8)
+                                            ->nullable()
+                                            ->columnSpanFull(),
+                                    ]),
+                            ]),
 
                         Forms\Components\SpatieMediaLibraryFileUpload::make('images')
                             ->collection('images')
