@@ -11,20 +11,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:8
-        env:
-          MYSQL_DATABASE: ${{ secrets.DB_DATABASE }}
-          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=3
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -69,12 +55,12 @@ jobs:
         local-dir: ./
         server-dir: ./
 
-    - name: Clear Laravel cache
-      run: |
-        php artisan config:clear
-        php artisan cache:clear
-        php artisan view:clear
-        php artisan route:clear
+    # - name: Clear Laravel cache
+    #   run: |
+    #     php artisan config:clear
+    #     php artisan cache:clear
+    #     php artisan view:clear
+    #     php artisan route:clear
 
   notify:
     needs: deploy
