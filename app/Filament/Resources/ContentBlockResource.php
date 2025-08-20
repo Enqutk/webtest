@@ -98,7 +98,7 @@ class ContentBlockResource extends Resource
                                 Forms\Components\Tabs\Tab::make('Rich Editor')
                                     ->schema([
                                         Forms\Components\RichEditor::make('content')
-                                            ->label('Content (WYSIWYG)')
+                                            ->label('Content')
                                             ->nullable()
                                             ->columnSpanFull(),
                                     ]),
