@@ -29,12 +29,14 @@
                             <div class="pbmit-menuarea d-flex justify-content-end">
                                 <div class="site-navigation">
                                     <nav class="main-navigation pbmit-navbar main-menu navbar-expand-xl navbar-light" id="site-navigation">
-                                        <ul class="navigation clearfix collapse navbar-collapse" id="pbmit-top-menu">
-                                            <li><a href="{{ route('home') }}">Home</a></li>
-                                            <li><a href="{{ route('about') }}">About Us</a></li>
-                                            <li><a href="{{ route('services.index') }}">Services</a></li>
-                                            <li><a href="{{ route('contact') }}">Contact Us</a></li>
-                                        </ul>
+                                        <div class="collapse navbar-collapse" id="pbmit-top-menu">
+                                            <ul class="navigation navbar-nav">
+                                                <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Home</a></li>
+                                                <li class="nav-item"><a class="nav-link" href="{{ route('about') }}">About Us</a></li>
+                                                <li class="nav-item"><a class="nav-link" href="{{ route('services.index') }}">Services</a></li>
+                                                <li class="nav-item"><a class="nav-link" href="{{ route('contact') }}">Contact Us</a></li>
+                                            </ul>
+                                        </div>
                                     </nav>
                                 </div>
                             </div>

@@ -102,6 +102,9 @@
     <script src='assets/js/gsap-animation.js'></script>
     <!-- Scripts JS -->
     <script src="assets/js/scripts.js"></script>
+    <!-- Custom JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
         (function() {
             function c() {
