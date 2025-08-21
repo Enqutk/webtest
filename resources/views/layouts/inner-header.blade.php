@@ -73,21 +73,48 @@
 								<div class="pbmit-menuarea d-flex align-items-center justify-content-center" style="width: 100%;">
 									<div class="site-navigation" style="width: 100%;">
 										<nav class="main-navigation pbmit-navbar main-menu navbar-expand-xl navbar-light" id="site-navigation">
-											<div style="display: flex; justify-content: center; width: 100%;">
-												<ul class="navigation clearfix" id="pbmit-top-menu" style="display: flex; justify-content: center; width: 100%;">
-													<li class="{{ request()->routeIs('home') ? 'active' : '' }}">
-														<a href="{{ route('home') }}">Home</a>
-													</li>
-													<li class="{{ request()->routeIs('about') ? 'active' : '' }}">
-														<a href="{{ route('about') }}">About Us</a>
-													</li>
-													<li class="{{ request()->routeIs('services.index') ? 'active' : '' }}">
-														<a href="{{ route('services.index') }}">Service</a>
-													</li>
-													<li class="{{ request()->routeIs('contact') ? 'active' : '' }}">
-														<a href="{{ route('contact') }}">Contact Us</a>
-													</li>
-												</ul>
+											<!-- Desktop Menu -->
+											<ul class="navigation clearfix d-none d-xl-flex" id="pbmit-top-menu" style="justify-content: center; width: 100%;">
+												<li class="{{ request()->routeIs('home') ? 'active' : '' }}">
+													<a href="{{ route('home') }}">Home</a>
+												</li>
+												<li class="{{ request()->routeIs('about') ? 'active' : '' }}">
+													<a href="{{ route('about') }}">About Us</a>
+												</li>
+												<li class="{{ request()->routeIs('services.index') ? 'active' : '' }}">
+													<a href="{{ route('services.index') }}">Our Service</a>
+												</li>
+												<li class="{{ request()->routeIs('contact') ? 'active' : '' }}">
+													<a href="{{ route('contact') }}">Contact Us</a>
+												</li>
+											</ul>
+											<!-- Mobile Menu -->
+											<ul class="navigation clearfix d-xl-none" id="pbmit-top-menu-mobile" style="flex-direction: column; align-items: center; width: 100%; background: #c8c8c8ab; position: absolute; top: 100%; left: 0; z-index: 999; display: none;">
+												<li>
+													<a href="{{ route('home') }}">Home</a>
+												</li>
+												<li>
+													<a href="{{ route('about') }}">About</a>
+												</li>
+												<li>
+													<a href="{{ route('services.index') }}">Service</a>
+												</li>
+												<li>
+													<a href="{{ route('contact') }}">Contact</a>
+												</li>
+											</ul>
+											<script>
+											document.addEventListener('DOMContentLoaded', function() {
+												const menuToggle = document.getElementById('menu-toggle');
+												const mobileMenu = document.getElementById('pbmit-top-menu-mobile');
+												if(menuToggle && mobileMenu){
+													menuToggle.addEventListener('click', function(e){
+														e.preventDefault();
+														mobileMenu.style.display = mobileMenu.style.display === 'block' ? 'none' : 'block';
+													});
+												}
+											});
+											</script>
 											</div>
 										</nav>
 									</div>
