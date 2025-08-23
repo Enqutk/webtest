@@ -52,49 +52,7 @@
 		</div>
 	</div>
 	<div class="pbmit-footer-widget-area">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-6 col-lg-3 pbmit-footer-widget">
-					<aside class="widget">
-						<h2 class="widget-title">Our Company</h2>
-						<ul class="menu">
-							<li><a href="#">About Us</a></li>
-							<li><a href="#">Services</a></li>
-						</ul>
-					</aside>
-				</div>
-				<div class="col-md-6 col-lg-3 pbmit-footer-widget">
-					<aside class="widget">
-						<h2 class="widget-title">Our Servcices</h2>
-						<ul class="menu">
-							<li><a href="#">Machine Analysis</a></li>
-							<li><a href="#">Comprehensive Logits</a></li>
-							<li><a href="#">Plant Maintenance</a></li>
-							<li><a href="#">Maintenance & Repairing</a></li>
-						</ul>
-					</aside>
-				</div>
-				<div class="col-md-6 col-lg-3 pbmit-footer-widget">
-					<aside class="widget">
-						<h2 class="widget-title">Media</h2>
-						<ul class="menu">
-							<li><a href="#">News</a></li>
-							<li><a href="#">Events</a></li>
-							<li><a href="#">Image Gallery</a></li>
-						</ul>
-					</aside>
-				</div>
-				<div class="col-md-6 col-lg-3 pbmit-footer-widget">
-					<aside class="widget">
-						<h2 class="widget-title">Quick Link</h2>
-						<ul class="menu">
-							<li><a href="faq.html">Privacy Policy</a></li>
-							<li><a href="faq.html">Terms of use</a></li>
-						</ul>
-					</aside>
-				</div>
-			</div>
-		</div>
+	
 	</div>
 	<div class="pbmit-footer-text-area">
 		<div class="container">
