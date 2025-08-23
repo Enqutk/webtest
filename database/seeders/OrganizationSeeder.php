@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Organization;
 use App\Models\OrganizationContact;
 use App\Enums\StatusEnum;
+use App\Models\SocialRef;
 use Illuminate\Database\Seeder;
 
 class OrganizationSeeder extends Seeder
@@ -54,6 +55,34 @@ class OrganizationSeeder extends Seeder
             'type' => 'email',
             'value' => 'info@veritasafrika.com',
             'status' => StatusEnum::active,
+        ]);
+
+        SocialRef::create([
+           'title' => 'Facebook',
+           'icon' => 'fa-brands fa-facebook-f',
+           'url' => 'https://www.facebook.com/veritasafrika',
+           'status' => StatusEnum::active,
+        ]);
+
+        SocialRef::create([
+           'title' => 'Telegram',
+           'icon' => 'fa-brands fa-telegram',
+           'url' => 'https://t.me/veritasafrika',
+           'status' => StatusEnum::active,
+        ]);
+
+        SocialRef::create([
+           'title' => 'Twitter',
+           'icon' => 'fa-brands fa-twitter',
+           'url' => 'https://twitter.com/veritasafrika',
+           'status' => StatusEnum::active,
+        ]);
+
+        SocialRef::create([
+           'title' => 'TikTok',
+           'icon' => 'fa-brands fa-tiktok',
+           'url' => 'https://www.tiktok.com/@veritasafrika',
+           'status' => StatusEnum::active,
         ]);
     }
 }
