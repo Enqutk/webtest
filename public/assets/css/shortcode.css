@@ -2511,10 +2511,7 @@ aside.widget.widget-tag-cloud a,
 	position: relative;
     z-index: 2;
 }
-.pbmit-title-bar-wrapper,
-.pbmit-title-bar-content{
-	min-height: 500px;
-}
+
 .pbmit-title-bar-wrapper:before{
 	content: "";
     display: block;
@@ -2539,7 +2536,7 @@ aside.widget.widget-tag-cloud a,
 .pbmit-title-bar-content{
 	position: relative;
     z-index: 1;
-    padding: 64px 0;
+    padding: 54px 0;
 	display: flex;
     align-items: center;
 }
