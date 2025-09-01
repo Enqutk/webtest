@@ -1,8 +1,7 @@
 <section class="section-lg">
     <div class="container">
         <div class="row mb-5">
-
-            <div class="col-md-12 col-xl-7 about-two-rigth-col">
+            <div class="col-md-12 col-xl-7 about-two-right-col">
                 <div class="about-two-content">
                     <div class="pbmit-heading-subheading">
                         {!! $description1 !!}
