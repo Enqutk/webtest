@@ -82,6 +82,7 @@ class PageSeeder extends Seeder
             'created_by' => $user->id,
             'updated_by' => $user->id,
         ]);
+        
 
         // Create content block for Home page features (as a list)
         ContentBlock::create([

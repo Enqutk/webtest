@@ -102,6 +102,7 @@
     <script src='assets/js/gsap-animation.js'></script>
     <!-- Scripts JS -->
     <script src="assets/js/scripts.js"></script>
+
     <script>
         (function() {
             function c() {
