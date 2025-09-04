@@ -14,45 +14,8 @@
 									</a>
 								</h1>
 							</div>
-							<div class="pbmit-header-text-box">
-							
-							</div>
-							<div class="pbmit-header-info ml-auto d-flex align-items-center">
-								<div class="pbmit-header-info-inner">
-									<div class="pbmit-header-box pbmit-header-box-1">
-										<a href="tel:(000)123456789">
-											<span class="pbmit-header-box-icon">
-												<i class="pbmit-induyst-icon pbmit-induyst-icon-telephone"></i>
-											</span>
-											<span class="pbmit-box-content">
-												<span class="pbmit-header-box-title">Need to talk</span>
-												<span class="pbmit-header-box-content">{{ $data['phone'][0] ?? '' }}</span>
-											</span>
-										</a>
-									</div>
-									<div class="pbmit-header-box pbmit-header-box-2">
-										<a href="#">
-											<span class="pbmit-header-box-icon">
-												<i class="pbmit-induyst-icon pbmit-induyst-icon-location-1"></i>
-											</span>
-											<span class="pbmit-box-content">
-												<span class="pbmit-header-box-title">Main Location</span>
-												<span class="pbmit-header-box-content">{{$data['address']}}</span>
-											</span>
-										</a>
-									</div>
-									<div class="pbmit-header-box pbmit-header-box-3">
-										<a href="mailto:{{$data['email'][0]}}">
-											<span class="pbmit-header-box-icon">
-												<i class="pbmit-induyst-icon pbmit-induyst-icon-mail"></i>
-											</span>
-											<span class="pbmit-box-content">
-												<span class="pbmit-header-box-title">Email address</span>
-												<span class="pbmit-header-box-content"><span class="__cf_email__" data-cfemail="6f0100421d0a1f03162f0a170e021f030a410c0002">{{$data['email'][0] ?? ''}}</span></span>
-										</a>
-									</div>
-								</div>
-							</div>
+
+
 							<div class="pbmit-right-box d-flex align-items-center">
 								<div class="pbmit-header-search-btn">
 									<a href="#" title="Search">
@@ -67,8 +30,8 @@
 								</div>
 							</div>
 						</div>
-					<div class="pbmit-main-header-area" style="max-width: 1000px; margin: 0 auto; margin-top: 60px;">
-						<div class="container-fluid" style="max-width: 900px;">
+					<div class="pbmit-main-header-area" style="max-width: 900px; margin: 0 0 0 700px;">
+						<div class="container-fluid" style="max-width: 700px;">
 							<div class="pbmit-header-content d-flex align-items-center justify-content-center pbmit-bg-color-white">
 								<div class="pbmit-menuarea d-flex align-items-center justify-content-center" style="width: 100%;">
 									<div class="site-navigation" style="width: 100%;">
