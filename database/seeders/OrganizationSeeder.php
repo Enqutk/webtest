@@ -59,29 +59,29 @@ class OrganizationSeeder extends Seeder
 
         SocialRef::create([
            'title' => 'Facebook',
-           'icon' => 'fa-brands fa-facebook-f',
-           'url' => 'https://www.facebook.com/veritasafrika',
+           'icon_class' => 'fa-brands fa-facebook-f',
+           'link' => 'https://www.facebook.com/veritasafrika',
            'status' => StatusEnum::active,
         ]);
 
         SocialRef::create([
            'title' => 'Telegram',
-           'icon' => 'fa-brands fa-telegram',
-           'url' => 'https://t.me/veritasafrika',
+           'icon_class' => 'fa-brands fa-telegram',
+           'link' => 'https://t.me/veritasafrika',
            'status' => StatusEnum::active,
         ]);
 
         SocialRef::create([
            'title' => 'Twitter',
-           'icon' => 'fa-brands fa-twitter',
-           'url' => 'https://twitter.com/veritasafrika',
+           'icon_class' => 'fa-brands fa-twitter',
+           'link' => 'https://twitter.com/veritasafrika',
            'status' => StatusEnum::active,
         ]);
 
         SocialRef::create([
            'title' => 'TikTok',
-           'icon' => 'fa-brands fa-tiktok',
-           'url' => 'https://www.tiktok.com/@veritasafrika',
+           'icon_class' => 'fa-brands fa-tiktok',
+           'link' => 'https://www.tiktok.com/@veritasafrika',
            'status' => StatusEnum::active,
         ]);
     }
