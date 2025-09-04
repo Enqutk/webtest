@@ -33,56 +33,59 @@ class OrganizationSeeder extends Seeder
             'status' => 'active',
         ]);
 
-        OrganizationContact::create([
-            'type' => 'phone',
-            'value' => '+211 923 2 41 605',
-            'status' => StatusEnum::active,
-        ]);
+        $contacts = [
+            [
+                'type' => 'email',
+                'value' => 'contact@veritasafrika.com',
+            ],
+            [
+                'type' => 'email',
+                'value' => 'info@veritasafrika.com',
+            ],
+            [
+                'type' => 'phone',
+                'value' => '+211 923 2 41 605',
+            ],
+            [
+                'type' => 'phone',
+                'value' => '+27 749 505 555',
+            ],
+            
+        ];
 
-        OrganizationContact::create([
-            'type' => 'phone',
-            'value' => '+27 749 505 555',
-            'status' => StatusEnum::active,
-        ]);
 
-        OrganizationContact::create([
-            'type' => 'email',
-            'value' => 'contact@veritasafrika.com',
-            'status' => StatusEnum::active,
-        ]);
+        foreach ($contacts as $contact) {
+            OrganizationContact::create($contact , ['status' => StatusEnum::active]);
+        }
 
-        OrganizationContact::create([
-            'type' => 'email',
-            'value' => 'info@veritasafrika.com',
-            'status' => StatusEnum::active,
-        ]);
+ 
 
-        SocialRef::create([
-           'title' => 'Facebook',
-           'icon_class' => 'fa-brands fa-facebook-f',
-           'link' => 'https://www.facebook.com/veritasafrika',
-           'status' => StatusEnum::active,
-        ]);
 
-        SocialRef::create([
-           'title' => 'Telegram',
-           'icon_class' => 'fa-brands fa-telegram',
-           'link' => 'https://t.me/veritasafrika',
-           'status' => StatusEnum::active,
-        ]);
+        $socials = [
+           [
+               'title' => 'Facebook',
+               'icon_class' => 'fa-brands fa-facebook-f',
+               'link' => 'https://www.facebook.com/veritasafrika',
+           ],
+           [
+               'title' => 'Telegram',
+               'icon_class' => 'fa-brands fa-telegram',
+               'link' => 'https://t.me/veritasafrika',
+           ],
+           [
+               'title' => 'Twitter',
+               'icon_class' => 'fa-brands fa-twitter',
+               'link' => 'https://twitter.com/veritasafrika',
+           ],
+           [
+               'title' => 'TikTok',
+               'icon_class' => 'fa-brands fa-tiktok',
+               'link' => 'https://www.tiktok.com/@veritasafrika',
+           ],
+        ];
 
-        SocialRef::create([
-           'title' => 'Twitter',
-           'icon_class' => 'fa-brands fa-twitter',
-           'link' => 'https://twitter.com/veritasafrika',
-           'status' => StatusEnum::active,
-        ]);
-
-        SocialRef::create([
-           'title' => 'TikTok',
-           'icon_class' => 'fa-brands fa-tiktok',
-           'link' => 'https://www.tiktok.com/@veritasafrika',
-           'status' => StatusEnum::active,
-        ]);
+        foreach ($socials as $social) {
+            SocialRef::create(array_merge($social, ['status' => StatusEnum::active]));
+        }
     }
 }
