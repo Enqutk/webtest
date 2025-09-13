@@ -2,8 +2,8 @@
     <div class="container">
         <div class="d-md-flex justify-content-between">
             <div class="pbmit-heading-subheading">
-                <h4 class="pbmit-subtitle">Our Services</h4>
-                <h2 class="pbmit-title">Our Water Infrastructure <br class="d-inline"> Expertise</h2>
+             
+                <h2 class="pbmit-title">Our Services </h2>
             </div>
             <div class="service-arrow d-inline-flex"></div>
         </div>

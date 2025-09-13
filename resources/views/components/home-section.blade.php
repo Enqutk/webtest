@@ -8,18 +8,15 @@
                         <div class="pbmit-slider-bg" style="background-image: url('{{ $hero->image_url }}');"></div>
                         <div class="container">
                             <div class="row">
-                                <div class="col-md-8 col-1">
+                                <div class="col-md-8 col-1 mx-auto">
                                     <div class="pbmit-slider-content">
-                                        <h5 class="pbmit-slider-subtitle transform-right-1 transform-delay-1">
-                                            <span>{{ $hero->subtitle }}</span>
-                                        </h5>
-                                        <h2 class="pbmit-slider-title transform-left transform-delay-2">
+                                        <h2 class="pbmit-slider-title transform-left transform-delay-2 text-center">
                                             <span class="first">{{ $hero->title }}</span>
                                         </h2>
-                                        <p class="pbmit-slider-title transform-left transform-delay-2">
-                                            <span>{{ $hero->description }}</span>
-                                        </p>
-                                        
+                                        <h5
+                                            class="pbmit-slider-subtitle transform-right-1 transform-delay-1 text-center">
+                                            <span class="second ">{{ $hero->subtitle }}</span>
+                                        </h5>
                                     </div> <!-- pbmit-slider-content -->
                                 </div>
                             </div>

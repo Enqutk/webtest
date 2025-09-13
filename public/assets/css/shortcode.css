@@ -2900,22 +2900,23 @@ aside.widget.widget-tag-cloud a,
 .pbmit-slider-area .pbmit-slider-desc,
 .pbmit-slider-two .pbmit-slider-title{
 	color: var(--pbmit-white-color);
+
 }
 .pbmit-slider-area .pbmit-slider-subtitle{
 	font-size: 16px;
 	line-height: 16px;
-	font-weight: 600;
+	font-weight:normal;
 	letter-spacing: 2.4px;
 	margin-bottom: 20px;
-	text-transform: uppercase;
+
 }
 .pbmit-slider-one .pbmit-slider-title{
-	font-size: 120px;
+	font-size: 100px;
 	line-height: 120px;
-	font-weight: 800;
+	font-weight: 200;
 	padding-bottom: 20px;
 	margin-bottom: 30px;
-	text-transform: uppercase;
+
 	border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 .pbmit-slider-area .pbmit-slider-desc{
@@ -2951,18 +2952,21 @@ aside.widget.widget-tag-cloud a,
 	overflow: hidden;
 }
 .pbmit-slider-two .pbmit-slider-title{
-	font-weight: 800;
+	font-weight: 800px;
 	margin-bottom: 30px;
-	text-transform: uppercase;
+
 }
 .pbmit-slider-two .pbmit-slider-title .first{
-	font-size: 85px;
-	line-height: 88px;
+	font-size: 45px;
+	line-height: 58px;
 }	
 .pbmit-slider-two .pbmit-slider-title .second{
-	font-size: 95px;
+	font-size: 90px;
 	line-height: 98px;
+ 
+
 }
+
 .pbmit-slider-two .pbmit-slider-desc{
 	display: flex;
 	margin-bottom: 40px;

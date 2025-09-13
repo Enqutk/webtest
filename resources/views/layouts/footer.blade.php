@@ -9,7 +9,7 @@
 					</div>
 					<div class="col-md-12 col-lg-6 text-lg-end">
 						<div class="pbmit-footer-logo">
-							<img class="pbmit-main-logo" src="./assets/images/logo/logo-05.png" alt="">
+							<img class="pbmit-main-logo" src="{{ asset('assets/images/logo/logo-05.png') }}" alt="">
 						</div>
 					</div>
 				</div>
@@ -72,6 +72,7 @@
 						</div>
 					</div>
 				</div>
+				
 			</div>
 		</div>
 	</div>
