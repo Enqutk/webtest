@@ -42,8 +42,8 @@
                                         <nav class="main-navigation pbmit-navbar main-menu navbar-expand-xl navbar-light"
                                             id="site-navigation">
                                             <div style="display: flex; justify-content: center; width: 100%;">
-                                                <ul class="navigation clearfix" id="pbmit-top-menu"
-                                                    style="display: flex; flex-direction: column; align-items: flex-start; width: 100%;">
+                                                <ul class="navigation clearfix main-navigation-list" id="pbmit-top-menu">
+                                                   
                                                     <li class="{{ request()->routeIs('home') ? 'active' : '' }}">
                                                         <a href="{{ route('home') }}">Home</a>
                                                     </li>
