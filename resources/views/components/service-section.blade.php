@@ -10,7 +10,7 @@
 
         @if(isset($services) && $services && $services->count() > 0)
             <div class="swiper-slider" data-autoplay="true" data-loop="true" data-dots="false" data-arrows="true"
-                data-arrows-class="service-arrow" data-columns="3" data-margin="30" data-effect="slide">
+                data-arrows-class="service-arrow" data-columns="2" data-margin="30" data-effect="slide">
                 <div class="swiper-wrapper">
                     @foreach ($services as $service)
                         <!-- Slide {{ $loop->iteration }} -->
@@ -24,12 +24,6 @@
                                                     alt="{{ $service->title }}">
                                             </div>
                                         </div>
-                                        <div class="pbmit-service-icon-wrapper">
-                                            <div class="pbmit-service-icon">
-                                                {!! $service->svg_inline !!}
-                                            </div>
-                                        </div>
-
                                     </div>
                                     <div class="pbmit-service-content-wrap">
                                         <h3 class="pbmit-service-title">
