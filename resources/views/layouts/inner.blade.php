@@ -29,7 +29,7 @@
     <!-- AOS -->
     <link rel="stylesheet" href="{{ asset('assets/css/aos.css') }}">
     <!-- Shortcode CSS -->
-    <link rel="stylesheet" href="{{ asset('assets/css/shortcode.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/shortcode.css?v=1.0.1') }}">
     <!-- Base CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/base.css') }}">
     <!-- Style CSS -->
