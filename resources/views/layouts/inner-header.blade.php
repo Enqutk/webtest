@@ -8,7 +8,7 @@
                     <div class="pbmit-logo-area-inner d-flex align-items-center justify-content-between">
                         <div class="site-branding">
                             <h1 class="site-title">
-                                <a href="index.html">
+                                <a href="{{ route('home') }}">
                                     <img class="pbmit-main-logo" src="{{ asset('assets/images/logo/logo-04.png') }}"
                                         alt="Induyst">
                                     <img class="pbmit-sticky-logo" src="{{ asset('assets/images/logo/logo-02.png') }}"
