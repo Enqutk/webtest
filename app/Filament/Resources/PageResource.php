@@ -6,6 +6,7 @@ use App\Filament\Resources\PageResource\Pages;
 use App\Models\Page;
 use Filament\Forms;
 use Filament\Forms\Form;
+use App\Filament\Concerns\AuthorizesWithPermission;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -16,6 +17,9 @@ use Illuminate\Support\Str;
 
 class PageResource extends Resource
 {
+    use AuthorizesWithPermission;
+
+    protected static string $permissionKey = 'page';
     protected static ?string $model = Page::class;
     protected static ?string $navigationGroup = 'Content Management';
     protected static ?int $navigationSort = 1;
