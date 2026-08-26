@@ -8,12 +8,16 @@ use App\Models\Organization;
 use App\Models\OrganizationContact;
 use Filament\Forms;
 use Filament\Forms\Form;
+use App\Filament\Concerns\AuthorizesWithPermission;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
 class OrganizationContactResource extends Resource
 {
+    use AuthorizesWithPermission;
+
+    protected static string $permissionKey = 'organization';
     protected static ?string $model = OrganizationContact::class;
     protected static ?string $navigationGroup = 'Setting';
     protected static ?int $navigationSort = 4;
