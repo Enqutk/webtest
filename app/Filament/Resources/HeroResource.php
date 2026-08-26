@@ -34,17 +34,17 @@ class HeroResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Section::make('Slide content')
-                    ->description('Shown on the homepage hero. Brand name “Veritas Afrika” always appears above the title.')
+                    ->description('Shown on the homepage hero. Brand name “MajiWorks” always appears above the title.')
                     ->schema([
                         Forms\Components\TextInput::make('subtitle')
                             ->label('Eyebrow')
-                            ->placeholder('e.g. Civil engineering & consultancy')
+                            ->placeholder('e.g. Irrigation · WASH · Resilience')
                             ->helperText('Small label above the brand.')
                             ->maxLength(255),
                         Forms\Components\TextInput::make('title')
                             ->label('Headline')
                             ->required()
-                            ->placeholder('e.g. Infrastructure with clarity')
+                            ->placeholder('e.g. Water systems that feed people')
                             ->helperText('Supporting headline under the brand name.')
                             ->maxLength(255),
                         Forms\Components\Textarea::make('description')
