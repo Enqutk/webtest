@@ -6,6 +6,7 @@ use App\Filament\Resources\SocialRefResource\Pages;
 use App\Models\SocialRef;
 use Filament\Forms;
 use Filament\Forms\Form;
+use App\Filament\Concerns\AuthorizesWithPermission;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -15,6 +16,9 @@ use App\Enums\StatusEnum;
 
 class SocialRefResource extends Resource
 {
+    use AuthorizesWithPermission;
+
+    protected static string $permissionKey = 'organization';
     protected static ?string $model = SocialRef::class;
     protected static ?string $navigationGroup = 'Other';
     protected static ?int $navigationSort = 1;
