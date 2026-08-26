@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             TeamSeeder::class,
             EntitySeeder::class,
             StatsSeeder::class,
+            AboutContentSeeder::class,
         ]);
     }
 }
