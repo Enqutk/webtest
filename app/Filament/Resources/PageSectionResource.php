@@ -7,6 +7,7 @@ use App\Models\PageSection;
 use App\Models\Page;
 use Filament\Forms;
 use Filament\Forms\Form;
+use App\Filament\Concerns\AuthorizesWithPermission;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -14,6 +15,9 @@ use Illuminate\Database\Eloquent\Builder;
 
 class PageSectionResource extends Resource
 {
+    use AuthorizesWithPermission;
+
+    protected static string $permissionKey = 'page';
     protected static ?string $model = PageSection::class;
     protected static ?string $navigationGroup = 'Content Management';
     protected static ?int $navigationSort = 2;
