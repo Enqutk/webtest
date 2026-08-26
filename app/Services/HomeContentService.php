@@ -50,7 +50,7 @@ class HomeContentService
             'heroFeatures' => $blocks->get('key-features'),
             'aboutFeatures' => $aboutFeaturesBlock
                 ? [
-                    'image' => $aboutFeaturesBlock->getFirstMediaUrl('images') ?: asset('assets/images/homepage-1/about-img-01.jpg'),
+                    'image' => $aboutFeaturesBlock->getFirstMediaUrl('images') ?: asset('assets/images/homepage-2/about-img-01.png'),
                     'title' => $aboutFeaturesBlock->title,
                     'subtitle' => $aboutFeaturesBlock->subtitle,
                     'description' => html_entity_decode((string) $aboutFeaturesBlock->content),
@@ -59,14 +59,14 @@ class HomeContentService
 
             'aboutSection1' => $aboutSection1Block
                 ? [
-                    'image' => $aboutSection1Block->getFirstMediaUrl('images') ?: asset('assets/images/homepage-1/about-img-01.jpg'),
+                    'image' => $aboutSection1Block->getFirstMediaUrl('images') ?: asset('assets/images/homepage-2/about-img-01.png'),
                     'description' => html_entity_decode((string) $aboutSection1Block->content),
                 ]
                 : null,
 
             'aboutSection2' => $aboutSection2Block
                 ? [
-                    'image' => $aboutSection2Block->getFirstMediaUrl('images') ?: asset('assets/images/homepage-1/about-img-02.jpg'),
+                    'image' => $aboutSection2Block->getFirstMediaUrl('images') ?: asset('assets/images/banner-slider-img/slider3-04.jpg'),
                     'description' => html_entity_decode((string) $aboutSection2Block->content),
                 ]
                 : null,
