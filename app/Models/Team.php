@@ -60,9 +60,10 @@ class Team extends Model implements HasMedia
         return trim($this->first_name . ' ' . ($this->last_name ?? ''));
     }
 
-    public function getImageUrlAttribute(): string
+    public function getImageUrlAttribute(): ?string
     {
-        return $this->getFirstMediaUrl('team-images')
-            ?: ($this->image ?: asset('assets/images/team/team-01.jpg'));
+        $url = $this->getFirstMediaUrl('team-images');
+
+        return $url !== '' ? $url : null;
     }
 }
