@@ -57,7 +57,31 @@ function initCounters() {
     counters.forEach((el) => observer.observe(el));
 }
 
+function initHeader() {
+    const header = document.querySelector('[data-hz-header]');
+    if (!header) return;
+
+    const onScroll = () => {
+        header.classList.toggle('is-scrolled', window.scrollY > 12);
+    };
+
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    const collapse = document.getElementById('hzMainNav');
+    const toggler = document.querySelector('.hz-toggler');
+    if (collapse && toggler) {
+        collapse.addEventListener('shown.bs.collapse', () => {
+            toggler.setAttribute('aria-expanded', 'true');
+        });
+        collapse.addEventListener('hidden.bs.collapse', () => {
+            toggler.setAttribute('aria-expanded', 'false');
+        });
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    initHeader();
     initPortfolioFilters();
     initCounters();
 });
