@@ -84,6 +84,8 @@ class HomeContentService
             ] : null,
 
             'stats' => $statsBlock?->list_items ?? [],
+            'statsTitle' => $statsBlock?->title ?: 'Impact that compounds',
+            'statsSubtitle' => $statsBlock?->subtitle ?: 'By the numbers',
         ];
     }
 }
