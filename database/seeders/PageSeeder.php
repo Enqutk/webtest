@@ -217,5 +217,25 @@ class PageSeeder extends Seeder
             'created_by' => $user->id,
             'updated_by' => $user->id,
         ]);
+
+        ContentBlock::updateOrCreate(
+            ['slug' => 'stats'],
+            [
+                'section_id' => $homePage->id ? $heroFeatures->id : $heroFeatures->id,
+                'type' => 'list',
+                'title' => 'Impact Stats',
+                'subtitle' => 'By the numbers',
+                'list_items' => [
+                    ['label' => 'Projects delivered', 'value' => 48, 'suffix' => '+'],
+                    ['label' => 'Years of practice', 'value' => 12, 'suffix' => '+'],
+                    ['label' => 'Specialists', 'value' => 25, 'suffix' => '+'],
+                    ['label' => 'Partner agencies', 'value' => 18, 'suffix' => '+'],
+                ],
+                'display_order' => 8,
+                'is_active' => true,
+                'created_by' => $user->id,
+                'updated_by' => $user->id,
+            ]
+        );
     }
 }

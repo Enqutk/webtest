@@ -41,7 +41,7 @@ class Team extends Model implements HasMedia
     }
 
 
-     public function registerMediaCollections(): void
+    public function registerMediaCollections(): void
     {
         $this
             ->addMediaCollection('team-images')
@@ -53,5 +53,16 @@ class Team extends Model implements HasMedia
                     ->height(150)
                     ->sharpen(10);
             });
+    }
+
+    public function getFullNameAttribute(): string
+    {
+        return trim($this->first_name . ' ' . ($this->last_name ?? ''));
+    }
+
+    public function getImageUrlAttribute(): string
+    {
+        return $this->getFirstMediaUrl('team-images')
+            ?: ($this->image ?: asset('assets/images/team/team-01.jpg'));
     }
 }

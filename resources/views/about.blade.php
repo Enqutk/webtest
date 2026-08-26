@@ -1,31 +1,36 @@
 @extends('layouts.inner')
 
 @section('title', 'About Us')
-@section('page_title', 'About Us')
-@section('description', 'Learn about Veritas Afrika, a multi-disciplinary consultancy providing expert professional services in civil engineering and infrastructure development.')
+@section('eyebrow', 'Who we are')
+@section('page_title', 'About Veritas Afrika')
+@section('description', 'A multi-disciplinary consultancy providing expert professional services in civil engineering and infrastructure development.')
 
-@section('content')
-<!-- About Start -->
+@section('page')
+    <x-horizon.about :about="$data['aboutFeatures']" :features="$data['heroFeatures']" />
 
-@if($data['aboutFeatures'])
-<x-about-section
-    :image="$data['aboutFeatures']['image']"
-    :subtitle="$data['aboutFeatures']['subtitle']"
-    :title="$data['aboutFeatures']['title']"
-    :description="$data['aboutFeatures']['description']" />
-@endif
+    @if($data['aboutSection1'] || $data['aboutSection2'])
+        <section class="hz-section bg-surface border-top border-bottom border-hz">
+            <div class="container">
+                <div class="row g-5">
+                    @if($data['aboutSection1'])
+                        <div class="col-lg-6">
+                            <img src="{{ $data['aboutSection1']['image'] }}" alt="About Veritas Afrika" class="w-100 border border-hz mb-3">
+                            <div class="hz-lead">{!! $data['aboutSection1']['description'] !!}</div>
+                        </div>
+                    @endif
+                    @if($data['aboutSection2'])
+                        <div class="col-lg-6">
+                            <img src="{{ $data['aboutSection2']['image'] }}" alt="Our approach" class="w-100 border border-hz mb-3">
+                            <div class="hz-lead">{!! $data['aboutSection2']['description'] !!}</div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </section>
+    @endif
 
-<!-- About End -->
-
-
-
-
-
-<x-about-feature
-    :image1="$data['aboutSection1']['image']"
-    :description1="$data['aboutSection1']['description']"
-    :image2="$data['aboutSection2']['image']"
-    :description2="$data['aboutSection2']['description']" />
-
-
+    <x-horizon.stats :stats="$data['stats']" />
+    <x-horizon.team :team="$team" />
+    <x-horizon.clients :clients="$clients" />
+    <x-horizon.cta />
 @endsection

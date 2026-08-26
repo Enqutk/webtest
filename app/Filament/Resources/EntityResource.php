@@ -39,6 +39,10 @@ class EntityResource extends Resource
                 Select::make('type')
                     ->options(EntityTypeEnum::class)
                     ->required(),
+                TextInput::make('category')
+                    ->maxLength(120)
+                    ->nullable()
+                    ->helperText('Used for portfolio filters (e.g. Engineering, Infrastructure).'),
                 TextInput::make('link')
                     ->maxLength(255)
                     ->url()
@@ -69,6 +73,7 @@ class EntityResource extends Resource
                TextColumn::make('id')->sortable(),
                TextColumn::make('name')->searchable()->sortable(),
                TextColumn::make('type')->badge()->sortable(),
+               TextColumn::make('category')->toggleable(),
                SpatieMediaLibraryImageColumn::make('image')->collection('image')->circular()->size(50),
                TextColumn::make('link')->url(fn($record) => $record->link)->openUrlInNewTab(true)->searchable(),
                TextColumn::make('order')->sortable(),

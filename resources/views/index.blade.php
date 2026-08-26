@@ -1,27 +1,15 @@
 @extends('layouts.app')
 
+@section('title', 'Home')
+@section('description', 'Veritas Afrika — multi-disciplinary consultancy for civil engineering and infrastructure development.')
+
 @section('content')
-<!-- Page Content -->
-<div class="page-content mb-4">
-    {{-- <!-- Hero Features Section -->
-    <div class="mt-5 mb-5">
-        <x-hero-features :features="$data['heroFeatures']?->list_items ?? []" />
-    </div> --}}
-
-    {{-- <hr> --}}
-
-    <!-- About Section -->
-    @if($data['aboutFeatures'])
-    <x-about-section
-        :image="$data['aboutFeatures']['image']"
-        :subtitle="$data['aboutFeatures']['subtitle']"
-        :title="$data['aboutFeatures']['title']"
-        :description="$data['aboutFeatures']['description']" />
-    @endif
-
-    <x-service-section :services="$services" />
-
-    
-</div>
-<!-- Page Content End -->
+    <x-horizon.hero :heroes="$heroes" />
+    <x-horizon.about :about="$data['aboutFeatures']" :features="$data['heroFeatures']" />
+    <x-horizon.services :services="$services" />
+    <x-horizon.stats :stats="$data['stats']" />
+    <x-horizon.portfolio :projects="$projects" />
+    <x-horizon.clients :clients="$clients" />
+    <x-horizon.team :team="$team" />
+    <x-horizon.cta />
 @endsection

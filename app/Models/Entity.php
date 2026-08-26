@@ -18,12 +18,17 @@ class Entity extends Model implements HasMedia
     protected $fillable = [
         'name',
         'type',
+        'category',
         'link',
         'description',
         'order',
         'status',
         'created_by',
         'updated_by',
+    ];
+
+    protected $appends = [
+        'image_url',
     ];
 
     protected $casts = [
@@ -55,5 +60,10 @@ class Entity extends Model implements HasMedia
                     ->height(150)
                     ->sharpen(10);
             });
+    }
+
+    public function getImageUrlAttribute(): string
+    {
+        return $this->getFirstMediaUrl('image') ?: asset('assets/images/homepage-2/img-01.jpg');
     }
 }

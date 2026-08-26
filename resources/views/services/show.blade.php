@@ -1,69 +1,52 @@
 @extends('layouts.inner')
 
 @section('title', $service->title)
+@section('eyebrow', 'Service detail')
 @section('page_title', $service->title)
 @section('description', $service->short_description)
 
-@section('content')
-
-    <section class="site-content service-details">
-        <div class="container">
-            <div class="row">
-
-
-                <div class="col-md-12 col-xl-3 service-left-col sidebar">
-                    <aside class="service-sidebar">
-                        <aside class="widget post-list">
-                            <div class="all-post-list">
-                                <ul>
-                                    @foreach ($relatedServices as $item)
-                                        <li class="{{ $item->id === $service->id ? 'post-active' : '' }}">
-                                            <a href="{{ route('services.show', $item->slug) }}">
-                                                {{ $item->title }}
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </aside>
-                    </aside>
-                </div>
-
-                <!-- Main Content -->
-                <div class="col-md-12 col-xl-9 service-right-col">
-                    <div class="pbmit-heading-subheading mb-4">
-                        <h4 class="pbmit-subtitle text-muted">Service Detail</h4>
-                        <h2 class="pbmit-title">{{ $service->title }}</h2>
-                    </div>
-
-                    <div class="row g-4">
-                        <div class="col-md-12">
-                            @if ($service->secondary_image_url)
-                                <img src="{{ $service->secondary_image_url }}" class="img-fluid"
-                                    alt="{{ $service->title }}">
-                            @endif
-                        </div>
-
-                        <div class="col-md-12">
-                            <div class="pbmit-service-description mb-4">
-                                <h5 class="fw-bold">Description</h5>
-                                <p>{!! \Purifier::clean($service->description) !!}</p>
-                            </div>
-
-                            @if ($service->features)
-                                <div class="pbmit-service-features mb-4">
-                                    <h5>Key Features</h5>
-                                    <div>{!! \Purifier::clean($service->features) !!}</div>
-                                </div>
-                            @endif
-                            @if ($service->quote)
-                                <blockquote class="blockquote p-3 bg-light border-start border-primary border-4 rounded">
-                                    <p class="mb-0 fst-italic">"{{ $service->quote }}"</p>
-                                </blockquote>
-                            @endif
-                        </div>
-                    </div>
-                </div>
+@section('page')
+<section class="hz-section">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-3">
+                <nav class="hz-side-nav">
+                    @foreach ($relatedServices as $item)
+                        <a href="{{ route('services.show', $item->slug) }}" class="{{ $item->id === $service->id ? 'active' : '' }}">
+                            {{ $item->title }}
+                        </a>
+                    @endforeach
+                    <a href="{{ route('services.index') }}">All services</a>
+                </nav>
             </div>
-    </section>
+            <div class="col-lg-9">
+                @if ($service->secondary_image_url || $service->main_image_url)
+                    <img
+                        src="{{ $service->secondary_image_url ?: $service->main_image_url }}"
+                        class="w-100 border border-hz mb-4"
+                        alt="{{ $service->title }}"
+                    >
+                @endif
+
+                <div class="mb-4">
+                    <h2 class="h4 mb-3">Description</h2>
+                    <div>{!! \Purifier::clean($service->description) !!}</div>
+                </div>
+
+                @if ($service->features)
+                    <div class="mb-4">
+                        <h2 class="h4 mb-3">Key features</h2>
+                        <div>{!! \Purifier::clean($service->features) !!}</div>
+                    </div>
+                @endif
+
+                @if ($service->quote)
+                    <blockquote class="hz-quote">{{ $service->quote }}</blockquote>
+                @endif
+            </div>
+        </div>
+    </div>
+</section>
+
+<x-horizon.cta />
 @endsection
