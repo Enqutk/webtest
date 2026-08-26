@@ -8,6 +8,7 @@ use App\Models\ContentBlock;
 use App\Models\PageSection;
 use Filament\Forms;
 use Filament\Forms\Form;
+use App\Filament\Concerns\AuthorizesWithPermission;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -16,6 +17,9 @@ use Illuminate\Support\Str;
 
 class ContentBlockResource extends Resource
 {
+    use AuthorizesWithPermission;
+
+    protected static string $permissionKey = 'page';
     protected static ?string $model = ContentBlock::class;
     protected static ?string $navigationGroup = 'Content Management';
     protected static ?int $navigationSort = 3;
@@ -74,23 +78,36 @@ class ContentBlockResource extends Resource
                     ->schema([
                         // Show a repeater for "List" type to allow dynamic features with icon, title, and description
                         Forms\Components\Repeater::make('list_items')
-                            ->label('List Items')
-                            ->visible(fn(callable $get) => $get('type') === 'list')
+                            ->label('List items')
+                            ->visible(fn (callable $get) => $get('type') === 'list')
                             ->schema([
                                 Forms\Components\TextInput::make('title')
-                                    ->label('Title')
-                                    ->required()
-                                    ->maxLength(255),
+                                    ->label('Title (features)')
+                                    ->maxLength(255)
+                                    ->helperText('Used for feature cards (e.g. key-features).'),
+                                Forms\Components\TextInput::make('label')
+                                    ->label('Stat label')
+                                    ->maxLength(255)
+                                    ->helperText('Used for stats counters (e.g. “Projects delivered”).'),
+                                Forms\Components\TextInput::make('value')
+                                    ->label('Stat number')
+                                    ->numeric()
+                                    ->helperText('Animate-to value for the stats section.'),
+                                Forms\Components\TextInput::make('suffix')
+                                    ->label('Stat suffix')
+                                    ->placeholder('+')
+                                    ->maxLength(10),
                                 Forms\Components\TextInput::make('icon')
-                                    ->label('Icon (SVG or class)')
+                                    ->label('Icon class')
                                     ->maxLength(100)
-                                    ->helperText(' icon class '),
+                                    ->helperText('Bootstrap Icons class, e.g. bi bi-shield-check'),
                                 Forms\Components\Textarea::make('description')
                                     ->label('Description')
                                     ->maxLength(500)
                                     ->rows(2),
                             ])
                             ->minItems(1)
+                            ->columns(2)
                             ->columnSpanFull(),
 
                         Forms\Components\Tabs::make('Content Input')
