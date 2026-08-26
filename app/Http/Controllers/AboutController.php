@@ -12,11 +12,13 @@ class AboutController extends Controller
     public function index()
     {
         $team = Team::where('status', StatusEnum::active)
+            ->with('media')
             ->orderBy('order')
             ->get();
 
         $clients = Entity::where('status', StatusEnum::active)
             ->whereIn('type', [EntityTypeEnum::client, EntityTypeEnum::partner])
+            ->with('media')
             ->orderBy('order')
             ->get();
 
