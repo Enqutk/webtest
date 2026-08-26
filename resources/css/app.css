@@ -216,20 +216,32 @@ h1, h2, h3, h4, .display-font {
     min-height: calc(100vh - 72px);
     display: flex;
     align-items: center;
-    padding: 4rem 0;
+    padding: 3.5rem 0 4.5rem;
     background:
         radial-gradient(circle at 85% 20%, rgba(232, 93, 4, 0.12), transparent 40%),
         linear-gradient(180deg, #f7f6f3 0%, #efece6 100%);
     border-bottom: 1px solid var(--hz-line);
     overflow: hidden;
+    position: relative;
+}
+
+.hz-hero .carousel,
+.hz-hero .carousel-inner,
+.hz-hero .carousel-item {
+    width: 100%;
+}
+
+.hz-hero-slide {
+    min-height: calc(100vh - 140px);
+    padding: 1rem 0 2.5rem;
 }
 
 .hz-hero-brand {
     font-family: var(--font-display);
-    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-size: clamp(2.6rem, 6.5vw, 4.8rem);
     font-weight: 700;
     line-height: 0.95;
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.85rem;
     letter-spacing: -0.04em;
 }
 
@@ -237,8 +249,17 @@ h1, h2, h3, h4, .display-font {
     color: var(--hz-accent);
 }
 
+.hz-hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+    font-weight: 500;
+    color: var(--hz-ink);
+    margin-bottom: 1rem;
+    max-width: 28rem;
+}
+
 .hz-hero-copy {
-    font-size: 1.15rem;
+    font-size: 1.08rem;
     color: var(--hz-muted);
     max-width: 32rem;
     margin-bottom: 2rem;
@@ -261,6 +282,44 @@ h1, h2, h3, h4, .display-font {
     inset: 1.25rem -1.25rem -1.25rem 1.25rem;
     border: 1px solid var(--hz-accent);
     z-index: -1;
+}
+
+.hz-hero-indicators {
+    margin-bottom: 0.5rem;
+}
+
+.hz-hero-indicators [data-bs-target] {
+    width: 2rem;
+    height: 3px;
+    border: 0;
+    border-radius: 0;
+    background: rgba(18, 18, 18, 0.25);
+    opacity: 1;
+}
+
+.hz-hero-indicators .active {
+    background: var(--hz-accent);
+}
+
+.hz-hero-control {
+    width: 3rem;
+    opacity: 1;
+}
+
+.hz-hero-control-icon {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: var(--hz-surface);
+    border: 1px solid var(--hz-line);
+    color: var(--hz-ink);
+    font-size: 1.1rem;
+}
+
+.hz-hero-control:hover .hz-hero-control-icon {
+    border-color: var(--hz-accent);
+    color: var(--hz-accent);
 }
 
 /* Cards */
@@ -585,10 +644,19 @@ h1, h2, h3, h4, .display-font {
 @media (max-width: 991.98px) {
     .hz-hero {
         min-height: auto;
-        padding: 3rem 0;
+        padding: 2.5rem 0 3.5rem;
+    }
+
+    .hz-hero-slide {
+        min-height: auto;
+        padding: 0.5rem 0 2rem;
     }
 
     .hz-hero-media::after {
+        display: none;
+    }
+
+    .hz-hero-control {
         display: none;
     }
 
