@@ -2,32 +2,38 @@
 
 namespace App\Providers;
 
+use App\Models\MenuItem;
+use App\Models\MenuLocation;
+use App\Observers\MenuCacheObserver;
+use App\Services\HomeContentService;
+use App\Services\NavigationService;
+use App\MediaLibrary\ModelNamePathGenerator;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Spatie\MediaLibrary\Support\PathGenerator\PathGenerator;
-use App\MediaLibrary\ModelNamePathGenerator;
-use App\Services\HomeContentService;
-use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-        // Register custom path generator globally for Spatie Media Library
         app()->bind(PathGenerator::class, function () {
             return new ModelNamePathGenerator();
         });
 
+        MenuItem::observe(MenuCacheObserver::class);
+        MenuLocation::observe(MenuCacheObserver::class);
+
+        RateLimiter::for('contact', function (Request $request) {
+            return Limit::perMinute(5)->by($request->ip());
+        });
 
         View::composer([
             'index',
@@ -37,11 +43,14 @@ class AppServiceProvider extends ServiceProvider
             'services.show',
             'portfolio.index',
             'portfolio.show',
+            'pages.show',
+            'layouts.horizon.header',
             'layouts.horizon.footer',
             'layouts.app',
         ], function ($view) {
             $data = app(HomeContentService::class)->getHomeContent();
-            $view->with(compact('data'));
+            $navItems = app(NavigationService::class)->navbarItems();
+            $view->with(compact('data', 'navItems'));
         });
     }
 }
