@@ -57,6 +57,34 @@ class EntitySeeder extends Seeder
                 'description' => 'Delivery partner',
                 'order' => 11,
             ],
+            [
+                'name' => 'State Housing Corporation',
+                'type' => EntityTypeEnum::client,
+                'category' => null,
+                'description' => 'Residential infrastructure programmes',
+                'order' => 12,
+            ],
+            [
+                'name' => 'Regional Development Fund',
+                'type' => EntityTypeEnum::partner,
+                'category' => null,
+                'description' => 'Programme financing partner',
+                'order' => 13,
+            ],
+            [
+                'name' => 'Municipal Works Department',
+                'type' => EntityTypeEnum::client,
+                'category' => null,
+                'description' => 'Urban sanitation upgrades',
+                'order' => 14,
+            ],
+            [
+                'name' => 'AgriWater Cooperative',
+                'type' => EntityTypeEnum::client,
+                'category' => null,
+                'description' => 'Irrigation network client',
+                'order' => 15,
+            ],
         ];
 
         foreach ($items as $item) {
