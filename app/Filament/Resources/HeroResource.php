@@ -6,6 +6,7 @@ use App\Filament\Resources\HeroResource\Pages;
 use App\Models\Hero;
 use Filament\Forms;
 use Filament\Forms\Form;
+use App\Filament\Concerns\AuthorizesWithPermission;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -17,6 +18,9 @@ use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 
 class HeroResource extends Resource
 {
+    use AuthorizesWithPermission;
+
+    protected static string $permissionKey = 'hero';
     protected static ?string $model = Hero::class;
     protected static ?string $navigationGroup = 'Website';
     protected static ?int $navigationSort = 1;
