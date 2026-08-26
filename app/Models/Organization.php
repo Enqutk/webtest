@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Organization extends Model
+class Organization extends Model implements HasMedia
 {
+    use InteractsWithMedia;
+
     protected $fillable = [
         'title',
         'tagline',
@@ -23,6 +27,31 @@ class Organization extends Model
         'opening_hours' => 'array',
         'theme' => 'array',
     ];
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('logo')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml']);
+
+        $this->addMediaCollection('favicon')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/png', 'image/x-icon', 'image/vnd.microsoft.icon', 'image/jpeg', 'image/webp', 'image/svg+xml']);
+    }
+
+    public function getLogoUrlAttribute(): ?string
+    {
+        $url = $this->getFirstMediaUrl('logo');
+
+        return $url !== '' ? $url : null;
+    }
+
+    public function getFaviconUrlAttribute(): ?string
+    {
+        $url = $this->getFirstMediaUrl('favicon');
+
+        return $url !== '' ? $url : null;
+    }
 
     public static function defaultTheme(): array
     {

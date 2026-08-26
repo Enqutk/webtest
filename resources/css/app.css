@@ -137,6 +137,33 @@ h1, h2, h3, h4, .display-font {
     margin: 0;
 }
 
+.hz-brand .hz-brand-mark,
+.hz-brand-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.hz-brand-logo {
+    display: block;
+    height: 2.25rem;
+    width: auto;
+    max-width: 10rem;
+    object-fit: contain;
+}
+
+.hz-footer-brand .hz-brand-logo {
+    height: 2.5rem;
+    max-width: 12rem;
+    filter: brightness(0) invert(1);
+}
+
+.hz-hero-brand .hz-brand-logo {
+    height: clamp(2.5rem, 6vw, 3.5rem);
+    max-width: 14rem;
+    margin-bottom: 0.5rem;
+}
+
 .hz-brand span {
     color: var(--hz-accent);
 }

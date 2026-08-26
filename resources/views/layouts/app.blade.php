@@ -7,7 +7,7 @@
     <title>@yield('title', 'Home') | {{ $data['siteName'] ?? config('app.name') }}</title>
     <meta name="description" content="@yield('description', $data['metaDescription'] ?? ($data['siteName'] ?? config('app.name')))">
     <meta name="robots" content="{{ config('app.env') === 'production' ? 'index, follow' : 'noindex, nofollow' }}">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/fevicon.png') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ $data['faviconUrl'] ?? $data['logoUrl'] ?? asset('images/fevicon.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @php
         $theme = $data['theme'] ?? \App\Models\Organization::defaultTheme();

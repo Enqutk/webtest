@@ -12,9 +12,7 @@ class HomeContentService
 {
     public function getHomeContent(): array
     {
-        $organization = Organization::query()
-            ->select(['title', 'tagline', 'meta_description', 'theme', 'address', 'opening_hours', 'map_url'])
-            ->first();
+        $organization = Organization::query()->with('media')->first();
 
         $contacts = OrganizationContact::where('status', StatusEnum::active)
             ->select(['type', 'value'])
@@ -68,6 +66,8 @@ class HomeContentService
             'tagline' => $tagline,
             'metaDescription' => $metaDescription,
             'theme' => $theme,
+            'logoUrl' => $organization?->logo_url,
+            'faviconUrl' => $organization?->favicon_url,
 
             'email' => $contacts->get('email', collect())->pluck('value')->all(),
             'phone' => $contacts->get('phone', collect())->pluck('value')->all(),

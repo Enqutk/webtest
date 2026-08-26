@@ -6,9 +6,7 @@
 @section('description', $service->short_description)
 
 @php
-    $heroImage = $service->secondary_image_url
-        ?: $service->main_image_url
-        ?: asset('assets/images/banner-slider-img/slider2-04.jpg');
+    $heroImage = $service->secondary_image_url ?: $service->main_image_url;
 @endphp
 
 @section('page')
@@ -34,9 +32,11 @@
             </div>
 
             <div class="col-lg-9">
-                <div class="hz-service-hero mb-4">
-                    <img src="{{ $heroImage }}" alt="{{ $service->title }}">
-                </div>
+                @if($heroImage)
+                    <div class="hz-service-hero mb-4">
+                        <img src="{{ $heroImage }}" alt="{{ $service->title }}">
+                    </div>
+                @endif
 
                 @if($service->short_description)
                     <p class="hz-lead mb-4">{{ $service->short_description }}</p>

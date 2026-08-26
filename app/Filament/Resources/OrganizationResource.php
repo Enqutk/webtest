@@ -9,6 +9,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use App\Filament\Concerns\AuthorizesWithPermission;
 use Filament\Resources\Resource;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
 class OrganizationResource extends Resource
 {
@@ -44,6 +45,22 @@ class OrganizationResource extends Resource
                     ->helperText('Used as the site-wide meta description when a page does not set its own.')
                     ->rows(2)
                     ->maxLength(500),
+                Forms\Components\Section::make('Brand images')
+                    ->description('Upload once — used across the public site. Hero, services, projects, and team images are managed on their own resources.')
+                    ->schema([
+                        SpatieMediaLibraryFileUpload::make('logo')
+                            ->label('Logo')
+                            ->collection('logo')
+                            ->image()
+                            ->imageEditor()
+                            ->helperText('Shown in the header and footer. PNG or SVG with transparent background works best.'),
+                        SpatieMediaLibraryFileUpload::make('favicon')
+                            ->label('Favicon')
+                            ->collection('favicon')
+                            ->image()
+                            ->helperText('Browser tab icon (PNG/ICO, square).'),
+                    ])
+                    ->columns(2),
                 Forms\Components\Section::make('Brand colors')
                     ->description('These override the public site theme. Leave blank to keep defaults. Change and save, then hard-refresh the site.')
                     ->schema([

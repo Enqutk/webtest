@@ -62,8 +62,10 @@ class Entity extends Model implements HasMedia
             });
     }
 
-    public function getImageUrlAttribute(): string
+    public function getImageUrlAttribute(): ?string
     {
-        return $this->getFirstMediaUrl('image') ?: asset('assets/images/homepage-2/img-01.jpg');
+        $url = $this->getFirstMediaUrl('image');
+
+        return $url !== '' ? $url : null;
     }
 }

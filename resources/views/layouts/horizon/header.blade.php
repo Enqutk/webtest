@@ -7,7 +7,7 @@
     <nav class="navbar navbar-expand-lg hz-navbar" aria-label="Primary">
         <div class="container hz-navbar-inner">
             <a class="navbar-brand hz-brand" href="{{ route('home') }}">
-                <x-site-brand :name="$siteName" />
+                <x-site-brand :name="$siteName" :logo="$data['logoUrl'] ?? null" :show-text="empty($data['logoUrl'] ?? null)" />
             </a>
 
             <button

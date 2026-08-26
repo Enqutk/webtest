@@ -9,7 +9,7 @@
         <div class="row g-4">
             <div class="col-lg-5">
                 <div class="hz-footer-brand">
-                    <x-site-brand :name="$siteName" />
+                    <x-site-brand :name="$siteName" :logo="$data['logoUrl'] ?? null" :show-text="empty($data['logoUrl'] ?? null)" />
                 </div>
                 @if($tagline)
                     <p class="mb-3">{{ $tagline }}</p>

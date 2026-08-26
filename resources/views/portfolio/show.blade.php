@@ -6,8 +6,7 @@
 @section('description', \Illuminate\Support\Str::limit(strip_tags((string) $entity->description), 160))
 
 @php
-    $image = $entity->getFirstMediaUrl('image')
-        ?: asset('assets/images/banner-slider-img/slider2-04.jpg');
+    $image = $entity->getFirstMediaUrl('image') ?: null;
 @endphp
 
 @section('page')
@@ -15,9 +14,11 @@
     <div class="container">
         <div class="row g-4 g-xl-5">
             <div class="col-lg-7">
-                <div class="hz-project-detail-media">
-                    <img src="{{ $image }}" alt="{{ $entity->name }}">
-                </div>
+                @if($image)
+                    <div class="hz-project-detail-media">
+                        <img src="{{ $image }}" alt="{{ $entity->name }}">
+                    </div>
+                @endif
             </div>
             <div class="col-lg-5">
                 @if($entity->category)
@@ -52,15 +53,16 @@
                     </div>
                 </div>
                 <div class="row g-4">
-                    @foreach($related as $index => $project)
+                    @foreach($related as $project)
                         @php
-                            $relatedImage = $project->getFirstMediaUrl('image')
-                                ?: asset('assets/images/banner-slider-img/slider3-04.jpg');
+                            $relatedImage = $project->getFirstMediaUrl('image') ?: null;
                         @endphp
                         <div class="col-md-4">
                             <article class="hz-project-card">
                                 <a href="{{ route('portfolio.show', $project) }}" class="hz-project-card-media">
-                                    <img src="{{ $relatedImage }}" alt="{{ $project->name }}">
+                                    @if($relatedImage)
+                                        <img src="{{ $relatedImage }}" alt="{{ $project->name }}">
+                                    @endif
                                     @if($project->category)
                                         <span class="hz-project-card-tag">{{ $project->category }}</span>
                                     @endif
