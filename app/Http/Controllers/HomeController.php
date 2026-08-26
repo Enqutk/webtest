@@ -22,16 +22,19 @@ class HomeController extends Controller
 
         $projects = Entity::where('status', StatusEnum::active)
             ->where('type', EntityTypeEnum::project)
+            ->with('media')
             ->orderBy('order')
             ->take(6)
             ->get();
 
         $clients = Entity::where('status', StatusEnum::active)
             ->whereIn('type', [EntityTypeEnum::client, EntityTypeEnum::partner])
+            ->with('media')
             ->orderBy('order')
             ->get();
 
         $team = Team::where('status', StatusEnum::active)
+            ->with('media')
             ->orderBy('order')
             ->take(4)
             ->get();
