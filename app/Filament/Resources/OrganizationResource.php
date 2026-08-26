@@ -7,10 +7,14 @@ use App\Filament\Resources\OrganizationResource\Pages;
 use App\Models\Organization;
 use Filament\Forms;
 use Filament\Forms\Form;
+use App\Filament\Concerns\AuthorizesWithPermission;
 use Filament\Resources\Resource;
 
 class OrganizationResource extends Resource
 {
+    use AuthorizesWithPermission;
+
+    protected static string $permissionKey = 'organization';
     protected static ?string $model = Organization::class;
     protected static ?string $navigationGroup = 'Setting';
     protected static ?int $navigationSort = 3;
