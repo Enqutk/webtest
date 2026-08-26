@@ -7,6 +7,7 @@ use App\Filament\Resources\MenuLocationResource\Pages;
 use App\Models\MenuLocation;
 use Filament\Forms;
 use Filament\Forms\Form;
+use App\Filament\Concerns\AuthorizesWithPermission;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -14,6 +15,9 @@ use Illuminate\Support\Str;
 
 class MenuLocationResource extends Resource
 {
+    use AuthorizesWithPermission;
+
+    protected static string $permissionKey = 'menu';
     protected static ?string $model = MenuLocation::class;
     protected static ?string $navigationGroup = 'Menus';
     protected static ?int $navigationSort = 1;
