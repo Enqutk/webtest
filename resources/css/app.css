@@ -492,6 +492,77 @@ h1, h2, h3, h4, .display-font {
     gap: 0.35rem;
 }
 
+/* About / Who we are */
+.hz-about-media {
+    position: relative;
+}
+
+.hz-about-media img {
+    width: 100%;
+    height: clamp(280px, 52vh, 520px);
+    object-fit: cover;
+    border: 1px solid var(--hz-line);
+}
+
+.hz-about-media::after {
+    content: '';
+    position: absolute;
+    inset: auto -1rem -1rem auto;
+    width: 42%;
+    height: 42%;
+    border: 1px solid var(--hz-accent);
+    z-index: -1;
+}
+
+.hz-about-title {
+    max-width: 18ch;
+}
+
+.hz-about-copy p {
+    margin-bottom: 0.85rem;
+}
+
+.hz-about-copy p:last-child {
+    margin-bottom: 0;
+}
+
+.hz-about-feature {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    height: 100%;
+    padding: 0.85rem;
+    border: 1px solid var(--hz-line);
+    background: var(--hz-surface);
+}
+
+.hz-about-feature p {
+    color: var(--hz-muted);
+}
+
+.hz-about-panel {
+    height: 100%;
+    background: var(--hz-bg);
+    border: 1px solid var(--hz-line);
+}
+
+.hz-about-panel-media img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    border-bottom: 1px solid var(--hz-line);
+}
+
+.hz-about-panel-body {
+    padding: 1.5rem;
+}
+
+@media (max-width: 991.98px) {
+    .hz-about-media::after {
+        display: none;
+    }
+}
+
 /* Stats */
 .hz-stat {
     text-align: center;
