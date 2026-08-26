@@ -13,16 +13,17 @@ class AboutContentSeeder extends Seeder
     {
         $userId = User::query()->value('id');
         $sectionId = PageSection::query()->value('id');
+        $base = public_path('assets/images/majiworks');
 
         $about = ContentBlock::query()->updateOrCreate(
             ['slug' => 'veritas-afrika-co-ltd'],
             [
                 'section_id' => ContentBlock::query()->where('slug', 'veritas-afrika-co-ltd')->value('section_id') ?? $sectionId,
                 'type' => 'image',
-                'title' => 'Built for lasting infrastructure',
+                'title' => 'Water expertise for living landscapes',
                 'subtitle' => 'Who we are',
                 'short_description' => '',
-                'content' => '<p>Veritas Afrika is a multi-disciplinary consultancy of professional engineers and advisors. We support government, NGO, and private-sector clients with civil engineering and water infrastructure — from early planning through design and construction supervision.</p>',
+                'content' => '<p>MajiWorks is a Nairobi-based consultancy for climate-smart irrigation, rural WASH, flood resilience, and water-resource GIS. We work with counties, cooperatives, NGOs, and utilities to turn field data into schemes that communities can operate for years.</p>',
                 'display_order' => 2,
                 'is_active' => true,
                 'created_by' => $userId,
@@ -30,34 +31,34 @@ class AboutContentSeeder extends Seeder
             ]
         );
 
-        $this->attachImage($about, public_path('assets/images/homepage-2/about-img-01.png'));
+        $this->replaceImage($about, $base.'/maji-about-field.png');
 
         ContentBlock::query()->updateOrCreate(
             ['slug' => 'key-features'],
             [
                 'section_id' => ContentBlock::query()->where('slug', 'key-features')->value('section_id') ?? $sectionId,
                 'type' => 'list',
-                'title' => 'Key Features',
+                'title' => 'How we work',
                 'list_items' => [
                     [
-                        'title' => 'Professional practice',
-                        'icon' => 'bi bi-shield-check',
-                        'description' => 'Experienced engineers and advisors recognized for practical delivery.',
+                        'title' => 'Field-first design',
+                        'icon' => 'bi bi-compass',
+                        'description' => 'Hydrology, soils, and community routines drive every drawing — not desk assumptions.',
                     ],
                     [
-                        'title' => 'Client-first delivery',
+                        'title' => 'Buildable packages',
+                        'icon' => 'bi bi-hammer',
+                        'description' => 'Specs that local contractors can price, build, and maintain with available spare parts.',
+                    ],
+                    [
+                        'title' => 'Climate-aware',
+                        'icon' => 'bi bi-cloud-sun',
+                        'description' => 'Drought, flood, and energy constraints are designed in from the first concept note.',
+                    ],
+                    [
+                        'title' => 'After the ribbon',
                         'icon' => 'bi bi-people',
-                        'description' => 'Clear communication, scoped solutions, and accountable milestones.',
-                    ],
-                    [
-                        'title' => 'Regional impact',
-                        'icon' => 'bi bi-globe-europe-africa',
-                        'description' => 'Infrastructure designed for local conditions and long-term use.',
-                    ],
-                    [
-                        'title' => 'End-to-end support',
-                        'icon' => 'bi bi-diagram-3',
-                        'description' => 'From studies and design to supervision on site.',
+                        'description' => 'Governance coaching and O&amp;M tools so schemes keep running past the grant cycle.',
                     ],
                 ],
                 'display_order' => 1,
@@ -74,14 +75,14 @@ class AboutContentSeeder extends Seeder
                 'type' => 'image',
                 'title' => 'Our practice',
                 'subtitle' => 'About Us',
-                'content' => '<p>We specialize in civil works with a strong focus on water and sanitation systems — pressurized networks, bulk supply, treatment plants, and open-channel sewer design. Our team pairs technical depth with project management discipline.</p>',
+                'content' => '<p>Our team blends hydrogeology, irrigation agronomy, WASH engineering, GIS, and community governance. We specialise in schemes that stretch scarce water further — solar pumping, drip networks, wetlands, and drainage that respects rivers.</p>',
                 'display_order' => 6,
                 'is_active' => true,
                 'created_by' => $userId,
                 'updated_by' => $userId,
             ]
         );
-        $this->attachImage($practice, public_path('assets/images/homepage-2/about-img-01.png'));
+        $this->replaceImage($practice, $base.'/maji-service-irrigation.png');
 
         $approach = ContentBlock::query()->updateOrCreate(
             ['slug' => 'about-section-2'],
@@ -90,22 +91,23 @@ class AboutContentSeeder extends Seeder
                 'type' => 'image',
                 'title' => 'Our approach',
                 'subtitle' => 'About Us',
-                'content' => '<p>Every engagement starts with listening. We translate complex briefs into buildable designs, stay present through supervision, and measure success by systems that communities can rely on for years.</p>',
+                'content' => '<p>Every engagement starts with listening — to farmers, operators, and county staff. We map what exists, sketch options people can afford, supervise construction carefully, and leave behind roles and tools that keep water flowing.</p>',
                 'display_order' => 7,
                 'is_active' => true,
                 'created_by' => $userId,
                 'updated_by' => $userId,
             ]
         );
-        $this->attachImage($approach, public_path('assets/images/banner-slider-img/slider3-04.jpg'));
+        $this->replaceImage($approach, $base.'/maji-service-governance.png');
     }
 
-    private function attachImage(ContentBlock $block, string $path): void
+    private function replaceImage(ContentBlock $block, string $path): void
     {
-        if (! is_file($path) || $block->getFirstMedia('images')) {
+        if (! is_file($path)) {
             return;
         }
 
+        $block->clearMediaCollection('images');
         $block->addMedia($path)
             ->preservingOriginal()
             ->toMediaCollection('images');

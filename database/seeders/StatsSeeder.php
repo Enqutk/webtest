@@ -14,7 +14,7 @@ class StatsSeeder extends Seeder
         $userId = User::query()->value('id');
         $sectionId = PageSection::query()->value('id');
 
-        if (!$sectionId) {
+        if (! $sectionId) {
             return;
         }
 
@@ -23,13 +23,13 @@ class StatsSeeder extends Seeder
             [
                 'section_id' => $sectionId,
                 'type' => 'list',
-                'title' => 'Impact Stats',
+                'title' => 'Impact that compounds',
                 'subtitle' => 'By the numbers',
                 'list_items' => [
-                    ['label' => 'Projects delivered', 'value' => 48, 'suffix' => '+'],
-                    ['label' => 'Years of practice', 'value' => 12, 'suffix' => '+'],
-                    ['label' => 'Specialists', 'value' => 25, 'suffix' => '+'],
-                    ['label' => 'Partner agencies', 'value' => 18, 'suffix' => '+'],
+                    ['label' => 'Schemes designed', 'value' => 62, 'suffix' => '+'],
+                    ['label' => 'Years in practice', 'value' => 9, 'suffix' => '+'],
+                    ['label' => 'Specialists', 'value' => 18, 'suffix' => '+'],
+                    ['label' => 'Counties & partners', 'value' => 22, 'suffix' => '+'],
                 ],
                 'display_order' => 8,
                 'is_active' => true,

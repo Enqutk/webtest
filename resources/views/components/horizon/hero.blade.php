@@ -10,10 +10,10 @@
         <div class="container">
             <div class="row align-items-center g-5 hz-hero-slide">
                 <div class="col-lg-6">
-                    <p class="hz-eyebrow">Consultancy · Infrastructure · Africa</p>
-                    <h1 class="hz-hero-brand">Veritas <span>Afrika</span></h1>
+                    <p class="hz-eyebrow">Irrigation · WASH · Resilience</p>
+                    <h1 class="hz-hero-brand">Maji <span>Works</span></h1>
                     <p class="hz-hero-copy">
-                        Multi-disciplinary consultancy delivering civil engineering and infrastructure expertise with clarity, craft, and conviction.
+                        Climate-smart irrigation, rural water, and drainage schemes designed for East African communities.
                     </p>
                     <div class="d-flex flex-wrap gap-3">
                         <a href="{{ route('services.index') }}" class="btn-hz">
@@ -24,7 +24,7 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="hz-hero-media">
-                        <img src="{{ asset('assets/images/banner-slider-img/slider2-04.jpg') }}" alt="Veritas Afrika">
+                        <img src="{{ asset('assets/images/majiworks/maji-hero-irrigation.png') }}" alt="MajiWorks">
                     </div>
                 </div>
             </div>
@@ -61,9 +61,9 @@
                                     @endif
 
                                     @if($index === 0)
-                                        <h1 class="hz-hero-brand">Veritas <span>Afrika</span></h1>
+                                        <h1 class="hz-hero-brand">Maji <span>Works</span></h1>
                                     @else
-                                        <p class="hz-hero-brand">Veritas <span>Afrika</span></p>
+                                        <p class="hz-hero-brand">Maji <span>Works</span></p>
                                     @endif
 
                                     <h2 class="hz-hero-title">{{ $hero->title }}</h2>
@@ -83,7 +83,7 @@
                                 <div class="col-lg-6">
                                     <div class="hz-hero-media">
                                         <img
-                                            src="{{ $hero->image_url ?: asset('assets/images/banner-slider-img/slider2-04.jpg') }}"
+                                            src="{{ $hero->image_url ?: asset('assets/images/majiworks/maji-hero-irrigation.png') }}"
                                             alt="{{ $hero->title }}"
                                         >
                                     </div>

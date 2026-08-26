@@ -3,35 +3,9 @@
 @section('title', 'Our Services')
 @section('eyebrow', 'What we do')
 @section('page_title', 'Our Services')
-@section('description', 'Comprehensive water infrastructure and civil engineering services from Veritas Afrika.')
+@section('description', 'Irrigation, WASH, drainage, GIS, solar pumping, and governance services from MajiWorks.')
 
 @section('page')
-<section class="hz-section">
-    <div class="container">
-        <div class="row g-4">
-            @forelse($services as $service)
-                <div class="col-md-6 col-lg-4">
-                    <article class="hz-card">
-                        <div class="hz-card-media">
-                            <img src="{{ $service->main_image_url ?: asset('assets/images/service/service-img-01.jpg') }}" alt="{{ $service->title }}">
-                        </div>
-                        <div class="hz-card-body">
-                            <h3>{{ $service->title }}</h3>
-                            <p>{{ $service->short_description }}</p>
-                            <a href="{{ route('services.show', $service->slug) }}" class="hz-link">
-                                Learn more <i class="bi bi-arrow-right"></i>
-                            </a>
-                        </div>
-                    </article>
-                </div>
-            @empty
-                <div class="col-12">
-                    <p class="text-muted">No services published yet.</p>
-                </div>
-            @endforelse
-        </div>
-    </div>
-</section>
-
-<x-horizon.cta />
+    <x-horizon.services :services="$services" :show-header="false" />
+    <x-horizon.cta />
 @endsection

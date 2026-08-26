@@ -2,8 +2,8 @@
 
 @section('title', 'About Us')
 @section('eyebrow', 'Who we are')
-@section('page_title', 'About Veritas Afrika')
-@section('description', 'A multi-disciplinary consultancy providing expert professional services in civil engineering and infrastructure development.')
+@section('page_title', 'About MajiWorks')
+@section('description', 'Nairobi-based consultancy for climate-smart irrigation, rural WASH, flood resilience, and water-resource GIS.')
 
 @section('page')
     <x-horizon.about
@@ -59,8 +59,12 @@
         </section>
     @endif
 
-    <x-horizon.stats :stats="$data['stats']" />
-    <x-horizon.team :team="$team" />
+    <x-horizon.stats
+        :stats="$data['stats']"
+        :title="$data['statsTitle']"
+        :subtitle="$data['statsSubtitle']"
+    />
+    <x-horizon.team :team="$team" :show-bios="true" />
     <x-horizon.clients :clients="$clients" />
     <x-horizon.cta />
 @endsection

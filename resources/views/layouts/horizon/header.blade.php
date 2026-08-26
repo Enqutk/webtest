@@ -1,19 +1,12 @@
 @php
-    $current = request()->route()?->getName() ?? '';
-    $links = [
-        ['label' => 'Home', 'route' => 'home', 'active' => $current === 'home'],
-        ['label' => 'About', 'route' => 'about', 'active' => $current === 'about'],
-        ['label' => 'Services', 'route' => 'services.index', 'active' => str_starts_with($current, 'services.')],
-        ['label' => 'Portfolio', 'route' => 'portfolio.index', 'active' => str_starts_with($current, 'portfolio.')],
-        ['label' => 'Contact', 'route' => 'contact', 'active' => $current === 'contact'],
-    ];
+    $navItems = $navItems ?? collect();
 @endphp
 
 <header class="hz-header" data-hz-header>
     <nav class="navbar navbar-expand-lg hz-navbar" aria-label="Primary">
         <div class="container hz-navbar-inner">
             <a class="navbar-brand hz-brand" href="{{ route('home') }}">
-                Veritas <span>Afrika</span>
+                Maji <span>Works</span>
             </a>
 
             <button
@@ -32,16 +25,50 @@
 
             <div class="collapse navbar-collapse hz-nav-collapse" id="hzMainNav">
                 <ul class="navbar-nav ms-auto align-items-lg-center hz-nav">
-                    @foreach ($links as $link)
-                        <li class="nav-item">
-                            <a
-                                class="nav-link {{ $link['active'] ? 'active' : '' }}"
-                                href="{{ route($link['route']) }}"
-                                @if($link['active']) aria-current="page" @endif
-                            >
-                                {{ $link['label'] }}
-                            </a>
-                        </li>
+                    @foreach ($navItems as $link)
+                        @if(!empty($link['children']))
+                            <li class="nav-item dropdown">
+                                <a
+                                    class="nav-link dropdown-toggle {{ !empty($link['active']) || collect($link['children'])->contains(fn ($c) => !empty($c['active'])) ? 'active' : '' }}"
+                                    href="{{ $link['url'] }}"
+                                    id="nav-{{ \Illuminate\Support\Str::slug($link['label']) }}"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    {{ $link['label'] }}
+                                </a>
+                                <ul class="dropdown-menu hz-dropdown" aria-labelledby="nav-{{ \Illuminate\Support\Str::slug($link['label']) }}">
+                                    <li>
+                                        <a class="dropdown-item {{ !empty($link['active']) ? 'active' : '' }}" href="{{ $link['url'] }}">
+                                            Overview
+                                        </a>
+                                    </li>
+                                    @foreach ($link['children'] as $child)
+                                        <li>
+                                            <a
+                                                class="dropdown-item {{ !empty($child['active']) ? 'active' : '' }}"
+                                                href="{{ $child['url'] }}"
+                                                target="{{ $child['target'] ?? '_self' }}"
+                                            >
+                                                {{ $child['label'] }}
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </li>
+                        @else
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link {{ !empty($link['active']) ? 'active' : '' }}"
+                                    href="{{ $link['url'] }}"
+                                    target="{{ $link['target'] ?? '_self' }}"
+                                    @if(!empty($link['active'])) aria-current="page" @endif
+                                >
+                                    {{ $link['label'] }}
+                                </a>
+                            </li>
+                        @endif
                     @endforeach
                     <li class="nav-item hz-nav-cta">
                         <a class="btn-hz btn-hz-sm" href="{{ route('contact') }}">Get in touch</a>

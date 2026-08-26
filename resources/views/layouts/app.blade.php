@@ -4,8 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Home') | Veritas Afrika</title>
-    <meta name="description" content="@yield('description', 'Veritas Afrika — professional consultancy for civil engineering and infrastructure development.')">
+    <title>@yield('title', 'Home') | MajiWorks</title>
+    <meta name="description" content="@yield('description', 'MajiWorks — climate-smart irrigation, rural WASH, and water resilience consultancy.')">
+    <meta name="robots" content="{{ config('app.env') === 'production' ? 'index, follow' : 'noindex, nofollow' }}">
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/fevicon.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')

@@ -1,29 +1,52 @@
-@props(['services' => collect()])
+@props([
+    'services' => collect(),
+    'limit' => null,
+    'showHeader' => true,
+])
 
-<section class="hz-section bg-surface border-top border-bottom border-hz" id="services">
+@php
+    $items = $limit ? $services->take($limit) : $services;
+    $fallbacks = [
+        'assets/images/banner-slider-img/slider2-04.jpg',
+        'assets/images/banner-slider-img/slider3-04.jpg',
+        'assets/images/homepage-2/about-img-01.png',
+        'assets/images/banner-slider-img/slider-07.png',
+    ];
+@endphp
+
+<section class="hz-section hz-services bg-surface border-top border-bottom border-hz" id="services">
     <div class="container">
-        <div class="row justify-content-between align-items-end mb-4 g-3">
-            <div class="col-lg-7">
-                <div class="hz-eyebrow">What we do</div>
-                <h2 class="hz-title mb-0">Services shaped around real infrastructure needs</h2>
+        @if($showHeader)
+            <div class="row justify-content-between align-items-end mb-4 g-3">
+                <div class="col-lg-7">
+                    <p class="hz-eyebrow">What we do</p>
+                    <h2 class="hz-title mb-0">Services shaped around real water challenges</h2>
+                </div>
+                <div class="col-lg-auto">
+                    <a href="{{ route('services.index') }}" class="btn-hz-outline">All services</a>
+                </div>
             </div>
-            <div class="col-lg-auto">
-                <a href="{{ route('services.index') }}" class="btn-hz-outline">All services</a>
-            </div>
-        </div>
+        @endif
 
         <div class="row g-4">
-            @forelse($services as $service)
+            @forelse($items as $index => $service)
+                @php
+                    $image = $service->main_image_url
+                        ?: asset($fallbacks[$index % count($fallbacks)]);
+                @endphp
                 <div class="col-md-6 col-lg-4">
-                    <article class="hz-card">
-                        <div class="hz-card-media">
-                            <img src="{{ $service->main_image_url ?: asset('assets/images/service/service-img-01.jpg') }}" alt="{{ $service->title }}">
-                        </div>
-                        <div class="hz-card-body">
-                            <h3>{{ $service->title }}</h3>
+                    <article class="hz-service-card">
+                        <a href="{{ route('services.show', $service->slug) }}" class="hz-service-card-media">
+                            <img src="{{ $image }}" alt="{{ $service->title }}">
+                            <span class="hz-service-card-index">{{ str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }}</span>
+                        </a>
+                        <div class="hz-service-card-body">
+                            <h3>
+                                <a href="{{ route('services.show', $service->slug) }}">{{ $service->title }}</a>
+                            </h3>
                             <p>{{ $service->short_description }}</p>
                             <a href="{{ route('services.show', $service->slug) }}" class="hz-link">
-                                Read more <i class="bi bi-arrow-right"></i>
+                                Learn more <i class="bi bi-arrow-right"></i>
                             </a>
                         </div>
                     </article>

@@ -61,7 +61,7 @@
 					<div class="col-md-6">
 						<div class="pbmit-footer-copyright-text-area">
 							<div class="copyright-text">
-								<a href=".">Veritas Afrika</a><span class="fw-bold"> © 2025</span>. All Right Reserved
+								<a href=".">MajiWorks</a><span class="fw-bold"> © {{ date('Y') }}</span>. All Right Reserved
 								Developed By <a href="https://tetercreatives.com" target="_blank">Teter PLC</a>
 							</div>
 						</div>

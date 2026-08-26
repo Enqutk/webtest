@@ -2,8 +2,8 @@
     <div class="container">
         <div class="row g-4">
             <div class="col-lg-5">
-                <div class="hz-footer-brand">Veritas <span>Afrika</span></div>
-                <p class="mb-3">Multi-disciplinary consultancy delivering civil engineering and infrastructure expertise across Africa.</p>
+                <div class="hz-footer-brand">Maji <span>Works</span></div>
+                <p class="mb-3">Climate-smart irrigation, rural WASH, flood resilience, and water-resource GIS across East Africa.</p>
                 <div class="hz-social">
                     <x-social-media />
                 </div>
@@ -39,7 +39,7 @@
         </div>
 
         <div class="hz-footer-bottom d-flex flex-column flex-md-row justify-content-between gap-2">
-            <div>&copy; {{ date('Y') }} Veritas Afrika. All rights reserved.</div>
+            <div>&copy; {{ date('Y') }} MajiWorks. All rights reserved.</div>
             <div>Developed by <a href="https://tetercreatives.com" target="_blank" rel="noopener">Teter PLC</a></div>
         </div>
     </div>

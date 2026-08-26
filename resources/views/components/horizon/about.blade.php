@@ -8,7 +8,7 @@
 @php
     $image = $about['image'] ?: asset('assets/images/homepage-2/about-img-01.png');
     $eyebrow = $about['subtitle'] ?: 'Who we are';
-    $title = $about['title'] ?: 'Veritas Afrika';
+    $title = $about['title'] ?: 'MajiWorks';
     $featureItems = collect($features?->list_items ?? [])->take(4);
 @endphp
 

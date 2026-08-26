@@ -106,7 +106,7 @@
         </div>
 
         <div class="company-info">
-            <strong>Veritas Afrika</strong><br>
+            <strong>MajiWorks</strong><br>
             Water Infrastructure & Civil Engineering Services<br>
             <small>This email was sent from your website contact form</small>
         </div>
