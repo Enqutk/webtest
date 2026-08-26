@@ -6,12 +6,16 @@ use App\Filament\Resources\MenuItemResource\Pages;
 use App\Models\MenuItem;
 use Filament\Forms;
 use Filament\Forms\Form;
+use App\Filament\Concerns\AuthorizesWithPermission;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
 class MenuItemResource extends Resource
 {
+    use AuthorizesWithPermission;
+
+    protected static string $permissionKey = 'menu';
     protected static ?string $model = MenuItem::class;
     protected static ?string $navigationGroup = 'Menus';
     protected static ?int $navigationSort = 2;
