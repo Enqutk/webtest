@@ -12,6 +12,7 @@ class PortfolioController extends Controller
     {
         $projects = Entity::where('status', StatusEnum::active)
             ->where('type', EntityTypeEnum::project)
+            ->with('media')
             ->orderBy('order')
             ->get();
 
@@ -31,9 +32,12 @@ class PortfolioController extends Controller
             404
         );
 
+        $entity->load('media');
+
         $related = Entity::where('status', StatusEnum::active)
             ->where('type', EntityTypeEnum::project)
             ->where('id', '!=', $entity->id)
+            ->with('media')
             ->orderBy('order')
             ->take(3)
             ->get();
