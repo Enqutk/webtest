@@ -39,18 +39,23 @@ class AppServiceProvider extends ServiceProvider
             'index',
             'about',
             'contact',
-            'services.index',
-            'services.show',
-            'portfolio.index',
-            'portfolio.show',
-            'pages.show',
-            'layouts.horizon.header',
-            'layouts.horizon.footer',
-            'layouts.app',
+            'services.*',
+            'portfolio.*',
+            'pages.*',
+            'emails.contact',
+            'layouts.*',
+            'components.*',
         ], function ($view) {
-            $data = app(HomeContentService::class)->getHomeContent();
-            $navItems = app(NavigationService::class)->navbarItems();
-            $view->with(compact('data', 'navItems'));
+            static $payload = null;
+
+            if ($payload === null) {
+                $payload = [
+                    'data' => app(HomeContentService::class)->getHomeContent(),
+                    'navItems' => app(NavigationService::class)->navbarItems(),
+                ];
+            }
+
+            $view->with($payload);
         });
     }
 }

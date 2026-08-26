@@ -6,9 +6,9 @@
 
 @if($about)
 @php
-    $image = $about['image'] ?: asset('assets/images/homepage-2/about-img-01.png');
+    $image = $about['image'] ?? null;
     $eyebrow = $about['subtitle'] ?: 'Who we are';
-    $title = $about['title'] ?: 'MajiWorks';
+    $title = $about['title'] ?: ($data['siteName'] ?? config('app.name'));
     $featureItems = collect($features?->list_items ?? [])->take(4);
 @endphp
 
@@ -16,9 +16,11 @@
     <div class="container">
         <div class="row align-items-center g-5">
             <div class="col-lg-6">
-                <div class="hz-about-media">
-                    <img src="{{ $image }}" alt="{{ $title }}">
-                </div>
+                @if($image)
+                    <div class="hz-about-media">
+                        <img src="{{ $image }}" alt="{{ $title }}">
+                    </div>
+                @endif
             </div>
             <div class="col-lg-6">
                 <p class="hz-eyebrow">{{ $eyebrow }}</p>

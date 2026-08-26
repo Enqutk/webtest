@@ -3,6 +3,8 @@
 @php
     $slides = $heroes instanceof \Illuminate\Support\Collection ? $heroes : collect($heroes);
     $hasMultiple = $slides->count() > 1;
+    $siteName = $data['siteName'] ?? config('app.name', 'Site');
+    $tagline = $data['tagline'] ?? '';
 @endphp
 
 <section class="hz-hero" aria-label="Homepage hero">
@@ -10,11 +12,13 @@
         <div class="container">
             <div class="row align-items-center g-5 hz-hero-slide">
                 <div class="col-lg-6">
-                    <p class="hz-eyebrow">Irrigation · WASH · Resilience</p>
-                    <h1 class="hz-hero-brand">Maji <span>Works</span></h1>
-                    <p class="hz-hero-copy">
-                        Climate-smart irrigation, rural water, and drainage schemes designed for East African communities.
-                    </p>
+                    @if($tagline)
+                        <p class="hz-eyebrow">{{ \Illuminate\Support\Str::limit($tagline, 60) }}</p>
+                    @endif
+                    <x-site-brand as="h1" class="hz-hero-brand" :name="$siteName" />
+                    @if($tagline)
+                        <p class="hz-hero-copy">{{ $tagline }}</p>
+                    @endif
                     <div class="d-flex flex-wrap gap-3">
                         <a href="{{ route('services.index') }}" class="btn-hz">
                             Explore services <i class="bi bi-arrow-right"></i>
@@ -22,18 +26,13 @@
                         <a href="{{ route('contact') }}" class="btn-hz-outline">Talk to us</a>
                     </div>
                 </div>
-                <div class="col-lg-6">
-                    <div class="hz-hero-media">
-                        <img src="{{ asset('assets/images/majiworks/maji-hero-irrigation.png') }}" alt="MajiWorks">
-                    </div>
-                </div>
             </div>
         </div>
     @else
         <div
             id="hzHeroCarousel"
-            class="carousel slide"
-            @if($hasMultiple) data-bs-ride="carousel" data-bs-interval="6500" @endif
+            class="carousel slide hz-hero-carousel"
+            @if($hasMultiple) data-bs-ride="carousel" data-bs-interval="4000" data-bs-pause="hover" data-bs-touch="true" @endif
         >
             @if($hasMultiple)
                 <div class="carousel-indicators hz-hero-indicators">
@@ -60,11 +59,11 @@
                                         <p class="hz-eyebrow">{{ $hero->subtitle }}</p>
                                     @endif
 
-                                    @if($index === 0)
-                                        <h1 class="hz-hero-brand">Maji <span>Works</span></h1>
-                                    @else
-                                        <p class="hz-hero-brand">Maji <span>Works</span></p>
-                                    @endif
+                                    <x-site-brand
+                                        :as="$index === 0 ? 'h1' : 'p'"
+                                        class="hz-hero-brand"
+                                        :name="$siteName"
+                                    />
 
                                     <h2 class="hz-hero-title">{{ $hero->title }}</h2>
 
@@ -81,12 +80,11 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
-                                    <div class="hz-hero-media">
-                                        <img
-                                            src="{{ $hero->image_url ?: asset('assets/images/majiworks/maji-hero-irrigation.png') }}"
-                                            alt="{{ $hero->title }}"
-                                        >
-                                    </div>
+                                    @if($hero->image_url)
+                                        <div class="hz-hero-media">
+                                            <img src="{{ $hero->image_url }}" alt="{{ $hero->title }}">
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>

@@ -27,13 +27,47 @@ class OrganizationResource extends Resource
                 Forms\Components\Grid::make(2)
                     ->schema([
                         Forms\Components\TextInput::make('title')
-                            ->label('Title')
+                            ->label('Company name')
+                            ->helperText('Shown in the header, footer, and hero. Use a space for accent styling (e.g. “Maji Works”).')
                             ->required()
                             ->maxLength(255),
                         Forms\Components\TextInput::make('po_box')
                             ->label('PO Box')
                             ->maxLength(100),
                     ]),
+                Forms\Components\TextInput::make('tagline')
+                    ->label('Tagline')
+                    ->helperText('Short line under the brand in the footer and empty-hero fallback.')
+                    ->maxLength(500),
+                Forms\Components\Textarea::make('meta_description')
+                    ->label('Default SEO description')
+                    ->helperText('Used as the site-wide meta description when a page does not set its own.')
+                    ->rows(2)
+                    ->maxLength(500),
+                Forms\Components\Section::make('Brand colors')
+                    ->description('These override the public site theme. Leave blank to keep defaults. Change and save, then hard-refresh the site.')
+                    ->schema([
+                        Forms\Components\ColorPicker::make('theme.accent')
+                            ->label('Accent')
+                            ->helperText('Buttons, links, highlights'),
+                        Forms\Components\ColorPicker::make('theme.accent_dark')
+                            ->label('Accent (hover)')
+                            ->helperText('Optional — auto-darkened from accent if empty'),
+                        Forms\Components\ColorPicker::make('theme.ink')
+                            ->label('Text / ink'),
+                        Forms\Components\ColorPicker::make('theme.muted')
+                            ->label('Muted text'),
+                        Forms\Components\ColorPicker::make('theme.bg')
+                            ->label('Page background'),
+                        Forms\Components\ColorPicker::make('theme.surface')
+                            ->label('Cards / surface'),
+                        Forms\Components\ColorPicker::make('theme.line')
+                            ->label('Borders / lines'),
+                        Forms\Components\ColorPicker::make('theme.dark')
+                            ->label('Footer / dark blocks'),
+                    ])
+                    ->columns(2)
+                    ->collapsed(false),
                 Forms\Components\Grid::make(2)
                     ->schema([
                         Forms\Components\TextInput::make('address')

@@ -106,8 +106,10 @@
         </div>
 
         <div class="company-info">
-            <strong>MajiWorks</strong><br>
-            Water Infrastructure & Civil Engineering Services<br>
+            <strong>{{ $data['siteName'] ?? config('app.name') }}</strong><br>
+            @if(!empty($data['tagline']))
+                {{ $data['tagline'] }}<br>
+            @endif
             <small>This email was sent from your website contact form</small>
         </div>
 

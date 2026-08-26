@@ -2,8 +2,8 @@
 
 @section('title', 'About Us')
 @section('eyebrow', 'Who we are')
-@section('page_title', 'About MajiWorks')
-@section('description', 'Nairobi-based consultancy for climate-smart irrigation, rural WASH, flood resilience, and water-resource GIS.')
+@section('page_title', 'About ' . ($data['siteName'] ?? config('app.name')))
+@section('description', $data['metaDescription'] ?? ($data['tagline'] ?? ''))
 
 @section('page')
     <x-horizon.about
@@ -25,14 +25,16 @@
                     @if($data['aboutSection1'])
                         <div class="col-lg-6">
                             <article class="hz-about-panel">
-                                <div class="hz-about-panel-media">
-                                    <img
-                                        src="{{ $data['aboutSection1']['image'] ?: asset('assets/images/homepage-2/about-img-01.png') }}"
-                                        alt="Our practice"
-                                    >
-                                </div>
+                                @if(!empty($data['aboutSection1']['image']))
+                                    <div class="hz-about-panel-media">
+                                        <img
+                                            src="{{ $data['aboutSection1']['image'] }}"
+                                            alt="{{ $data['aboutSection1']['title'] ?? 'Our practice' }}"
+                                        >
+                                    </div>
+                                @endif
                                 <div class="hz-about-panel-body">
-                                    <h3 class="h4 mb-3">Our practice</h3>
+                                    <h3 class="h4 mb-3">{{ $data['aboutSection1']['title'] ?? 'Our practice' }}</h3>
                                     <div class="hz-lead mb-0">{!! $data['aboutSection1']['description'] !!}</div>
                                 </div>
                             </article>
@@ -41,14 +43,16 @@
                     @if($data['aboutSection2'])
                         <div class="col-lg-6">
                             <article class="hz-about-panel">
-                                <div class="hz-about-panel-media">
-                                    <img
-                                        src="{{ $data['aboutSection2']['image'] ?: asset('assets/images/banner-slider-img/slider3-04.jpg') }}"
-                                        alt="Our approach"
-                                    >
-                                </div>
+                                @if(!empty($data['aboutSection2']['image']))
+                                    <div class="hz-about-panel-media">
+                                        <img
+                                            src="{{ $data['aboutSection2']['image'] }}"
+                                            alt="{{ $data['aboutSection2']['title'] ?? 'Our approach' }}"
+                                        >
+                                    </div>
+                                @endif
                                 <div class="hz-about-panel-body">
-                                    <h3 class="h4 mb-3">Our approach</h3>
+                                    <h3 class="h4 mb-3">{{ $data['aboutSection2']['title'] ?? 'Our approach' }}</h3>
                                     <div class="hz-lead mb-0">{!! $data['aboutSection2']['description'] !!}</div>
                                 </div>
                             </article>

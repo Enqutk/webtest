@@ -6,12 +6,15 @@ use App\Enums\StatusEnum;
 use App\Models\ContentBlock;
 use App\Models\Organization;
 use App\Models\OrganizationContact;
+use Illuminate\Support\Str;
 
 class HomeContentService
 {
     public function getHomeContent(): array
     {
-        $organization = Organization::select(['address', 'opening_hours', 'map_url'])->first();
+        $organization = Organization::query()
+            ->select(['title', 'tagline', 'meta_description', 'theme', 'address', 'opening_hours', 'map_url'])
+            ->first();
 
         $contacts = OrganizationContact::where('status', StatusEnum::active)
             ->select(['type', 'value'])
@@ -39,7 +42,33 @@ class HomeContentService
         $aboutSection2Block = $blocks->get('about-section-2');
         $statsBlock = $blocks->get('stats');
 
+        $siteName = $organization?->title ?: config('app.name', 'Site');
+
+        if ($organization?->tagline) {
+            $tagline = $organization->tagline;
+        } elseif ($aboutFeaturesBlock?->short_description) {
+            $tagline = $aboutFeaturesBlock->short_description;
+        } else {
+            $tagline = Str::limit(trim(strip_tags((string) ($aboutFeaturesBlock?->content ?? ''))), 160) ?: '';
+        }
+
+        $metaDescription = $organization?->meta_description
+            ?: ($tagline !== '' ? "{$siteName} — {$tagline}" : $siteName);
+
+        $theme = $organization
+            ? $organization->resolvedTheme()
+            : array_merge(Organization::defaultTheme(), [
+                'accent_soft' => Organization::hexToRgba(Organization::defaultTheme()['accent'], 0.12),
+            ]);
+
+        $aboutImage = $aboutFeaturesBlock?->getFirstMediaUrl('images') ?: null;
+
         return [
+            'siteName' => $siteName,
+            'tagline' => $tagline,
+            'metaDescription' => $metaDescription,
+            'theme' => $theme,
+
             'email' => $contacts->get('email', collect())->pluck('value')->all(),
             'phone' => $contacts->get('phone', collect())->pluck('value')->all(),
             'fax' => $contacts->get('fax', collect())->pluck('value')->all(),
@@ -50,7 +79,7 @@ class HomeContentService
             'heroFeatures' => $blocks->get('key-features'),
             'aboutFeatures' => $aboutFeaturesBlock
                 ? [
-                    'image' => $aboutFeaturesBlock->getFirstMediaUrl('images') ?: asset('assets/images/majiworks/maji-about-field.png'),
+                    'image' => $aboutImage,
                     'title' => $aboutFeaturesBlock->title,
                     'subtitle' => $aboutFeaturesBlock->subtitle,
                     'description' => html_entity_decode((string) $aboutFeaturesBlock->content),
@@ -59,14 +88,18 @@ class HomeContentService
 
             'aboutSection1' => $aboutSection1Block
                 ? [
-                    'image' => $aboutSection1Block->getFirstMediaUrl('images') ?: asset('assets/images/majiworks/maji-service-irrigation.png'),
+                    'image' => $aboutSection1Block->getFirstMediaUrl('images') ?: null,
+                    'title' => $aboutSection1Block->title,
+                    'subtitle' => $aboutSection1Block->subtitle,
                     'description' => html_entity_decode((string) $aboutSection1Block->content),
                 ]
                 : null,
 
             'aboutSection2' => $aboutSection2Block
                 ? [
-                    'image' => $aboutSection2Block->getFirstMediaUrl('images') ?: asset('assets/images/majiworks/maji-service-governance.png'),
+                    'image' => $aboutSection2Block->getFirstMediaUrl('images') ?: null,
+                    'title' => $aboutSection2Block->title,
+                    'subtitle' => $aboutSection2Block->subtitle,
                     'description' => html_entity_decode((string) $aboutSection2Block->content),
                 ]
                 : null,
@@ -74,8 +107,8 @@ class HomeContentService
             'videoSection' => $blocks->get('video-section'),
 
             'videoThumbnail' => $blocks->get('video-thumbnail')
-                ? $blocks->get('video-thumbnail')->getFirstMediaUrl('images')
-                : asset('assets/images/homepage-2/video-thumbnail.png'),
+                ? ($blocks->get('video-thumbnail')->getFirstMediaUrl('images') ?: null)
+                : null,
 
             'videoDetails' => $blocks->get('video-details') ? [
                 'short_description' => $blocks->get('video-details')->short_description,

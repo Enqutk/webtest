@@ -23,7 +23,7 @@ class AboutContentSeeder extends Seeder
                 'title' => 'Water expertise for living landscapes',
                 'subtitle' => 'Who we are',
                 'short_description' => '',
-                'content' => '<p>MajiWorks is a Nairobi-based consultancy for climate-smart irrigation, rural WASH, flood resilience, and water-resource GIS. We work with counties, cooperatives, NGOs, and utilities to turn field data into schemes that communities can operate for years.</p>',
+                'content' => '<p>Maji Works is a Nairobi-based consultancy for climate-smart irrigation, rural WASH, flood resilience, and water-resource GIS. We work with counties, cooperatives, NGOs, and utilities to turn field data into schemes that communities can operate for years.</p>',
                 'display_order' => 2,
                 'is_active' => true,
                 'created_by' => $userId,

@@ -3,7 +3,7 @@
 @section('title', 'Contact Us')
 @section('eyebrow', 'Get in touch')
 @section('page_title', 'Contact Us')
-@section('description', 'Reach MajiWorks for irrigation, WASH, and water resilience projects.')
+@section('description', 'Reach ' . ($data['siteName'] ?? config('app.name')) . ($data['tagline'] ? ' — ' . $data['tagline'] : ''))
 
 @php
     $dayLabels = [
@@ -19,7 +19,7 @@
         <div class="row g-4 g-xl-5">
             <div class="col-lg-7">
                 <p class="hz-lead mb-4">
-                    Share a brief about your project — irrigation, WASH, drainage, GIS, or solar pumping. We’ll respond with next steps.
+                    {{ $data['tagline'] ?? 'Share a brief about your project. We’ll respond with next steps.' }}
                 </p>
 
                 @if(session('success'))

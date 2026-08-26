@@ -410,6 +410,54 @@ h1, h2, h3, h4, .display-font {
     width: 100%;
 }
 
+/* Faster autoplay feel + smooth horizontal slide */
+.hz-hero-carousel .carousel-item {
+    transition: transform 0.9s cubic-bezier(0.33, 0.1, 0.2, 1);
+}
+
+.hz-hero-carousel .carousel-item.active .hz-hero-brand,
+.hz-hero-carousel .carousel-item.active .hz-hero-title,
+.hz-hero-carousel .carousel-item.active .hz-hero-copy,
+.hz-hero-carousel .carousel-item.active .hz-hero-media {
+    animation: hz-hero-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hz-hero-carousel .carousel-item.active .hz-hero-title {
+    animation-delay: 0.08s;
+}
+
+.hz-hero-carousel .carousel-item.active .hz-hero-copy {
+    animation-delay: 0.14s;
+}
+
+.hz-hero-carousel .carousel-item.active .hz-hero-media {
+    animation-delay: 0.1s;
+}
+
+@keyframes hz-hero-in {
+    from {
+        opacity: 0.35;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hz-hero-carousel .carousel-item {
+        transition-duration: 0.01ms;
+    }
+
+    .hz-hero-carousel .carousel-item.active .hz-hero-brand,
+    .hz-hero-carousel .carousel-item.active .hz-hero-title,
+    .hz-hero-carousel .carousel-item.active .hz-hero-copy,
+    .hz-hero-carousel .carousel-item.active .hz-hero-media {
+        animation: none;
+    }
+}
+
 .hz-hero-slide {
     min-height: calc(100vh - 140px);
     padding: 1rem 0 2.5rem;

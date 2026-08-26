@@ -34,7 +34,7 @@ class HeroResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Section::make('Slide content')
-                    ->description('Shown on the homepage hero. Brand name “MajiWorks” always appears above the title.')
+                    ->description('Shown on the homepage hero. The company name from Organization settings always appears above the headline.')
                     ->schema([
                         Forms\Components\TextInput::make('subtitle')
                             ->label('Eyebrow')

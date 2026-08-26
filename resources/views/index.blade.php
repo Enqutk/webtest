@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('title', 'Home')
-@section('description', 'MajiWorks — climate-smart irrigation, rural WASH, flood resilience, and water-resource GIS.')
 
 @section('content')
     <x-horizon.hero :heroes="$heroes" />
@@ -15,5 +14,5 @@
     <x-horizon.portfolio :projects="$projects" />
     <x-horizon.clients :clients="$clients" />
     <x-horizon.team :team="$team" />
-    <x-horizon.cta />
+    <x-horizon.cta :text="$data['tagline'] ?? null" />
 @endsection

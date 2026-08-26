@@ -1,12 +1,13 @@
 @php
     $navItems = $navItems ?? collect();
+    $siteName = $data['siteName'] ?? config('app.name', 'Site');
 @endphp
 
 <header class="hz-header" data-hz-header>
     <nav class="navbar navbar-expand-lg hz-navbar" aria-label="Primary">
         <div class="container hz-navbar-inner">
             <a class="navbar-brand hz-brand" href="{{ route('home') }}">
-                Maji <span>Works</span>
+                <x-site-brand :name="$siteName" />
             </a>
 
             <button

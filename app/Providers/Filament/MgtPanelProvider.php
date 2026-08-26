@@ -22,13 +22,27 @@ class MgtPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
+        $accent = '#0f766e';
+
+        try {
+            $theme = \App\Models\Organization::query()->value('theme');
+            if (is_string($theme)) {
+                $theme = json_decode($theme, true);
+            }
+            if (is_array($theme) && ! empty($theme['accent'])) {
+                $accent = $theme['accent'];
+            }
+        } catch (\Throwable) {
+            // DB may not be ready during early boot / migrate.
+        }
+
         return $panel
             ->default()
             ->id('mgt')
             ->path('mgt')
             ->login()
             ->colors([
-                'primary' => Color::Teal,
+                'primary' => Color::hex($accent),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')

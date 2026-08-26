@@ -82,7 +82,8 @@ Filament resources are gated by Spatie permissions (`read|create|update|delete` 
    ```
 3. Point the web server document root to `/public`  
    Example Nginx config: [`deploy/nginx.conf.example`](deploy/nginx.conf.example)  
-   Optional demo host on Vercel (serverless PHP — needs external MySQL): [`deploy/vercel.md`](deploy/vercel.md)
+   Optional demo host on Vercel (serverless PHP — needs external MySQL): [`deploy/vercel.md`](deploy/vercel.md)  
+   **Recommended host:** Railway (app + MySQL): [`deploy/railway.md`](deploy/railway.md)
 4. Ensure `storage/` and `bootstrap/cache/` are writable
 5. Keep `/mgt` on HTTPS; change default seeded passwords immediately
 6. Contact form is rate-limited (`throttle:contact`, 5/minute/IP)
