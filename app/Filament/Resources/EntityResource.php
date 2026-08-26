@@ -4,8 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\EntityResource\Pages;
 use App\Models\Entity;
-use Filament\Forms;
 use Filament\Forms\Form;
+use App\Filament\Concerns\AuthorizesWithPermission;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -18,51 +18,74 @@ use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\TextColumn;
 
 class EntityResource extends Resource
 {
-    protected static ?string $model = Entity::class;
-    protected static ?string $navigationGroup = 'Other';
-    protected static ?int $navigationSort = 3;
-    protected static ?string $navigationLabel = 'Entity';
+    use AuthorizesWithPermission;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string $permissionKey = 'entity';
+    protected static ?string $model = Entity::class;
+    protected static ?string $navigationGroup = 'Website';
+    protected static ?int $navigationSort = 3;
+    protected static ?string $navigationLabel = 'Portfolio & entities';
+    protected static ?string $modelLabel = 'Entity';
+    protected static ?string $pluralModelLabel = 'Portfolio & entities';
+    protected static ?string $navigationIcon = 'heroicon-o-briefcase';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Select::make('type')
-                    ->options(EntityTypeEnum::class)
-                    ->required(),
-                TextInput::make('category')
-                    ->maxLength(120)
-                    ->nullable()
-                    ->helperText('Used for portfolio filters (e.g. Engineering, Infrastructure).'),
-                TextInput::make('link')
-                    ->maxLength(255)
-                    ->url()
-                    ->nullable(),
-                SpatieMediaLibraryFileUpload::make('image')
-                    ->collection('image')
-                    ->image()
-                    ->imagePreviewHeight('150'),
-                Textarea::make('description')
-                    ->maxLength(65535)
-                    ->nullable(),
-                TextInput::make('order')
-                    ->numeric()
-                    ->default(1)
-                    ->minValue(1)
-                    ->unique(ignoreRecord: true)
-                    ->required(),
-                Select::make('status')
-                    ->options(StatusEnum::class)
-                    ->default(StatusEnum::active),
+                Section::make('Entity details')
+                    ->description('Use type “Project” for portfolio items. Clients and partners appear in the logo strip.')
+                    ->schema([
+                        TextInput::make('name')
+                            ->required()
+                            ->maxLength(255),
+                        Select::make('type')
+                            ->options(EntityTypeEnum::options())
+                            ->required()
+                            ->live(),
+                        TextInput::make('category')
+                            ->maxLength(120)
+                            ->nullable()
+                            ->visible(fn ($get) => $get('type') === EntityTypeEnum::project->value)
+                            ->helperText('Portfolio filter label, e.g. Engineering, Infrastructure, Consulting.'),
+                        TextInput::make('link')
+                            ->label('External URL')
+                            ->maxLength(2048)
+                            ->url()
+                            ->nullable(),
+                        Textarea::make('description')
+                            ->rows(5)
+                            ->maxLength(65535)
+                            ->nullable()
+                            ->columnSpanFull(),
+                        SpatieMediaLibraryFileUpload::make('image')
+                            ->label('Image')
+                            ->collection('image')
+                            ->image()
+                            ->imagePreviewHeight('180')
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(2),
+
+                Section::make('Publishing')
+                    ->schema([
+                        TextInput::make('order')
+                            ->numeric()
+                            ->default(1)
+                            ->minValue(1)
+                            ->required()
+                            ->helperText('Lower numbers appear first.'),
+                        Select::make('status')
+                            ->options(StatusEnum::class)
+                            ->default(StatusEnum::active)
+                            ->required(),
+                    ])
+                    ->columns(2),
             ]);
     }
 
@@ -70,28 +93,30 @@ class EntityResource extends Resource
     {
         return $table
             ->columns([
-               TextColumn::make('id')->sortable(),
-               TextColumn::make('name')->searchable()->sortable(),
-               TextColumn::make('type')->badge()->sortable(),
-               TextColumn::make('category')->toggleable(),
-               SpatieMediaLibraryImageColumn::make('image')->collection('image')->circular()->size(50),
-               TextColumn::make('link')->url(fn($record) => $record->link)->openUrlInNewTab(true)->searchable(),
-               TextColumn::make('order')->sortable(),
-               TextColumn::make('status')->badge()
-                    ->color(fn(StatusEnum $state): string => match ($state) {
+                SpatieMediaLibraryImageColumn::make('image')
+                    ->collection('image')
+                    ->size(48),
+                TextColumn::make('name')->searchable()->sortable(),
+                TextColumn::make('type')->badge()->sortable(),
+                TextColumn::make('category')->toggleable(),
+                TextColumn::make('order')->sortable(),
+                TextColumn::make('status')
+                    ->badge()
+                    ->color(fn (StatusEnum $state): string => match ($state) {
                         StatusEnum::active => 'success',
                         StatusEnum::inactive => 'danger',
-                    }) ->sortable(),
-               TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-               TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-               TextColumn::make('deleted_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-               TextColumn::make('creator.name')->label('Created By')->sortable()->toggleable(isToggledHiddenByDefault: true),
-               TextColumn::make('updater.name')->label('Updated By')->sortable()->toggleable(isToggledHiddenByDefault: true),
+                    })
+                    ->sortable(),
+                TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->reorderable('order')
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
                 Tables\Filters\SelectFilter::make('type')
-                    ->options(EntityTypeEnum::class),
+                    ->options(EntityTypeEnum::options()),
                 Tables\Filters\SelectFilter::make('status')
                     ->options(StatusEnum::class),
             ])
@@ -113,16 +138,16 @@ class EntityResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
+
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()->withoutGlobalScopes([
             SoftDeletingScope::class,
         ]);
     }
+
     public static function getPages(): array
     {
         return [
