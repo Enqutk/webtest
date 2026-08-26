@@ -18,41 +18,76 @@ use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 class HeroResource extends Resource
 {
     protected static ?string $model = Hero::class;
-    protected static ?string $navigationGroup = 'Other';
-    protected static ?int $navigationSort = 5;
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Website';
+    protected static ?int $navigationSort = 1;
+    protected static ?string $navigationLabel = 'Hero slides';
+    protected static ?string $modelLabel = 'Hero slide';
+    protected static ?string $pluralModelLabel = 'Hero slides';
+    protected static ?string $navigationIcon = 'heroicon-o-photo';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('title')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('subtitle')
-                    ->maxLength(255),
-                Forms\Components\Textarea::make('description')
-                    ->required(),
-                Forms\Components\SpatieMediaLibraryFileUpload::make('image')
-                    ->collection('image')
-                    ->image()
-                    ->imagePreviewHeight('150')
-                    ->required(),
+                Forms\Components\Section::make('Slide content')
+                    ->description('Shown on the homepage hero. Brand name “Veritas Afrika” always appears above the title.')
+                    ->schema([
+                        Forms\Components\TextInput::make('subtitle')
+                            ->label('Eyebrow')
+                            ->placeholder('e.g. Civil engineering & consultancy')
+                            ->helperText('Small label above the brand.')
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('title')
+                            ->label('Headline')
+                            ->required()
+                            ->placeholder('e.g. Infrastructure with clarity')
+                            ->helperText('Supporting headline under the brand name.')
+                            ->maxLength(255),
+                        Forms\Components\Textarea::make('description')
+                            ->label('Supporting text')
+                            ->required()
+                            ->rows(4)
+                            ->helperText('One short paragraph under the headline.'),
+                        Forms\Components\SpatieMediaLibraryFileUpload::make('image')
+                            ->label('Hero image')
+                            ->collection('image')
+                            ->image()
+                            ->imageEditor()
+                            ->imagePreviewHeight('200')
+                            ->required()
+                            ->helperText('Use a wide photo (about 1200×900 or larger).'),
+                    ])
+                    ->columns(1),
 
-                Forms\Components\TextInput::make('button_link')
-                    ->maxLength(2048),
-                Forms\Components\TextInput::make('text_link')
-                    ->maxLength(2048),
-                Forms\Components\TextInput::make('order')
-                    ->numeric()
-                    ->default(1)
-                    ->minValue(1)
-                    ->unique(ignoreRecord: true),
-                Forms\Components\Select::make('status')
-                    ->options(StatusEnum::class)
-                    ->default(StatusEnum::active)
-                    ->required(),
+                Forms\Components\Section::make('Call to action')
+                    ->schema([
+                        Forms\Components\TextInput::make('text_link')
+                            ->label('Button label')
+                            ->placeholder('e.g. Explore services')
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('button_link')
+                            ->label('Button URL')
+                            ->placeholder('/our-services or https://…')
+                            ->maxLength(2048)
+                            ->helperText('Internal path (/our-services) or full URL.'),
+                    ])
+                    ->columns(2),
+
+                Forms\Components\Section::make('Publishing')
+                    ->schema([
+                        Forms\Components\TextInput::make('order')
+                            ->label('Display order')
+                            ->numeric()
+                            ->default(1)
+                            ->minValue(1)
+                            ->required()
+                            ->helperText('Lower numbers appear first in the carousel.'),
+                        Forms\Components\Select::make('status')
+                            ->options(StatusEnum::class)
+                            ->default(StatusEnum::active)
+                            ->required(),
+                    ])
+                    ->columns(2),
             ]);
     }
 
@@ -60,36 +95,44 @@ class HeroResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')->sortable(),
-                Tables\Columns\TextColumn::make('title')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('subtitle')->searchable()->limit(50),
-                Tables\Columns\TextColumn::make('description')->limit(50)->tooltip(fn($record) => $record->description),
                 Tables\Columns\SpatieMediaLibraryImageColumn::make('image')
                     ->collection('image')
                     ->square()
-                    ->size(50),
-                Tables\Columns\TextColumn::make('button_link')->searchable()->url(fn($record) => $record->button_link)->openUrlInNewTab(true),
-                Tables\Columns\TextColumn::make('text_link')->searchable()->url(fn($record) => $record->text_link)->openUrlInNewTab(true),
-                Tables\Columns\TextColumn::make('order')->sortable(),
+                    ->size(56),
+                Tables\Columns\TextColumn::make('title')
+                    ->label('Headline')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('subtitle')
+                    ->label('Eyebrow')
+                    ->searchable()
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('text_link')
+                    ->label('Button label')
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('button_link')
+                    ->label('Button URL')
+                    ->limit(30)
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('order')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
-                    ->color(fn(StatusEnum $state): string => match ($state) {
+                    ->color(fn (StatusEnum $state): string => match ($state) {
                         StatusEnum::active => 'success',
                         StatusEnum::inactive => 'danger',
                     })
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
+                Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->reorderable('order')
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
                 Tables\Filters\SelectFilter::make('status')
                     ->options(StatusEnum::class),
-
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -109,10 +152,9 @@ class HeroResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
+
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()->withoutGlobalScopes([
