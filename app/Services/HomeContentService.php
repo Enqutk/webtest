@@ -61,20 +61,30 @@ class HomeContentService
 
         $aboutImage = $aboutFeaturesBlock?->getFirstMediaUrl('images') ?: null;
 
+        $logoUrl = ($theme['show_logo'] ?? true) ? $organization?->logo_url : null;
+        $faviconUrl = ($theme['show_favicon'] ?? true) ? $organization?->favicon_url : null;
+        $activeTagline = ($theme['show_tagline'] ?? true) ? $tagline : '';
+        $activeAddress = ($theme['show_address'] ?? true) ? ($organization->address ?? null) : null;
+        $activeWorkingDays = ($theme['show_opening_hours'] ?? true) ? ($organization->opening_hours ?? []) : [];
+        $activeMap = ($theme['show_map'] ?? true) ? ($organization->map_url ?? null) : null;
+        $activeEmail = ($theme['show_email'] ?? true) ? $contacts->get('email', collect())->pluck('value')->all() : [];
+        $activePhone = ($theme['show_phone'] ?? true) ? $contacts->get('phone', collect())->pluck('value')->all() : [];
+
         return [
             'siteName' => $siteName,
-            'tagline' => $tagline,
+            'tagline' => $activeTagline,
             'metaDescription' => $metaDescription,
             'theme' => $theme,
-            'logoUrl' => $organization?->logo_url,
-            'faviconUrl' => $organization?->favicon_url,
+            'logoUrl' => $logoUrl,
+            'faviconUrl' => $faviconUrl,
 
-            'email' => $contacts->get('email', collect())->pluck('value')->all(),
-            'phone' => $contacts->get('phone', collect())->pluck('value')->all(),
+            'email' => $activeEmail,
+            'phone' => $activePhone,
             'fax' => $contacts->get('fax', collect())->pluck('value')->all(),
-            'address' => $organization->address ?? null,
-            'working_days' => $organization->opening_hours ?? [],
-            'map' => $organization->map_url ?? null,
+            'address' => $activeAddress,
+            'po_box' => ($theme['show_po_box'] ?? true) ? ($organization->po_box ?? null) : null,
+            'working_days' => $activeWorkingDays,
+            'map' => $activeMap,
 
             'heroFeatures' => $blocks->get('key-features'),
             'aboutFeatures' => $aboutFeaturesBlock
