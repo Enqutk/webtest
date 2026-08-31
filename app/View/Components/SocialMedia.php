@@ -10,6 +10,14 @@ class SocialMedia extends Component {
     public $socialRefs;
 
     public function __construct() {
+        $org = \App\Models\Organization::first();
+        $theme = $org ? $org->resolvedTheme() : \App\Models\Organization::defaultTheme();
+
+        if (! ($theme['show_social_links'] ?? true)) {
+            $this->socialRefs = collect();
+            return;
+        }
+
         $this->socialRefs = SocialRef::where('status', StatusEnum::active)
             ->orderBy('order')
             ->get();
