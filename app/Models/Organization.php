@@ -64,19 +64,61 @@ class Organization extends Model implements HasMedia
             'surface' => '#ffffff',
             'line' => '#d7e0dd',
             'dark' => '#0a1615',
+            'font_display' => 'Fraunces',
+            'font_body' => 'Outfit',
+            'show_brand_text' => true,
+            'show_logo' => true,
+            'show_favicon' => true,
+            'show_tagline' => true,
+            'show_po_box' => true,
+            'show_header_logo' => true,
+            'show_header_cta' => true,
+            'header_cta_text' => 'Get in touch',
+            'header_cta_url' => '/contact',
+            'show_address' => true,
+            'show_map' => true,
+            'show_email' => true,
+            'show_phone' => true,
+            'show_social_links' => true,
+            'show_opening_hours' => true,
+            'show_footer_tagline' => true,
+            'show_footer_social' => true,
+            'show_footer_nav' => true,
+            'show_footer_contact' => true,
+            'show_footer_credit' => true,
+        ];
+    }
+
+    public static function getFontOptions(): array
+    {
+        return [
+            'Outfit' => 'Outfit (Modern Sans-serif)',
+            'Fraunces' => 'Fraunces (Warm Editorial Serif)',
+            'Plus Jakarta Sans' => 'Plus Jakarta Sans (Clean Modern Sans)',
+            'Inter' => 'Inter (Geometric UI Sans)',
+            'Poppins' => 'Poppins (Rounded Modern Sans)',
+            'Montserrat' => 'Montserrat (Classic Geometric Sans)',
+            'Playfair Display' => 'Playfair Display (Elegant Serif)',
+            'Lora' => 'Lora (Contemporary Literary Serif)',
+            'Roboto' => 'Roboto (Clean Standard Sans)',
+            'Open Sans' => 'Open Sans (Neutral Sans)',
+            'DM Sans' => 'DM Sans (Low-contrast Sans)',
+            'Cinzel' => 'Cinzel (Classical Display Serif)',
+            'Space Grotesk' => 'Space Grotesk (Tech Display)',
+            'Syne' => 'Syne (Bold Expressive Display)',
         ];
     }
 
     /**
      * Merged theme with derived soft accent for CSS variables.
      *
-     * @return array<string, string>
+     * @return array<string, mixed>
      */
     public function resolvedTheme(): array
     {
         $theme = array_merge(self::defaultTheme(), array_filter(
             $this->theme ?? [],
-            fn ($value) => is_string($value) && $value !== ''
+            fn ($value) => $value !== null && $value !== ''
         ));
 
         if (empty($this->theme['accent_dark'] ?? null) && ! empty($theme['accent'])) {
