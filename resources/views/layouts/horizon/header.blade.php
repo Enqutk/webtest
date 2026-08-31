@@ -1,14 +1,23 @@
 @php
     $navItems = $navItems ?? collect();
     $siteName = $data['siteName'] ?? config('app.name', 'Site');
+    $theme = $data['theme'] ?? \App\Models\Organization::defaultTheme();
+    $showLogo = ($theme['show_logo'] ?? true) && ($theme['show_header_logo'] ?? true);
+    $showBrandText = (bool) ($theme['show_brand_text'] ?? true);
+    $logoUrl = $showLogo ? ($data['logoUrl'] ?? null) : null;
+    $showHeaderCta = (bool) ($theme['show_header_cta'] ?? true);
+    $headerCtaText = !empty($theme['header_cta_text']) ? $theme['header_cta_text'] : 'Get in touch';
+    $headerCtaUrl = !empty($theme['header_cta_url']) ? $theme['header_cta_url'] : route('contact');
 @endphp
 
 <header class="hz-header" data-hz-header>
     <nav class="navbar navbar-expand-lg hz-navbar" aria-label="Primary">
         <div class="container hz-navbar-inner">
-            <a class="navbar-brand hz-brand" href="{{ route('home') }}">
-                <x-site-brand :name="$siteName" :logo="$data['logoUrl'] ?? null" :show-text="empty($data['logoUrl'] ?? null)" />
-            </a>
+            @if($logoUrl || $showBrandText)
+                <a class="navbar-brand hz-brand" href="{{ route('home') }}">
+                    <x-site-brand :name="$siteName" :logo="$logoUrl" :show-text="$showBrandText" />
+                </a>
+            @endif
 
             <button
                 class="hz-toggler d-lg-none"
@@ -71,9 +80,11 @@
                             </li>
                         @endif
                     @endforeach
-                    <li class="nav-item hz-nav-cta">
-                        <a class="btn-hz btn-hz-sm" href="{{ route('contact') }}">Get in touch</a>
-                    </li>
+                    @if($showHeaderCta)
+                        <li class="nav-item hz-nav-cta">
+                            <a class="btn-hz btn-hz-sm" href="{{ $headerCtaUrl }}">{{ $headerCtaText }}</a>
+                        </li>
+                    @endif
                 </ul>
             </div>
         </div>
