@@ -34,61 +34,113 @@ class HomePageResource extends Resource
                         Forms\Components\Tabs\Tab::make('Hero Banner')
                             ->icon('heroicon-m-sparkles')
                             ->schema([
-                                Forms\Components\Section::make('Hero Section Settings')
-                                    ->description('Configure headline, badge, text, and action buttons for the top hero banner.')
+                                Forms\Components\Section::make('Hero Banner Settings')
+                                    ->description('Global headline, badge, and action buttons for the top hero banner.')
+                                    ->headerActions([
+                                        Forms\Components\Actions\Action::make('configure_hero')
+                                            ->label('Configure Banner (Modal)')
+                                            ->icon('heroicon-m-pencil-square')
+                                            ->color('primary')
+                                            ->modalHeading('Configure Hero Banner Settings')
+                                            ->modalDescription('Update the main top headline, category badge, supporting copy, and action buttons.')
+                                            ->modalWidth('3xl')
+                                            ->modalSubmitActionLabel('Save Banner Settings')
+                                            ->fillForm(fn ($get) => [
+                                                'is_visible' => $get('theme.home_sections.hero.is_visible') ?? true,
+                                                'badge' => $get('theme.home_sections.hero.badge') ?: 'Infrastructure · Engineering · Impact',
+                                                'subtitle' => $get('theme.home_sections.hero.subtitle') ?: 'Engineering Excellence',
+                                                'title' => $get('theme.home_sections.hero.title') ?: 'Building resilient infrastructure for lasting communities',
+                                                'description' => $get('theme.home_sections.hero.description') ?: 'We design, engineer, and deliver high-impact water and infrastructure systems that power communities across East Africa.',
+                                                'cta_text' => $get('theme.home_sections.hero.cta_text') ?: 'Explore Our Work',
+                                                'cta_url' => $get('theme.home_sections.hero.cta_url') ?: '/portfolio',
+                                                'secondary_cta_text' => $get('theme.home_sections.hero.secondary_cta_text') ?: 'Our Services',
+                                                'secondary_cta_url' => $get('theme.home_sections.hero.secondary_cta_url') ?: '/our-services',
+                                            ])
+                                            ->form([
+                                                Forms\Components\Toggle::make('is_visible')
+                                                    ->label('Show Hero Section on Home Page (ON / OFF)')
+                                                    ->default(true),
+                                                Forms\Components\Grid::make(2)
+                                                    ->schema([
+                                                        Forms\Components\TextInput::make('badge')
+                                                            ->label('Eyebrow / Badge')
+                                                            ->placeholder('e.g. Infrastructure · Engineering · Impact')
+                                                            ->maxLength(255),
+                                                        Forms\Components\TextInput::make('subtitle')
+                                                            ->label('Category / Subtitle')
+                                                            ->placeholder('e.g. Engineering Excellence')
+                                                            ->maxLength(255),
+                                                    ]),
+                                                Forms\Components\TextInput::make('title')
+                                                    ->label('Main Headline')
+                                                    ->placeholder('e.g. Building resilient infrastructure for lasting communities')
+                                                    ->required()
+                                                    ->maxLength(255),
+                                                Forms\Components\Textarea::make('description')
+                                                    ->label('Supporting Paragraph')
+                                                    ->placeholder('We design, engineer, and deliver high-impact systems...')
+                                                    ->rows(3)
+                                                    ->maxLength(500),
+                                                Forms\Components\Grid::make(2)
+                                                    ->schema([
+                                                        Forms\Components\TextInput::make('cta_text')
+                                                            ->label('Primary Button Text')
+                                                            ->default('Explore Our Work'),
+                                                        Forms\Components\TextInput::make('cta_url')
+                                                            ->label('Primary Button Link')
+                                                            ->default('/portfolio'),
+                                                    ]),
+                                                Forms\Components\Grid::make(2)
+                                                    ->schema([
+                                                        Forms\Components\TextInput::make('secondary_cta_text')
+                                                            ->label('Secondary Button Text')
+                                                            ->default('Our Services'),
+                                                        Forms\Components\TextInput::make('secondary_cta_url')
+                                                            ->label('Secondary Button Link')
+                                                            ->default('/our-services'),
+                                                    ]),
+                                            ])
+                                            ->action(function (array $data, $set) {
+                                                foreach ($data as $key => $val) {
+                                                    $set("theme.home_sections.hero.{$key}", $val);
+                                                }
+                                            }),
+                                    ])
                                     ->schema([
                                         Forms\Components\Toggle::make('theme.home_sections.hero.is_visible')
                                             ->label('Show Hero Section on Home Page (ON / OFF)')
                                             ->default(true)
                                             ->live(),
 
-                                        Forms\Components\Grid::make(2)
-                                            ->schema([
-                                                Forms\Components\TextInput::make('theme.home_sections.hero.badge')
-                                                    ->label('Eyebrow / Badge')
-                                                    ->placeholder('e.g. Infrastructure · Engineering · Impact')
-                                                    ->default('Infrastructure · Engineering · Impact')
-                                                    ->maxLength(255),
-                                                Forms\Components\TextInput::make('theme.home_sections.hero.subtitle')
-                                                    ->label('Category / Subtitle')
-                                                    ->placeholder('e.g. Engineering Excellence')
-                                                    ->default('Engineering Excellence')
-                                                    ->maxLength(255),
-                                            ]),
+                                        Forms\Components\Placeholder::make('hero_summary')
+                                            ->label('Current Banner Configuration')
+                                            ->content(function ($get) {
+                                                $title = $get('theme.home_sections.hero.title') ?: 'Building resilient infrastructure for lasting communities';
+                                                $badge = $get('theme.home_sections.hero.badge') ?: 'Infrastructure · Engineering · Impact';
+                                                $sub = $get('theme.home_sections.hero.subtitle') ?: 'Engineering Excellence';
+                                                $desc = $get('theme.home_sections.hero.description') ?: 'We design, engineer, and deliver high-impact water and infrastructure systems...';
+                                                $btn1 = ($get('theme.home_sections.hero.cta_text') ?: 'Explore Our Work') . ' (' . ($get('theme.home_sections.hero.cta_url') ?: '/portfolio') . ')';
+                                                $btn2 = ($get('theme.home_sections.hero.secondary_cta_text') ?: 'Our Services') . ' (' . ($get('theme.home_sections.hero.secondary_cta_url') ?: '/our-services') . ')';
 
-                                        Forms\Components\TextInput::make('theme.home_sections.hero.title')
-                                            ->label('Main Headline')
-                                            ->placeholder('e.g. Building resilient infrastructure for lasting communities')
-                                            ->default('Building resilient infrastructure for lasting communities')
-                                            ->required()
-                                            ->maxLength(255),
+                                                return new \Illuminate\Support\HtmlString("
+                                                    <div style='display: grid; gap: 0.5rem; font-size: 0.875rem; background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.06); padding: 0.85rem 1.15rem; border-radius: 0.5rem;'>
+                                                        <div><span style='font-weight: 600; opacity: 0.7;'>Eyebrow / Badge:</span> " . e($badge) . " &bull; <span style='font-weight: 600; opacity: 0.7;'>Category:</span> " . e($sub) . "</div>
+                                                        <div><span style='font-weight: 600; opacity: 0.7;'>Headline:</span> <strong>" . e($title) . "</strong></div>
+                                                        <div style='opacity: 0.85; font-size: 0.825rem;'><span style='font-weight: 600; opacity: 0.7;'>Supporting Text:</span> " . e(\Illuminate\Support\Str::limit($desc, 120)) . "</div>
+                                                        <div style='font-size: 0.8rem; display: flex; gap: 1rem;'><span style='font-weight: 600; opacity: 0.7;'>Buttons:</span> <span>🔹 " . e($btn1) . "</span> <span>🔸 " . e($btn2) . "</span></div>
+                                                    </div>
+                                                ");
+                                            }),
 
-                                        Forms\Components\Textarea::make('theme.home_sections.hero.description')
-                                            ->label('Supporting Paragraph')
-                                            ->placeholder('We design, engineer, and deliver high-impact systems...')
-                                            ->default('We design, engineer, and deliver high-impact water and infrastructure systems that power communities across East Africa.')
-                                            ->rows(3)
-                                            ->maxLength(500),
-
-                                        Forms\Components\Grid::make(2)
-                                            ->schema([
-                                                Forms\Components\TextInput::make('theme.home_sections.hero.cta_text')
-                                                    ->label('Primary Button Text')
-                                                    ->default('Explore Our Work'),
-                                                Forms\Components\TextInput::make('theme.home_sections.hero.cta_url')
-                                                    ->label('Primary Button Link')
-                                                    ->default('/portfolio'),
-                                            ]),
-
-                                        Forms\Components\Grid::make(2)
-                                            ->schema([
-                                                Forms\Components\TextInput::make('theme.home_sections.hero.secondary_cta_text')
-                                                    ->label('Secondary Button Text')
-                                                    ->default('Our Services'),
-                                                Forms\Components\TextInput::make('theme.home_sections.hero.secondary_cta_url')
-                                                    ->label('Secondary Button Link')
-                                                    ->default('/our-services'),
-                                            ]),
+                                        // Hidden fields to ensure live wire state persists
+                                        Forms\Components\Hidden::make('theme.home_sections.hero.badge')->default('Infrastructure · Engineering · Impact'),
+                                        Forms\Components\Hidden::make('theme.home_sections.hero.subtitle')->default('Engineering Excellence'),
+                                        Forms\Components\Hidden::make('theme.home_sections.hero.title')->default('Building resilient infrastructure for lasting communities'),
+                                        Forms\Components\Hidden::make('theme.home_sections.hero.description')->default('We design, engineer, and deliver high-impact water and infrastructure systems that power communities across East Africa.'),
+                                        Forms\Components\Hidden::make('theme.home_sections.hero.cta_text')->default('Explore Our Work'),
+                                        Forms\Components\Hidden::make('theme.home_sections.hero.cta_url')->default('/portfolio'),
+                                        Forms\Components\Hidden::make('theme.home_sections.hero.secondary_cta_text')->default('Our Services'),
+                                        Forms\Components\Hidden::make('theme.home_sections.hero.secondary_cta_url')->default('/our-services'),
                                     ]),
 
                                 Forms\Components\Section::make('Hero Carousel Slides')
