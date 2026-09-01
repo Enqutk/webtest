@@ -25,8 +25,21 @@ class OrganizationResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\Section::make('Live Visual Preview')
+                    ->description('Instant live preview of your header, brand typography, navigation, action button, tagline, and contact info as you edit them below.')
+                    ->schema([
+                        Forms\Components\ViewField::make('live_preview')
+                            ->view('filament.components.theme-preview')
+                            ->dehydrated(false),
+                    ])
+                    ->collapsible()
+                    ->collapsed(false)
+                    ->extraAttributes([
+                        'class' => 'sticky top-16 z-20 shadow-md',
+                    ]),
+
                 Forms\Components\Section::make('Company & Brand Identity')
-                    ->description('Set your company details and toggle their visibility on/off.')
+                    ->description('Set your company details, visibility toggles, and individual text styles.')
                     ->schema([
                         Forms\Components\Grid::make(2)
                             ->schema([
@@ -34,32 +47,109 @@ class OrganizationResource extends Resource
                                     ->label('Company name')
                                     ->helperText('Main business / brand name (e.g. “Maji Works”).')
                                     ->required()
-                                    ->maxLength(255),
+                                    ->maxLength(255)
+                                    ->live(debounce: 300),
                                 Forms\Components\Toggle::make('theme.show_brand_text')
                                     ->label('Company Name Visibility (ON / OFF)')
-                                    ->helperText('Turn company name text display ON or OFF in the header and branding.')
-                                    ->default(true),
+                                    ->helperText('Turn company name text display ON or OFF.')
+                                    ->default(true)
+                                    ->live(),
                             ]),
+                        Forms\Components\Fieldset::make('Company Name Typography & Styling')
+                            ->schema([
+                                Forms\Components\Select::make('theme.brand_font_family')
+                                    ->label('Brand Font')
+                                    ->options(Organization::getFontOptions())
+                                    ->placeholder('Inherit Display Font')
+                                    ->searchable()
+                                    ->live(),
+                                Forms\Components\TextInput::make('theme.brand_font_size')
+                                    ->label('Font Size')
+                                    ->placeholder('1.45rem')
+                                    ->default('1.45rem')
+                                    ->live(debounce: 300),
+                                Forms\Components\Select::make('theme.brand_font_weight')
+                                    ->label('Font Weight')
+                                    ->options(Organization::getFontWeightOptions())
+                                    ->default('700')
+                                    ->live(),
+                                Forms\Components\ColorPicker::make('theme.brand_color')
+                                    ->label('Text Color')
+                                    ->live(),
+                                Forms\Components\TextInput::make('theme.brand_letter_spacing')
+                                    ->label('Letter Spacing')
+                                    ->placeholder('-0.03em')
+                                    ->default('-0.03em')
+                                    ->live(debounce: 300),
+                            ])
+                            ->columns(5),
+
                         Forms\Components\Grid::make(2)
                             ->schema([
                                 Forms\Components\TextInput::make('tagline')
                                     ->label('Tagline')
                                     ->helperText('Short line under brand and empty-hero fallback.')
-                                    ->maxLength(500),
+                                    ->maxLength(500)
+                                    ->live(debounce: 300),
                                 Forms\Components\Toggle::make('theme.show_tagline')
                                     ->label('Tagline Visibility (ON / OFF)')
                                     ->helperText('Turn tagline ON or OFF across the website.')
-                                    ->default(true),
+                                    ->default(true)
+                                    ->live(),
                             ]),
+                        Forms\Components\Fieldset::make('Tagline Typography & Styling')
+                            ->schema([
+                                Forms\Components\Select::make('theme.tagline_font_family')
+                                    ->label('Tagline Font')
+                                    ->options(Organization::getFontOptions())
+                                    ->placeholder('Inherit Body Font')
+                                    ->searchable()
+                                    ->live(),
+                                Forms\Components\TextInput::make('theme.tagline_font_size')
+                                    ->label('Font Size')
+                                    ->placeholder('0.95rem')
+                                    ->default('0.95rem')
+                                    ->live(debounce: 300),
+                                Forms\Components\Select::make('theme.tagline_font_style')
+                                    ->label('Font Style')
+                                    ->options(Organization::getFontStyleOptions())
+                                    ->default('normal')
+                                    ->live(),
+                                Forms\Components\Select::make('theme.tagline_font_weight')
+                                    ->label('Font Weight')
+                                    ->options(Organization::getFontWeightOptions())
+                                    ->default('400')
+                                    ->live(),
+                                Forms\Components\ColorPicker::make('theme.tagline_color')
+                                    ->label('Text Color')
+                                    ->live(),
+                            ])
+                            ->columns(5),
+
                         Forms\Components\Grid::make(2)
                             ->schema([
                                 Forms\Components\TextInput::make('po_box')
                                     ->label('PO Box')
-                                    ->maxLength(100),
+                                    ->maxLength(100)
+                                    ->live(debounce: 300),
                                 Forms\Components\Toggle::make('theme.show_po_box')
                                     ->label('PO Box Visibility (ON / OFF)')
-                                    ->default(true),
+                                    ->default(true)
+                                    ->live(),
                             ]),
+                        Forms\Components\Fieldset::make('PO Box Typography & Styling')
+                            ->schema([
+                                Forms\Components\TextInput::make('theme.pobox_font_size')
+                                    ->label('Font Size')
+                                    ->placeholder('0.875rem')
+                                    ->default('0.875rem')
+                                    ->live(debounce: 300),
+                                Forms\Components\ColorPicker::make('theme.pobox_color')
+                                    ->label('Text Color')
+                                    ->live(),
+                            ])
+                            ->columns(2),
+
                         Forms\Components\Textarea::make('meta_description')
                             ->label('Default SEO description')
                             ->helperText('Used as the site-wide meta description when a page does not set its own.')
@@ -81,7 +171,8 @@ class OrganizationResource extends Resource
                                 Forms\Components\Toggle::make('theme.show_logo')
                                     ->label('Logo Image Visibility (ON / OFF)')
                                     ->helperText('Turn uploaded logo image display ON or OFF.')
-                                    ->default(true),
+                                    ->default(true)
+                                    ->live(),
                             ]),
                         Forms\Components\Grid::make(2)
                             ->schema([
@@ -92,18 +183,20 @@ class OrganizationResource extends Resource
                                     ->helperText('Browser tab icon (PNG/ICO, square).'),
                                 Forms\Components\Toggle::make('theme.show_favicon')
                                     ->label('Favicon Visibility (ON / OFF)')
-                                    ->default(true),
+                                    ->default(true)
+                                    ->live(),
                             ]),
                     ])
                     ->columns(1),
 
                 Forms\Components\Section::make('Header & Navigation Settings')
-                    ->description('Toggle header components ON or OFF.')
+                    ->description('Configure header links, action button, typography, and spacing.')
                     ->schema([
                         Forms\Components\Toggle::make('theme.show_header_logo')
                             ->label('Show Logo in Header (ON / OFF)')
                             ->helperText('Toggle logo image in the header navbar.')
-                            ->default(true),
+                            ->default(true)
+                            ->live(),
                         Forms\Components\Toggle::make('theme.show_header_cta')
                             ->label('Header Action Button / CTA (ON / OFF)')
                             ->helperText('Toggle the action button (e.g. “Get in touch”) on the right side of the navbar.')
@@ -115,13 +208,59 @@ class OrganizationResource extends Resource
                                     ->label('CTA Button Text')
                                     ->default('Get in touch')
                                     ->placeholder('Get in touch')
-                                    ->visible(fn (Forms\Get $get) => (bool) ($get('theme.show_header_cta') ?? true)),
+                                    ->visible(fn (Forms\Get $get) => (bool) ($get('theme.show_header_cta') ?? true))
+                                    ->live(debounce: 300),
                                 Forms\Components\TextInput::make('theme.header_cta_url')
                                     ->label('CTA Button URL')
                                     ->default('/contact')
                                     ->placeholder('/contact')
                                     ->visible(fn (Forms\Get $get) => (bool) ($get('theme.show_header_cta') ?? true)),
                             ]),
+                        Forms\Components\Fieldset::make('CTA Button Styling')
+                            ->visible(fn (Forms\Get $get) => (bool) ($get('theme.show_header_cta') ?? true))
+                            ->schema([
+                                Forms\Components\TextInput::make('theme.header_cta_font_size')
+                                    ->label('CTA Font Size')
+                                    ->placeholder('0.88rem')
+                                    ->default('0.88rem')
+                                    ->live(debounce: 300),
+                                Forms\Components\ColorPicker::make('theme.header_cta_bg')
+                                    ->label('Button Background Color')
+                                    ->live(),
+                                Forms\Components\ColorPicker::make('theme.header_cta_text_color')
+                                    ->label('Button Text Color')
+                                    ->live(),
+                            ])
+                            ->columns(3),
+
+                        Forms\Components\Fieldset::make('Navigation Links Typography & Spacing')
+                            ->schema([
+                                Forms\Components\Select::make('theme.nav_font_family')
+                                    ->label('Nav Font')
+                                    ->options(Organization::getFontOptions())
+                                    ->placeholder('Inherit Body Font')
+                                    ->searchable()
+                                    ->live(),
+                                Forms\Components\TextInput::make('theme.nav_font_size')
+                                    ->label('Nav Font Size')
+                                    ->placeholder('0.95rem')
+                                    ->default('0.95rem')
+                                    ->live(debounce: 300),
+                                Forms\Components\Select::make('theme.nav_font_weight')
+                                    ->label('Nav Font Weight')
+                                    ->options(Organization::getFontWeightOptions())
+                                    ->default('500')
+                                    ->live(),
+                                Forms\Components\ColorPicker::make('theme.nav_color')
+                                    ->label('Nav Link Color')
+                                    ->live(),
+                                Forms\Components\TextInput::make('theme.nav_spacing')
+                                    ->label('Nav Item Padding / Spacing')
+                                    ->placeholder('0.55rem 0.9rem')
+                                    ->default('0.55rem 0.9rem')
+                                    ->live(debounce: 300),
+                            ])
+                            ->columns(5),
                     ])
                     ->columns(2)
                     ->collapsed(false),
@@ -155,11 +294,25 @@ class OrganizationResource extends Resource
                             ->schema([
                                 Forms\Components\TextInput::make('address')
                                     ->label('Address')
-                                    ->maxLength(255),
+                                    ->maxLength(255)
+                                    ->live(debounce: 300),
                                 Forms\Components\Toggle::make('theme.show_address')
                                     ->label('Address Visibility (ON / OFF)')
-                                    ->default(true),
+                                    ->default(true)
+                                    ->live(),
                             ]),
+                        Forms\Components\Fieldset::make('Address Typography & Styling')
+                            ->schema([
+                                Forms\Components\TextInput::make('theme.address_font_size')
+                                    ->label('Font Size')
+                                    ->placeholder('0.95rem')
+                                    ->default('0.95rem')
+                                    ->live(debounce: 300),
+                                Forms\Components\ColorPicker::make('theme.address_color')
+                                    ->label('Text Color')
+                                    ->live(),
+                            ])
+                            ->columns(2),
                         Forms\Components\Grid::make(2)
                             ->schema([
                                 Forms\Components\TextInput::make('map_url')
@@ -212,13 +365,15 @@ class OrganizationResource extends Resource
                             ->helperText('Applied to brand text, main headings (H1-H4), and hero titles.')
                             ->options(Organization::getFontOptions())
                             ->default('Fraunces')
-                            ->searchable(),
+                            ->searchable()
+                            ->live(),
                         Forms\Components\Select::make('theme.font_body')
                             ->label('Body Font')
                             ->helperText('Applied to body paragraphs, nav links, and UI elements.')
                             ->options(Organization::getFontOptions())
                             ->default('Outfit')
-                            ->searchable(),
+                            ->searchable()
+                            ->live(),
                     ])
                     ->columns(2)
                     ->collapsed(false),
@@ -228,22 +383,30 @@ class OrganizationResource extends Resource
                     ->schema([
                         Forms\Components\ColorPicker::make('theme.accent')
                             ->label('Accent')
-                            ->helperText('Buttons, links, highlights'),
+                            ->helperText('Buttons, links, highlights')
+                            ->live(),
                         Forms\Components\ColorPicker::make('theme.accent_dark')
                             ->label('Accent (hover)')
-                            ->helperText('Optional — auto-darkened from accent if empty'),
+                            ->helperText('Optional — auto-darkened from accent if empty')
+                            ->live(),
                         Forms\Components\ColorPicker::make('theme.ink')
-                            ->label('Text / ink'),
+                            ->label('Text / ink')
+                            ->live(),
                         Forms\Components\ColorPicker::make('theme.muted')
-                            ->label('Muted text'),
+                            ->label('Muted text')
+                            ->live(),
                         Forms\Components\ColorPicker::make('theme.bg')
-                            ->label('Page background'),
+                            ->label('Page background')
+                            ->live(),
                         Forms\Components\ColorPicker::make('theme.surface')
-                            ->label('Cards / surface'),
+                            ->label('Cards / surface')
+                            ->live(),
                         Forms\Components\ColorPicker::make('theme.line')
-                            ->label('Borders / lines'),
+                            ->label('Borders / lines')
+                            ->live(),
                         Forms\Components\ColorPicker::make('theme.dark')
-                            ->label('Footer / dark blocks'),
+                            ->label('Footer / dark blocks')
+                            ->live(),
                     ])
                     ->columns(2)
                     ->collapsed(false),

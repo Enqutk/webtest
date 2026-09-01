@@ -128,11 +128,11 @@ h1, h2, h3, h4, .display-font {
 }
 
 .hz-brand {
-    font-family: var(--font-display);
-    font-size: 1.45rem;
-    font-weight: 700;
-    color: var(--hz-ink) !important;
-    letter-spacing: -0.03em;
+    font-family: var(--hz-brand-font-family, var(--font-display));
+    font-size: var(--hz-brand-font-size, 1.45rem);
+    font-weight: var(--hz-brand-font-weight, 700);
+    color: var(--hz-brand-color, var(--hz-ink)) !important;
+    letter-spacing: var(--hz-brand-letter-spacing, -0.03em);
     padding: 0;
     margin: 0;
 }
@@ -210,10 +210,11 @@ h1, h2, h3, h4, .display-font {
 }
 
 .hz-nav .nav-link {
-    font-weight: 500;
-    font-size: 0.95rem;
-    color: var(--hz-ink) !important;
-    padding: 0.55rem 0.9rem !important;
+    font-family: var(--hz-nav-font-family, inherit);
+    font-weight: var(--hz-nav-font-weight, 500);
+    font-size: var(--hz-nav-font-size, 0.95rem);
+    color: var(--hz-nav-color, var(--hz-ink)) !important;
+    padding: var(--hz-nav-spacing, 0.55rem 0.9rem) !important;
     position: relative;
 }
 
@@ -241,6 +242,31 @@ h1, h2, h3, h4, .display-font {
 
 .hz-nav-cta {
     margin-left: 0.65rem;
+}
+
+.hz-nav-cta .btn-hz {
+    font-size: var(--hz-cta-font-size, 0.88rem);
+    background: var(--hz-cta-bg, var(--hz-accent));
+    color: var(--hz-cta-color, #fff) !important;
+    border-color: var(--hz-cta-bg, var(--hz-accent));
+}
+
+.hz-footer-tagline, .hz-tagline {
+    font-family: var(--hz-tagline-font-family, inherit);
+    font-size: var(--hz-tagline-font-size, inherit);
+    font-style: var(--hz-tagline-font-style, normal);
+    font-weight: var(--hz-tagline-font-weight, 400);
+    color: var(--hz-tagline-color, inherit);
+}
+
+.hz-pobox {
+    font-size: var(--hz-pobox-font-size, inherit);
+    color: var(--hz-pobox-color, inherit);
+}
+
+.hz-address {
+    font-size: var(--hz-address-font-size, inherit);
+    color: var(--hz-address-color, inherit);
 }
 
 .hz-dropdown {

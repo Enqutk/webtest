@@ -10,12 +10,14 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\HtmlString;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class MgtPanelProvider extends PanelProvider
@@ -66,6 +68,31 @@ class MgtPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->renderHook(
+                PanelsRenderHook::HEAD_END,
+                fn (): HtmlString => new HtmlString('
+                    <style>
+                        .fi-form-actions {
+                            position: sticky !important;
+                            bottom: 1.25rem !important;
+                            z-index: 25 !important;
+                            backdrop-filter: blur(12px) !important;
+                            -webkit-backdrop-filter: blur(12px) !important;
+                            background: rgba(255, 255, 255, 0.92) !important;
+                            padding: 0.85rem 1.25rem !important;
+                            border-radius: 0.75rem !important;
+                            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.08) !important;
+                            border: 1px solid rgba(0, 0, 0, 0.08) !important;
+                            transition: all 0.2s ease-in-out !important;
+                        }
+                        .dark .fi-form-actions {
+                            background: rgba(17, 24, 39, 0.92) !important;
+                            border-color: rgba(255, 255, 255, 0.1) !important;
+                            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+                        }
+                    </style>
+                ')
+            );
     }
 }

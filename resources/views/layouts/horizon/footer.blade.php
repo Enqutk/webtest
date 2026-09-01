@@ -20,7 +20,7 @@
                     <x-site-brand :name="$siteName" :logo="$logoUrl" :show-text="$showBrandText" />
                 </div>
                 @if($tagline)
-                    <p class="mb-3">{{ $tagline }}</p>
+                    <p class="mb-3 hz-footer-tagline">{{ $tagline }}</p>
                 @endif
                 @if($showFooterSocial)
                     <div class="hz-social">
@@ -54,10 +54,10 @@
                 <div class="col-lg-3">
                     <h6 class="text-white mb-3">Contact</h6>
                     @if(!empty($data['address'] ?? null))
-                        <p class="mb-2">{{ $data['address'] }}</p>
+                        <p class="mb-2 hz-address">{{ $data['address'] }}</p>
                     @endif
                     @if(!empty($data['po_box'] ?? null))
-                        <p class="mb-2 opacity-75"><small>P.O. Box: {{ $data['po_box'] }}</small></p>
+                        <p class="mb-2 opacity-75 hz-pobox"><small>P.O. Box: {{ $data['po_box'] }}</small></p>
                     @endif
                     @foreach(($data['email'] ?? []) as $email)
                         <p class="mb-1"><a href="mailto:{{ $email }}">{{ $email }}</a></p>

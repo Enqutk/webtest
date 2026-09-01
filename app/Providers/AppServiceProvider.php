@@ -15,6 +15,10 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Spatie\MediaLibrary\Support\PathGenerator\PathGenerator;
 
+use Filament\Pages\Page;
+use Filament\Resources\Pages\CreateRecord;
+use Filament\Resources\Pages\EditRecord;
+
 class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -24,6 +28,10 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        Page::stickyFormActions(true);
+        CreateRecord::stickyFormActions(true);
+        EditRecord::stickyFormActions(true);
+
         app()->bind(PathGenerator::class, function () {
             return new ModelNamePathGenerator();
         });

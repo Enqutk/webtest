@@ -86,6 +86,58 @@ class Organization extends Model implements HasMedia
             'show_footer_nav' => true,
             'show_footer_contact' => true,
             'show_footer_credit' => true,
+
+            // Brand Typography & Style
+            'brand_font_family' => null,
+            'brand_font_size' => '1.45rem',
+            'brand_font_weight' => '700',
+            'brand_color' => null,
+            'brand_letter_spacing' => '-0.03em',
+
+            // Tagline Typography & Style
+            'tagline_font_family' => null,
+            'tagline_font_size' => '0.95rem',
+            'tagline_font_style' => 'normal',
+            'tagline_font_weight' => '400',
+            'tagline_color' => null,
+
+            // Navigation Links Typography & Spacing
+            'nav_font_family' => null,
+            'nav_font_size' => '0.95rem',
+            'nav_font_weight' => '500',
+            'nav_color' => null,
+            'nav_spacing' => '0.55rem 0.9rem',
+
+            // Header CTA Button Styling
+            'header_cta_font_size' => '0.88rem',
+            'header_cta_bg' => null,
+            'header_cta_text_color' => null,
+
+            // Contact Typography (PO Box & Address)
+            'pobox_font_size' => '0.875rem',
+            'pobox_color' => null,
+            'address_font_size' => '0.95rem',
+            'address_color' => null,
+        ];
+    }
+
+    public static function getFontWeightOptions(): array
+    {
+        return [
+            '300' => '300 (Light)',
+            '400' => '400 (Regular)',
+            '500' => '500 (Medium)',
+            '600' => '600 (Semi-Bold)',
+            '700' => '700 (Bold)',
+            '800' => '800 (Extra-Bold)',
+        ];
+    }
+
+    public static function getFontStyleOptions(): array
+    {
+        return [
+            'normal' => 'Normal',
+            'italic' => 'Italic',
         ];
     }
 
