@@ -14,12 +14,15 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
 
+use App\Traits\BelongsToOrganization;
+
 class Service extends Model implements HasMedia {
-    use SoftDeletes, HasUserStamps, InteractsWithMedia;
+    use SoftDeletes, HasUserStamps, InteractsWithMedia, BelongsToOrganization;
 
     protected $table = 'services';
 
     protected $fillable = [
+        'organization_id',
         'slug',
         'title',
         'short_description',

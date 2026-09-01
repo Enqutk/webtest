@@ -6,14 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\HasMedia;
+use App\Traits\BelongsToOrganization;
 use App\Traits\HasUserStamps;
-
 
 class Team extends Model implements HasMedia
 {
-    use SoftDeletes, InteractsWithMedia , HasUserStamps;
+    use SoftDeletes, InteractsWithMedia, HasUserStamps, BelongsToOrganization;
 
     protected $fillable = [
+        'organization_id',
         'first_name',
         'last_name',
         'title',
