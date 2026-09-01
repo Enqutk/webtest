@@ -23,7 +23,7 @@ class HeroResource extends Resource
     protected static string $permissionKey = 'hero';
     protected static ?string $model = Hero::class;
     protected static ?string $navigationGroup = 'Website';
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 2;
     protected static ?string $navigationLabel = 'Hero slides';
     protected static ?string $modelLabel = 'Hero slide';
     protected static ?string $pluralModelLabel = 'Hero slides';

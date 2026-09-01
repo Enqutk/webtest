@@ -2,10 +2,16 @@
     'services' => collect(),
     'limit' => null,
     'showHeader' => true,
+    'eyebrow' => 'What we deliver',
+    'title' => 'Our services',
+    'description' => null,
+    'ctaText' => 'All services',
+    'ctaUrl' => null,
 ])
 
 @php
     $items = $limit ? $services->take($limit) : $services;
+    $targetCtaUrl = $ctaUrl ?: route('services.index');
 @endphp
 
 <section class="hz-section hz-services bg-surface border-top border-bottom border-hz" id="services">
@@ -13,11 +19,14 @@
         @if($showHeader)
             <div class="row justify-content-between align-items-end mb-4 g-3">
                 <div class="col-lg-7">
-                    <p class="hz-eyebrow">What we do</p>
-                    <h2 class="hz-title mb-0">Our services</h2>
+                    <p class="hz-eyebrow">{{ $eyebrow }}</p>
+                    <h2 class="hz-title mb-0">{{ $title }}</h2>
+                    @if($description)
+                        <p class="hz-lead text-muted mt-2 mb-0">{{ $description }}</p>
+                    @endif
                 </div>
                 <div class="col-lg-auto">
-                    <a href="{{ route('services.index') }}" class="btn-hz-outline">All services</a>
+                    <a href="{{ $targetCtaUrl }}" class="btn-hz-outline">{{ $ctaText }}</a>
                 </div>
             </div>
         @endif

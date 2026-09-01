@@ -1,10 +1,20 @@
-@props(['heroes' => collect()])
+@props([
+    'heroes' => collect(),
+    'heroConfig' => [],
+])
 
 @php
     $slides = $heroes instanceof \Illuminate\Support\Collection ? $heroes : collect($heroes);
     $hasMultiple = $slides->count() > 1;
     $siteName = $data['siteName'] ?? config('app.name', 'Site');
     $tagline = $data['tagline'] ?? '';
+    $heroBadge = $heroConfig['badge'] ?? $heroConfig['subtitle'] ?? ($tagline ? \Illuminate\Support\Str::limit($tagline, 60) : 'Engineering Excellence');
+    $heroHeadline = $heroConfig['title'] ?? null;
+    $heroCopy = $heroConfig['description'] ?? $tagline;
+    $heroCtaText = $heroConfig['cta_text'] ?? 'Explore services';
+    $heroCtaUrl = $heroConfig['cta_url'] ?? route('services.index');
+    $heroSecCtaText = $heroConfig['secondary_cta_text'] ?? 'Talk to us';
+    $heroSecCtaUrl = $heroConfig['secondary_cta_url'] ?? route('contact');
 @endphp
 
 <section class="hz-hero" aria-label="Homepage hero">
@@ -12,18 +22,22 @@
         <div class="container">
             <div class="row align-items-center g-5 hz-hero-slide">
                 <div class="col-lg-6">
-                    @if($tagline)
-                        <p class="hz-eyebrow">{{ \Illuminate\Support\Str::limit($tagline, 60) }}</p>
+                    @if($heroBadge)
+                        <p class="hz-eyebrow">{{ $heroBadge }}</p>
                     @endif
-                    <x-site-brand as="h1" class="hz-hero-brand" :name="$siteName" />
-                    @if($tagline)
-                        <p class="hz-hero-copy">{{ $tagline }}</p>
+                    @if($heroHeadline)
+                        <h1 class="hz-hero-title mb-3">{{ $heroHeadline }}</h1>
+                    @else
+                        <x-site-brand as="h1" class="hz-hero-brand" :name="$siteName" />
+                    @endif
+                    @if($heroCopy)
+                        <p class="hz-hero-copy">{{ $heroCopy }}</p>
                     @endif
                     <div class="d-flex flex-wrap gap-3">
-                        <a href="{{ route('services.index') }}" class="btn-hz">
-                            Explore services <i class="bi bi-arrow-right"></i>
+                        <a href="{{ $heroCtaUrl }}" class="btn-hz">
+                            {{ $heroCtaText }} <i class="bi bi-arrow-right"></i>
                         </a>
-                        <a href="{{ route('contact') }}" class="btn-hz-outline">Talk to us</a>
+                        <a href="{{ $heroSecCtaUrl }}" class="btn-hz-outline">{{ $heroSecCtaText }}</a>
                     </div>
                 </div>
             </div>

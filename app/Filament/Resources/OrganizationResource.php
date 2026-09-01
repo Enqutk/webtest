@@ -222,11 +222,11 @@ class OrganizationResource extends Resource
                                     ]),
 
                                 Forms\Components\Section::make('Navbar Menu Links')
-                                    ->description('Rename links, switch them ON or OFF, change destinations, or drag to reorder.')
+                                    ->description('Customize the displayed name and toggle visibility (ON / OFF) for each page link in your navbar. System routes remain safely protected.')
                                     ->schema([
                                         Forms\Components\Repeater::make('theme.nav_items')
-                                            ->label('Navbar Menu Links (Order, Name & ON / OFF Visibility)')
-                                            ->helperText('Manage each link in your top navbar. Turn links ON or OFF, change their displayed names, set destinations, or drag to reorder.')
+                                            ->label('Navbar Menu Links (Rename, Reorder & Toggle ON / OFF)')
+                                            ->helperText('Change the displayed name or toggle ON / OFF. The page routes are protected to prevent broken links.')
                                             ->default(fn () => Organization::defaultNavItems())
                                             ->afterStateHydrated(function (Forms\Components\Repeater $component, $state) {
                                                 if (empty($state)) {
@@ -235,31 +235,32 @@ class OrganizationResource extends Resource
                                             })
                                             ->schema([
                                                 Forms\Components\TextInput::make('label')
-                                                    ->label('Link Name / Label')
+                                                    ->label('Displayed Name / Label')
                                                     ->placeholder('e.g. Services')
                                                     ->required()
                                                     ->live(debounce: 300),
                                                 Forms\Components\TextInput::make('url')
-                                                    ->label('URL / Route')
-                                                    ->placeholder('e.g. /our-services or https://...')
-                                                    ->required(),
+                                                    ->label('Target Route (Fixed)')
+                                                    ->disabled()
+                                                    ->dehydrated()
+                                                    ->helperText('System route'),
                                                 Forms\Components\Toggle::make('is_visible')
-                                                    ->label('Visibility (ON / OFF)')
+                                                    ->label('Show in Navbar (ON / OFF)')
                                                     ->default(true)
                                                     ->live(),
                                                 Forms\Components\Select::make('target')
                                                     ->label('Open In')
                                                     ->options([
-                                                        '_self' => 'Same Window',
+                                                        '_self' => 'Same Tab',
                                                         '_blank' => 'New Tab',
                                                     ])
                                                     ->default('_self'),
                                             ])
                                             ->columns(4)
                                             ->reorderable()
-                                            ->collapsible()
-                                            ->cloneable()
-                                            ->itemLabel(fn (array $state): ?string => ($state['label'] ?? 'Link') . ((isset($state['is_visible']) && ! $state['is_visible']) ? ' (OFF - Hidden)' : ' (ON - Visible)'))
+                                            ->addable(false)
+                                            ->deletable(false)
+                                            ->itemLabel(fn (array $state): ?string => ($state['label'] ?? 'Link') . ' [' . ($state['url'] ?? '/') . ']' . ((isset($state['is_visible']) && ! $state['is_visible']) ? ' — (OFF Hidden)' : ' — (ON Visible)'))
                                             ->live(),
                                     ]),
                             ]),

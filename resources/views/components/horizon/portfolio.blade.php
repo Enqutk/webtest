@@ -4,10 +4,16 @@
     'showFilters' => false,
     'limit' => null,
     'showHeader' => true,
+    'eyebrow' => 'Selected projects',
+    'title' => 'Our projects',
+    'description' => null,
+    'ctaText' => 'View full portfolio',
+    'ctaUrl' => null,
 ])
 
 @php
     $items = $limit ? $projects->take($limit) : $projects;
+    $targetCtaUrl = $ctaUrl ?: route('portfolio.index');
 @endphp
 
 <section class="hz-section hz-portfolio" id="portfolio">
@@ -15,12 +21,15 @@
         @if($showHeader)
             <div class="row justify-content-between align-items-end mb-4 g-3">
                 <div class="col-lg-7">
-                    <p class="hz-eyebrow">Selected work</p>
-                    <h2 class="hz-title mb-0">Our projects</h2>
+                    <p class="hz-eyebrow">{{ $eyebrow }}</p>
+                    <h2 class="hz-title mb-0">{{ $title }}</h2>
+                    @if($description)
+                        <p class="hz-lead text-muted mt-2 mb-0">{{ $description }}</p>
+                    @endif
                 </div>
                 @if(!$showFilters)
                     <div class="col-lg-auto">
-                        <a href="{{ route('portfolio.index') }}" class="btn-hz-outline">View portfolio</a>
+                        <a href="{{ $targetCtaUrl }}" class="btn-hz-outline">{{ $ctaText }}</a>
                     </div>
                 @endif
             </div>

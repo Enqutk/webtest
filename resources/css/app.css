@@ -395,19 +395,19 @@ h1, h2, h3, h4, .display-font {
 }
 
 .hz-eyebrow-light {
-    color: #5eead4;
+    color: var(--hz-accent);
 }
 
 .hz-stats-grid {
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    border-top: 1px solid var(--hz-line);
 }
 
 .hz-stat {
     text-align: left;
     padding: 2rem 1.25rem;
     height: 100%;
-    border-right: 1px solid rgba(255, 255, 255, 0.12);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    border-right: 1px solid var(--hz-line);
+    border-bottom: 1px solid var(--hz-line);
 }
 
 @media (min-width: 992px) {
@@ -429,13 +429,13 @@ h1, h2, h3, h4, .display-font {
 .hz-stat-value {
     font-family: var(--font-display);
     font-size: clamp(2.4rem, 4vw, 3.5rem);
-    color: #5eead4;
+    color: var(--hz-accent);
     line-height: 1;
     margin-bottom: 0.65rem;
 }
 
 .hz-stat-label {
-    color: #b7c4c1;
+    color: var(--hz-muted);
     font-weight: 500;
     font-size: 0.95rem;
 }
@@ -978,7 +978,7 @@ h1, h2, h3, h4, .display-font {
     position: relative;
     aspect-ratio: 3 / 4;
     overflow: hidden;
-    background: #dfe8e5;
+    background: var(--hz-surface);
     border: 1px solid var(--hz-line);
     margin-bottom: 1rem;
 }
@@ -999,8 +999,8 @@ h1, h2, h3, h4, .display-font {
     font-weight: 700;
     color: var(--hz-accent);
     background:
-        linear-gradient(160deg, rgba(15, 118, 110, 0.12), transparent 55%),
-        #e7eeec;
+        linear-gradient(160deg, var(--hz-accent-soft), transparent 55%),
+        var(--hz-bg);
 }
 
 .hz-team-badge {

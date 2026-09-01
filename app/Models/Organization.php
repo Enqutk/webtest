@@ -106,6 +106,9 @@ class Organization extends Model implements HasMedia
             'nav_font_weight' => '500',
             'nav_spacing' => '0.55rem 0.9rem',
             'nav_items' => self::defaultNavItems(),
+
+            // Home Page Sections Customizer
+            'home_sections' => self::defaultHomeSections(),
         ];
     }
 
@@ -135,6 +138,83 @@ class Organization extends Model implements HasMedia
             ['label' => 'Services', 'url' => '/our-services', 'is_visible' => true, 'target' => '_self'],
             ['label' => 'Portfolio', 'url' => '/portfolio', 'is_visible' => true, 'target' => '_self'],
             ['label' => 'Contact', 'url' => '/contact', 'is_visible' => true, 'target' => '_self'],
+        ];
+    }
+
+    public static function defaultHomeSections(): array
+    {
+        return [
+            'hero' => [
+                'is_visible' => true,
+                'badge' => 'Infrastructure · Engineering · Impact',
+                'title' => 'Building resilient infrastructure for lasting communities',
+                'subtitle' => 'Engineering Excellence',
+                'description' => 'We design, engineer, and deliver high-impact water and infrastructure systems that power communities across East Africa.',
+                'cta_text' => 'Explore Our Work',
+                'cta_url' => '/portfolio',
+                'secondary_cta_text' => 'Our Services',
+                'secondary_cta_url' => '/our-services',
+            ],
+            'about' => [
+                'is_visible' => true,
+                'eyebrow' => 'Who we are',
+                'title' => 'Water expertise for living landscapes',
+                'description' => 'We combine technical hydrology, sustainable agriculture, and community governance to design water infrastructure that lasts generations.',
+                'points' => [
+                    ['title' => 'Design & Build', 'description' => 'Turnkey irrigation schemes, boreholes, and piped distribution networks.'],
+                    ['title' => 'Climate Resilience', 'description' => 'Flood control, catchment rehabilitation, and water harvesting structures.'],
+                    ['title' => 'Governance & Training', 'description' => 'Capacity building for community water management committees and utilities.'],
+                ],
+            ],
+            'services' => [
+                'is_visible' => true,
+                'eyebrow' => 'What we deliver',
+                'title' => 'Specialized engineering across the water cycle',
+                'description' => 'From feasibility studies to long-term asset management, our services address critical water challenges.',
+                'cta_text' => 'View all services',
+                'cta_url' => '/our-services',
+            ],
+            'stats' => [
+                'is_visible' => true,
+                'eyebrow' => 'By the numbers',
+                'title' => 'Impact that compounds across communities',
+                'subtitle' => 'Measured outcomes delivered through disciplined engineering and long-term community stewardship.',
+                'items' => [
+                    ['value' => '25+', 'label' => 'Counties served', 'description' => 'Across East Africa'],
+                    ['value' => '140k+', 'label' => 'People with clean water', 'description' => 'Sustainable access'],
+                    ['value' => '98%', 'label' => 'Scheme uptime', 'description' => 'Reliable operations'],
+                    ['value' => '65+', 'label' => 'Completed projects', 'description' => 'On time & budget'],
+                ],
+            ],
+            'portfolio' => [
+                'is_visible' => true,
+                'eyebrow' => 'Selected projects',
+                'title' => 'Engineered systems operating in the field',
+                'description' => 'A showcase of recent irrigation schemes, dam rehabilitations, and municipal water supply projects.',
+                'cta_text' => 'View full portfolio',
+                'cta_url' => '/portfolio',
+            ],
+            'clients' => [
+                'is_visible' => true,
+                'eyebrow' => 'Trusted partners',
+                'title' => 'Organizations we work alongside',
+                'description' => 'Partnering with governments, development agencies, private developers, and local communities.',
+            ],
+            'team' => [
+                'is_visible' => true,
+                'eyebrow' => 'Leadership & Team',
+                'title' => 'Experienced engineers & hydrologists',
+                'description' => 'Multidisciplinary experts dedicated to delivering technical precision and community impact.',
+                'cta_text' => 'Meet the entire team',
+                'cta_url' => '/about#team',
+            ],
+            'cta' => [
+                'is_visible' => true,
+                'title' => 'Have a project in mind?',
+                'description' => 'Climate-smart irrigation, rural WASH, flood resilience, and water-resource GIS across East Africa.',
+                'button_text' => 'Start a conversation',
+                'button_url' => '/contact',
+            ],
         ];
     }
 

@@ -70,11 +70,20 @@ class HomeContentService
         $activeEmail = ($theme['show_email'] ?? true) ? $contacts->get('email', collect())->pluck('value')->all() : [];
         $activePhone = ($theme['show_phone'] ?? true) ? $contacts->get('phone', collect())->pluck('value')->all() : [];
 
+        $defaultSections = Organization::defaultHomeSections();
+        $configuredSections = $theme['home_sections'] ?? [];
+        $homeSections = array_replace_recursive($defaultSections, is_array($configuredSections) ? $configuredSections : []);
+
+        $statsItems = !empty($homeSections['stats']['items'])
+            ? $homeSections['stats']['items']
+            : ($statsBlock?->list_items ?? []);
+
         return [
             'siteName' => $siteName,
             'tagline' => $activeTagline,
             'metaDescription' => $metaDescription,
             'theme' => $theme,
+            'homeSections' => $homeSections,
             'logoUrl' => $logoUrl,
             'faviconUrl' => $faviconUrl,
 
@@ -87,14 +96,15 @@ class HomeContentService
             'map' => $activeMap,
 
             'heroFeatures' => $blocks->get('key-features'),
-            'aboutFeatures' => $aboutFeaturesBlock
-                ? [
-                    'image' => $aboutImage,
-                    'title' => $aboutFeaturesBlock->title,
-                    'subtitle' => $aboutFeaturesBlock->subtitle,
-                    'description' => html_entity_decode((string) $aboutFeaturesBlock->content),
-                ]
-                : null,
+            'aboutFeatures' => [
+                'image' => $aboutImage,
+                'title' => $homeSections['about']['title'] ?? ($aboutFeaturesBlock?->title ?: 'Water expertise for living landscapes'),
+                'subtitle' => $homeSections['about']['eyebrow'] ?? ($aboutFeaturesBlock?->subtitle ?: 'Who we are'),
+                'description' => !empty($homeSections['about']['description'])
+                    ? nl2br(e($homeSections['about']['description']))
+                    : ($aboutFeaturesBlock ? html_entity_decode((string) $aboutFeaturesBlock->content) : ''),
+                'points' => $homeSections['about']['points'] ?? [],
+            ],
 
             'aboutSection1' => $aboutSection1Block
                 ? [
@@ -126,9 +136,9 @@ class HomeContentService
                 'metadata' => $blocks->get('video-details')->metadata,
             ] : null,
 
-            'stats' => $statsBlock?->list_items ?? [],
-            'statsTitle' => $statsBlock?->title ?: 'Impact that compounds',
-            'statsSubtitle' => $statsBlock?->subtitle ?: 'By the numbers',
+            'stats' => $statsItems,
+            'statsTitle' => $homeSections['stats']['title'] ?? ($statsBlock?->title ?: 'Impact that compounds'),
+            'statsSubtitle' => $homeSections['stats']['eyebrow'] ?? ($statsBlock?->subtitle ?: 'By the numbers'),
         ];
     }
 }

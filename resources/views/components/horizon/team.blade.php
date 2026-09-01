@@ -1,6 +1,11 @@
 @props([
     'team' => collect(),
     'showBios' => false,
+    'eyebrow' => 'Our people',
+    'title' => 'The team behind the work',
+    'description' => null,
+    'ctaText' => null,
+    'ctaUrl' => null,
 ])
 
 @if($team->isNotEmpty())
@@ -8,9 +13,17 @@
     <div class="container">
         <div class="row justify-content-between align-items-end mb-4 g-3">
             <div class="col-lg-7">
-                <p class="hz-eyebrow">Our people</p>
-                <h2 class="hz-title mb-0">The team behind the work</h2>
+                <p class="hz-eyebrow">{{ $eyebrow }}</p>
+                <h2 class="hz-title mb-0">{{ $title }}</h2>
+                @if($description)
+                    <p class="hz-lead text-muted mt-2 mb-0">{{ $description }}</p>
+                @endif
             </div>
+            @if($ctaText)
+                <div class="col-lg-auto">
+                    <a href="{{ $ctaUrl ?: route('about') . '#team' }}" class="btn-hz-outline">{{ $ctaText }}</a>
+                </div>
+            @endif
         </div>
 
         <div class="row g-4">
