@@ -59,7 +59,8 @@ class OrganizationResource extends Resource
                             ->schema([
                                 Forms\Components\Select::make('theme.brand_font_family')
                                     ->label('Brand Font')
-                                    ->options(Organization::getFontOptions())
+                                    ->options(Organization::getFontOptionsWithPreview())
+                                    ->allowHtml()
                                     ->placeholder('Inherit Display Font')
                                     ->searchable()
                                     ->live(),
@@ -101,7 +102,8 @@ class OrganizationResource extends Resource
                             ->schema([
                                 Forms\Components\Select::make('theme.tagline_font_family')
                                     ->label('Tagline Font')
-                                    ->options(Organization::getFontOptions())
+                                    ->options(Organization::getFontOptionsWithPreview())
+                                    ->allowHtml()
                                     ->placeholder('Inherit Body Font')
                                     ->searchable()
                                     ->live(),
@@ -237,7 +239,8 @@ class OrganizationResource extends Resource
                             ->schema([
                                 Forms\Components\Select::make('theme.nav_font_family')
                                     ->label('Nav Font')
-                                    ->options(Organization::getFontOptions())
+                                    ->options(Organization::getFontOptionsWithPreview())
+                                    ->allowHtml()
                                     ->placeholder('Inherit Body Font')
                                     ->searchable()
                                     ->live(),
@@ -363,14 +366,16 @@ class OrganizationResource extends Resource
                         Forms\Components\Select::make('theme.font_display')
                             ->label('Display / Heading Font')
                             ->helperText('Applied to brand text, main headings (H1-H4), and hero titles.')
-                            ->options(Organization::getFontOptions())
+                            ->options(Organization::getFontOptionsWithPreview())
+                            ->allowHtml()
                             ->default('Fraunces')
                             ->searchable()
                             ->live(),
                         Forms\Components\Select::make('theme.font_body')
                             ->label('Body Font')
                             ->helperText('Applied to body paragraphs, nav links, and UI elements.')
-                            ->options(Organization::getFontOptions())
+                            ->options(Organization::getFontOptionsWithPreview())
+                            ->allowHtml()
                             ->default('Outfit')
                             ->searchable()
                             ->live(),
@@ -378,37 +383,43 @@ class OrganizationResource extends Resource
                     ->columns(2)
                     ->collapsed(false),
 
-                Forms\Components\Section::make('Brand colors')
-                    ->description('These override the public site theme. Leave blank to keep defaults. Change and save, then hard-refresh the site.')
+                Forms\Components\Section::make('Design System & Brand Colors')
+                    ->description('Universal color tokens applied across the entire website (buttons, navbar, cards, texts, borders, hero, and footer).')
                     ->schema([
                         Forms\Components\ColorPicker::make('theme.accent')
-                            ->label('Accent')
-                            ->helperText('Buttons, links, highlights')
+                            ->label('Main Accent / Primary')
+                            ->helperText('Primary buttons, active links, badges, highlights, slider dots.')
                             ->live(),
                         Forms\Components\ColorPicker::make('theme.accent_dark')
-                            ->label('Accent (hover)')
-                            ->helperText('Optional — auto-darkened from accent if empty')
+                            ->label('Primary Dark (Hover)')
+                            ->helperText('Hover state for buttons and dark highlights.')
                             ->live(),
                         Forms\Components\ColorPicker::make('theme.ink')
-                            ->label('Text / ink')
+                            ->label('Main Text / Ink')
+                            ->helperText('Primary headings, titles, and main body text.')
                             ->live(),
                         Forms\Components\ColorPicker::make('theme.muted')
-                            ->label('Muted text')
+                            ->label('Muted / Secondary Text')
+                            ->helperText('Subtitles, descriptions, helper labels, captions.')
                             ->live(),
                         Forms\Components\ColorPicker::make('theme.bg')
-                            ->label('Page background')
+                            ->label('Page Canvas Background')
+                            ->helperText('Main body background and light section canvas.')
                             ->live(),
                         Forms\Components\ColorPicker::make('theme.surface')
-                            ->label('Cards / surface')
+                            ->label('Surface / Card Background')
+                            ->helperText('Header navbar, content cards, dropdowns, forms.')
                             ->live(),
                         Forms\Components\ColorPicker::make('theme.line')
-                            ->label('Borders / lines')
+                            ->label('Border / Line Color')
+                            ->helperText('Outlines, card borders, dividers, subtle separators.')
                             ->live(),
                         Forms\Components\ColorPicker::make('theme.dark')
-                            ->label('Footer / dark blocks')
+                            ->label('Dark Theme / Footer')
+                            ->helperText('Website footer background and dark contrast blocks.')
                             ->live(),
                     ])
-                    ->columns(2)
+                    ->columns(4)
                     ->collapsed(false),
 
                 Forms\Components\Select::make('status')

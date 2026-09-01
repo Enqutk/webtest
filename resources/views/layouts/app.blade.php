@@ -18,23 +18,7 @@
         $taglineFont = $theme['tagline_font_family'] ?? null;
         $navFont = $theme['nav_font_family'] ?? null;
 
-        $fonts = array_unique(array_filter([$fontDisplay, $fontBody, $brandFont, $taglineFont, $navFont]));
-        $fontQueries = [];
-        foreach ($fonts as $font) {
-            $encodedFont = str_replace(' ', '+', $font);
-            if ($font === 'Fraunces') {
-                $fontQueries[] = 'family=Fraunces:opsz,wght@9..144,500;9..144,700';
-            } elseif ($font === 'Playfair Display') {
-                $fontQueries[] = 'family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400';
-            } elseif ($font === 'Cinzel') {
-                $fontQueries[] = 'family=Cinzel:wght@400;600;700';
-            } elseif ($font === 'Lora') {
-                $fontQueries[] = 'family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400';
-            } else {
-                $fontQueries[] = "family={$encodedFont}:wght@300;400;500;600;700;800";
-            }
-        }
-        $googleFontsUrl = 'https://fonts.googleapis.com/css2?' . implode('&', $fontQueries) . '&display=swap';
+        $googleFontsUrl = \App\Models\Organization::getGoogleFontsUrl([$fontDisplay, $fontBody, $brandFont, $taglineFont, $navFont]);
 
         $serifFonts = ['Fraunces', 'Playfair Display', 'Lora', 'Cinzel'];
         $displayFallback = in_array($fontDisplay, $serifFonts) ? 'Georgia, serif' : 'sans-serif';

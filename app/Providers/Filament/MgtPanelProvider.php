@@ -72,6 +72,9 @@ class MgtPanelProvider extends PanelProvider
             ->renderHook(
                 PanelsRenderHook::HEAD_END,
                 fn (): HtmlString => new HtmlString('
+                    <link rel="preconnect" href="https://fonts.googleapis.com">
+                    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                    <link href="' . \App\Models\Organization::getAllGoogleFontsUrl() . '" rel="stylesheet">
                     <style>
                         .fi-form-actions {
                             position: sticky !important;

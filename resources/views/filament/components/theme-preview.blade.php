@@ -141,10 +141,15 @@
         },
 
         init() {
-            ['brandFont', 'taglineFont', 'navFont'].forEach(key => {
-                this.$watch(key, f => this.loadGoogleFont(f));
-                this.loadGoogleFont(this[key]);
-            });
+            this.$watch('$wire.data.theme.brand_font_family', f => this.loadGoogleFont(f));
+            this.$watch('$wire.data.theme.tagline_font_family', f => this.loadGoogleFont(f));
+            this.$watch('$wire.data.theme.nav_font_family', f => this.loadGoogleFont(f));
+            this.$watch('$wire.data.theme.font_display', f => this.loadGoogleFont(f));
+            this.$watch('$wire.data.theme.font_body', f => this.loadGoogleFont(f));
+
+            this.loadGoogleFont(this.brandFont);
+            this.loadGoogleFont(this.taglineFont);
+            this.loadGoogleFont(this.navFont);
         }
     }"
     class="w-full select-none"

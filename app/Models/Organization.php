@@ -161,6 +161,71 @@ class Organization extends Model implements HasMedia
         ];
     }
 
+    public static function getGoogleFontQuery(string $font): string
+    {
+        return match ($font) {
+            'Outfit' => 'family=Outfit:wght@400;500;600;700;800',
+            'Fraunces' => 'family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,800',
+            'Plus Jakarta Sans' => 'family=Plus+Jakarta+Sans:wght@400;500;600;700;800',
+            'Inter' => 'family=Inter:wght@400;500;600;700;800',
+            'Poppins' => 'family=Poppins:wght@400;500;600;700;800',
+            'Montserrat' => 'family=Montserrat:wght@400;500;600;700;800',
+            'Playfair Display' => 'family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400',
+            'Lora' => 'family=Lora:ital,wght@0,400;0,500;0,600;0,700',
+            'Roboto' => 'family=Roboto:wght@400;500;700',
+            'Open Sans' => 'family=Open+Sans:wght@400;500;600;700',
+            'DM Sans' => 'family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700',
+            'Cinzel' => 'family=Cinzel:wght@400;600;700;800',
+            'Space Grotesk' => 'family=Space+Grotesk:wght@400;500;600;700',
+            'Syne' => 'family=Syne:wght@400;600;700;800',
+            default => 'family=' . str_replace(' ', '+', $font) . ':wght@400;600;700',
+        };
+    }
+
+    public static function getGoogleFontsUrl(array $fonts = []): string
+    {
+        $unique = array_unique(array_filter($fonts));
+        if (empty($unique)) {
+            $unique = ['Fraunces', 'Outfit'];
+        }
+
+        $queries = array_map(fn ($f) => self::getGoogleFontQuery($f), $unique);
+
+        return 'https://fonts.googleapis.com/css2?' . implode('&', $queries) . '&display=swap';
+    }
+
+    public static function getAllGoogleFontsUrl(): string
+    {
+        return self::getGoogleFontsUrl(array_keys(self::getFontOptions()));
+    }
+
+    public static function getFontOptionsWithPreview(): array
+    {
+        $options = [];
+        $fontDetails = [
+            'Outfit' => ['label' => 'Outfit', 'sub' => 'Modern Sans-serif'],
+            'Fraunces' => ['label' => 'Fraunces', 'sub' => 'Warm Editorial Serif'],
+            'Plus Jakarta Sans' => ['label' => 'Plus Jakarta Sans', 'sub' => 'Clean Modern Sans'],
+            'Inter' => ['label' => 'Inter', 'sub' => 'Geometric UI Sans'],
+            'Poppins' => ['label' => 'Poppins', 'sub' => 'Rounded Modern Sans'],
+            'Montserrat' => ['label' => 'Montserrat', 'sub' => 'Classic Geometric Sans'],
+            'Playfair Display' => ['label' => 'Playfair Display', 'sub' => 'Elegant Serif'],
+            'Lora' => ['label' => 'Lora', 'sub' => 'Contemporary Literary Serif'],
+            'Roboto' => ['label' => 'Roboto', 'sub' => 'Clean Standard Sans'],
+            'Open Sans' => ['label' => 'Open Sans', 'sub' => 'Neutral Sans'],
+            'DM Sans' => ['label' => 'DM Sans', 'sub' => 'Low-contrast Sans'],
+            'Cinzel' => ['label' => 'Cinzel', 'sub' => 'Classical Display Serif'],
+            'Space Grotesk' => ['label' => 'Space Grotesk', 'sub' => 'Tech Display'],
+            'Syne' => ['label' => 'Syne', 'sub' => 'Bold Expressive Display'],
+        ];
+
+        foreach ($fontDetails as $name => $info) {
+            $options[$name] = "<span style=\"font-family: '{$name}', sans-serif; font-size: 1.05rem; letter-spacing: 0.01em; display: inline-flex; align-items: baseline; gap: 0.4rem;\"><strong>{$info['label']}</strong> <span style=\"font-size: 0.78rem; opacity: 0.6; font-family: sans-serif; font-weight: normal;\">({$info['sub']})</span></span>";
+        }
+
+        return $options;
+    }
+
     /**
      * Merged theme with derived soft accent for CSS variables.
      *
