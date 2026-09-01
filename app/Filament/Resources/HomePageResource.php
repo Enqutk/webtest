@@ -96,7 +96,7 @@ class HomePageResource extends Resource
                                     ->schema([
                                         Forms\Components\Repeater::make('theme.home_sections.hero.slides')
                                             ->label('Hero Carousel Slides')
-                                            ->helperText('Manage individual slides displayed in the homepage carousel slider.')
+                                            ->helperText('Manage individual slides displayed in the homepage carousel slider. Click "Add Slide (Modal)" or the pencil icon to edit in a modal.')
                                             ->default(fn () => Organization::defaultHeroSlides())
                                             ->afterStateHydrated(function (Forms\Components\Repeater $component, $state) {
                                                 if (empty($state)) {
@@ -114,67 +114,49 @@ class HomePageResource extends Resource
                                                     $component->state($updated);
                                                 }
                                             })
-                                            ->schema([
-                                                Forms\Components\Grid::make(2)
-                                                    ->schema([
-                                                        Forms\Components\TextInput::make('subtitle')
-                                                            ->label('Eyebrow')
-                                                            ->placeholder('e.g. Irrigation · WASH · Resilience')
-                                                            ->maxLength(255),
-                                                        Forms\Components\TextInput::make('title')
-                                                            ->label('Slide Headline')
-                                                            ->placeholder('e.g. Water systems that feed people')
-                                                            ->required()
-                                                            ->maxLength(255),
-                                                    ]),
-                                                Forms\Components\Textarea::make('description')
-                                                    ->label('Slide Supporting Text')
-                                                    ->rows(2)
-                                                    ->maxLength(500),
-                                                Forms\Components\FileUpload::make('image')
-                                                    ->label('Slide Background Photo')
-                                                    ->image()
-                                                    ->imageEditor()
-                                                    ->disk('public')
-                                                    ->directory('hero-slides')
-                                                    ->visibility('public')
-                                                    ->formatStateUsing(function ($state) {
-                                                        if (blank($state)) {
-                                                            return [];
-                                                        }
-                                                        if (is_string($state)) {
-                                                            $clean = str_replace(url('/storage') . '/', '', $state);
-                                                            $clean = str_replace('/storage/', '', $clean);
-                                                            return [$clean => $clean];
-                                                        }
-                                                        return (array) $state;
-                                                    })
-                                                    ->dehydrateStateUsing(function ($state) {
-                                                        if (is_array($state)) {
-                                                            $val = array_values($state)[0] ?? null;
-                                                            return is_string($val) ? $val : null;
-                                                        }
-                                                        return is_string($state) ? $state : null;
-                                                    })
-                                                    ->helperText('Use a wide photo (about 1200×900 or larger).'),
-                                                Forms\Components\Grid::make(3)
-                                                    ->schema([
-                                                        Forms\Components\TextInput::make('text_link')
-                                                            ->label('Button Label')
-                                                            ->default('Explore services'),
-                                                        Forms\Components\TextInput::make('button_link')
-                                                            ->label('Button Link')
-                                                            ->default('/our-services'),
-                                                        Forms\Components\Toggle::make('is_visible')
-                                                            ->label('Slide Visibility (ON / OFF)')
-                                                            ->default(true),
-                                                    ]),
-                                            ])
+                                            ->schema(self::getHeroSlideFormSchema())
                                             ->columns(1)
                                             ->reorderable()
                                             ->collapsible()
+                                            ->collapsed()
                                             ->cloneable()
-                                            ->itemLabel(fn (array $state): ?string => ($state['title'] ?? 'Hero Slide') . ((isset($state['is_visible']) && ! $state['is_visible']) ? ' (OFF - Hidden)' : ' (ON - Visible)')),
+                                            ->addAction(fn (Forms\Components\Actions\Action $action) => $action
+                                                ->label('Add Hero Slide (Modal)')
+                                                ->icon('heroicon-m-plus-circle')
+                                                ->modalHeading('Add New Hero Slide')
+                                                ->modalDescription('Configure a new slide with photo, headline, and action link.')
+                                                ->modalWidth('3xl')
+                                                ->modalSubmitActionLabel('Add Slide')
+                                                ->form(self::getHeroSlideFormSchema())
+                                                ->action(function (array $data, Forms\Components\Repeater $component): void {
+                                                    $state = $component->getState() ?? [];
+                                                    $state[] = $data;
+                                                    $component->state($state);
+                                                })
+                                            )
+                                            ->extraItemActions([
+                                                Forms\Components\Actions\Action::make('edit_modal')
+                                                    ->label('Edit in Modal')
+                                                    ->tooltip('Open in modal editor')
+                                                    ->icon('heroicon-m-pencil-square')
+                                                    ->color('primary')
+                                                    ->modalHeading(fn (array $arguments, Forms\Components\Repeater $component): string => 'Edit Slide: ' . ($component->getItemState($arguments['item'])['title'] ?? 'Slide'))
+                                                    ->modalWidth('3xl')
+                                                    ->modalSubmitActionLabel('Save Slide Changes')
+                                                    ->form(self::getHeroSlideFormSchema())
+                                                    ->fillForm(fn (array $arguments, Forms\Components\Repeater $component): array => $component->getItemState($arguments['item']) ?? [])
+                                                    ->action(function (array $arguments, array $data, Forms\Components\Repeater $component): void {
+                                                        $state = $component->getState();
+                                                        $state[$arguments['item']] = array_merge($state[$arguments['item']] ?? [], $data);
+                                                        $component->state($state);
+                                                    }),
+                                            ])
+                                            ->itemLabel(function (array $state): ?string {
+                                                $title = $state['title'] ?? 'Untitled Slide';
+                                                $eyebrow = !empty($state['subtitle']) ? "[{$state['subtitle']}] " : '';
+                                                $status = (isset($state['is_visible']) && ! $state['is_visible']) ? ' (OFF - Hidden)' : ' (ON - Visible)';
+                                                return $eyebrow . $title . $status;
+                                            }),
                                     ]),
                             ]),
 
@@ -468,6 +450,66 @@ class HomePageResource extends Resource
                     ])
                     ->columnSpanFull(),
             ]);
+    }
+
+    public static function getHeroSlideFormSchema(): array
+    {
+        return [
+            Forms\Components\Grid::make(2)
+                ->schema([
+                    Forms\Components\TextInput::make('subtitle')
+                        ->label('Eyebrow')
+                        ->placeholder('e.g. Irrigation · WASH · Resilience')
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('title')
+                        ->label('Slide Headline')
+                        ->placeholder('e.g. Water systems that feed people')
+                        ->required()
+                        ->maxLength(255),
+                ]),
+            Forms\Components\Textarea::make('description')
+                ->label('Slide Supporting Text')
+                ->rows(3)
+                ->maxLength(500),
+            Forms\Components\FileUpload::make('image')
+                ->label('Slide Background Photo')
+                ->image()
+                ->imageEditor()
+                ->disk('public')
+                ->directory('hero-slides')
+                ->visibility('public')
+                ->formatStateUsing(function ($state) {
+                    if (blank($state)) {
+                        return [];
+                    }
+                    if (is_string($state)) {
+                        $clean = str_replace(url('/storage') . '/', '', $state);
+                        $clean = str_replace('/storage/', '', $clean);
+                        return [$clean => $clean];
+                    }
+                    return (array) $state;
+                })
+                ->dehydrateStateUsing(function ($state) {
+                    if (is_array($state)) {
+                        $val = array_values($state)[0] ?? null;
+                        return is_string($val) ? $val : null;
+                    }
+                    return is_string($state) ? $state : null;
+                })
+                ->helperText('Use a wide photo (about 1200×900 or larger).'),
+            Forms\Components\Grid::make(3)
+                ->schema([
+                    Forms\Components\TextInput::make('text_link')
+                        ->label('Button Label')
+                        ->default('Explore services'),
+                    Forms\Components\TextInput::make('button_link')
+                        ->label('Button Link')
+                        ->default('/our-services'),
+                    Forms\Components\Toggle::make('is_visible')
+                        ->label('Slide Visibility (ON / OFF)')
+                        ->default(true),
+                ]),
+        ];
     }
 
     public static function shouldRegisterNavigation(): bool
