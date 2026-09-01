@@ -359,6 +359,11 @@ class HomePageResource extends Resource
                         ->label('Slide Visibility (ON / OFF)')
                         ->default(true),
                 ]),
+            Forms\Components\Select::make('image_shape')
+                ->label('Individual Slide Photo Shape Style (Optional)')
+                ->options(Organization::imageShapeOptions(true))
+                ->default('inherit')
+                ->helperText('Override the section photo shape for this specific slide (e.g. Star, Arch, Hexagon, Pill).'),
         ];
     }
 

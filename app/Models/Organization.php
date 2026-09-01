@@ -467,18 +467,56 @@ class Organization extends Model implements HasMedia
         }
 
         return array_merge($options, [
-            'sharp' => '📐 Sharp / Square (0px - Modern Architectural)',
-            'rounded-sm' => '◽ Subtle Rounded (4px - Minimal)',
-            'rounded-md' => '◻️ Standard Rounded (8px - Classic)',
-            'rounded-lg' => '▢ Smooth Rounded (14px - Modern)',
-            'rounded-xl' => '🟩 Card Rounded (20px - Premium Soft)',
-            'rounded-2xl' => '🟢 Ultra Soft (28px - Friendly & Organic)',
-            'rounded-3xl' => '🔵 Super Curvy (36px - Bold Modern)',
-            'arch' => '🏛️ Architectural Arch (Curved top 100px, flat bottom)',
+            'star' => '⭐ Star (5-Point Geometric Star)',
+            'star-8' => '✨ Starburst (8-Point Star Diamond)',
+            'diamond' => '💎 Diamond / Rhombus',
+            'hexagon' => '🔷 Hexagon (6-Sided Modern)',
+            'octagon' => '🛑 Octagon (8-Sided Architectural)',
+            'shield' => '🛡️ Shield / Crest Badge',
+            'blob' => '🫧 Organic Fluid Blob',
+            'arch' => '🏛️ Architectural Arch (Curved top 120px)',
             'arch-full' => '⛪ Cathedral Roman Arch (Full dome top)',
-            'squircle' => '💠 Organic Squircle (25% geometric curve)',
-            'pill' => '💊 Capsule / Full Pill (Full 9999px rounded)',
+            'circle' => '⚪ Circle / Round (Full Circular)',
+            'pill' => '💊 Capsule / Full Pill (9999px)',
+            'squircle' => '💠 Organic Squircle (28% curve)',
+            'rounded-xl' => '🟩 Card Rounded (20px - Premium Soft)',
+            'rounded-2xl' => '🟢 Ultra Soft (28px - Friendly)',
+            'rounded-3xl' => '🔵 Super Curvy (36px - Bold)',
+            'rounded-lg' => '▢ Smooth Rounded (14px - Modern)',
+            'rounded-md' => '◻️ Standard Rounded (8px - Classic)',
+            'rounded-sm' => '◽ Subtle Rounded (4px - Minimal)',
+            'sharp' => '📐 Sharp / Square (0px - Modern Architectural)',
         ]);
+    }
+
+    public static function getImageShapeCss(?string $shape, ?string $fallback = 'rounded-xl'): string
+    {
+        if ($shape === 'inherit' || empty($shape)) {
+            $shape = $fallback ?: 'rounded-xl';
+        }
+
+        return match ($shape) {
+            'star', 'star-5' => 'border-radius: 0 !important; clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%) !important;',
+            'star-8' => 'border-radius: 0 !important; clip-path: polygon(50% 0%, 65% 25%, 100% 50%, 75% 65%, 50% 100%, 25% 75%, 0% 50%, 25% 25%) !important;',
+            'diamond' => 'border-radius: 0 !important; clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%) !important;',
+            'hexagon' => 'border-radius: 0 !important; clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%) !important;',
+            'octagon' => 'border-radius: 0 !important; clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%) !important;',
+            'shield' => 'border-radius: 0 !important; clip-path: polygon(50% 0%, 100% 0%, 100% 75%, 50% 100%, 0% 75%, 0% 0%) !important;',
+            'circle' => 'border-radius: 50% !important; clip-path: none !important;',
+            'blob' => 'border-radius: 60% 40% 30% 70% / 60% 30% 70% 40% !important; clip-path: none !important;',
+            'arch' => 'border-radius: 120px 120px 14px 14px !important; clip-path: none !important;',
+            'arch-full' => 'border-radius: 9999px 9999px 14px 14px !important; clip-path: none !important;',
+            'pill' => 'border-radius: 9999px !important; clip-path: none !important;',
+            'squircle' => 'border-radius: 28% !important; clip-path: none !important;',
+            'sharp' => 'border-radius: 0px !important; clip-path: none !important;',
+            'rounded-sm' => 'border-radius: 4px !important; clip-path: none !important;',
+            'rounded-md' => 'border-radius: 8px !important; clip-path: none !important;',
+            'rounded-lg' => 'border-radius: 14px !important; clip-path: none !important;',
+            'rounded-xl' => 'border-radius: 20px !important; clip-path: none !important;',
+            'rounded-2xl' => 'border-radius: 28px !important; clip-path: none !important;',
+            'rounded-3xl' => 'border-radius: 36px !important; clip-path: none !important;',
+            default => 'border-radius: 20px !important; clip-path: none !important;',
+        };
     }
 
     public static function getImageRadiusCss(?string $shape, ?string $fallback = 'rounded-xl'): array
@@ -488,19 +526,28 @@ class Organization extends Model implements HasMedia
         }
 
         return match ($shape) {
-            'sharp' => ['border-radius' => '0px'],
-            'rounded-sm' => ['border-radius' => '4px'],
-            'rounded-md' => ['border-radius' => '8px'],
-            'rounded-lg' => ['border-radius' => '14px'],
-            'rounded-xl' => ['border-radius' => '20px'],
-            'rounded-2xl' => ['border-radius' => '28px'],
-            'rounded-3xl' => ['border-radius' => '36px'],
-            'arch' => ['border-radius' => '100px 100px 12px 12px'],
-            'arch-full' => ['border-radius' => '9999px 9999px 12px 12px'],
-            'pill' => ['border-radius' => '9999px'],
-            'squircle' => ['border-radius' => '25%'],
-            default => ['border-radius' => '20px'],
+            'star', 'star-5' => ['border-radius' => '0px', 'clip-path' => 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)'],
+            'star-8' => ['border-radius' => '0px', 'clip-path' => 'polygon(50% 0%, 65% 25%, 100% 50%, 75% 65%, 50% 100%, 25% 75%, 0% 50%, 25% 25%)'],
+            'diamond' => ['border-radius' => '0px', 'clip-path' => 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'],
+            'hexagon' => ['border-radius' => '0px', 'clip-path' => 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)'],
+            'octagon' => ['border-radius' => '0px', 'clip-path' => 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)'],
+            'shield' => ['border-radius' => '0px', 'clip-path' => 'polygon(50% 0%, 100% 0%, 100% 75%, 50% 100%, 0% 75%, 0% 0%)'],
+            'circle' => ['border-radius' => '50%', 'clip-path' => 'none'],
+            'blob' => ['border-radius' => '60% 40% 30% 70% / 60% 30% 70% 40%', 'clip-path' => 'none'],
+            'arch' => ['border-radius' => '120px 120px 14px 14px', 'clip-path' => 'none'],
+            'arch-full' => ['border-radius' => '9999px 9999px 14px 14px', 'clip-path' => 'none'],
+            'pill' => ['border-radius' => '9999px', 'clip-path' => 'none'],
+            'squircle' => ['border-radius' => '28%', 'clip-path' => 'none'],
+            'sharp' => ['border-radius' => '0px', 'clip-path' => 'none'],
+            'rounded-sm' => ['border-radius' => '4px', 'clip-path' => 'none'],
+            'rounded-md' => ['border-radius' => '8px', 'clip-path' => 'none'],
+            'rounded-lg' => ['border-radius' => '14px', 'clip-path' => 'none'],
+            'rounded-xl' => ['border-radius' => '20px', 'clip-path' => 'none'],
+            'rounded-2xl' => ['border-radius' => '28px', 'clip-path' => 'none'],
+            'rounded-3xl' => ['border-radius' => '36px', 'clip-path' => 'none'],
+            default => ['border-radius' => '20px', 'clip-path' => 'none'],
         };
     }
 }
+
 

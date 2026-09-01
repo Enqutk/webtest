@@ -58,46 +58,38 @@
             @if(!empty($theme['nav_font_weight'])) --hz-nav-font-weight: {{ $theme['nav_font_weight'] }}; @endif
             @if(!empty($theme['nav_spacing'])) --hz-nav-spacing: {{ $theme['nav_spacing'] }}; @endif
 
-            @php
-                $globalShape = $theme['image_shape'] ?? 'rounded-xl';
-                $heroShape = $theme['home_sections']['hero']['image_shape'] ?? 'inherit';
-                $aboutShape = $theme['home_sections']['about']['image_shape'] ?? 'inherit';
-                $portfolioShape = $theme['home_sections']['portfolio']['image_shape'] ?? 'inherit';
-                $teamShape = $theme['home_sections']['team']['image_shape'] ?? 'inherit';
+        @php
+            $globalShape = $theme['image_shape'] ?? 'rounded-xl';
+            $heroShape = $theme['home_sections']['hero']['image_shape'] ?? 'inherit';
+            $aboutShape = $theme['home_sections']['about']['image_shape'] ?? 'inherit';
+            $portfolioShape = $theme['home_sections']['portfolio']['image_shape'] ?? 'inherit';
+            $teamShape = $theme['home_sections']['team']['image_shape'] ?? 'inherit';
 
-                $globalRadius = \App\Models\Organization::getImageRadiusCss($globalShape)['border-radius'];
-                $heroRadius = \App\Models\Organization::getImageRadiusCss($heroShape, $globalShape)['border-radius'];
-                $aboutRadius = \App\Models\Organization::getImageRadiusCss($aboutShape, $globalShape)['border-radius'];
-                $portfolioRadius = \App\Models\Organization::getImageRadiusCss($portfolioShape, $globalShape)['border-radius'];
-                $teamRadius = \App\Models\Organization::getImageRadiusCss($teamShape, $globalShape)['border-radius'];
-            @endphp
-
-            --hz-img-radius: {{ $globalRadius }};
-            --hz-hero-img-radius: {{ $heroRadius }};
-            --hz-about-img-radius: {{ $aboutRadius }};
-            --hz-portfolio-img-radius: {{ $portfolioRadius }};
-            --hz-team-img-radius: {{ $teamRadius }};
-        }
+            $heroShapeCss = \App\Models\Organization::getImageShapeCss($heroShape, $globalShape);
+            $aboutShapeCss = \App\Models\Organization::getImageShapeCss($aboutShape, $globalShape);
+            $portfolioShapeCss = \App\Models\Organization::getImageShapeCss($portfolioShape, $globalShape);
+            $teamShapeCss = \App\Models\Organization::getImageShapeCss($teamShape, $globalShape);
+        @endphp
 
         .hz-hero-media img,
         .hz-hero-media::after {
-            border-radius: var(--hz-hero-img-radius) !important;
+            {!! $heroShapeCss !!}
         }
 
         .hz-about-media img,
         .hz-about-media::after {
-            border-radius: var(--hz-about-img-radius) !important;
+            {!! $aboutShapeCss !!}
         }
 
         .hz-project-card-media,
         .hz-project-card-media img {
-            border-radius: var(--hz-portfolio-img-radius) !important;
+            {!! $portfolioShapeCss !!}
         }
 
         .hz-team-photo,
         .hz-team-photo img,
         .hz-team-initials {
-            border-radius: var(--hz-team-img-radius) !important;
+            {!! $teamShapeCss !!}
         }
     </style>
     @stack('styles')
