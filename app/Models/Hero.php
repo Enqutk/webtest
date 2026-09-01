@@ -6,6 +6,7 @@ use App\Enums\StatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Traits\BelongsToOrganization;
 use App\Traits\HasUserStamps;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -13,12 +14,12 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Hero extends Model implements HasMedia
 {
-    use SoftDeletes, HasUserStamps, InteractsWithMedia;
-
+    use SoftDeletes, HasUserStamps, InteractsWithMedia, BelongsToOrganization;
 
     protected $table = 'heroes';
 
     protected $fillable = [
+        'organization_id',
         'title',
         'subtitle',
         'description',

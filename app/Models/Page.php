@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Traits\BelongsToOrganization;
 use App\Traits\HasUserStamps;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -14,9 +15,10 @@ use Illuminate\Support\Str;
 
 class Page extends Model implements HasMedia
 {
-    use SoftDeletes, HasUserStamps, InteractsWithMedia;
+    use SoftDeletes, HasUserStamps, InteractsWithMedia, BelongsToOrganization;
 
     protected $fillable = [
+        'organization_id',
         'title',
         'slug',
         'short_description',
