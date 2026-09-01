@@ -105,13 +105,36 @@ class Organization extends Model implements HasMedia
             'nav_font_family' => null,
             'nav_font_weight' => '500',
             'nav_spacing' => '0.55rem 0.9rem',
-            'nav_items' => [
-                ['label' => 'Home', 'url' => '/', 'is_visible' => true, 'target' => '_self'],
-                ['label' => 'About', 'url' => '/about', 'is_visible' => true, 'target' => '_self'],
-                ['label' => 'Services', 'url' => '/our-services', 'is_visible' => true, 'target' => '_self'],
-                ['label' => 'Portfolio', 'url' => '/portfolio', 'is_visible' => true, 'target' => '_self'],
-                ['label' => 'Contact', 'url' => '/contact', 'is_visible' => true, 'target' => '_self'],
-            ],
+            'nav_items' => self::defaultNavItems(),
+        ];
+    }
+
+    public static function defaultNavItems(): array
+    {
+        try {
+            $existing = MenuItem::query()
+                ->whereNull('parent_id')
+                ->orderBy('order_number')
+                ->get();
+
+            if ($existing->isNotEmpty()) {
+                return $existing->map(fn (MenuItem $item) => [
+                    'label' => $item->title,
+                    'url' => $item->url ?: '/',
+                    'is_visible' => true,
+                    'target' => $item->target ?: '_self',
+                ])->all();
+            }
+        } catch (\Throwable $e) {
+            // fallback
+        }
+
+        return [
+            ['label' => 'Home', 'url' => '/', 'is_visible' => true, 'target' => '_self'],
+            ['label' => 'About', 'url' => '/about', 'is_visible' => true, 'target' => '_self'],
+            ['label' => 'Services', 'url' => '/our-services', 'is_visible' => true, 'target' => '_self'],
+            ['label' => 'Portfolio', 'url' => '/portfolio', 'is_visible' => true, 'target' => '_self'],
+            ['label' => 'Contact', 'url' => '/contact', 'is_visible' => true, 'target' => '_self'],
         ];
     }
 
