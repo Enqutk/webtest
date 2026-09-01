@@ -25,6 +25,8 @@ class EditHomePage extends EditRecord
         return [
             $this->addHeroSlideAction(),
             $this->configureHeroBannerAction(),
+            $this->addTeamMemberAction(),
+            $this->configureTeamSectionAction(),
             \Filament\Actions\Action::make('view_site')
                 ->label('View Live Home Page')
                 ->icon('heroicon-m-arrow-top-right-on-square')
@@ -221,6 +223,287 @@ class EditHomePage extends EditRecord
                     ->success()
                     ->send();
             });
+    }
+
+    public function configureTeamSectionAction(): \Filament\Actions\Action
+    {
+        return \Filament\Actions\Action::make('configureTeamSection')
+            ->label('Configure Team Section')
+            ->icon('heroicon-m-pencil-square')
+            ->modalHeading('Configure Leadership Team Section')
+            ->modalDescription('Update the heading, eyebrow, supporting description, CTA button, and photo shape for the team showcase.')
+            ->modalWidth('3xl')
+            ->modalSubmitActionLabel('Save Team Section')
+            ->fillForm(function (): array {
+                $record = $this->getRecord();
+                $team = $record?->theme['home_sections']['team'] ?? Organization::defaultHomeSections()['team'];
+                return [
+                    'is_visible' => $team['is_visible'] ?? true,
+                    'eyebrow' => $team['eyebrow'] ?? 'Leadership & Team',
+                    'title' => $team['title'] ?? 'Experienced engineers & hydrologists',
+                    'description' => $team['description'] ?? 'Multidisciplinary experts dedicated to delivering technical precision and community impact.',
+                    'cta_text' => $team['cta_text'] ?? 'Meet the entire team',
+                    'cta_url' => $team['cta_url'] ?? '/about#team',
+                    'image_shape' => $team['image_shape'] ?? 'inherit',
+                ];
+            })
+            ->form([
+                \Filament\Forms\Components\Toggle::make('is_visible')
+                    ->label('Show Team Section on Home Page (ON / OFF)')
+                    ->default(true),
+                \Filament\Forms\Components\Select::make('image_shape')
+                    ->label('Team Member Photo Shape Style')
+                    ->options(Organization::imageShapeOptions(true))
+                    ->default('inherit')
+                    ->helperText('Shape and corner rounding for team headshots / profile pictures.'),
+                \Filament\Forms\Components\Grid::make(2)
+                    ->schema([
+                        \Filament\Forms\Components\TextInput::make('eyebrow')
+                            ->label('Section Eyebrow')
+                            ->default('Leadership & Team')
+                            ->maxLength(100),
+                        \Filament\Forms\Components\TextInput::make('title')
+                            ->label('Section Heading')
+                            ->default('Experienced engineers & hydrologists')
+                            ->required()
+                            ->maxLength(255),
+                    ]),
+                \Filament\Forms\Components\Textarea::make('description')
+                    ->label('Section Description')
+                    ->rows(3)
+                    ->maxLength(500),
+                \Filament\Forms\Components\Grid::make(2)
+                    ->schema([
+                        \Filament\Forms\Components\TextInput::make('cta_text')
+                            ->label('CTA Button Text')
+                            ->default('Meet the entire team'),
+                        \Filament\Forms\Components\TextInput::make('cta_url')
+                            ->label('CTA Button Link')
+                            ->default('/about#team'),
+                    ]),
+            ])
+            ->action(function (array $data) {
+                $record = $this->getRecord();
+                $theme = is_array($record->theme) ? $record->theme : Organization::defaultTheme();
+                foreach ($data as $k => $v) {
+                    $theme['home_sections']['team'][$k] = $v;
+                }
+                $record->theme = $theme;
+                $record->save();
+                $this->fillForm();
+                \Filament\Notifications\Notification::make()
+                    ->title('Team section settings saved')
+                    ->success()
+                    ->send();
+            });
+    }
+
+    public function addTeamMemberAction(): \Filament\Actions\Action
+    {
+        return \Filament\Actions\Action::make('addTeamMember')
+            ->label('Add Team Member (Modal)')
+            ->icon('heroicon-m-plus-circle')
+            ->modalHeading('Add New Team Member')
+            ->modalDescription('Add a leadership or staff member with profile photo, name, title, and bio.')
+            ->modalWidth('3xl')
+            ->modalSubmitActionLabel('Save Team Member')
+            ->form([
+                \Filament\Forms\Components\Grid::make(2)
+                    ->schema([
+                        \Filament\Forms\Components\TextInput::make('first_name')
+                            ->label('First name')
+                            ->required()
+                            ->maxLength(120),
+                        \Filament\Forms\Components\TextInput::make('last_name')
+                            ->label('Last name')
+                            ->maxLength(120),
+                    ]),
+                \Filament\Forms\Components\TextInput::make('title')
+                    ->label('Role / Title')
+                    ->placeholder('e.g. Lead Irrigation Agronomist')
+                    ->required()
+                    ->maxLength(190),
+                \Filament\Forms\Components\Textarea::make('description')
+                    ->label('Short Bio / Description')
+                    ->rows(3)
+                    ->maxLength(500),
+                \Filament\Forms\Components\FileUpload::make('photo')
+                    ->label('Profile Photo')
+                    ->image()
+                    ->imageEditor()
+                    ->disk('public')
+                    ->directory('team-photos')
+                    ->visibility('public')
+                    ->helperText('Upload a square or portrait headshot photo.'),
+                \Filament\Forms\Components\Grid::make(3)
+                    ->schema([
+                        \Filament\Forms\Components\TextInput::make('order')
+                            ->label('Display Order')
+                            ->numeric()
+                            ->default(fn () => (\App\Models\Team::max('order') ?? 0) + 1)
+                            ->required(),
+                        \Filament\Forms\Components\Select::make('status')
+                            ->label('Status')
+                            ->options(\App\Enums\StatusEnum::class)
+                            ->default(\App\Enums\StatusEnum::active)
+                            ->required(),
+                        \Filament\Forms\Components\Toggle::make('founder')
+                            ->label('Founder Badge (ON / OFF)'),
+                    ]),
+            ])
+            ->action(function (array $data) {
+                $member = new \App\Models\Team();
+                $member->first_name = $data['first_name'];
+                $member->last_name = $data['last_name'] ?? null;
+                $member->title = $data['title'];
+                $member->description = $data['description'] ?? null;
+                $member->founder = (bool) ($data['founder'] ?? false);
+                $member->order = (int) ($data['order'] ?? 1);
+                $member->status = $data['status'] ?? \App\Enums\StatusEnum::active;
+                $member->save();
+
+                if (!empty($data['photo'])) {
+                    $photoPath = is_array($data['photo']) ? array_values($data['photo'])[0] : $data['photo'];
+                    if (is_string($photoPath) && filled($photoPath)) {
+                        $fullPath = storage_path('app/public/' . ltrim($photoPath, '/'));
+                        if (file_exists($fullPath)) {
+                            $member->clearMediaCollection('team-images');
+                            $member->addMedia($fullPath)->preservingOriginal()->toMediaCollection('team-images');
+                        }
+                    }
+                }
+
+                $this->fillForm();
+                \Filament\Notifications\Notification::make()
+                    ->title('Team member added successfully')
+                    ->success()
+                    ->send();
+            });
+    }
+
+    public function editTeamMemberAction(): \Filament\Actions\Action
+    {
+        return \Filament\Actions\Action::make('editTeamMember')
+            ->modalHeading('Edit Team Member')
+            ->modalWidth('3xl')
+            ->modalSubmitActionLabel('Save Changes')
+            ->fillForm(function (array $arguments): array {
+                $member = \App\Models\Team::find($arguments['id'] ?? 0);
+                if (!$member) return [];
+                return [
+                    'first_name' => $member->first_name,
+                    'last_name' => $member->last_name,
+                    'title' => $member->title,
+                    'description' => $member->description,
+                    'founder' => (bool) $member->founder,
+                    'order' => $member->order ?? 1,
+                    'status' => $member->status?->value ?? 'active',
+                ];
+            })
+            ->form([
+                \Filament\Forms\Components\Grid::make(2)
+                    ->schema([
+                        \Filament\Forms\Components\TextInput::make('first_name')
+                            ->label('First name')
+                            ->required()
+                            ->maxLength(120),
+                        \Filament\Forms\Components\TextInput::make('last_name')
+                            ->label('Last name')
+                            ->maxLength(120),
+                    ]),
+                \Filament\Forms\Components\TextInput::make('title')
+                    ->label('Role / Title')
+                    ->required()
+                    ->maxLength(190),
+                \Filament\Forms\Components\Textarea::make('description')
+                    ->label('Short Bio / Description')
+                    ->rows(3)
+                    ->maxLength(500),
+                \Filament\Forms\Components\FileUpload::make('photo')
+                    ->label('Change Profile Photo (Optional)')
+                    ->image()
+                    ->imageEditor()
+                    ->disk('public')
+                    ->directory('team-photos')
+                    ->visibility('public')
+                    ->helperText('Upload new photo to replace the current headshot.'),
+                \Filament\Forms\Components\Grid::make(3)
+                    ->schema([
+                        \Filament\Forms\Components\TextInput::make('order')
+                            ->label('Display Order')
+                            ->numeric()
+                            ->required(),
+                        \Filament\Forms\Components\Select::make('status')
+                            ->label('Status')
+                            ->options(\App\Enums\StatusEnum::class)
+                            ->required(),
+                        \Filament\Forms\Components\Toggle::make('founder')
+                            ->label('Founder Badge (ON / OFF)'),
+                    ]),
+            ])
+            ->action(function (array $arguments, array $data) {
+                $member = \App\Models\Team::find($arguments['id'] ?? 0);
+                if (!$member) return;
+
+                $member->first_name = $data['first_name'];
+                $member->last_name = $data['last_name'] ?? null;
+                $member->title = $data['title'];
+                $member->description = $data['description'] ?? null;
+                $member->founder = (bool) ($data['founder'] ?? false);
+                $member->order = (int) ($data['order'] ?? 1);
+                $member->status = $data['status'] ?? \App\Enums\StatusEnum::active;
+                $member->save();
+
+                if (!empty($data['photo'])) {
+                    $photoPath = is_array($data['photo']) ? array_values($data['photo'])[0] : $data['photo'];
+                    if (is_string($photoPath) && filled($photoPath)) {
+                        $fullPath = storage_path('app/public/' . ltrim($photoPath, '/'));
+                        if (file_exists($fullPath)) {
+                            $member->clearMediaCollection('team-images');
+                            $member->addMedia($fullPath)->preservingOriginal()->toMediaCollection('team-images');
+                        }
+                    }
+                }
+
+                $this->fillForm();
+                \Filament\Notifications\Notification::make()
+                    ->title('Team member updated successfully')
+                    ->success()
+                    ->send();
+            });
+    }
+
+    public function deleteTeamMemberAction(): \Filament\Actions\Action
+    {
+        return \Filament\Actions\Action::make('deleteTeamMember')
+            ->requiresConfirmation()
+            ->modalHeading('Delete Team Member')
+            ->modalDescription('Are you sure you want to remove this team member?')
+            ->modalSubmitActionLabel('Delete Member')
+            ->color('danger')
+            ->action(function (array $arguments) {
+                $member = \App\Models\Team::find($arguments['id'] ?? 0);
+                if ($member) {
+                    $member->delete();
+                    $this->fillForm();
+                    \Filament\Notifications\Notification::make()
+                        ->title('Team member deleted')
+                        ->success()
+                        ->send();
+                }
+            });
+    }
+
+    public function toggleTeamMemberStatus(int $id): void
+    {
+        $member = \App\Models\Team::find($id);
+        if ($member) {
+            $member->status = ($member->status === \App\Enums\StatusEnum::active)
+                ? \App\Enums\StatusEnum::inactive
+                : \App\Enums\StatusEnum::active;
+            $member->save();
+            $this->fillForm();
+        }
     }
 
     public function toggleHeroSlideVisibility(int $index): void

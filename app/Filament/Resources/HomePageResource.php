@@ -268,45 +268,7 @@ class HomePageResource extends Resource
                         Forms\Components\Tabs\Tab::make('Leadership Team')
                             ->icon('heroicon-m-users')
                             ->schema([
-                                Forms\Components\Section::make('Team Section Settings')
-                                    ->schema([
-                                        Forms\Components\Toggle::make('theme.home_sections.team.is_visible')
-                                            ->label('Show Team Section on Home Page (ON / OFF)')
-                                            ->default(true)
-                                            ->live(),
-
-                                        Forms\Components\Grid::make(2)
-                                            ->schema([
-                                                Forms\Components\TextInput::make('theme.home_sections.team.eyebrow')
-                                                    ->label('Eyebrow')
-                                                    ->default('Leadership & Team'),
-                                                Forms\Components\TextInput::make('theme.home_sections.team.title')
-                                                    ->label('Heading')
-                                                    ->default('Experienced engineers & hydrologists')
-                                                    ->required(),
-                                            ]),
-
-                                        Forms\Components\Textarea::make('theme.home_sections.team.description')
-                                            ->label('Description')
-                                            ->default('Multidisciplinary experts dedicated to delivering technical precision and community impact.')
-                                            ->rows(2),
-
-                                        Forms\Components\Grid::make(2)
-                                            ->schema([
-                                                Forms\Components\TextInput::make('theme.home_sections.team.cta_text')
-                                                    ->label('CTA Button Text')
-                                                    ->default('Meet the entire team'),
-                                                Forms\Components\TextInput::make('theme.home_sections.team.cta_url')
-                                                    ->label('CTA Button URL')
-                                                    ->default('/about#team'),
-                                            ]),
-
-                                        Forms\Components\Select::make('theme.home_sections.team.image_shape')
-                                            ->label('Team Member Photo Shape Style')
-                                            ->options(Organization::imageShapeOptions(true))
-                                            ->default('inherit')
-                                            ->helperText('Shape and corner rounding for team headshots / profile pictures.'),
-                                    ]),
+                                Forms\Components\View::make('filament.components.team-members-manager'),
                             ]),
 
                         // Tab 8: Call to Action Banner

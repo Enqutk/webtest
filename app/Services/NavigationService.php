@@ -12,7 +12,7 @@ class NavigationService
 {
     public function navbarItems(): Collection
     {
-        return Cache::remember('nav.navbar', 60, function () {
+        $rawItems = Cache::remember('nav.navbar_raw', 3600, function () {
             $org = \App\Models\Organization::first();
             $themeNavItems = $org?->theme['nav_items'] ?? null;
 
@@ -25,7 +25,6 @@ class NavigationService
                             'label' => $item['label'] ?? 'Link',
                             'url' => $url,
                             'target' => $item['target'] ?? '_self',
-                            'active' => $this->isActive($url),
                             'children' => [],
                         ];
                     })
@@ -37,7 +36,7 @@ class NavigationService
                 ->first();
 
             if (! $location) {
-                return $this->fallbackNavbar();
+                return $this->fallbackNavbarRaw();
             }
 
             $items = MenuItem::query()
@@ -48,19 +47,32 @@ class NavigationService
                 ->get();
 
             if ($items->isEmpty()) {
-                return $this->fallbackNavbar();
+                return $this->fallbackNavbarRaw();
             }
 
-            return $items->map(fn (MenuItem $item) => $this->mapItem($item));
+            return $items->map(fn (MenuItem $item) => $this->mapItemRaw($item));
+        });
+
+        // Compute active dynamically per request
+        return $rawItems->map(function ($item) {
+            $item['active'] = $this->isActive($item['url']);
+            if (!empty($item['children'])) {
+                $item['children'] = collect($item['children'])->map(function ($child) {
+                    $child['active'] = $this->isActive($child['url']);
+                    return $child;
+                })->all();
+            }
+            return $item;
         });
     }
 
     public function clearCache(): void
     {
         Cache::forget('nav.navbar');
+        Cache::forget('nav.navbar_raw');
     }
 
-    private function mapItem(MenuItem $item): array
+    private function mapItemRaw(MenuItem $item): array
     {
         $url = $this->normalizeUrl((string) $item->url);
 
@@ -68,9 +80,8 @@ class NavigationService
             'label' => $item->title,
             'url' => $url,
             'target' => $item->target ?: '_self',
-            'active' => $this->isActive($url),
             'children' => $item->children
-                ->map(fn (MenuItem $child) => $this->mapItem($child))
+                ->map(fn (MenuItem $child) => $this->mapItemRaw($child))
                 ->values()
                 ->all(),
         ];
@@ -123,6 +134,17 @@ class NavigationService
         }
 
         return $current === $path || str_starts_with($current, rtrim($path, '/') . '/');
+    }
+
+    private function fallbackNavbarRaw(): Collection
+    {
+        return collect([
+            ['label' => 'Home', 'url' => url('/'), 'target' => '_self', 'children' => []],
+            ['label' => 'About', 'url' => url('/about'), 'target' => '_self', 'children' => []],
+            ['label' => 'Services', 'url' => url('/our-services'), 'target' => '_self', 'children' => []],
+            ['label' => 'Portfolio', 'url' => url('/portfolio'), 'target' => '_self', 'children' => []],
+            ['label' => 'Contact', 'url' => url('/contact'), 'target' => '_self', 'children' => []],
+        ]);
     }
 
     private function fallbackNavbar(): Collection
