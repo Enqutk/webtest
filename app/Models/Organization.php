@@ -6,12 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Organization extends Model implements HasMedia
+class Organization extends Model implements HasMedia, \Filament\Models\Contracts\HasName, \Filament\Models\Contracts\HasCurrentTenantLabel
 {
     use InteractsWithMedia;
 
     protected $fillable = [
         'title',
+        'slug',
+        'domain',
         'tagline',
         'meta_description',
         'theme',
@@ -27,6 +29,63 @@ class Organization extends Model implements HasMedia
         'opening_hours' => 'array',
         'theme' => 'array',
     ];
+
+    public function getFilamentName(): string
+    {
+        return $this->title ?? 'Organization';
+    }
+
+    public function getCurrentTenantLabel(): string
+    {
+        return 'Active Organization';
+    }
+
+    public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'organization_user')
+            ->withPivot('role')
+            ->withTimestamps();
+    }
+
+    public function services(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Service::class);
+    }
+
+    public function teams(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Team::class);
+    }
+
+    public function entities(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Entity::class);
+    }
+
+    public function heroes(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Hero::class);
+    }
+
+    public function pages(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Page::class);
+    }
+
+    public function menuLocations(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(MenuLocation::class);
+    }
+
+    public function socialRefs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(SocialRef::class);
+    }
+
+    public function contacts(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(OrganizationContact::class);
+    }
 
     public function registerMediaCollections(): void
     {
