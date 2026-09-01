@@ -90,6 +90,92 @@ class HomePageResource extends Resource
                                                     ->default('/our-services'),
                                             ]),
                                     ]),
+
+                                Forms\Components\Section::make('Hero Carousel Slides')
+                                    ->description('Add, edit, reorder, or toggle individual carousel slide photos, headlines, and links directly on the home page.')
+                                    ->schema([
+                                        Forms\Components\Repeater::make('theme.home_sections.hero.slides')
+                                            ->label('Hero Carousel Slides')
+                                            ->helperText('Manage individual slides displayed in the homepage carousel slider.')
+                                            ->default(fn () => Organization::defaultHeroSlides())
+                                            ->afterStateHydrated(function (Forms\Components\Repeater $component, $state) {
+                                                if (empty($state)) {
+                                                    $component->state(Organization::defaultHeroSlides());
+                                                } elseif (is_array($state)) {
+                                                    $updated = [];
+                                                    foreach ($state as $key => $slide) {
+                                                        if (isset($slide['image']) && is_string($slide['image']) && filled($slide['image'])) {
+                                                            $clean = str_replace(url('/storage') . '/', '', $slide['image']);
+                                                            $clean = str_replace('/storage/', '', $clean);
+                                                            $slide['image'] = [$clean => $clean];
+                                                        }
+                                                        $updated[$key] = $slide;
+                                                    }
+                                                    $component->state($updated);
+                                                }
+                                            })
+                                            ->schema([
+                                                Forms\Components\Grid::make(2)
+                                                    ->schema([
+                                                        Forms\Components\TextInput::make('subtitle')
+                                                            ->label('Eyebrow')
+                                                            ->placeholder('e.g. Irrigation · WASH · Resilience')
+                                                            ->maxLength(255),
+                                                        Forms\Components\TextInput::make('title')
+                                                            ->label('Slide Headline')
+                                                            ->placeholder('e.g. Water systems that feed people')
+                                                            ->required()
+                                                            ->maxLength(255),
+                                                    ]),
+                                                Forms\Components\Textarea::make('description')
+                                                    ->label('Slide Supporting Text')
+                                                    ->rows(2)
+                                                    ->maxLength(500),
+                                                Forms\Components\FileUpload::make('image')
+                                                    ->label('Slide Background Photo')
+                                                    ->image()
+                                                    ->imageEditor()
+                                                    ->disk('public')
+                                                    ->directory('hero-slides')
+                                                    ->visibility('public')
+                                                    ->formatStateUsing(function ($state) {
+                                                        if (blank($state)) {
+                                                            return [];
+                                                        }
+                                                        if (is_string($state)) {
+                                                            $clean = str_replace(url('/storage') . '/', '', $state);
+                                                            $clean = str_replace('/storage/', '', $clean);
+                                                            return [$clean => $clean];
+                                                        }
+                                                        return (array) $state;
+                                                    })
+                                                    ->dehydrateStateUsing(function ($state) {
+                                                        if (is_array($state)) {
+                                                            $val = array_values($state)[0] ?? null;
+                                                            return is_string($val) ? $val : null;
+                                                        }
+                                                        return is_string($state) ? $state : null;
+                                                    })
+                                                    ->helperText('Use a wide photo (about 1200×900 or larger).'),
+                                                Forms\Components\Grid::make(3)
+                                                    ->schema([
+                                                        Forms\Components\TextInput::make('text_link')
+                                                            ->label('Button Label')
+                                                            ->default('Explore services'),
+                                                        Forms\Components\TextInput::make('button_link')
+                                                            ->label('Button Link')
+                                                            ->default('/our-services'),
+                                                        Forms\Components\Toggle::make('is_visible')
+                                                            ->label('Slide Visibility (ON / OFF)')
+                                                            ->default(true),
+                                                    ]),
+                                            ])
+                                            ->columns(1)
+                                            ->reorderable()
+                                            ->collapsible()
+                                            ->cloneable()
+                                            ->itemLabel(fn (array $state): ?string => ($state['title'] ?? 'Hero Slide') . ((isset($state['is_visible']) && ! $state['is_visible']) ? ' (OFF - Hidden)' : ' (ON - Visible)')),
+                                    ]),
                             ]),
 
                         // Tab 2: About & Highlights
