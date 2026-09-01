@@ -8,14 +8,16 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use App\Enums\EntityTypeEnum;
 use App\Enums\StatusEnum;
+use App\Traits\BelongsToOrganization;
 use App\Traits\HasUserStamps;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Entity extends Model implements HasMedia 
 {
-    use SoftDeletes, HasUserStamps, InteractsWithMedia;
+    use SoftDeletes, HasUserStamps, InteractsWithMedia, BelongsToOrganization;
 
     protected $fillable = [
+        'organization_id',
         'name',
         'type',
         'category',
