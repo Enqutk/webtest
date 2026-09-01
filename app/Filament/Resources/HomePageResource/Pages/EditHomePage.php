@@ -56,12 +56,18 @@ class EditHomePage extends EditRecord
                     'cta_url' => $hero['cta_url'] ?? '/portfolio',
                     'secondary_cta_text' => $hero['secondary_cta_text'] ?? 'Our Services',
                     'secondary_cta_url' => $hero['secondary_cta_url'] ?? '/our-services',
+                    'image_shape' => $hero['image_shape'] ?? 'inherit',
                 ];
             })
             ->form([
                 \Filament\Forms\Components\Toggle::make('is_visible')
                     ->label('Show Hero Section on Home Page (ON / OFF)')
                     ->default(true),
+                \Filament\Forms\Components\Select::make('image_shape')
+                    ->label('Hero Carousel Slide Photo Shape')
+                    ->options(Organization::imageShapeOptions(true))
+                    ->default('inherit')
+                    ->helperText('Shape and corner rounding applied to the hero slide photos.'),
                 \Filament\Forms\Components\Grid::make(2)
                     ->schema([
                         \Filament\Forms\Components\TextInput::make('badge')

@@ -67,6 +67,12 @@ class HomePageResource extends Resource
                                             ->default('We combine technical hydrology, sustainable agriculture, and community governance to design water infrastructure that lasts generations.')
                                             ->rows(4),
 
+                                        Forms\Components\Select::make('theme.home_sections.about.image_shape')
+                                            ->label('About Picture Shape Style')
+                                            ->options(Organization::imageShapeOptions(true))
+                                            ->default('inherit')
+                                            ->helperText('Shape and corner curvature of the about section featured photo.'),
+
                                         Forms\Components\Repeater::make('theme.home_sections.about.points')
                                             ->label('Core Pillars / Highlights')
                                             ->default([
@@ -220,6 +226,12 @@ class HomePageResource extends Resource
                                                     ->label('CTA Button URL')
                                                     ->default('/portfolio'),
                                             ]),
+
+                                        Forms\Components\Select::make('theme.home_sections.portfolio.image_shape')
+                                            ->label('Project Thumbnail Picture Shape')
+                                            ->options(Organization::imageShapeOptions(true))
+                                            ->default('inherit')
+                                            ->helperText('Shape and corner rounding for project cards in the showcase grid.'),
                                     ]),
                             ]),
 
@@ -288,6 +300,12 @@ class HomePageResource extends Resource
                                                     ->label('CTA Button URL')
                                                     ->default('/about#team'),
                                             ]),
+
+                                        Forms\Components\Select::make('theme.home_sections.team.image_shape')
+                                            ->label('Team Member Photo Shape Style')
+                                            ->options(Organization::imageShapeOptions(true))
+                                            ->default('inherit')
+                                            ->helperText('Shape and corner rounding for team headshots / profile pictures.'),
                                     ]),
                             ]),
 

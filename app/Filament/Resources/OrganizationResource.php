@@ -431,6 +431,17 @@ class OrganizationResource extends Resource
                                             ->live(),
                                     ])
                                     ->columns(2),
+
+                                Forms\Components\Section::make('Picture & Image Shape Styling')
+                                    ->description('Select the global geometric shape and corner curvature for all pictures and photos across the website.')
+                                    ->schema([
+                                        Forms\Components\Select::make('theme.image_shape')
+                                            ->label('Global Picture Shape Preset')
+                                            ->options(Organization::imageShapeOptions(false))
+                                            ->default('rounded-xl')
+                                            ->helperText('Applied to hero slides, about visuals, project showcase cards, and team photos.')
+                                            ->live(),
+                                    ]),
                             ]),
 
                         // Tab 6: Status & Metadata

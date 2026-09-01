@@ -16,6 +16,11 @@
     $isVisible = $hero['is_visible'] ?? true;
 
     $slides = $hero['slides'] ?? \App\Models\Organization::defaultHeroSlides();
+
+    $globalShape = $theme['image_shape'] ?? 'rounded-xl';
+    $heroShape = $hero['image_shape'] ?? 'inherit';
+    $effectiveShape = ($heroShape === 'inherit' || empty($heroShape)) ? $globalShape : $heroShape;
+    $heroRadiusCss = \App\Models\Organization::getImageRadiusCss($effectiveShape)['border-radius'];
 @endphp
 
 <style>
@@ -74,7 +79,7 @@
         max-width: 72px;
         min-height: 72px;
         max-height: 72px;
-        border-radius: 0.5rem;
+        border-radius: {{ $heroRadiusCss }} !important;
         overflow: hidden;
         background: #e5e7eb;
         border: 1px solid #d1d5db;
@@ -92,6 +97,7 @@
         height: 72px !important;
         max-width: 72px !important;
         max-height: 72px !important;
+        border-radius: {{ $heroRadiusCss }} !important;
         object-fit: cover !important;
         display: block !important;
     }
@@ -113,7 +119,7 @@
                 <h3 style="font-size: 0.95rem; font-weight: 600; margin: 0; color: inherit; display: flex; align-items: center; gap: 0.5rem;">
                     <span>🌟</span> Hero Banner Global Settings
                 </h3>
-                <p style="font-size: 0.75rem; color: #6b7280; margin: 0.2rem 0 0 0;">Top headline, category badge, supporting copy, and action button links.</p>
+                <p style="font-size: 0.75rem; color: #6b7280; margin: 0.2rem 0 0 0;">Top headline, category badge, supporting copy, photo shape, and action button links.</p>
             </div>
             <button
                 type="button"
@@ -131,10 +137,12 @@
             <div style="padding: 0.75rem; background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.06); border-radius: 0.5rem;">
                 <div style="font-size: 0.65rem; text-transform: uppercase; font-weight: 600; color: #9ca3af; letter-spacing: 0.05em; margin-bottom: 0.3rem;">Headline & Eyebrow</div>
                 <div style="font-weight: 700; font-size: 0.9rem; margin-bottom: 0.3rem;">{{ $title }}</div>
-                <div style="color: #6b7280; display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem;">
+                <div style="color: #6b7280; display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; flex-wrap: wrap;">
                     <span class="hz-pill" style="background: rgba(234, 88, 12, 0.12); color: #c2410c;">{{ $badge }}</span>
                     <span>&bull;</span>
                     <span>{{ $subtitle }}</span>
+                    <span>&bull;</span>
+                    <span class="hz-pill" style="background: rgba(59, 130, 246, 0.12); color: #2563eb;">🖼️ Photo Shape: {{ ucfirst($effectiveShape) }}</span>
                 </div>
             </div>
 

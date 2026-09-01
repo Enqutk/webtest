@@ -107,6 +107,9 @@ class Organization extends Model implements HasMedia
             'nav_spacing' => '0.55rem 0.9rem',
             'nav_items' => self::defaultNavItems(),
 
+            // Picture / Image Shape Style
+            'image_shape' => 'rounded-xl',
+
             // Home Page Sections Customizer
             'home_sections' => self::defaultHomeSections(),
         ];
@@ -455,4 +458,49 @@ class Organization extends Model implements HasMedia
 
         return $out;
     }
+
+    public static function imageShapeOptions(bool $includeInherit = false): array
+    {
+        $options = [];
+        if ($includeInherit) {
+            $options['inherit'] = '🔄 Use Global Picture Shape (Default)';
+        }
+
+        return array_merge($options, [
+            'sharp' => '📐 Sharp / Square (0px - Modern Architectural)',
+            'rounded-sm' => '◽ Subtle Rounded (4px - Minimal)',
+            'rounded-md' => '◻️ Standard Rounded (8px - Classic)',
+            'rounded-lg' => '▢ Smooth Rounded (14px - Modern)',
+            'rounded-xl' => '🟩 Card Rounded (20px - Premium Soft)',
+            'rounded-2xl' => '🟢 Ultra Soft (28px - Friendly & Organic)',
+            'rounded-3xl' => '🔵 Super Curvy (36px - Bold Modern)',
+            'arch' => '🏛️ Architectural Arch (Curved top 100px, flat bottom)',
+            'arch-full' => '⛪ Cathedral Roman Arch (Full dome top)',
+            'squircle' => '💠 Organic Squircle (25% geometric curve)',
+            'pill' => '💊 Capsule / Full Pill (Full 9999px rounded)',
+        ]);
+    }
+
+    public static function getImageRadiusCss(?string $shape, ?string $fallback = 'rounded-xl'): array
+    {
+        if ($shape === 'inherit' || empty($shape)) {
+            $shape = $fallback ?: 'rounded-xl';
+        }
+
+        return match ($shape) {
+            'sharp' => ['border-radius' => '0px'],
+            'rounded-sm' => ['border-radius' => '4px'],
+            'rounded-md' => ['border-radius' => '8px'],
+            'rounded-lg' => ['border-radius' => '14px'],
+            'rounded-xl' => ['border-radius' => '20px'],
+            'rounded-2xl' => ['border-radius' => '28px'],
+            'rounded-3xl' => ['border-radius' => '36px'],
+            'arch' => ['border-radius' => '100px 100px 12px 12px'],
+            'arch-full' => ['border-radius' => '9999px 9999px 12px 12px'],
+            'pill' => ['border-radius' => '9999px'],
+            'squircle' => ['border-radius' => '25%'],
+            default => ['border-radius' => '20px'],
+        };
+    }
 }
+
