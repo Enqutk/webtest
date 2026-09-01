@@ -6,13 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Traits\BelongsToOrganization;
 use App\Traits\HasUserStamps;
 
 class PageSection extends Model
 {
-    use SoftDeletes, HasUserStamps;
+    use SoftDeletes, HasUserStamps, BelongsToOrganization;
 
     protected $fillable = [
+        'organization_id',
         'page_id',
         'title',
         'subtitle',
