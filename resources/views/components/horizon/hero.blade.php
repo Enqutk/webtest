@@ -21,6 +21,7 @@
                     'subtitle' => $s['subtitle'] ?? null,
                     'description' => $s['description'] ?? null,
                     'image_url' => $imgUrl,
+                    'image_shape' => $s['image_shape'] ?? null,
                     'text_link' => $s['text_link'] ?? 'Explore services',
                     'button_link' => $s['button_link'] ?? route('services.index'),
                 ];
@@ -119,8 +120,12 @@
                                 </div>
                                 <div class="col-lg-6">
                                     @if($hero->image_url)
-                                        <div class="hz-hero-media">
-                                            <img src="{{ $hero->image_url }}" alt="{{ $hero->title }}">
+                                        @php
+                                            $slideShape = (!empty($hero->image_shape) && $hero->image_shape !== 'inherit') ? $hero->image_shape : null;
+                                            $slideShapeCss = $slideShape ? \App\Models\Organization::getImageShapeCss($slideShape) : '';
+                                        @endphp
+                                        <div class="hz-hero-media" @if(str_contains($slideShapeCss, 'clip-path')) style="overflow: visible;" @endif>
+                                            <img src="{{ $hero->image_url }}" alt="{{ $hero->title }}" @if($slideShapeCss) style="{{ $slideShapeCss }}" @endif>
                                         </div>
                                     @endif
                                 </div>
