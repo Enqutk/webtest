@@ -32,6 +32,38 @@ class EditHomePage extends EditRecord
         ];
     }
 
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        if (isset($data['theme']['home_sections']['hero']['slides']) && is_array($data['theme']['home_sections']['hero']['slides'])) {
+            foreach ($data['theme']['home_sections']['hero']['slides'] as &$slide) {
+                if (isset($slide['image']) && is_string($slide['image']) && filled($slide['image'])) {
+                    $img = $slide['image'];
+                    $slide['image'] = [$img => $img];
+                }
+            }
+        }
+
+        return $data;
+    }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        if (isset($data['theme']['home_sections']['hero']['slides']) && is_array($data['theme']['home_sections']['hero']['slides'])) {
+            foreach ($data['theme']['home_sections']['hero']['slides'] as &$slide) {
+                if (isset($slide['image']) && is_array($slide['image'])) {
+                    $slide['image'] = array_values($slide['image'])[0] ?? null;
+                }
+            }
+        }
+
+        $existingTheme = $this->getRecord()?->theme ?? [];
+        if (is_array($existingTheme) && isset($data['theme'])) {
+            $data['theme'] = array_merge($existingTheme, $data['theme']);
+        }
+
+        return $data;
+    }
+
     protected function getRedirectUrl(): string
     {
         return static::$resource::getUrl('index');

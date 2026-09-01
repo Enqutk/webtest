@@ -27,6 +27,16 @@ class EditOrganization extends EditRecord
         ];
     }
 
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $existingTheme = $this->getRecord()?->theme ?? [];
+        if (is_array($existingTheme) && isset($data['theme'])) {
+            $data['theme'] = array_merge($existingTheme, $data['theme']);
+        }
+
+        return $data;
+    }
+
     protected function getRedirectUrl(): string
     {
         // Always redirect to the singleton edit page
