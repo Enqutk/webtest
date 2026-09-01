@@ -2,20 +2,21 @@
 
 namespace App\Models;
 
-use App\Enums\StatusEnum;
+use App\Traits\BelongsToOrganization;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SocialRef extends Model 
 {
-    use SoftDeletes;
+    use SoftDeletes, BelongsToOrganization;
     protected $table = 'social_refs';
 
     /**
     * Mass assignable attributes.
     */
     protected $fillable = [
+        'organization_id',
         'title',
         'link',
         'description',
