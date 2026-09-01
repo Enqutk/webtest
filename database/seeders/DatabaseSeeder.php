@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             PortfolioMediaSeeder::class,
             StatsSeeder::class,
             AboutContentSeeder::class,
+            HomePageSeeder::class,
         ]);
     }
 }
