@@ -13,6 +13,25 @@ class NavigationService
     public function navbarItems(): Collection
     {
         return Cache::remember('nav.navbar', 60, function () {
+            $org = \App\Models\Organization::first();
+            $themeNavItems = $org?->theme['nav_items'] ?? null;
+
+            if (is_array($themeNavItems) && ! empty($themeNavItems)) {
+                return collect($themeNavItems)
+                    ->filter(fn ($item) => !isset($item['is_visible']) || (bool)$item['is_visible'])
+                    ->map(function ($item) {
+                        $url = $this->normalizeUrl((string) ($item['url'] ?? '/'));
+                        return [
+                            'label' => $item['label'] ?? 'Link',
+                            'url' => $url,
+                            'target' => $item['target'] ?? '_self',
+                            'active' => $this->isActive($url),
+                            'children' => [],
+                        ];
+                    })
+                    ->values();
+            }
+
             $location = MenuLocation::query()
                 ->where('location', MenuLocationEnum::Navbar)
                 ->first();

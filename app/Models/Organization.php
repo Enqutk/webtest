@@ -101,24 +101,29 @@ class Organization extends Model implements HasMedia
             'tagline_font_weight' => '400',
             'tagline_color' => null,
 
-            // Navigation Links Typography & Spacing
+            // Navigation Links & Menu Items
             'nav_font_family' => null,
-            'nav_font_size' => '0.95rem',
             'nav_font_weight' => '500',
-            'nav_color' => null,
             'nav_spacing' => '0.55rem 0.9rem',
-
-            // Header CTA Button Styling
-            'header_cta_font_size' => '0.88rem',
-            'header_cta_bg' => null,
-            'header_cta_text_color' => null,
-
-            // Contact Typography (PO Box & Address)
-            'pobox_font_size' => '0.875rem',
-            'pobox_color' => null,
-            'address_font_size' => '0.95rem',
-            'address_color' => null,
+            'nav_items' => [
+                ['label' => 'Home', 'url' => '/', 'is_visible' => true, 'target' => '_self'],
+                ['label' => 'About', 'url' => '/about', 'is_visible' => true, 'target' => '_self'],
+                ['label' => 'Services', 'url' => '/our-services', 'is_visible' => true, 'target' => '_self'],
+                ['label' => 'Portfolio', 'url' => '/portfolio', 'is_visible' => true, 'target' => '_self'],
+                ['label' => 'Contact', 'url' => '/contact', 'is_visible' => true, 'target' => '_self'],
+            ],
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::saved(function () {
+            try {
+                app(\App\Services\NavigationService::class)->clearCache();
+            } catch (\Throwable $e) {
+                // ignore
+            }
+        });
     }
 
     public static function getFontWeightOptions(): array

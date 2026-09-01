@@ -13,14 +13,13 @@
             return $wire.data?.theme?.brand_font_family || $wire.data?.theme?.font_display || 'Fraunces'; 
         },
         get brandSize() { 
-            let s = $wire.data?.theme?.brand_font_size;
-            return s ? (s.match(/^[0-9]+$/) ? s + 'px' : s) : '1.45rem'; 
+            return '1.45rem'; 
         },
         get brandWeight() { 
             return $wire.data?.theme?.brand_font_weight || '700'; 
         },
         get brandColor() { 
-            return $wire.data?.theme?.brand_color || (this.previewTheme === 'dark' ? '#ffffff' : ($wire.data?.theme?.ink || '#10211f')); 
+            return this.previewTheme === 'dark' ? '#ffffff' : ($wire.data?.theme?.ink || '#10211f'); 
         },
         get brandSpacing() { 
             return $wire.data?.theme?.brand_letter_spacing || '-0.03em'; 
@@ -36,8 +35,7 @@
             return $wire.data?.theme?.tagline_font_family || $wire.data?.theme?.font_body || 'Outfit'; 
         },
         get taglineSize() { 
-            let s = $wire.data?.theme?.tagline_font_size;
-            return s ? (s.match(/^[0-9]+$/) ? s + 'px' : s) : '0.95rem'; 
+            return '0.95rem'; 
         },
         get taglineStyle() { 
             return $wire.data?.theme?.tagline_font_style || 'normal'; 
@@ -46,24 +44,38 @@
             return $wire.data?.theme?.tagline_font_weight || '400'; 
         },
         get taglineColor() { 
-            return $wire.data?.theme?.tagline_color || (this.previewTheme === 'dark' ? '#94a3b8' : ($wire.data?.theme?.muted || '#5a6b68')); 
+            return this.previewTheme === 'dark' ? '#94a3b8' : ($wire.data?.theme?.muted || '#5a6b68'); 
         },
 
         get navFont() { 
             return $wire.data?.theme?.nav_font_family || $wire.data?.theme?.font_body || 'Outfit'; 
         },
         get navSize() { 
-            let s = $wire.data?.theme?.nav_font_size;
-            return s ? (s.match(/^[0-9]+$/) ? s + 'px' : s) : '0.95rem'; 
+            return '0.95rem'; 
         },
         get navWeight() { 
             return $wire.data?.theme?.nav_font_weight || '500'; 
         },
         get navColor() { 
-            return $wire.data?.theme?.nav_color || (this.previewTheme === 'dark' ? '#e2e8f0' : ($wire.data?.theme?.ink || '#10211f')); 
+            return this.previewTheme === 'dark' ? '#e2e8f0' : ($wire.data?.theme?.ink || '#10211f'); 
         },
         get navSpacing() { 
             return $wire.data?.theme?.nav_spacing || '0.55rem 0.9rem'; 
+        },
+        get navItems() {
+            let items = $wire.data?.theme?.nav_items;
+            if (Array.isArray(items) && items.length > 0) {
+                return items
+                    .filter(item => item && (item.is_visible !== false && item.is_visible !== '0' && item.is_visible !== 0))
+                    .map(item => ({ label: item.label || 'Link' }));
+            }
+            return [
+                { label: 'Home' },
+                { label: 'About' },
+                { label: 'Services' },
+                { label: 'Portfolio' },
+                { label: 'Contact' },
+            ];
         },
 
         get showHeaderCta() { 
@@ -73,14 +85,13 @@
             return $wire.data?.theme?.header_cta_text?.trim() || 'Get in touch'; 
         },
         get ctaSize() { 
-            let s = $wire.data?.theme?.header_cta_font_size;
-            return s ? (s.match(/^[0-9]+$/) ? s + 'px' : s) : '0.88rem'; 
+            return '0.88rem'; 
         },
         get ctaBg() { 
-            return $wire.data?.theme?.header_cta_bg || $wire.data?.theme?.accent || '#0f766e'; 
+            return $wire.data?.theme?.accent || '#0f766e'; 
         },
         get ctaColor() { 
-            return $wire.data?.theme?.header_cta_text_color || '#ffffff'; 
+            return '#ffffff'; 
         },
 
         get poBox() { 
@@ -90,11 +101,10 @@
             return $wire.data?.theme?.show_po_box !== false && $wire.data?.theme?.show_po_box !== '0'; 
         },
         get poboxSize() { 
-            let s = $wire.data?.theme?.pobox_font_size;
-            return s ? (s.match(/^[0-9]+$/) ? s + 'px' : s) : '0.875rem'; 
+            return '0.875rem'; 
         },
         get poboxColor() { 
-            return $wire.data?.theme?.pobox_color || (this.previewTheme === 'dark' ? '#94a3b8' : ($wire.data?.theme?.muted || '#5a6b68')); 
+            return this.previewTheme === 'dark' ? '#94a3b8' : ($wire.data?.theme?.muted || '#5a6b68'); 
         },
 
         get address() { 
@@ -104,11 +114,10 @@
             return $wire.data?.theme?.show_address !== false && $wire.data?.theme?.show_address !== '0'; 
         },
         get addressSize() { 
-            let s = $wire.data?.theme?.address_font_size;
-            return s ? (s.match(/^[0-9]+$/) ? s + 'px' : s) : '0.95rem'; 
+            return '0.95rem'; 
         },
         get addressColor() { 
-            return $wire.data?.theme?.address_color || (this.previewTheme === 'dark' ? '#e2e8f0' : ($wire.data?.theme?.ink || '#10211f')); 
+            return this.previewTheme === 'dark' ? '#e2e8f0' : ($wire.data?.theme?.ink || '#10211f'); 
         },
 
         get accentColor() { 
@@ -276,9 +285,9 @@
                     <!-- Navigation Menu (Desktop & Tablet) -->
                     <template x-if="viewMode !== 'mobile'">
                         <nav class="flex items-center gap-1">
-                            <template x-for="(link, i) in ['Home', 'About Us', 'Services', 'Contact Us']" :key="link">
+                            <template x-for="(link, i) in navItems" :key="link.label + i">
                                 <span
-                                    x-text="link"
+                                    x-text="link.label"
                                     :style="{
                                         fontFamily: `'${navFont}', sans-serif`,
                                         fontSize: navSize,

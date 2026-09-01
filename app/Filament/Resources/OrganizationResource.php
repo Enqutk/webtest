@@ -64,18 +64,10 @@ class OrganizationResource extends Resource
                                     ->placeholder('Inherit Display Font')
                                     ->searchable()
                                     ->live(),
-                                Forms\Components\TextInput::make('theme.brand_font_size')
-                                    ->label('Font Size')
-                                    ->placeholder('1.45rem')
-                                    ->default('1.45rem')
-                                    ->live(debounce: 300),
                                 Forms\Components\Select::make('theme.brand_font_weight')
                                     ->label('Font Weight')
                                     ->options(Organization::getFontWeightOptions())
                                     ->default('700')
-                                    ->live(),
-                                Forms\Components\ColorPicker::make('theme.brand_color')
-                                    ->label('Text Color')
                                     ->live(),
                                 Forms\Components\TextInput::make('theme.brand_letter_spacing')
                                     ->label('Letter Spacing')
@@ -83,7 +75,7 @@ class OrganizationResource extends Resource
                                     ->default('-0.03em')
                                     ->live(debounce: 300),
                             ])
-                            ->columns(5),
+                            ->columns(3),
 
                         Forms\Components\Grid::make(2)
                             ->schema([
@@ -107,11 +99,6 @@ class OrganizationResource extends Resource
                                     ->placeholder('Inherit Body Font')
                                     ->searchable()
                                     ->live(),
-                                Forms\Components\TextInput::make('theme.tagline_font_size')
-                                    ->label('Font Size')
-                                    ->placeholder('0.95rem')
-                                    ->default('0.95rem')
-                                    ->live(debounce: 300),
                                 Forms\Components\Select::make('theme.tagline_font_style')
                                     ->label('Font Style')
                                     ->options(Organization::getFontStyleOptions())
@@ -122,11 +109,8 @@ class OrganizationResource extends Resource
                                     ->options(Organization::getFontWeightOptions())
                                     ->default('400')
                                     ->live(),
-                                Forms\Components\ColorPicker::make('theme.tagline_color')
-                                    ->label('Text Color')
-                                    ->live(),
                             ])
-                            ->columns(5),
+                            ->columns(3),
 
                         Forms\Components\Grid::make(2)
                             ->schema([
@@ -139,18 +123,6 @@ class OrganizationResource extends Resource
                                     ->default(true)
                                     ->live(),
                             ]),
-                        Forms\Components\Fieldset::make('PO Box Typography & Styling')
-                            ->schema([
-                                Forms\Components\TextInput::make('theme.pobox_font_size')
-                                    ->label('Font Size')
-                                    ->placeholder('0.875rem')
-                                    ->default('0.875rem')
-                                    ->live(debounce: 300),
-                                Forms\Components\ColorPicker::make('theme.pobox_color')
-                                    ->label('Text Color')
-                                    ->live(),
-                            ])
-                            ->columns(2),
 
                         Forms\Components\Textarea::make('meta_description')
                             ->label('Default SEO description')
@@ -192,48 +164,35 @@ class OrganizationResource extends Resource
                     ->columns(1),
 
                 Forms\Components\Section::make('Header & Navigation Settings')
-                    ->description('Configure header links, action button, typography, and spacing.')
+                    ->description('Manage header logo, action CTA button, typography, and customize each navbar link (rename, turn ON / OFF, reorder, or add new).')
                     ->schema([
-                        Forms\Components\Toggle::make('theme.show_header_logo')
-                            ->label('Show Logo in Header (ON / OFF)')
-                            ->helperText('Toggle logo image in the header navbar.')
-                            ->default(true)
-                            ->live(),
-                        Forms\Components\Toggle::make('theme.show_header_cta')
-                            ->label('Header Action Button / CTA (ON / OFF)')
-                            ->helperText('Toggle the action button (e.g. “Get in touch”) on the right side of the navbar.')
-                            ->default(true)
-                            ->live(),
                         Forms\Components\Grid::make(2)
+                            ->schema([
+                                Forms\Components\Toggle::make('theme.show_header_logo')
+                                    ->label('Show Logo in Header (ON / OFF)')
+                                    ->helperText('Toggle logo image in the top header navbar.')
+                                    ->default(true)
+                                    ->live(),
+                                Forms\Components\Toggle::make('theme.show_header_cta')
+                                    ->label('Header Action Button / CTA (ON / OFF)')
+                                    ->helperText('Toggle the action button (e.g. “Get in touch”) on the right side of navbar.')
+                                    ->default(true)
+                                    ->live(),
+                            ]),
+
+                        Forms\Components\Grid::make(2)
+                            ->visible(fn (Forms\Get $get) => (bool) ($get('theme.show_header_cta') ?? true))
                             ->schema([
                                 Forms\Components\TextInput::make('theme.header_cta_text')
                                     ->label('CTA Button Text')
                                     ->default('Get in touch')
                                     ->placeholder('Get in touch')
-                                    ->visible(fn (Forms\Get $get) => (bool) ($get('theme.show_header_cta') ?? true))
                                     ->live(debounce: 300),
                                 Forms\Components\TextInput::make('theme.header_cta_url')
                                     ->label('CTA Button URL')
                                     ->default('/contact')
-                                    ->placeholder('/contact')
-                                    ->visible(fn (Forms\Get $get) => (bool) ($get('theme.show_header_cta') ?? true)),
+                                    ->placeholder('/contact'),
                             ]),
-                        Forms\Components\Fieldset::make('CTA Button Styling')
-                            ->visible(fn (Forms\Get $get) => (bool) ($get('theme.show_header_cta') ?? true))
-                            ->schema([
-                                Forms\Components\TextInput::make('theme.header_cta_font_size')
-                                    ->label('CTA Font Size')
-                                    ->placeholder('0.88rem')
-                                    ->default('0.88rem')
-                                    ->live(debounce: 300),
-                                Forms\Components\ColorPicker::make('theme.header_cta_bg')
-                                    ->label('Button Background Color')
-                                    ->live(),
-                                Forms\Components\ColorPicker::make('theme.header_cta_text_color')
-                                    ->label('Button Text Color')
-                                    ->live(),
-                            ])
-                            ->columns(3),
 
                         Forms\Components\Fieldset::make('Navigation Links Typography & Spacing')
                             ->schema([
@@ -244,18 +203,10 @@ class OrganizationResource extends Resource
                                     ->placeholder('Inherit Body Font')
                                     ->searchable()
                                     ->live(),
-                                Forms\Components\TextInput::make('theme.nav_font_size')
-                                    ->label('Nav Font Size')
-                                    ->placeholder('0.95rem')
-                                    ->default('0.95rem')
-                                    ->live(debounce: 300),
                                 Forms\Components\Select::make('theme.nav_font_weight')
                                     ->label('Nav Font Weight')
                                     ->options(Organization::getFontWeightOptions())
                                     ->default('500')
-                                    ->live(),
-                                Forms\Components\ColorPicker::make('theme.nav_color')
-                                    ->label('Nav Link Color')
                                     ->live(),
                                 Forms\Components\TextInput::make('theme.nav_spacing')
                                     ->label('Nav Item Padding / Spacing')
@@ -263,31 +214,48 @@ class OrganizationResource extends Resource
                                     ->default('0.55rem 0.9rem')
                                     ->live(debounce: 300),
                             ])
-                            ->columns(5),
-                    ])
-                    ->columns(2)
-                    ->collapsed(false),
+                            ->columns(3),
 
-                Forms\Components\Section::make('Footer Elements Visibility')
-                    ->description('Toggle individual footer sections ON or OFF.')
-                    ->schema([
-                        Forms\Components\Toggle::make('theme.show_footer_tagline')
-                            ->label('Footer Tagline (ON / OFF)')
-                            ->default(true),
-                        Forms\Components\Toggle::make('theme.show_footer_social')
-                            ->label('Footer Social Icons (ON / OFF)')
-                            ->default(true),
-                        Forms\Components\Toggle::make('theme.show_footer_nav')
-                            ->label('Footer Navigation Links (ON / OFF)')
-                            ->default(true),
-                        Forms\Components\Toggle::make('theme.show_footer_contact')
-                            ->label('Footer Contact Details (ON / OFF)')
-                            ->default(true),
-                        Forms\Components\Toggle::make('theme.show_footer_credit')
-                            ->label('Developer Credits (ON / OFF)')
-                            ->default(true),
+                        Forms\Components\Repeater::make('theme.nav_items')
+                            ->label('Navbar Menu Links (Order, Name & ON / OFF Visibility)')
+                            ->helperText('Manage each link in your top navbar. Turn links ON or OFF, change their displayed names, set destinations, or drag to reorder.')
+                            ->default([
+                                ['label' => 'Home', 'url' => '/', 'is_visible' => true, 'target' => '_self'],
+                                ['label' => 'About', 'url' => '/about', 'is_visible' => true, 'target' => '_self'],
+                                ['label' => 'Services', 'url' => '/our-services', 'is_visible' => true, 'target' => '_self'],
+                                ['label' => 'Portfolio', 'url' => '/portfolio', 'is_visible' => true, 'target' => '_self'],
+                                ['label' => 'Contact', 'url' => '/contact', 'is_visible' => true, 'target' => '_self'],
+                            ])
+                            ->schema([
+                                Forms\Components\TextInput::make('label')
+                                    ->label('Link Name / Label')
+                                    ->placeholder('e.g. Services')
+                                    ->required()
+                                    ->live(debounce: 300),
+                                Forms\Components\TextInput::make('url')
+                                    ->label('URL / Route')
+                                    ->placeholder('e.g. /our-services or https://...')
+                                    ->required(),
+                                Forms\Components\Toggle::make('is_visible')
+                                    ->label('Visibility (ON / OFF)')
+                                    ->default(true)
+                                    ->live(),
+                                Forms\Components\Select::make('target')
+                                    ->label('Open In')
+                                    ->options([
+                                        '_self' => 'Same Window',
+                                        '_blank' => 'New Tab',
+                                    ])
+                                    ->default('_self'),
+                            ])
+                            ->columns(4)
+                            ->reorderable()
+                            ->collapsible()
+                            ->cloneable()
+                            ->itemLabel(fn (array $state): ?string => ($state['label'] ?? 'Link') . ((isset($state['is_visible']) && ! $state['is_visible']) ? ' (OFF - Hidden)' : ' (ON - Visible)'))
+                            ->live(),
                     ])
-                    ->columns(3)
+                    ->columns(1)
                     ->collapsed(false),
 
                 Forms\Components\Section::make('Contact & Location Details')
@@ -304,18 +272,6 @@ class OrganizationResource extends Resource
                                     ->default(true)
                                     ->live(),
                             ]),
-                        Forms\Components\Fieldset::make('Address Typography & Styling')
-                            ->schema([
-                                Forms\Components\TextInput::make('theme.address_font_size')
-                                    ->label('Font Size')
-                                    ->placeholder('0.95rem')
-                                    ->default('0.95rem')
-                                    ->live(debounce: 300),
-                                Forms\Components\ColorPicker::make('theme.address_color')
-                                    ->label('Text Color')
-                                    ->live(),
-                            ])
-                            ->columns(2),
                         Forms\Components\Grid::make(2)
                             ->schema([
                                 Forms\Components\TextInput::make('map_url')

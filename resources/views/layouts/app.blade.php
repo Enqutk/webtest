@@ -47,32 +47,16 @@
             --font-display: '{{ $fontDisplay }}', {{ $displayFallback }};
             --font-body: '{{ $fontBody }}', {{ $bodyFallback }};
             @if(!empty($brandFont)) --hz-brand-font-family: '{{ $brandFont }}', {{ $brandFallback }}; @endif
-            @if(!empty($theme['brand_font_size'])) --hz-brand-font-size: {{ $theme['brand_font_size'] }}; @endif
             @if(!empty($theme['brand_font_weight'])) --hz-brand-font-weight: {{ $theme['brand_font_weight'] }}; @endif
-            @if(!empty($theme['brand_color'])) --hz-brand-color: {{ $theme['brand_color'] }}; @endif
             @if(!empty($theme['brand_letter_spacing'])) --hz-brand-letter-spacing: {{ $theme['brand_letter_spacing'] }}; @endif
 
             @if(!empty($taglineFont)) --hz-tagline-font-family: '{{ $taglineFont }}', {{ $taglineFallback }}; @endif
-            @if(!empty($theme['tagline_font_size'])) --hz-tagline-font-size: {{ $theme['tagline_font_size'] }}; @endif
             @if(!empty($theme['tagline_font_style'])) --hz-tagline-font-style: {{ $theme['tagline_font_style'] }}; @endif
             @if(!empty($theme['tagline_font_weight'])) --hz-tagline-font-weight: {{ $theme['tagline_font_weight'] }}; @endif
-            @if(!empty($theme['tagline_color'])) --hz-tagline-color: {{ $theme['tagline_color'] }}; @endif
 
             @if(!empty($navFont)) --hz-nav-font-family: '{{ $navFont }}', {{ $navFallback }}; @endif
-            @if(!empty($theme['nav_font_size'])) --hz-nav-font-size: {{ $theme['nav_font_size'] }}; @endif
             @if(!empty($theme['nav_font_weight'])) --hz-nav-font-weight: {{ $theme['nav_font_weight'] }}; @endif
-            @if(!empty($theme['nav_color'])) --hz-nav-color: {{ $theme['nav_color'] }}; @endif
             @if(!empty($theme['nav_spacing'])) --hz-nav-spacing: {{ $theme['nav_spacing'] }}; @endif
-
-            @if(!empty($theme['header_cta_font_size'])) --hz-cta-font-size: {{ $theme['header_cta_font_size'] }}; @endif
-            @if(!empty($theme['header_cta_bg'])) --hz-cta-bg: {{ $theme['header_cta_bg'] }}; @endif
-            @if(!empty($theme['header_cta_text_color'])) --hz-cta-color: {{ $theme['header_cta_text_color'] }}; @endif
-
-            @if(!empty($theme['pobox_font_size'])) --hz-pobox-font-size: {{ $theme['pobox_font_size'] }}; @endif
-            @if(!empty($theme['pobox_color'])) --hz-pobox-color: {{ $theme['pobox_color'] }}; @endif
-
-            @if(!empty($theme['address_font_size'])) --hz-address-font-size: {{ $theme['address_font_size'] }}; @endif
-            @if(!empty($theme['address_color'])) --hz-address-color: {{ $theme['address_color'] }}; @endif
         }
     </style>
     @stack('styles')
