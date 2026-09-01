@@ -4,7 +4,31 @@
 ])
 
 @php
-    $slides = $heroes instanceof \Illuminate\Support\Collection ? $heroes : collect($heroes);
+    $configuredSlides = $heroConfig['slides'] ?? null;
+    if (is_array($configuredSlides) && !empty($configuredSlides)) {
+        $slides = collect($configuredSlides)
+            ->filter(fn ($s) => !isset($s['is_visible']) || (bool)$s['is_visible'])
+            ->map(function ($s) {
+                $img = $s['image'] ?? $s['image_path'] ?? null;
+                if (is_array($img)) {
+                    $img = array_values($img)[0] ?? null;
+                }
+                $imgUrl = (is_string($img) && filled($img))
+                    ? (str_starts_with($img, 'http') ? $img : asset('storage/' . ltrim($img, '/')))
+                    : null;
+                return (object) [
+                    'title' => $s['title'] ?? '',
+                    'subtitle' => $s['subtitle'] ?? null,
+                    'description' => $s['description'] ?? null,
+                    'image_url' => $imgUrl,
+                    'text_link' => $s['text_link'] ?? 'Explore services',
+                    'button_link' => $s['button_link'] ?? route('services.index'),
+                ];
+            });
+    } else {
+        $slides = $heroes instanceof \Illuminate\Support\Collection ? $heroes : collect($heroes);
+    }
+
     $hasMultiple = $slides->count() > 1;
     $siteName = $data['siteName'] ?? config('app.name', 'Site');
     $tagline = $data['tagline'] ?? '';

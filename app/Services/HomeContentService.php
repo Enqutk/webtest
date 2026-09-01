@@ -74,6 +74,17 @@ class HomeContentService
         $configuredSections = $theme['home_sections'] ?? [];
         $homeSections = array_replace_recursive($defaultSections, is_array($configuredSections) ? $configuredSections : []);
 
+        // Repeater arrays must take exact user configuration
+        if (isset($configuredSections['hero']['slides']) && is_array($configuredSections['hero']['slides'])) {
+            $homeSections['hero']['slides'] = $configuredSections['hero']['slides'];
+        }
+        if (isset($configuredSections['stats']['items']) && is_array($configuredSections['stats']['items'])) {
+            $homeSections['stats']['items'] = $configuredSections['stats']['items'];
+        }
+        if (isset($configuredSections['about']['points']) && is_array($configuredSections['about']['points'])) {
+            $homeSections['about']['points'] = $configuredSections['about']['points'];
+        }
+
         $statsItems = !empty($homeSections['stats']['items'])
             ? $homeSections['stats']['items']
             : ($statsBlock?->list_items ?? []);

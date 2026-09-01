@@ -154,6 +154,7 @@ class Organization extends Model implements HasMedia
                 'cta_url' => '/portfolio',
                 'secondary_cta_text' => 'Our Services',
                 'secondary_cta_url' => '/our-services',
+                'slides' => self::defaultHeroSlides(),
             ],
             'about' => [
                 'is_visible' => true,
@@ -218,11 +219,56 @@ class Organization extends Model implements HasMedia
         ];
     }
 
+    public static function defaultHeroSlides(): array
+    {
+        try {
+            $existing = Hero::where('status', \App\Enums\StatusEnum::active)
+                ->with('media')
+                ->orderBy('order')
+                ->get();
+
+            if ($existing->isNotEmpty()) {
+                return $existing->map(function (Hero $h) {
+                    $media = $h->getFirstMedia('image');
+                    $rel = null;
+                    if ($media) {
+                        $rel = str_replace(url('/storage') . '/', '', $media->getUrl());
+                        $rel = str_replace('/storage/', '', $rel);
+                    }
+                    return [
+                        'title' => $h->title,
+                        'subtitle' => $h->subtitle,
+                        'description' => $h->description,
+                        'image' => $rel ? [$rel => $rel] : [],
+                        'text_link' => $h->text_link ?: 'Explore services',
+                        'button_link' => $h->button_link ?: '/our-services',
+                        'is_visible' => true,
+                    ];
+                })->all();
+            }
+        } catch (\Throwable $e) {
+            // fallback
+        }
+
+        return [
+            [
+                'title' => 'Water systems that feed communities',
+                'subtitle' => 'Irrigation · WASH · Resilience',
+                'description' => 'Precision irrigation and rural water infrastructure engineered for climate resilience.',
+                'image' => [],
+                'text_link' => 'Explore services',
+                'button_link' => '/our-services',
+                'is_visible' => true,
+            ],
+        ];
+    }
+
     protected static function booted(): void
     {
         static::saved(function () {
             try {
                 app(\App\Services\NavigationService::class)->clearCache();
+                \Illuminate\Support\Facades\Cache::flush();
             } catch (\Throwable $e) {
                 // ignore
             }
