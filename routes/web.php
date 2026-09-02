@@ -8,6 +8,8 @@ use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\CardApplicationController;
+
 // 1. Reception / Main Platform Landing Page (Kimem Cards Luxury Showcase)
 Route::get('/', function () {
     return view('kimem-landing');
@@ -16,6 +18,14 @@ Route::get('/', function () {
 Route::get('/cards', function () {
     return view('kimem-landing');
 })->name('kimem.cards');
+
+// Public Card Application & Live Preview Onboarding Flow
+Route::get('/apply', [CardApplicationController::class, 'create'])->name('card.apply');
+Route::get('/order', [CardApplicationController::class, 'create'])->name('card.order');
+Route::get('/order-card', [CardApplicationController::class, 'create'])->name('card.order-card');
+Route::post('/apply', [CardApplicationController::class, 'store'])->name('card.apply.store');
+Route::get('/apply/success/{code}', [CardApplicationController::class, 'success'])->name('card.apply.success');
+Route::get('/apply/track', [CardApplicationController::class, 'track'])->name('card.apply.track');
 
 // 2. Client Company / Tenant Websites (/card/{slug} or /org/{slug})
 Route::prefix('card/{slug}')->name('card.')->group(function () {
@@ -52,3 +62,25 @@ Route::post('/contact/send/{recipient}', [ContactController::class, 'send'])
 Route::get('/pages/{slug}', [PageController::class, 'show'])
     ->where('slug', '[A-Za-z0-9\-]+')
     ->name('pages.show');
+
+// Deployment Diagnostic Health Endpoint
+Route::get('/deploy-health', function () {
+    $status = [
+        'php_version' => PHP_VERSION,
+        'app_env' => config('app.env'),
+        'app_debug' => config('app.debug'),
+        'app_key_set' => !empty(config('app.key')),
+        'storage_writable' => is_writable(storage_path()),
+        'database' => 'untested',
+    ];
+
+    try {
+        \Illuminate\Support\Facades\DB::connection()->getPdo();
+        $status['database'] = 'connected';
+    } catch (\Throwable $e) {
+        $status['database'] = 'error: ' . $e->getMessage();
+    }
+
+    return response()->json($status);
+});
+

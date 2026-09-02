@@ -30,6 +30,31 @@ class Organization extends Model implements HasMedia, \Filament\Models\Contracts
         'theme' => 'array',
     ];
 
+    protected static function booted(): void
+    {
+        static::saving(function (Organization $org) {
+            if (empty($org->slug) && !empty($org->title)) {
+                $baseSlug = \Illuminate\Support\Str::slug($org->title) ?: 'org';
+                $slug = $baseSlug;
+                $counter = 1;
+                while (static::where('slug', $slug)->where('id', '!=', $org->id ?? 0)->exists()) {
+                    $slug = $baseSlug . '-' . $counter;
+                    $counter++;
+                }
+                $org->slug = $slug;
+            }
+        });
+
+        static::saved(function () {
+            try {
+                app(\App\Services\NavigationService::class)->clearCache();
+                \Illuminate\Support\Facades\Cache::flush();
+            } catch (\Throwable $e) {
+                // ignore
+            }
+        });
+    }
+
     public static function resolveCurrent(): self
     {
         $routeSlug = request()->route('slug');
@@ -379,18 +404,6 @@ class Organization extends Model implements HasMedia, \Filament\Models\Contracts
                 'is_visible' => true,
             ],
         ];
-    }
-
-    protected static function booted(): void
-    {
-        static::saved(function () {
-            try {
-                app(\App\Services\NavigationService::class)->clearCache();
-                \Illuminate\Support\Facades\Cache::flush();
-            } catch (\Throwable $e) {
-                // ignore
-            }
-        });
     }
 
     public static function getFontWeightOptions(): array

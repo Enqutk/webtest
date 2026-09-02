@@ -534,7 +534,7 @@ class OrganizationResource extends Resource
                     ->label('Website')
                     ->icon('heroicon-m-arrow-top-right-on-square')
                     ->color('gray')
-                    ->url(fn (Organization $record): string => route('card.home', ['slug' => $record->slug]))
+                    ->url(fn (Organization $record): string => route('card.home', ['slug' => $record->slug ?: \Illuminate\Support\Str::slug($record->title) ?: 'default']))
                     ->openUrlInNewTab(),
             ])
             ->bulkActions([

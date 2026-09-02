@@ -269,7 +269,24 @@
 
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Opening Hours</label>
-                    <input type="text" name="opening_hours" value="{{ is_array($organization->opening_hours) ? implode(', ', $organization->opening_hours) : $organization->opening_hours }}" placeholder="Mon - Fri: 8:00 AM - 5:00 PM" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    @php
+                        $formattedOpeningHours = '';
+                        if (is_array($organization->opening_hours)) {
+                            $formattedOpeningHours = collect($organization->opening_hours)->map(function ($h) {
+                                if (is_string($h)) return $h;
+                                if (is_array($h)) {
+                                    $days = isset($h['days']) ? (is_array($h['days']) ? implode('-', array_map('ucfirst', $h['days'])) : $h['days']) : '';
+                                    $from = $h['from'] ?? '';
+                                    $to = $h['to'] ?? '';
+                                    return trim("{$days}: {$from} - {$to}", ': -');
+                                }
+                                return '';
+                            })->filter()->implode(', ');
+                        } else {
+                            $formattedOpeningHours = (string) ($organization->opening_hours ?? '');
+                        }
+                    @endphp
+                    <input type="text" name="opening_hours" value="{{ $formattedOpeningHours }}" placeholder="Mon - Fri: 8:00 AM - 5:00 PM" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
             </div>
 

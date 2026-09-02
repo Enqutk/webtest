@@ -147,17 +147,29 @@ class NavigationService
 
     private function isActive(string $url): bool
     {
-        $path = parse_url($url, PHP_URL_PATH) ?: '/';
-        $current = '/' . ltrim(request()->getPathInfo(), '/');
-        if ($current === '//') {
+        $path = rtrim(parse_url($url, PHP_URL_PATH) ?: '/', '/');
+        if ($path === '') {
+            $path = '/';
+        }
+
+        $current = rtrim(request()->getPathInfo() ?: '/', '/');
+        if ($current === '') {
             $current = '/';
         }
 
-        if ($path === '/' || $path === '') {
-            return $current === '/';
+        // Exact match
+        if ($current === $path) {
+            return true;
         }
 
-        return $current === $path || str_starts_with($current, rtrim($path, '/') . '/');
+        // Home URL (either '/' or '/card/{slug}') must only match exactly
+        $routeSlug = request()->route('slug');
+        if ($path === '/' || ($routeSlug && $path === "/card/{$routeSlug}")) {
+            return $current === $path;
+        }
+
+        // Sub-pages can match nested sub-routes (e.g. /card/slug/portfolio/1 matches /card/slug/portfolio)
+        return str_starts_with($current, $path . '/');
     }
 
     private function fallbackNavbarRaw(): Collection

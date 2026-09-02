@@ -137,6 +137,7 @@
         <nav class="flex-1 px-3 py-4 space-y-6 overflow-y-auto custom-scrollbar">
             
             <!-- Group: Overview -->
+            <!-- Group: Main -->
             <div>
                 <div class="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">Main</div>
                 <div class="space-y-1">
@@ -144,6 +145,22 @@
                        class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-semibold transition {{ request()->routeIs('admin.dashboard') ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/20' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                         <i class="bi bi-speedometer2 text-base"></i>
                         <span>Dashboard</span>
+                    </a>
+
+                    @php
+                        $pendingAppsCount = \App\Models\CardApplication::where('status', 'pending')->count();
+                    @endphp
+                    <a href="{{ route('admin.applications.index') }}"
+                       class="flex items-center justify-between px-3 py-2 rounded-xl text-sm font-semibold transition {{ request()->routeIs('admin.applications.*') ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/20' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <div class="flex items-center gap-3">
+                            <i class="bi bi-credit-card-2-front-fill text-base text-amber-400"></i>
+                            <span>Card Requests & Quotes</span>
+                        </div>
+                        @if($pendingAppsCount > 0)
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-500 text-slate-950 animate-pulse">
+                                {{ $pendingAppsCount }}
+                            </span>
+                        @endif
                     </a>
                 </div>
             </div>
@@ -287,7 +304,7 @@
                 </div>
 
                 <!-- Public Website Quick Link -->
-                <a href="{{ route('card.home', ['slug' => $activeOrg->slug ?? 'default']) }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition">
+                <a href="{{ route('card.home', ['slug' => $activeOrg->slug ?? \Illuminate\Support\Str::slug($activeOrg->title ?? '') ?: 'default']) }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition">
                     <i class="bi bi-box-arrow-up-right text-xs"></i>
                     <span class="hidden sm:inline">View Card / Live Site</span>
                 </a>

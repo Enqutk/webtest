@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\CardApplicationAdminController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HomePageController;
 use App\Http\Controllers\Admin\MenuController;
@@ -37,6 +38,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Dashboard
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+        // Card Requests & Quotes (Self-Service Onboarding & 1-Click Provisioning)
+        Route::get('/applications', [CardApplicationAdminController::class, 'index'])->name('applications.index');
+        Route::get('/applications/{application}', [CardApplicationAdminController::class, 'show'])->name('applications.show');
+        Route::post('/applications/{application}/approve', [CardApplicationAdminController::class, 'approve'])->name('applications.approve');
+        Route::post('/applications/{application}/reject', [CardApplicationAdminController::class, 'reject'])->name('applications.reject');
 
         // Tenant Switcher
         Route::post('/organizations/switch/{organization}', [OrganizationController::class, 'switchTenant'])->name('organizations.switch');
