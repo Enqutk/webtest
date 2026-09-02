@@ -72,8 +72,13 @@ class CardApplicationController extends Controller
             'tagline' => ['nullable', 'string', 'max:500'],
             'bio' => ['nullable', 'string', 'max:2000'],
             'card_edition' => ['required', 'in:midnight_navy,brushed_gold,executive_black'],
-            'bg_color' => ['nullable', 'string', 'max:20'],
-            'accent_color' => ['nullable', 'string', 'max:20'],
+            'bg_color' => ['nullable', 'string', 'max:25'],
+            'surface_color' => ['nullable', 'string', 'max:25'],
+            'accent_color' => ['nullable', 'string', 'max:25'],
+            'accent_dark' => ['nullable', 'string', 'max:25'],
+            'text_color' => ['nullable', 'string', 'max:25'],
+            'muted_color' => ['nullable', 'string', 'max:25'],
+            'line_color' => ['nullable', 'string', 'max:25'],
             'font_display' => ['nullable', 'string', 'max:50'],
             'font_body' => ['nullable', 'string', 'max:50'],
             'image_shape' => ['nullable', 'string', 'max:30'],
@@ -85,6 +90,7 @@ class CardApplicationController extends Controller
             'github' => ['nullable', 'string', 'max:255'],
             'website' => ['nullable', 'string', 'max:255'],
             'photo' => ['nullable', 'image', 'max:5120'], // max 5MB
+            'hero_image' => ['nullable', 'image', 'max:5120'], // max 5MB
         ]);
 
         // Generate unique slug
@@ -102,14 +108,17 @@ class CardApplicationController extends Controller
             'executive_black' => '2,150 ETB',
         ];
 
+        $accent = $request->input('accent_color', '#c5a059');
         $theme = [
-            'bg' => $request->input('bg_color', '#090d16'),
-            'surface' => '#111827',
-            'ink' => '#f9fafb',
-            'muted' => '#9ca3af',
-            'line' => '#1f2937',
-            'accent' => $request->input('accent_color', '#c5a059'),
-            'accent_dark' => '#9e7d3b',
+            'bg' => $request->input('bg_color', '#070b14'),
+            'surface' => $request->input('surface_color', '#0f172a'),
+            'ink' => $request->input('text_color', '#ffffff'),
+            'muted' => $request->input('muted_color', '#94a3b8'),
+            'line' => $request->input('line_color', '#1e293b'),
+            'accent' => $accent,
+            'accent_dark' => $request->input('accent_dark', '#9e7d3b'),
+            'accent_soft' => Organization::hexToRgba($accent, 0.15),
+            'dark' => '#030712',
             'font_display' => $request->input('font_display', 'Outfit'),
             'font_body' => $request->input('font_body', 'Outfit'),
             'brand_font_family' => $request->input('font_display', 'Outfit'),

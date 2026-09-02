@@ -78,6 +78,14 @@ class CardApplicationTest extends TestCase
             'font_body' => 'Outfit',
             'image_shape' => 'arch',
             'highlights' => ['Winner of AIA 2025 Award', 'Featured in Architectural Digest'],
+            'portfolio' => [
+                [
+                    'title' => 'Serengeti Eco Pavilion',
+                    'tag' => 'Architecture',
+                    'description' => 'Zero-emission luxury safari pavilion design.',
+                    'url' => 'https://example.com/serengeti',
+                ],
+            ],
         ];
 
         $submitResponse = $this->withoutMiddleware()->post('/apply', $payload);
