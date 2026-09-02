@@ -49,8 +49,10 @@ class CardApplicationAdminController extends Controller
         return view('admin.applications.show', compact('application', 'currentOrg'));
     }
 
-    public function approve(CardApplication $application, Request $request)
+    public function approve($application, Request $request)
     {
+        $application = ($application instanceof CardApplication) ? $application : CardApplication::findOrFail($application);
+
         if ($application->status === 'approved' && $application->organization_id) {
             return back()->with('info', 'This application has already been approved and provisioned.');
         }
@@ -299,8 +301,10 @@ class CardApplicationAdminController extends Controller
             ->with('success', "🎉 Application approved! Organization '{$org->title}' and live site /card/{$org->slug} have been successfully provisioned!");
     }
 
-    public function reject(CardApplication $application, Request $request)
+    public function reject($application, Request $request)
     {
+        $application = ($application instanceof CardApplication) ? $application : CardApplication::findOrFail($application);
+
         $application->update([
             'status' => 'rejected',
             'admin_notes' => $request->input('admin_notes'),
