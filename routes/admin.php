@@ -3,11 +3,23 @@
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HomePageController;
+use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\OrganizationController;
+use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PortfolioController;
 use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\SocialController;
 use App\Http\Controllers\Admin\TeamController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
+
+// Redirect old /mgt URLs to /admin
+Route::any('/mgt', function () {
+    return redirect()->route('admin.dashboard');
+});
+Route::any('/mgt/{any}', function () {
+    return redirect()->route('admin.dashboard');
+})->where('any', '.*');
 
 // Admin Guest Routes (Login)
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -37,7 +49,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/home-sections/slides/save', [HomePageController::class, 'saveSlide'])->name('home-sections.slides.save');
         Route::delete('/home-sections/slides/delete/{index}', [HomePageController::class, 'deleteSlide'])->name('home-sections.slides.delete');
 
-        // Leadership Team Management (Modal & Standard CRUD)
+        // Leadership Team Management
         Route::resource('team', TeamController::class)->except(['show']);
         Route::post('/team/quick-store', [TeamController::class, 'quickStore'])->name('team.quick-store');
         Route::post('/team/quick-update/{team}', [TeamController::class, 'quickUpdate'])->name('team.quick-update');
@@ -48,5 +60,22 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Portfolio / Projects Management
         Route::resource('portfolio', PortfolioController::class)->except(['show']);
+
+        // Custom Pages
+        Route::resource('pages', PageController::class)->except(['show']);
+
+        // Navigation Menus
+        Route::get('/menus', [MenuController::class, 'index'])->name('menus.index');
+        Route::post('/menus/locations', [MenuController::class, 'storeMenu'])->name('menus.locations.store');
+        Route::delete('/menus/locations/{menu}', [MenuController::class, 'destroyMenu'])->name('menus.locations.destroy');
+        Route::post('/menus/items', [MenuController::class, 'storeItem'])->name('menus.items.store');
+        Route::put('/menus/items/{item}', [MenuController::class, 'updateItem'])->name('menus.items.update');
+        Route::delete('/menus/items/{item}', [MenuController::class, 'destroyItem'])->name('menus.items.destroy');
+
+        // Social Media
+        Route::resource('socials', SocialController::class)->except(['show', 'create', 'edit']);
+
+        // Platform Users & Staff
+        Route::resource('users', UserController::class)->except(['show', 'create', 'edit']);
     });
 });

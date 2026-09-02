@@ -148,7 +148,7 @@
                 </div>
             </div>
 
-            <!-- Group: Website Builder -->
+            <!-- Group: Website Content -->
             <div>
                 <div class="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">Website Content & Sections</div>
                 <div class="space-y-1">
@@ -172,6 +172,28 @@
                         <i class="bi bi-briefcase-fill text-base"></i>
                         <span>Portfolio Projects</span>
                     </a>
+                    <a href="{{ route('admin.pages.index') }}"
+                       class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-semibold transition {{ request()->routeIs('admin.pages.*') ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/20' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <i class="bi bi-file-earmark-text-fill text-base"></i>
+                        <span>Custom Pages</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Group: Menus & Navigation -->
+            <div>
+                <div class="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">Menus & Social</div>
+                <div class="space-y-1">
+                    <a href="{{ route('admin.menus.index') }}"
+                       class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-semibold transition {{ request()->routeIs('admin.menus.*') ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/20' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <i class="bi bi-menu-button-wide-fill text-base"></i>
+                        <span>Navigation Menus</span>
+                    </a>
+                    <a href="{{ route('admin.socials.index') }}"
+                       class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-semibold transition {{ request()->routeIs('admin.socials.*') ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/20' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <i class="bi bi-share-fill text-base"></i>
+                        <span>Social Media Links</span>
+                    </a>
                 </div>
             </div>
 
@@ -180,7 +202,7 @@
                 <div class="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">Management & Settings</div>
                 <div class="space-y-1">
                     <a href="{{ route('admin.organizations.index') }}"
-                       class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-semibold transition {{ request()->routeIs('admin.organizations.*') ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/20' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                       class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-semibold transition {{ request()->routeIs('admin.organizations.index') || request()->routeIs('admin.organizations.create') ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/20' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                         <i class="bi bi-buildings-fill text-base"></i>
                         <span>Organizations & Tenants</span>
                     </a>
@@ -188,6 +210,11 @@
                        class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-semibold transition {{ request()->is('admin/organizations/'.$activeOrg->id.'/edit') ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/20' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                         <i class="bi bi-palette-fill text-base"></i>
                         <span>Brand & Styling Settings</span>
+                    </a>
+                    <a href="{{ route('admin.users.index') }}"
+                       class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-semibold transition {{ request()->routeIs('admin.users.*') ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/20' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <i class="bi bi-people-fill text-base"></i>
+                        <span>Users & Access</span>
                     </a>
                 </div>
             </div>
