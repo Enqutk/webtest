@@ -14,9 +14,9 @@ class OrganizationResource extends Resource
 {
     protected static ?string $model = Organization::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-office';
+    protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
 
-    protected static ?string $navigationLabel = 'Organization Info';
+    protected static ?string $navigationLabel = 'Organizations';
 
     protected static ?string $navigationGroup = 'Settings';
 
@@ -62,6 +62,21 @@ class OrganizationResource extends Resource
                                                     ->helperText('Turn company name text display ON or OFF.')
                                                     ->default(true)
                                                     ->live(),
+                                            ]),
+                                        Forms\Components\Grid::make(2)
+                                            ->schema([
+                                                Forms\Components\TextInput::make('slug')
+                                                    ->label('Organization URL Slug (Subdomain / Path)')
+                                                    ->helperText('Unique identifier for this tenant (e.g. maji-works, yab, hydroworks).')
+                                                    ->required()
+                                                    ->unique(Organization::class, 'slug', ignoreRecord: true)
+                                                    ->maxLength(100),
+                                                Forms\Components\TextInput::make('domain')
+                                                    ->label('Custom Domain Name (Optional)')
+                                                    ->helperText('Custom domain mapped to this website (e.g. majiworks.org, client.com).')
+                                                    ->unique(Organization::class, 'domain', ignoreRecord: true)
+                                                    ->placeholder('e.g. majiworks.org')
+                                                    ->maxLength(255),
                                             ]),
                                         Forms\Components\Fieldset::make('Company Name Typography & Styling')
                                             ->schema([
@@ -468,6 +483,74 @@ class OrganizationResource extends Resource
             ]);
     }
 
+    public static function table(\Filament\Tables\Table $table): \Filament\Tables\Table
+    {
+        return $table
+            ->columns([
+                \Filament\Tables\Columns\SpatieMediaLibraryImageColumn::make('logo')
+                    ->collection('logo')
+                    ->circular()
+                    ->size(44)
+                    ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name=' . urlencode($record->title) . '&background=ea580c&color=ffffff'),
+                \Filament\Tables\Columns\TextColumn::make('title')
+                    ->label('Organization Name')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold'),
+                \Filament\Tables\Columns\TextColumn::make('slug')
+                    ->label('Tenant Slug / Path')
+                    ->badge()
+                    ->color('gray')
+                    ->searchable(),
+                \Filament\Tables\Columns\TextColumn::make('domain')
+                    ->label('Custom Domain')
+                    ->placeholder('No custom domain')
+                    ->searchable()
+                    ->copyable(),
+                \Filament\Tables\Columns\TextColumn::make('users_count')
+                    ->counts('users')
+                    ->label('Members')
+                    ->badge()
+                    ->color('info'),
+                \Filament\Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'active' => 'success',
+                        default => 'danger',
+                    })
+                    ->sortable(),
+                \Filament\Tables\Columns\TextColumn::make('created_at')
+                    ->label('Created')
+                    ->dateTime('M d, Y')
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->filters([
+                \Filament\Tables\Filters\SelectFilter::make('status')
+                    ->options(StatusEnum::class),
+            ])
+            ->actions([
+                \Filament\Tables\Actions\EditAction::make(),
+                \Filament\Tables\Actions\Action::make('view_site')
+                    ->label('Website')
+                    ->icon('heroicon-m-arrow-top-right-on-square')
+                    ->color('gray')
+                    ->url(fn (Organization $record): string => url('/'))
+                    ->openUrlInNewTab(),
+            ])
+            ->bulkActions([
+                \Filament\Tables\Actions\BulkActionGroup::make([
+                    \Filament\Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            OrganizationResource\RelationManagers\UsersRelationManager::class,
+        ];
+    }
+
     public static function shouldRegisterNavigation(): bool
     {
         return true;
@@ -476,16 +559,9 @@ class OrganizationResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\EditOrganization::route('/'),
+            'index' => Pages\ListOrganizations::route('/'),
+            'create' => Pages\CreateOrganization::route('/create'),
+            'edit' => Pages\EditOrganization::route('/{record}/edit'),
         ];
-    }
-
-    public static function getRecord(): Organization
-    {
-        // Always return the first organization, creating it if it doesn't exist.
-        return Organization::firstOrCreate([], [
-            'title' => 'Your Organization',
-            'status' => 'active',
-        ]);
     }
 }

@@ -9,21 +9,20 @@ use Filament\Resources\Pages\EditRecord;
 
 class EditOrganization extends EditRecord
 {
-    public function mount($record = null): void
-    {
-        $organization = \App\Models\Organization::firstOrCreate([], [
-            'title' => 'Your Organization',
-            'status' => 'active',
-        ]);
-
-        parent::mount($organization->getKey());
-    }
     protected static string $resource = OrganizationResource::class;
-
 
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('view_site')
+                ->label('View Public Website')
+                ->icon('heroicon-m-arrow-top-right-on-square')
+                ->color('gray')
+                ->url(fn (): string => url('/'))
+                ->openUrlInNewTab(),
+
+            Actions\DeleteAction::make()
+                ->visible(fn () => Organization::count() > 1),
         ];
     }
 
@@ -39,7 +38,6 @@ class EditOrganization extends EditRecord
 
     protected function getRedirectUrl(): string
     {
-        // Always redirect to the singleton edit page
         return static::$resource::getUrl('index');
     }
 }
