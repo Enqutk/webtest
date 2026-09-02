@@ -92,7 +92,14 @@ class HomeContentService
             ? $homeSections['stats']['items']
             : ($statsBlock?->list_items ?? []);
 
+        $routeSlug = request()->route('slug');
+        $brandHomeUrl = $routeSlug
+            ? route('card.home', ['slug' => $routeSlug])
+            : ($organization ? route('card.home', ['slug' => $organization->slug]) : url('/'));
+
         return [
+            'organization' => $organization,
+            'brandHomeUrl' => $brandHomeUrl,
             'siteName' => $siteName,
             'tagline' => $activeTagline,
             'metaDescription' => $metaDescription,

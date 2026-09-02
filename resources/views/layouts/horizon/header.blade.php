@@ -7,14 +7,16 @@
     $logoUrl = $showLogo ? ($data['logoUrl'] ?? null) : null;
     $showHeaderCta = (bool) ($theme['show_header_cta'] ?? true);
     $headerCtaText = !empty($theme['header_cta_text']) ? $theme['header_cta_text'] : 'Get in touch';
-    $headerCtaUrl = !empty($theme['header_cta_url']) ? $theme['header_cta_url'] : route('contact');
+    $routeSlug = request()->route('slug');
+    $brandHomeUrl = $data['brandHomeUrl'] ?? ($routeSlug ? route('card.home', ['slug' => $routeSlug]) : url('/'));
+    $headerCtaUrl = !empty($theme['header_cta_url']) ? $theme['header_cta_url'] : ($routeSlug ? route('card.contact', ['slug' => $routeSlug]) : route('contact'));
 @endphp
 
 <header class="hz-header" data-hz-header>
     <nav class="navbar navbar-expand-lg hz-navbar" aria-label="Primary">
         <div class="container hz-navbar-inner">
             @if($logoUrl || $showBrandText)
-                <a class="navbar-brand hz-brand" href="{{ route('home') }}">
+                <a class="navbar-brand hz-brand" href="{{ $brandHomeUrl }}">
                     <x-site-brand :name="$siteName" :logo="$logoUrl" :show-text="$showBrandText" />
                 </a>
             @endif

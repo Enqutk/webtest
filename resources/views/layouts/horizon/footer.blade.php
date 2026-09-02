@@ -16,9 +16,9 @@
     <div class="container">
         <div class="row g-4">
             <div class="col-lg-5">
-                <div class="hz-footer-brand">
+                <a href="{{ $data['brandHomeUrl'] ?? url('/') }}" class="hz-footer-brand d-inline-block text-decoration-none">
                     <x-site-brand :name="$siteName" :logo="$logoUrl" :show-text="$showBrandText" />
-                </div>
+                </a>
                 @if($tagline)
                     <p class="mb-3 hz-footer-tagline">{{ $tagline }}</p>
                 @endif
