@@ -57,6 +57,12 @@ class PageResource extends Resource
 
                 Forms\Components\Section::make('Settings')
                     ->schema([
+                        Forms\Components\Select::make('organization_id')
+                            ->relationship('organization', 'title')
+                            ->default(fn () => session('active_organization_id') ?? \App\Models\Organization::first()?->id)
+                            ->required()
+                            ->label('Organization'),
+                        
                         Forms\Components\Toggle::make('is_active')
                             ->label('Active')
                             ->default(true)
@@ -66,7 +72,7 @@ class PageResource extends Resource
                             ->numeric()
                             ->default(0)
                             ->helperText('Order for display (lower numbers appear first)'),
-                    ])->columns(2),
+                    ])->columns(3),
             ]);
     }
 
@@ -83,6 +89,8 @@ class PageResource extends Resource
                     ->label('Hero Image')
                     ->size(60)
                     ->square(),
+                
+                Tables\Columns\TextColumn::make('organization.title')->label('Organization')->badge()->sortable(),
                 
                 Tables\Columns\TextColumn::make('title')
                     ->searchable()
@@ -121,7 +129,12 @@ class PageResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->reorderable('display_order')
+            ->defaultSort('display_order')
             ->filters([
+                Tables\Filters\SelectFilter::make('organization_id')
+                    ->relationship('organization', 'title')
+                    ->label('Organization'),
                 Tables\Filters\TernaryFilter::make('is_active')
                     ->label('Status')
                     ->placeholder('All Pages')

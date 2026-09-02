@@ -63,6 +63,11 @@ class TeamResource extends Resource
 
                 Section::make('Publishing')
                     ->schema([
+                        Select::make('organization_id')
+                            ->relationship('organization', 'title')
+                            ->default(fn () => session('active_organization_id') ?? \App\Models\Organization::first()?->id)
+                            ->required()
+                            ->label('Organization'),
                         TextInput::make('order')
                             ->numeric()
                             ->default(1)
@@ -76,7 +81,7 @@ class TeamResource extends Resource
                         Toggle::make('founder')
                             ->label('Show founder badge'),
                     ])
-                    ->columns(3),
+                    ->columns(4),
             ]);
     }
 
@@ -88,6 +93,7 @@ class TeamResource extends Resource
                     ->collection('team-images')
                     ->circular()
                     ->size(48),
+                TextColumn::make('organization.title')->label('Organization')->badge()->sortable(),
                 TextColumn::make('first_name')->searchable()->sortable(),
                 TextColumn::make('last_name')->searchable()->sortable(),
                 TextColumn::make('title')->label('Role')->searchable(),
@@ -104,6 +110,9 @@ class TeamResource extends Resource
             ->reorderable('order')
             ->defaultSort('order')
             ->filters([
+                Tables\Filters\SelectFilter::make('organization_id')
+                    ->relationship('organization', 'title')
+                    ->label('Organization'),
                 Tables\Filters\TernaryFilter::make('founder')->label('Founder')->boolean(),
                 Tables\Filters\TrashedFilter::make(),
                 Tables\Filters\SelectFilter::make('status')->options(StatusEnum::class),

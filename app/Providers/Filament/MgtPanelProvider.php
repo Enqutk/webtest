@@ -42,7 +42,6 @@ class MgtPanelProvider extends PanelProvider
             ->default()
             ->id('mgt')
             ->path('mgt')
-            ->login()
             ->colors([
                 'primary' => Color::hex($accent),
             ])
@@ -69,6 +68,10 @@ class MgtPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
+            ->renderHook(
+                PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
+                fn (): string => \Illuminate\Support\Facades\Blade::render("@include('filament.components.topbar-org-switcher')")
+            )
             ->renderHook(
                 PanelsRenderHook::HEAD_END,
                 fn (): HtmlString => new HtmlString('

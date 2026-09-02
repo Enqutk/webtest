@@ -88,6 +88,11 @@ class ServiceResource extends Resource
 
                 Forms\Components\Section::make('Publishing')
                     ->schema([
+                        Forms\Components\Select::make('organization_id')
+                            ->relationship('organization', 'title')
+                            ->default(fn () => session('active_organization_id') ?? \App\Models\Organization::first()?->id)
+                            ->required()
+                            ->label('Organization'),
                         Forms\Components\TextInput::make('order')
                             ->numeric()
                             ->default(1)
@@ -99,7 +104,7 @@ class ServiceResource extends Resource
                             ->default(StatusEnum::active)
                             ->required(),
                     ])
-                    ->columns(2),
+                    ->columns(3),
             ]);
     }
 
@@ -111,6 +116,7 @@ class ServiceResource extends Resource
                     ->collection('main_image')
                     ->label('Image')
                     ->size(48),
+                Tables\Columns\TextColumn::make('organization.title')->label('Organization')->badge()->sortable(),
                 Tables\Columns\TextColumn::make('title')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('short_description')->label('Summary')->limit(40)->toggleable(),
                 Tables\Columns\TextColumn::make('order')->sortable(),
@@ -128,6 +134,9 @@ class ServiceResource extends Resource
             ])
             ->reorderable('order')
             ->filters([
+                Tables\Filters\SelectFilter::make('organization_id')
+                    ->relationship('organization', 'title')
+                    ->label('Organization'),
                 Tables\Filters\SelectFilter::make('status')
                     ->options(StatusEnum::class),
             ])

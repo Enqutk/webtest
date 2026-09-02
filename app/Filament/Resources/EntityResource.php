@@ -74,6 +74,11 @@ class EntityResource extends Resource
 
                 Section::make('Publishing')
                     ->schema([
+                        Select::make('organization_id')
+                            ->relationship('organization', 'title')
+                            ->default(fn () => session('active_organization_id') ?? \App\Models\Organization::first()?->id)
+                            ->required()
+                            ->label('Organization'),
                         TextInput::make('order')
                             ->numeric()
                             ->default(1)
@@ -85,7 +90,7 @@ class EntityResource extends Resource
                             ->default(StatusEnum::active)
                             ->required(),
                     ])
-                    ->columns(2),
+                    ->columns(3),
             ]);
     }
 
@@ -96,6 +101,7 @@ class EntityResource extends Resource
                 SpatieMediaLibraryImageColumn::make('image')
                     ->collection('image')
                     ->size(48),
+                TextColumn::make('organization.title')->label('Organization')->badge()->sortable(),
                 TextColumn::make('name')->searchable()->sortable(),
                 TextColumn::make('type')->badge()->sortable(),
                 TextColumn::make('category')->toggleable(),
@@ -114,6 +120,9 @@ class EntityResource extends Resource
             ])
             ->reorderable('order')
             ->filters([
+                Tables\Filters\SelectFilter::make('organization_id')
+                    ->relationship('organization', 'title')
+                    ->label('Organization'),
                 Tables\Filters\TrashedFilter::make(),
                 Tables\Filters\SelectFilter::make('type')
                     ->options(EntityTypeEnum::options()),

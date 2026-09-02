@@ -79,6 +79,11 @@ class HeroResource extends Resource
 
                 Forms\Components\Section::make('Publishing')
                     ->schema([
+                        Forms\Components\Select::make('organization_id')
+                            ->relationship('organization', 'title')
+                            ->default(fn () => session('active_organization_id') ?? \App\Models\Organization::first()?->id)
+                            ->required()
+                            ->label('Organization'),
                         Forms\Components\TextInput::make('order')
                             ->label('Display order')
                             ->numeric()
@@ -91,7 +96,7 @@ class HeroResource extends Resource
                             ->default(StatusEnum::active)
                             ->required(),
                     ])
-                    ->columns(2),
+                    ->columns(3),
             ]);
     }
 
@@ -103,6 +108,7 @@ class HeroResource extends Resource
                     ->collection('image')
                     ->square()
                     ->size(56),
+                Tables\Columns\TextColumn::make('organization.title')->label('Organization')->badge()->sortable(),
                 Tables\Columns\TextColumn::make('title')
                     ->label('Headline')
                     ->searchable()
@@ -134,6 +140,9 @@ class HeroResource extends Resource
             ])
             ->reorderable('order')
             ->filters([
+                Tables\Filters\SelectFilter::make('organization_id')
+                    ->relationship('organization', 'title')
+                    ->label('Organization'),
                 Tables\Filters\TrashedFilter::make(),
                 Tables\Filters\SelectFilter::make('status')
                     ->options(StatusEnum::class),

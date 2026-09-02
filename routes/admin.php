@@ -13,12 +13,15 @@ use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
-// Redirect old /mgt URLs to /admin
+// Redirect old /mgt and /mgt/login URLs to /admin / admin/login
+Route::get('/mgt/login', function () {
+    return redirect()->route('admin.login');
+});
 Route::any('/mgt', function () {
-    return redirect()->route('admin.dashboard');
+    return auth()->check() ? redirect()->route('admin.dashboard') : redirect()->route('admin.login');
 });
 Route::any('/mgt/{any}', function () {
-    return redirect()->route('admin.dashboard');
+    return auth()->check() ? redirect()->route('admin.dashboard') : redirect()->route('admin.login');
 })->where('any', '.*');
 
 // Admin Guest Routes (Login)
