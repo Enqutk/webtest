@@ -30,6 +30,39 @@ class Organization extends Model implements HasMedia, \Filament\Models\Contracts
         'theme' => 'array',
     ];
 
+    public static function resolveCurrent(): self
+    {
+        if (request()->filled('org')) {
+            $org = self::find(request('org'));
+            if ($org) {
+                session(['active_organization_id' => $org->id]);
+                return $org;
+            }
+        }
+
+        if (session()->has('active_organization_id')) {
+            $org = self::find(session('active_organization_id'));
+            if ($org) {
+                return $org;
+            }
+        }
+
+        $first = self::first();
+        if ($first) {
+            session(['active_organization_id' => $first->id]);
+            return $first;
+        }
+
+        $created = self::create([
+            'title' => 'My Organization',
+            'slug' => 'default',
+            'status' => 'active',
+            'theme' => self::defaultTheme(),
+        ]);
+        session(['active_organization_id' => $created->id]);
+        return $created;
+    }
+
     public function getFilamentName(): string
     {
         return $this->title ?? 'Organization';
