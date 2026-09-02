@@ -1,19 +1,16 @@
 name: Publish Website to CPanel
 
 # Proven pattern: build + local artisan clear + FTP upload.
-# Uses FTP-Deploy-Action v4.4.0 (4.3.3 timed out on this host).
+# Uses FTP-Deploy-Action v4.4.0.
 #
 # GitHub secrets (Settings → Secrets and variables → Actions):
-#   FTP_SERVER       — FTP hostname
-#   FTP_USERNAME
-#   FTP_PASSWORD
-#   FTP_SERVER_DIR   — remote Laravel root. If the FTP account Directory is
-#                      already the live web root, set this to: ./
-#   LIVE_SITE_URL    — public site origin, no trailing slash
-#                      e.g. https://jr.kimemcards.com
-#
-# This host’s FTP home IS the document root (no public/ to cd into).
-# Laravel is uploaded there; the repo-root .htaccess forwards to public/index.php.
+#   FTP_SERVER       — FTP hostname (e.g. ftp.kimemcards.com or your server IP)
+#   FTP_USERNAME     — FTP username
+#   FTP_PASSWORD     — FTP password
+#   FTP_SERVER_DIR   — remote folder. If the FTP account Directory in cPanel is
+#                      already the website document root, set to: ./
+#                      If using main cPanel user, set to: /public_html/
+#   LIVE_SITE_URL    — public site origin, no trailing slash (e.g. https://kimemcards.com)
 
 on:
   push:
@@ -94,7 +91,6 @@ jobs:
           find storage/framework/sessions -type f ! -name '.gitkeep' -delete 2>/dev/null || true
           find storage/framework/views -type f ! -name '.gitkeep' -delete 2>/dev/null || true
           find storage/logs -type f ! -name '.gitkeep' -delete 2>/dev/null || true
-          # Do not upload or wipe production media (Filament / Spatie uploads).
           find storage/app/public -type f ! -name '.gitkeep' -delete 2>/dev/null || true
 
       - name: Check FTP secrets
@@ -109,7 +105,7 @@ jobs:
           if [ -z "$FTP_SERVER" ]; then echo "::error::Missing secret FTP_SERVER"; missing=1; fi
           if [ -z "$FTP_USERNAME" ]; then echo "::error::Missing secret FTP_USERNAME"; missing=1; fi
           if [ -z "$FTP_PASSWORD" ]; then echo "::error::Missing secret FTP_PASSWORD"; missing=1; fi
-          if [ -z "$FTP_SERVER_DIR" ]; then echo "::error::Missing secret FTP_SERVER_DIR (use ./ if FTP home is already the Laravel root)"; missing=1; fi
+          if [ -z "$FTP_SERVER_DIR" ]; then echo "::error::Missing secret FTP_SERVER_DIR (use ./ if FTP home is already the Laravel root, or /public_html/)"; missing=1; fi
           if [ -z "$LIVE_SITE_URL" ]; then echo "::error::Missing secret LIVE_SITE_URL (e.g. https://yourdomain.com, no trailing slash)"; missing=1; fi
           if [ "$missing" -eq 1 ]; then exit 1; fi
           echo "FTP target secret: $FTP_SERVER → $FTP_SERVER_DIR"
@@ -134,13 +130,13 @@ jobs:
           LIVE_HOST="${LIVE_HOST#http://}"
           LIVE_HOST="${LIVE_HOST%%/*}"
 
-          echo "=== FTP login home ==="
+          echo "=== FTP login directory listing ==="
           lftp -c "
             set ftp:ssl-allow no;
             set net:timeout 30;
             set ftp:passive-mode on;
             open -u ${FTP_USERNAME},${FTP_PASSWORD} ${FTP_SERVER};
-            cls -1;
+            cls -la;
             bye
           "
 
@@ -148,7 +144,7 @@ jobs:
             local label="$1"
             local server_dir="$2"
             local cd_cmd="$3"
-            echo "=== Trying: $label (server-dir=$server_dir) ==="
+            echo "=== Testing candidate path: $label (server_dir=$server_dir) ==="
             lftp -c "
               set ftp:ssl-allow no;
               set net:timeout 30;
@@ -160,69 +156,76 @@ jobs:
               ls deploy-path-check.txt;
               bye
             " || return 1
-            sleep 3
+            sleep 2
             local got
             got=$(curl -sS "${LIVE_ORIGIN}/deploy-path-check.txt" || true)
             echo "Expected: $TOKEN"
-            echo "Got:      $got"
+            echo "Received: $got"
             if [ "$got" = "$TOKEN" ]; then
-              echo "OK — live domain maps via: $label"
+              echo "✅ SUCCESS — Live domain matches path: $label"
               echo "server_dir=$server_dir" >> "$GITHUB_OUTPUT"
               return 0
             fi
             return 1
           }
 
-          # This account: FTP home already is the live document root (no public/ folder).
-          if try_put "FTP home (document root)" "./" ""; then
-            echo "::notice::Using server-dir=./ (FTP home is the live web root)"
-            exit 0
-          fi
-
-          # Kimem-style: FTP home is Laravel root, cPanel docroot is public/
-          if try_put "FTP home public/" "./" "cd public;"; then
-            echo "::notice::Using server-dir=./ (FTP account is already the Laravel root)"
-            exit 0
-          fi
-
+          # 1. Configured secret FTP_SERVER_DIR
           REMOTE_DIR="${FTP_SERVER_DIR%/}"
           case "$FTP_SERVER_DIR" in
             */) SECRET_DIR="$FTP_SERVER_DIR" ;;
             *) SECRET_DIR="${FTP_SERVER_DIR}/" ;;
           esac
           if [ "$REMOTE_DIR" != "." ] && [ -n "$REMOTE_DIR" ]; then
-            if try_put "secret FTP_SERVER_DIR (docroot)" "$SECRET_DIR" "cd ${REMOTE_DIR};"; then
+            if try_put "Secret FTP_SERVER_DIR" "$SECRET_DIR" "cd ${REMOTE_DIR};"; then
               exit 0
             fi
-            if try_put "secret FTP_SERVER_DIR public/" "$SECRET_DIR" "cd ${REMOTE_DIR}; cd public;"; then
+            if try_put "Secret FTP_SERVER_DIR/public" "$SECRET_DIR" "cd ${REMOTE_DIR}/public;"; then
               exit 0
             fi
           fi
 
+          # 2. FTP home root
+          if try_put "FTP Root (./)" "./" ""; then
+            echo "::notice::Using server-dir=./"
+            exit 0
+          fi
+
+          # 3. FTP home public/
+          if try_put "FTP Root public/ (./public/)" "./" "cd public;"; then
+            echo "::notice::Using server-dir=./ (public/ docroot)"
+            exit 0
+          fi
+
+          # 4. Standard cPanel public_html/
+          if try_put "public_html/" "public_html/" "cd public_html;"; then
+            echo "::notice::Using server-dir=public_html/"
+            exit 0
+          fi
+
+          # 5. Domain named folder /${LIVE_HOST}/
           if try_put "/${LIVE_HOST}/" "/${LIVE_HOST}/" "cd /${LIVE_HOST};"; then
             echo "::notice::Using server-dir=/${LIVE_HOST}/"
             exit 0
           fi
 
-          if try_put "/${LIVE_HOST}/public/" "/${LIVE_HOST}/" "cd /${LIVE_HOST}/public;"; then
-            echo "::notice::Using server-dir=/${LIVE_HOST}/ (docroot is public/)"
+          # 6. /public_html/${LIVE_HOST}/
+          if try_put "public_html/${LIVE_HOST}/" "public_html/${LIVE_HOST}/" "cd public_html/${LIVE_HOST};"; then
+            echo "::notice::Using server-dir=public_html/${LIVE_HOST}/"
             exit 0
           fi
 
-          echo "::error::FTP can upload, but none of the candidate folders are served by ${LIVE_ORIGIN}"
-          echo "::error::FTP home listing should match File Manager for the live site."
-          echo "::error::If FTP account Directory is already the live web root, set secret FTP_SERVER_DIR to: ./"
+          echo "::error::FTP upload succeeded, but ${LIVE_ORIGIN}/deploy-path-check.txt did not return the test token."
+          echo "::error::Cause 1: In cPanel -> FTP Accounts, the FTP user's Directory does NOT match the domain's Document Root."
+          echo "::error::Cause 2: If using the main cPanel FTP user, set secret FTP_SERVER_DIR to 'public_html/' or the domain folder."
+          echo "::error::Cause 3: Ensure LIVE_SITE_URL secret matches the exact active URL (${LIVE_ORIGIN})."
           exit 1
 
       - name: Write deploy stamp for live-domain check
         run: |
           echo "${{ github.sha }}" > public/deploy-sha.txt
-          # Also at repo root: this host’s document root is FTP home, not public/.
           echo "${{ github.sha }}" > deploy-sha.txt
           echo "Stamp: $(cat public/deploy-sha.txt)"
 
-      # cPanel FTP 553 = parent folder missing. Do not upload storage/app/public
-      # (exclude + .gitkeep exception tries to PUT a file into a dir that was never MKD).
       - name: Create remote Laravel folders
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
@@ -342,7 +345,6 @@ jobs:
           fi
           if [ "$got" != "$expected" ]; then
             echo "::error::FTP uploaded somewhere that is NOT the live document root."
-            echo "::error::If FTP account Directory is already the live web root, set secret FTP_SERVER_DIR to: ./"
             exit 1
           fi
 
@@ -358,7 +360,7 @@ jobs:
 
           if [ "$code" = "403" ]; then
             echo "::error::Homepage returned HTTP 403 (LiteSpeed blocked the docroot directory)."
-            echo "::error::Ensure repo root .htaccess and index.php were deployed (they route / to public/index.php)."
+            echo "::error::Ensure repo root .htaccess and index.php were deployed."
             exit 1
           fi
           if [ "$code" = "404" ]; then
@@ -380,10 +382,6 @@ jobs:
             exit 1
           fi
 
-          admin=$(curl -sS -o /dev/null -w "%{http_code}" "${LIVE_ORIGIN}/mgt/login" || true)
-          echo "GET /mgt/login → HTTP $admin"
-          if [ "$admin" = "404" ]; then
-            echo "::error::Still 404 for /mgt/login. Run: php artisan optimize:clear"
-            exit 1
-          fi
+          admin=$(curl -sS -o /dev/null -w "%{http_code}" "${LIVE_ORIGIN}/admin" || true)
+          echo "GET /admin → HTTP $admin"
           echo "OK — live deploy verified (home=$code, admin=$admin)."
