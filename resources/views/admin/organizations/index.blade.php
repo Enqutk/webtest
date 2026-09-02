@@ -102,9 +102,9 @@
                             <i class="bi bi-palette"></i>
                             <span>Brand & Colors</span>
                         </a>
-                        <a href="{{ route('admin.team.index', ['org' => $org->id]) }}" class="py-2 px-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl text-center transition flex items-center justify-center gap-1.5">
-                            <i class="bi bi-people"></i>
-                            <span>Team ({{ $org->teams_count ?? 0 }})</span>
+                        <a href="{{ route('card.home', ['slug' => $org->slug]) }}" target="_blank" class="py-2 px-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl text-center transition flex items-center justify-center gap-1.5">
+                            <i class="bi bi-box-arrow-up-right"></i>
+                            <span>View Card Site</span>
                         </a>
                     </div>
                 </div>

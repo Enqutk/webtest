@@ -54,16 +54,10 @@ class AppServiceProvider extends ServiceProvider
             'layouts.*',
             'components.*',
         ], function ($view) {
-            static $payload = null;
-
-            if ($payload === null) {
-                $payload = [
-                    'data' => app(HomeContentService::class)->getHomeContent(),
-                    'navItems' => app(NavigationService::class)->navbarItems(),
-                ];
-            }
-
-            $view->with($payload);
+            $view->with([
+                'data' => app(HomeContentService::class)->getHomeContent(),
+                'navItems' => app(NavigationService::class)->navbarItems(),
+            ]);
         });
     }
 }

@@ -6,6 +6,7 @@ use App\Enums\EntityTypeEnum;
 use App\Enums\StatusEnum;
 use App\Models\Entity;
 use App\Models\Hero;
+use App\Models\Organization;
 use App\Models\Service;
 use App\Models\Team;
 
@@ -13,32 +14,41 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $heroes = Hero::where('status', StatusEnum::active)
+        $currentOrg = Organization::resolvePublicCurrent();
+
+        $heroes = Hero::where('organization_id', $currentOrg->id)
+            ->where('status', StatusEnum::active)
             ->with('media')
             ->orderBy('order')
             ->get();
 
-        $services = Service::activeOrdered()->get();
+        $services = Service::where('organization_id', $currentOrg->id)
+            ->where('status', StatusEnum::active)
+            ->orderBy('order')
+            ->get();
 
-        $projects = Entity::where('status', StatusEnum::active)
+        $projects = Entity::where('organization_id', $currentOrg->id)
+            ->where('status', StatusEnum::active)
             ->where('type', EntityTypeEnum::project)
             ->with('media')
             ->orderBy('order')
             ->take(6)
             ->get();
 
-        $clients = Entity::where('status', StatusEnum::active)
+        $clients = Entity::where('organization_id', $currentOrg->id)
+            ->where('status', StatusEnum::active)
             ->whereIn('type', [EntityTypeEnum::client, EntityTypeEnum::partner])
             ->with('media')
             ->orderBy('order')
             ->get();
 
-        $team = Team::where('status', StatusEnum::active)
+        $team = Team::where('organization_id', $currentOrg->id)
+            ->where('status', StatusEnum::active)
             ->with('media')
             ->orderBy('order')
             ->take(4)
             ->get();
 
-        return view('index', compact('heroes', 'services', 'projects', 'clients', 'team'));
+        return view('index', compact('heroes', 'services', 'projects', 'clients', 'team', 'currentOrg'));
     }
 }

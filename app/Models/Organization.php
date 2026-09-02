@@ -32,10 +32,28 @@ class Organization extends Model implements HasMedia, \Filament\Models\Contracts
 
     public static function resolveCurrent(): self
     {
-        if (request()->filled('org')) {
-            $org = self::find(request('org'));
+        $routeSlug = request()->route('slug');
+        if ($routeSlug) {
+            $org = self::where('slug', $routeSlug)->first();
             if ($org) {
                 session(['active_organization_id' => $org->id]);
+                return $org;
+            }
+        }
+
+        if (request()->filled('org')) {
+            $param = request('org');
+            $org = is_numeric($param) ? self::find($param) : self::where('slug', $param)->first();
+            if ($org) {
+                session(['active_organization_id' => $org->id]);
+                return $org;
+            }
+        }
+
+        $host = request()->getHost();
+        if ($host && !in_array($host, ['127.0.0.1', 'localhost', '::1'])) {
+            $org = self::where('domain', $host)->first();
+            if ($org) {
                 return $org;
             }
         }
@@ -61,6 +79,11 @@ class Organization extends Model implements HasMedia, \Filament\Models\Contracts
         ]);
         session(['active_organization_id' => $created->id]);
         return $created;
+    }
+
+    public static function resolvePublicCurrent(): self
+    {
+        return self::resolveCurrent();
     }
 
     public function getFilamentName(): string

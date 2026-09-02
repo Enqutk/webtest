@@ -18,7 +18,7 @@ class EditOrganization extends EditRecord
                 ->label('View Public Website')
                 ->icon('heroicon-m-arrow-top-right-on-square')
                 ->color('gray')
-                ->url(fn (): string => url('/'))
+                ->url(fn (): string => route('card.home', ['slug' => $this->getRecord()->slug]))
                 ->openUrlInNewTab(),
 
             Actions\DeleteAction::make()

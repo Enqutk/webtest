@@ -12,14 +12,17 @@ class HomeContentService
 {
     public function getHomeContent(): array
     {
-        $organization = Organization::query()->with('media')->first();
+        $organization = Organization::resolvePublicCurrent();
+        $organization->loadMissing('media');
 
-        $contacts = OrganizationContact::where('status', StatusEnum::active)
+        $contacts = OrganizationContact::where('organization_id', $organization->id)
+            ->where('status', StatusEnum::active)
             ->select(['type', 'value'])
             ->get()
             ->groupBy('type');
 
-        $blocks = ContentBlock::where('is_active', true)
+        $blocks = ContentBlock::where('organization_id', $organization->id)
+            ->where('is_active', true)
             ->whereIn('slug', [
                 'key-features',
                 'veritas-afrika-co-ltd',

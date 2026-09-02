@@ -114,6 +114,11 @@ class NavigationService
         $fragment = parse_url($url, PHP_URL_FRAGMENT);
         $mapped = $aliases[$path] ?? $path;
 
+        $routeSlug = request()->route('slug');
+        if ($routeSlug && !str_starts_with($mapped, "/card/{$routeSlug}")) {
+            $mapped = ($mapped === '/') ? "/card/{$routeSlug}" : "/card/{$routeSlug}" . $mapped;
+        }
+
         if ($fragment && ! str_contains($mapped, '#')) {
             $mapped .= '#' . $fragment;
         }
