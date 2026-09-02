@@ -112,6 +112,28 @@
 </style>
 
 <div class="hz-hero-manager-wrap">
+    {{-- Organization Switcher Banner --}}
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius:0.75rem; padding:0.875rem 1.25rem;">
+        <div style="display:flex; align-items:center; gap:0.75rem;">
+            <div style="width:2.25rem; height:2.25rem; border-radius:0.5rem; background:#0284c7; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.875rem;">
+                {{ substr($record?->title ?? 'O', 0, 2) }}
+            </div>
+            <div>
+                <span style="font-size:0.6875rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#64748b; display:block;">Editing Organization:</span>
+                <strong style="font-size:1.05rem; color:#0f172a;">{{ $record?->title ?? 'Default Organization' }}</strong>
+                <span style="font-size:0.75rem; color:#64748b; margin-left:0.5rem;">(Link: <a href="{{ route('card.home', ['slug' => $record?->slug ?? 'default']) }}" target="_blank" style="color:#0284c7; font-weight:600; text-decoration:underline;">/card/{{ $record?->slug }}</a>)</span>
+            </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:0.625rem;">
+            <label style="font-size:0.75rem; font-weight:700; color:#475569;">Switch Organization:</label>
+            <select onchange="window.location.href='/mgt/home-page-sections?org=' + this.value" style="font-size:0.8125rem; border-radius:0.5rem; border:1px solid #cbd5e1; padding:0.375rem 0.75rem; background:#fff; font-weight:600; cursor:pointer;">
+                @foreach(\App\Models\Organization::all() as $o)
+                    <option value="{{ $o->id }}" {{ $o->id === $record?->id ? 'selected' : '' }}>{{ $o->title }} ({{ $o->slug }})</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+
     {{-- Card 1: Banner Global Settings --}}
     <div class="hz-admin-card">
         <div class="hz-card-header">

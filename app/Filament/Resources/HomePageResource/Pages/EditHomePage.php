@@ -12,26 +12,56 @@ class EditHomePage extends EditRecord
 
     public function mount($record = null): void
     {
-        $organization = Organization::firstOrCreate([], [
-            'title' => 'Your Organization',
-            'status' => 'active',
-        ]);
+        $orgId = request('org') ?? request('record') ?? session('active_organization_id');
+        $organization = null;
+        if ($orgId) {
+            $organization = is_numeric($orgId) ? Organization::find($orgId) : Organization::where('slug', $orgId)->first();
+        }
+
+        if (!$organization) {
+            $organization = Organization::first() ?? Organization::create([
+                'title' => 'Your Organization',
+                'slug' => 'default',
+                'status' => 'active',
+                'theme' => Organization::defaultTheme(),
+            ]);
+        }
+
+        session(['active_organization_id' => $organization->id]);
 
         parent::mount($organization->getKey());
     }
 
     protected function getHeaderActions(): array
     {
+        $currentOrg = $this->getRecord();
+
         return [
+            \Filament\Actions\Action::make('switch_org')
+                ->label('🏢 Org: ' . ($currentOrg?->title ?? 'Select'))
+                ->icon('heroicon-m-arrows-right-left')
+                ->color('warning')
+                ->form([
+                    \Filament\Forms\Components\Select::make('organization_id')
+                        ->label('Choose Organization to Edit')
+                        ->options(Organization::pluck('title', 'id'))
+                        ->default(fn () => $this->getRecord()?->id)
+                        ->required(),
+                ])
+                ->action(function (array $data) {
+                    session(['active_organization_id' => $data['organization_id']]);
+                    return redirect('/mgt/home-page-sections?org=' . $data['organization_id']);
+                }),
+
             $this->addHeroSlideAction(),
             $this->configureHeroBannerAction(),
             $this->addTeamMemberAction(),
             $this->configureTeamSectionAction(),
             \Filament\Actions\Action::make('view_site')
-                ->label('View Live Home Page')
+                ->label('View Live Website')
                 ->icon('heroicon-m-arrow-top-right-on-square')
                 ->color('gray')
-                ->url(url('/'))
+                ->url(fn (): string => route('card.home', ['slug' => $this->getRecord()?->slug ?? 'default']))
                 ->openUrlInNewTab(),
         ];
     }
