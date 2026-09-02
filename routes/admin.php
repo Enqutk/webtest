@@ -49,6 +49,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/organizations/switch/{organization}', [OrganizationController::class, 'switchTenant'])->name('organizations.switch');
 
         // Organizations Management
+        Route::post('/organizations/invite', [OrganizationController::class, 'createInvitation'])->name('organizations.invite');
         Route::resource('organizations', OrganizationController::class);
         Route::post('/organizations/{organization}/members', [OrganizationController::class, 'addMember'])->name('organizations.members.add');
         Route::delete('/organizations/{organization}/members/{user}', [OrganizationController::class, 'removeMember'])->name('organizations.members.remove');

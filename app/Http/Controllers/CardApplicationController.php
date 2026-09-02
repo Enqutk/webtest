@@ -9,12 +9,9 @@ use Illuminate\Support\Str;
 
 class CardApplicationController extends Controller
 {
-    public function create()
+    private function getEditions(): array
     {
-        $fontOptions = Organization::getFontOptions();
-        $shapeOptions = Organization::imageShapeOptions(false);
-        
-        $editions = [
+        return [
             'midnight_navy' => [
                 'name' => 'Midnight Obsidian Navy',
                 'subtitle' => 'Deep Navy with Brushed Silver NFC Chip',
@@ -40,13 +37,32 @@ class CardApplicationController extends Controller
                 'badge' => 'High Tech',
             ],
         ];
+    }
 
-        return view('card-applications.apply', compact('fontOptions', 'shapeOptions', 'editions'));
+    public function create()
+    {
+        $fontOptions = Organization::getFontOptions();
+        $shapeOptions = Organization::imageShapeOptions(false);
+        $editions = $this->getEditions();
+        $invitation = null;
+
+        return view('card-applications.apply', compact('fontOptions', 'shapeOptions', 'editions', 'invitation'));
+    }
+
+    public function showInvite(string $token)
+    {
+        $invitation = \App\Models\OrganizationInvitation::where('token', $token)->firstOrFail();
+        $fontOptions = Organization::getFontOptions();
+        $shapeOptions = Organization::imageShapeOptions(false);
+        $editions = $this->getEditions();
+
+        return view('card-applications.apply', compact('fontOptions', 'shapeOptions', 'editions', 'invitation'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'invitation_token' => ['nullable', 'string'],
             'type' => ['required', 'in:individual,business'],
             'name' => ['required', 'string', 'max:255'],
             'role_title' => ['required', 'string', 'max:255'],
@@ -132,6 +148,16 @@ class CardApplicationController extends Controller
 
         if ($request->hasFile('photo')) {
             $application->addMediaFromRequest('photo')->toMediaCollection('profile_photo');
+        }
+
+        if ($request->filled('invitation_token')) {
+            $invite = \App\Models\OrganizationInvitation::where('token', $request->invitation_token)->first();
+            if ($invite) {
+                $invite->update([
+                    'status' => 'completed',
+                    'card_application_id' => $application->id,
+                ]);
+            }
         }
 
         return redirect()->route('card.apply.success', ['code' => $application->reference_code]);

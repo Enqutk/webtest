@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\CardApplication;
 use App\Models\Organization;
+use App\Models\OrganizationInvitation;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -22,42 +23,73 @@ class CardApplicationTest extends TestCase
     {
         $response = $this->get('/apply');
         $response->assertStatus(200);
-        $response->assertSee('Live Preview');
+        $response->assertSee('Design Your NFC Smart Card');
     }
 
-    public function test_user_can_submit_card_application(): void
+    public function test_admin_can_generate_client_invitation(): void
     {
+        $admin = User::first();
+
+        $response = $this->actingAs($admin)->post(route('admin.organizations.invite'), [
+            'client_name' => 'Elias Vance',
+            'client_email' => 'elias@vance.example',
+            'client_phone' => '+251911223344',
+            'initial_role' => 'Senior Partner & Strategic Advisor',
+            'card_edition' => 'brushed_gold',
+        ]);
+
+        $response->assertRedirect(route('admin.organizations.create'));
+        $invitation = OrganizationInvitation::where('client_email', 'elias@vance.example')->first();
+        $this->assertNotNull($invitation);
+        $this->assertStringStartsWith('km-', $invitation->token);
+        $this->assertEquals('pending', $invitation->status);
+    }
+
+    public function test_client_can_open_invitation_link_and_submit(): void
+    {
+        $invitation = OrganizationInvitation::create([
+            'token' => 'km-test-invite',
+            'client_name' => 'Maya Lin',
+            'client_email' => 'maya@lin-design.example',
+            'client_phone' => '+14155552671',
+            'initial_role' => 'Lead Architectural Designer',
+            'card_edition' => 'brushed_gold',
+            'status' => 'pending',
+        ]);
+
+        $response = $this->get('/invite/' . $invitation->token);
+        $response->assertStatus(200);
+        $response->assertSee('Welcome, Maya Lin!');
+
         $payload = [
+            'invitation_token' => $invitation->token,
             'type' => 'individual',
-            'name' => 'Sophia Al-Mansoor',
-            'role_title' => 'Chief Investment Officer',
-            'company_name' => 'Horizon Capital Group',
-            'email' => 'sophia@horizon-capital.example',
-            'phone' => '+971 50 123 4567',
-            'tagline' => 'Global private wealth and sovereign advisory',
-            'bio' => 'Advising institutional funds and executive boards across the EMEA region.',
+            'name' => 'Maya Lin',
+            'role_title' => 'Lead Architectural Designer',
+            'company_name' => 'Maya Lin Studio',
+            'email' => 'maya@lin-design.example',
+            'phone' => '+14155552671',
+            'tagline' => 'Creating sustainable luxury physical & digital spaces',
+            'bio' => 'Award-winning architectural designer with 10+ years experience.',
             'card_edition' => 'brushed_gold',
             'bg_color' => '#0b0f19',
             'accent_color' => '#c5a059',
             'font_display' => 'Cinzel',
             'font_body' => 'Outfit',
-            'image_shape' => 'shield',
-            'highlights' => [
-                'Over $1.2B in institutional capital syndicated',
-                'Advisory partner to 14 multi-family offices',
-            ],
-            'telegram' => '@sophia_almansoor',
-            'whatsapp' => '+971501234567',
+            'image_shape' => 'arch',
+            'highlights' => ['Winner of AIA 2025 Award', 'Featured in Architectural Digest'],
         ];
 
-        $response = $this->withoutMiddleware()->post('/apply', $payload);
+        $submitResponse = $this->withoutMiddleware()->post('/apply', $payload);
         
-        $app = CardApplication::where('email', 'sophia@horizon-capital.example')->first();
+        $app = CardApplication::where('email', 'maya@lin-design.example')->first();
         $this->assertNotNull($app);
         $this->assertEquals('pending', $app->status);
         $this->assertEquals('2,450 ETB', $app->quote_amount);
 
-        $response->assertRedirect(route('card.apply.success', ['code' => $app->reference_code]));
+        $invitation->refresh();
+        $this->assertEquals('completed', $invitation->status);
+        $this->assertEquals($app->id, $invitation->card_application_id);
     }
 
     public function test_admin_can_approve_and_provision_application(): void

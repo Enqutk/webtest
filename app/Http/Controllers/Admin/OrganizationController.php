@@ -29,8 +29,37 @@ class OrganizationController extends Controller
         $fontOptions = Organization::getFontOptions();
         $fontWeights = Organization::getFontWeightOptions();
         $shapeOptions = Organization::imageShapeOptions(false);
+        $recentInvitations = \App\Models\OrganizationInvitation::latest()->take(10)->get();
 
-        return view('admin.organizations.create', compact('currentOrg', 'fontOptions', 'fontWeights', 'shapeOptions'));
+        return view('admin.organizations.create', compact('currentOrg', 'fontOptions', 'fontWeights', 'shapeOptions', 'recentInvitations'));
+    }
+
+    public function createInvitation(Request $request)
+    {
+        $validated = $request->validate([
+            'client_name' => ['required', 'string', 'max:255'],
+            'client_email' => ['nullable', 'email', 'max:255'],
+            'client_phone' => ['nullable', 'string', 'max:50'],
+            'initial_role' => ['nullable', 'string', 'max:255'],
+            'card_edition' => ['required', 'in:midnight_navy,brushed_gold,executive_black'],
+        ]);
+
+        $token = \App\Models\OrganizationInvitation::generateToken();
+
+        $invitation = \App\Models\OrganizationInvitation::create([
+            'token' => $token,
+            'client_name' => $validated['client_name'],
+            'client_email' => $validated['client_email'],
+            'client_phone' => $validated['client_phone'],
+            'initial_role' => $validated['initial_role'],
+            'card_edition' => $validated['card_edition'],
+            'created_by' => Auth::id(),
+            'status' => 'pending',
+            'expires_at' => now()->addDays(14),
+        ]);
+
+        return redirect()->route('admin.organizations.create')
+            ->with('invitation_created', $invitation);
     }
 
     public function store(Request $request)

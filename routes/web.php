@@ -23,6 +23,7 @@ Route::get('/cards', function () {
 Route::get('/apply', [CardApplicationController::class, 'create'])->name('card.apply');
 Route::get('/order', [CardApplicationController::class, 'create'])->name('card.order');
 Route::get('/order-card', [CardApplicationController::class, 'create'])->name('card.order-card');
+Route::get('/invite/{token}', [CardApplicationController::class, 'showInvite'])->name('card.invite.show');
 Route::post('/apply', [CardApplicationController::class, 'store'])->name('card.apply.store');
 Route::get('/apply/success/{code}', [CardApplicationController::class, 'success'])->name('card.apply.success');
 Route::get('/apply/track', [CardApplicationController::class, 'track'])->name('card.apply.track');
