@@ -7,6 +7,8 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
+                'resources/css/kimem-landing.css',
+                'resources/js/kimem-landing.js',
             ],
             refresh: true,
         }),
