@@ -92,6 +92,8 @@ class HomeContentService
             ? $homeSections['stats']['items']
             : ($statsBlock?->list_items ?? []);
 
+        $routeSlug = request()->route('slug');
+
         $brandHomeUrl = $routeSlug
             ? route('card.home', ['slug' => $routeSlug])
             : ($organization ? route('card.home', ['slug' => $organization->slug ?: \Illuminate\Support\Str::slug($organization->title) ?: 'default']) : url('/'));

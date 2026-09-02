@@ -260,7 +260,7 @@ class CardApplicationAdminController extends Controller
         ]);
 
         // 7. Create Hero Slide
-        Hero::create([
+        $hero = Hero::create([
             'organization_id' => $org->id,
             'subtitle' => $application->role_title,
             'title' => $application->tagline ?: "Welcome to {$application->name}",
@@ -271,16 +271,38 @@ class CardApplicationAdminController extends Controller
             'status' => StatusEnum::active,
         ]);
 
-        // 8. Create Entities for Highlights
-        foreach ($highlights as $index => $h) {
-            Entity::create([
-                'organization_id' => $org->id,
-                'name' => "Highlight " . ($index + 1),
-                'type' => EntityTypeEnum::project,
-                'description' => $h,
-                'order' => $index + 1,
-                'status' => StatusEnum::active,
-            ]);
+        $heroMedia = $application->getFirstMedia('hero_image');
+        if ($heroMedia) {
+            try {
+                $hero->addMedia($heroMedia->getPath())->preservingOriginal()->toMediaCollection('images');
+            } catch (\Throwable $e) {}
+        }
+
+        // 8. Create Portfolio Projects or Highlight Entities
+        $portfolioItems = $application->portfolio ?: [];
+        if (!empty($portfolioItems)) {
+            foreach ($portfolioItems as $index => $item) {
+                Entity::create([
+                    'organization_id' => $org->id,
+                    'name' => $item['title'] ?? ("Project " . ($index + 1)),
+                    'type' => EntityTypeEnum::project,
+                    'description' => $item['description'] ?? '',
+                    'link' => !empty($item['url']) ? $item['url'] : null,
+                    'order' => $index + 1,
+                    'status' => StatusEnum::active,
+                ]);
+            }
+        } else {
+            foreach ($highlights as $index => $h) {
+                Entity::create([
+                    'organization_id' => $org->id,
+                    'name' => "Highlight " . ($index + 1),
+                    'type' => EntityTypeEnum::project,
+                    'description' => $h,
+                    'order' => $index + 1,
+                    'status' => StatusEnum::active,
+                ]);
+            }
         }
 
         // 9. Transfer uploaded headshot to Organization & Team

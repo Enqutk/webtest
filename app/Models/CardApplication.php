@@ -26,6 +26,7 @@ class CardApplication extends Model implements HasMedia
         'quote_amount',
         'theme',
         'highlights',
+        'portfolio',
         'social_links',
         'photo_path',
         'status',
@@ -37,6 +38,7 @@ class CardApplication extends Model implements HasMedia
     protected $casts = [
         'theme' => 'array',
         'highlights' => 'array',
+        'portfolio' => 'array',
         'social_links' => 'array',
     ];
 

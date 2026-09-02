@@ -127,6 +127,21 @@ class CardApplicationController extends Controller
 
         $filteredHighlights = array_values(array_filter($request->input('highlights', [])));
 
+        $rawPortfolio = $request->input('portfolio', []);
+        $portfolioItems = [];
+        if (is_array($rawPortfolio)) {
+            foreach ($rawPortfolio as $item) {
+                if (!empty($item['title'])) {
+                    $portfolioItems[] = [
+                        'title' => trim($item['title']),
+                        'description' => trim($item['description'] ?? ''),
+                        'tag' => trim($item['tag'] ?? 'Featured'),
+                        'url' => trim($item['url'] ?? ''),
+                    ];
+                }
+            }
+        }
+
         $application = CardApplication::create([
             'reference_code' => CardApplication::generateReferenceCode(),
             'type' => $validated['type'],
@@ -142,12 +157,17 @@ class CardApplicationController extends Controller
             'quote_amount' => $prices[$validated['card_edition']] ?? '1,850 ETB',
             'theme' => $theme,
             'highlights' => $filteredHighlights,
+            'portfolio' => $portfolioItems,
             'social_links' => $socialLinks,
             'status' => 'pending',
         ]);
 
         if ($request->hasFile('photo')) {
             $application->addMediaFromRequest('photo')->toMediaCollection('profile_photo');
+        }
+
+        if ($request->hasFile('hero_image')) {
+            $application->addMediaFromRequest('hero_image')->toMediaCollection('hero_image');
         }
 
         if ($request->filled('invitation_token')) {
