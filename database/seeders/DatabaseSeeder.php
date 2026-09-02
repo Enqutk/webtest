@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
             StatsSeeder::class,
             AboutContentSeeder::class,
             HomePageSeeder::class,
+            BusinessExecutiveSeeder::class,
+            EnkuTaddesseSeeder::class,
         ]);
     }
 }

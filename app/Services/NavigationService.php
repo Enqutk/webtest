@@ -12,49 +12,68 @@ class NavigationService
 {
     public function navbarItems(): Collection
     {
-        $rawItems = Cache::remember('nav.navbar_raw', 3600, function () {
-            $org = \App\Models\Organization::first();
-            $themeNavItems = $org?->theme['nav_items'] ?? null;
+        $org = \App\Models\Organization::resolvePublicCurrent();
+        $theme = is_array($org?->theme) ? $org->theme : [];
+        $themeNavItems = $theme['nav_items'] ?? null;
 
-            if (is_array($themeNavItems) && ! empty($themeNavItems)) {
-                return collect($themeNavItems)
-                    ->filter(fn ($item) => !isset($item['is_visible']) || (bool)$item['is_visible'])
-                    ->map(function ($item) {
-                        $url = $this->normalizeUrl((string) ($item['url'] ?? '/'));
-                        return [
-                            'label' => $item['label'] ?? 'Link',
-                            'url' => $url,
-                            'target' => $item['target'] ?? '_self',
-                            'children' => [],
-                        ];
-                    })
-                    ->values();
-            }
+        $showServices = $theme['home_sections']['services']['is_visible'] ?? true;
+        $showPortfolio = $theme['home_sections']['portfolio']['is_visible'] ?? true;
+        $showAbout = $theme['home_sections']['about']['is_visible'] ?? true;
 
+        if (is_array($themeNavItems) && ! empty($themeNavItems)) {
+            $items = collect($themeNavItems)
+                ->filter(fn ($item) => !isset($item['is_visible']) || (bool)$item['is_visible'])
+                ->map(function ($item) {
+                    $url = $this->normalizeUrl((string) ($item['url'] ?? '/'));
+                    return [
+                        'label' => $item['label'] ?? 'Link',
+                        'url' => $url,
+                        'target' => $item['target'] ?? '_self',
+                        'children' => [],
+                    ];
+                });
+        } else {
             $location = MenuLocation::query()
                 ->where('location', MenuLocationEnum::Navbar)
                 ->first();
 
-            if (! $location) {
-                return $this->fallbackNavbarRaw();
+            if ($location) {
+                $dbItems = MenuItem::query()
+                    ->where('menu_id', $location->id)
+                    ->whereNull('parent_id')
+                    ->orderBy('order_number')
+                    ->with(['children' => fn ($q) => $q->orderBy('order_number')])
+                    ->get();
+
+                if ($dbItems->isNotEmpty()) {
+                    $items = $dbItems->map(fn (MenuItem $item) => $this->mapItemRaw($item));
+                } else {
+                    $items = $this->fallbackNavbarRaw();
+                }
+            } else {
+                $items = $this->fallbackNavbarRaw();
             }
+        }
 
-            $items = MenuItem::query()
-                ->where('menu_id', $location->id)
-                ->whereNull('parent_id')
-                ->orderBy('order_number')
-                ->with(['children' => fn ($q) => $q->orderBy('order_number')])
-                ->get();
+        // Automatically hide navbar items if section is disabled for this organization
+        $items = $items->filter(function ($item) use ($showServices, $showPortfolio, $showAbout) {
+            $label = strtolower($item['label'] ?? '');
+            $url = strtolower($item['url'] ?? '');
 
-            if ($items->isEmpty()) {
-                return $this->fallbackNavbarRaw();
+            if (!$showServices && (str_contains($label, 'service') || str_contains($url, 'service'))) {
+                return false;
             }
-
-            return $items->map(fn (MenuItem $item) => $this->mapItemRaw($item));
-        });
+            if (!$showPortfolio && (str_contains($label, 'portfolio') || str_contains($label, 'project') || str_contains($url, 'portfolio'))) {
+                return false;
+            }
+            if (!$showAbout && (str_contains($label, 'about') || str_contains($url, '/about'))) {
+                return false;
+            }
+            return true;
+        })->values();
 
         // Compute active dynamically per request
-        return $rawItems->map(function ($item) {
+        return $items->map(function ($item) {
             $item['active'] = $this->isActive($item['url']);
             if (!empty($item['children'])) {
                 $item['children'] = collect($item['children'])->map(function ($child) {
