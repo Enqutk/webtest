@@ -12,13 +12,12 @@ class PageSeeder extends Seeder
 {
     public function run(): void
     {
-        // Get the first user for created_by
-        $user = User::first();
-
-        if (!$user) {
-            $this->command->error('No users found. Please run UserSeeder first.');
-            return;
-        }
+        // Get or create the first user for created_by
+        $user = User::first() ?? User::create([
+            'name' => 'Admin User',
+            'email' => 'admin@admin.com',
+            'password' => \Illuminate\Support\Facades\Hash::make('12345678'),
+        ]);
 
         // Create Home page
         $homePage = Page::create([
