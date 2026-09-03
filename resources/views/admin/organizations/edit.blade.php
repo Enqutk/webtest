@@ -296,91 +296,164 @@
                 </div>
             </div>
 
-            <!-- Detailed Color Palette Controls -->
+            <!-- Detailed Color Palette Controls with 1-Click Swatches -->
             <div class="pt-4 border-t border-slate-100 space-y-4">
-                <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider">Custom Color Palette</label>
+                <div class="flex items-center justify-between">
+                    <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider">Custom Color Palette & Swatch Picker</label>
+                    <span class="text-[11px] text-slate-500">Click any color dot to instantly apply or pick custom hex</span>
+                </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Canvas Background Color -->
-                    <div class="space-y-1.5">
+                    <div class="space-y-2 p-3.5 rounded-xl border border-slate-200/80 bg-slate-50/50">
                         <label class="block text-xs font-bold text-slate-700 flex items-center justify-between">
                             <span>Main Background Canvas</span>
                             <span class="text-[10px] font-mono text-slate-500">theme[bg]</span>
                         </label>
-                        <div class="flex items-center gap-3">
-                            <input type="color" name="theme[bg]" x-model="bgColor" class="w-12 h-10 p-0.5 rounded-xl border border-slate-200 cursor-pointer bg-white">
-                            <input type="text" x-model="bgColor" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-900">
+                        <div class="flex items-center gap-2.5">
+                            <input type="color" name="theme[bg]" x-model="bgColor" class="w-10 h-9 p-0.5 rounded-xl border border-slate-300 cursor-pointer bg-white shadow-sm shrink-0">
+                            <input type="text" x-model="bgColor" class="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-mono text-slate-900 shadow-sm">
+                        </div>
+                        <!-- Swatches -->
+                        <div class="flex items-center gap-1.5 pt-1">
+                            <span class="text-[10px] text-slate-400 font-semibold mr-1">Presets:</span>
+                            @foreach(['#0b0f19', '#000000', '#061122', '#0f172a', '#18181b', '#f8fafc', '#fdfbf7', '#ffffff'] as $c)
+                                <button type="button" @click="bgColor = '{{ $c }}'" title="{{ $c }}"
+                                        class="w-5 h-5 rounded-full border border-slate-300 shadow-sm transition hover:scale-125 focus:outline-none"
+                                        :class="bgColor === '{{ $c }}' ? 'ring-2 ring-brand-500 scale-110' : ''"
+                                        style="background: {{ $c }}"></button>
+                            @endforeach
                         </div>
                     </div>
 
                     <!-- Surface / Card Color -->
-                    <div class="space-y-1.5">
+                    <div class="space-y-2 p-3.5 rounded-xl border border-slate-200/80 bg-slate-50/50">
                         <label class="block text-xs font-bold text-slate-700 flex items-center justify-between">
                             <span>Card & Section Surface</span>
                             <span class="text-[10px] font-mono text-slate-500">theme[surface]</span>
                         </label>
-                        <div class="flex items-center gap-3">
-                            <input type="color" name="theme[surface]" x-model="surfaceColor" class="w-12 h-10 p-0.5 rounded-xl border border-slate-200 cursor-pointer bg-white">
-                            <input type="text" x-model="surfaceColor" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-900">
+                        <div class="flex items-center gap-2.5">
+                            <input type="color" name="theme[surface]" x-model="surfaceColor" class="w-10 h-9 p-0.5 rounded-xl border border-slate-300 cursor-pointer bg-white shadow-sm shrink-0">
+                            <input type="text" x-model="surfaceColor" class="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-mono text-slate-900 shadow-sm">
+                        </div>
+                        <!-- Swatches -->
+                        <div class="flex items-center gap-1.5 pt-1">
+                            <span class="text-[10px] text-slate-400 font-semibold mr-1">Presets:</span>
+                            @foreach(['#111827', '#0a0a0a', '#0b1d3a', '#1e293b', '#27272a', '#ffffff', '#f1f5f9', '#f8fafc'] as $c)
+                                <button type="button" @click="surfaceColor = '{{ $c }}'" title="{{ $c }}"
+                                        class="w-5 h-5 rounded-full border border-slate-300 shadow-sm transition hover:scale-125 focus:outline-none"
+                                        :class="surfaceColor === '{{ $c }}' ? 'ring-2 ring-brand-500 scale-110' : ''"
+                                        style="background: {{ $c }}"></button>
+                            @endforeach
                         </div>
                     </div>
 
                     <!-- Main Text Color -->
-                    <div class="space-y-1.5">
+                    <div class="space-y-2 p-3.5 rounded-xl border border-slate-200/80 bg-slate-50/50">
                         <label class="block text-xs font-bold text-slate-700 flex items-center justify-between">
                             <span>Primary Heading & Text</span>
                             <span class="text-[10px] font-mono text-slate-500">theme[ink]</span>
                         </label>
-                        <div class="flex items-center gap-3">
-                            <input type="color" name="theme[ink]" x-model="textColor" class="w-12 h-10 p-0.5 rounded-xl border border-slate-200 cursor-pointer bg-white">
-                            <input type="text" x-model="textColor" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-900">
+                        <div class="flex items-center gap-2.5">
+                            <input type="color" name="theme[ink]" x-model="textColor" class="w-10 h-9 p-0.5 rounded-xl border border-slate-300 cursor-pointer bg-white shadow-sm shrink-0">
+                            <input type="text" x-model="textColor" class="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-mono text-slate-900 shadow-sm">
+                        </div>
+                        <!-- Swatches -->
+                        <div class="flex items-center gap-1.5 pt-1">
+                            <span class="text-[10px] text-slate-400 font-semibold mr-1">Presets:</span>
+                            @foreach(['#ffffff', '#f9fafb', '#f3f4f6', '#e2e8f0', '#10211f', '#0f172a', '#1c1917', '#000000'] as $c)
+                                <button type="button" @click="textColor = '{{ $c }}'" title="{{ $c }}"
+                                        class="w-5 h-5 rounded-full border border-slate-300 shadow-sm transition hover:scale-125 focus:outline-none"
+                                        :class="textColor === '{{ $c }}' ? 'ring-2 ring-brand-500 scale-110' : ''"
+                                        style="background: {{ $c }}"></button>
+                            @endforeach
                         </div>
                     </div>
 
                     <!-- Muted Text Color -->
-                    <div class="space-y-1.5">
+                    <div class="space-y-2 p-3.5 rounded-xl border border-slate-200/80 bg-slate-50/50">
                         <label class="block text-xs font-bold text-slate-700 flex items-center justify-between">
                             <span>Muted / Subtitle Text</span>
                             <span class="text-[10px] font-mono text-slate-500">theme[muted]</span>
                         </label>
-                        <div class="flex items-center gap-3">
-                            <input type="color" name="theme[muted]" x-model="mutedColor" class="w-12 h-10 p-0.5 rounded-xl border border-slate-200 cursor-pointer bg-white">
-                            <input type="text" x-model="mutedColor" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-900">
+                        <div class="flex items-center gap-2.5">
+                            <input type="color" name="theme[muted]" x-model="mutedColor" class="w-10 h-9 p-0.5 rounded-xl border border-slate-300 cursor-pointer bg-white shadow-sm shrink-0">
+                            <input type="text" x-model="mutedColor" class="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-mono text-slate-900 shadow-sm">
+                        </div>
+                        <!-- Swatches -->
+                        <div class="flex items-center gap-1.5 pt-1">
+                            <span class="text-[10px] text-slate-400 font-semibold mr-1">Presets:</span>
+                            @foreach(['#9ca3af', '#94a3b8', '#a1a1aa', '#64748b', '#5a6b68', '#78716c', '#475569', '#334155'] as $c)
+                                <button type="button" @click="mutedColor = '{{ $c }}'" title="{{ $c }}"
+                                        class="w-5 h-5 rounded-full border border-slate-300 shadow-sm transition hover:scale-125 focus:outline-none"
+                                        :class="mutedColor === '{{ $c }}' ? 'ring-2 ring-brand-500 scale-110' : ''"
+                                        style="background: {{ $c }}"></button>
+                            @endforeach
                         </div>
                     </div>
 
                     <!-- Border / Line Color -->
-                    <div class="space-y-1.5">
+                    <div class="space-y-2 p-3.5 rounded-xl border border-slate-200/80 bg-slate-50/50">
                         <label class="block text-xs font-bold text-slate-700 flex items-center justify-between">
                             <span>Borders & Divider Lines</span>
                             <span class="text-[10px] font-mono text-slate-500">theme[line]</span>
                         </label>
-                        <div class="flex items-center gap-3">
-                            <input type="color" name="theme[line]" x-model="lineColor" class="w-12 h-10 p-0.5 rounded-xl border border-slate-200 cursor-pointer bg-white">
-                            <input type="text" x-model="lineColor" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-900">
+                        <div class="flex items-center gap-2.5">
+                            <input type="color" name="theme[line]" x-model="lineColor" class="w-10 h-9 p-0.5 rounded-xl border border-slate-300 cursor-pointer bg-white shadow-sm shrink-0">
+                            <input type="text" x-model="lineColor" class="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-mono text-slate-900 shadow-sm">
+                        </div>
+                        <!-- Swatches -->
+                        <div class="flex items-center gap-1.5 pt-1">
+                            <span class="text-[10px] text-slate-400 font-semibold mr-1">Presets:</span>
+                            @foreach(['#1f2937', '#27272a', '#1e293b', '#334155', '#d7e0dd', '#e2e8f0', '#e5e7eb', '#e7e5e4'] as $c)
+                                <button type="button" @click="lineColor = '{{ $c }}'" title="{{ $c }}"
+                                        class="w-5 h-5 rounded-full border border-slate-300 shadow-sm transition hover:scale-125 focus:outline-none"
+                                        :class="lineColor === '{{ $c }}' ? 'ring-2 ring-brand-500 scale-110' : ''"
+                                        style="background: {{ $c }}"></button>
+                            @endforeach
                         </div>
                     </div>
 
                     <!-- Primary Accent Color -->
-                    <div class="space-y-1.5">
+                    <div class="space-y-2 p-3.5 rounded-xl border border-slate-200/80 bg-slate-50/50">
                         <label class="block text-xs font-bold text-slate-700 flex items-center justify-between">
-                            <span>Primary Accent Color</span>
+                            <span>Primary Brand Accent</span>
                             <span class="text-[10px] font-mono text-slate-500">theme[accent]</span>
                         </label>
-                        <div class="flex items-center gap-3">
-                            <input type="color" name="theme[accent]" x-model="accentColor" class="w-12 h-10 p-0.5 rounded-xl border border-slate-200 cursor-pointer bg-white">
-                            <input type="text" x-model="accentColor" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-900">
+                        <div class="flex items-center gap-2.5">
+                            <input type="color" name="theme[accent]" x-model="accentColor" class="w-10 h-9 p-0.5 rounded-xl border border-slate-300 cursor-pointer bg-white shadow-sm shrink-0">
+                            <input type="text" x-model="accentColor" class="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-mono text-slate-900 shadow-sm">
+                        </div>
+                        <!-- Swatches -->
+                        <div class="flex items-center gap-1.5 pt-1">
+                            <span class="text-[10px] text-slate-400 font-semibold mr-1">Presets:</span>
+                            @foreach(['#00e769', '#d4af37', '#38bdf8', '#8b5cf6', '#f43f5e', '#f97316', '#2563eb', '#ea580c'] as $c)
+                                <button type="button" @click="accentColor = '{{ $c }}'" title="{{ $c }}"
+                                        class="w-5 h-5 rounded-full border border-slate-300 shadow-sm transition hover:scale-125 focus:outline-none"
+                                        :class="accentColor === '{{ $c }}' ? 'ring-2 ring-brand-500 scale-110' : ''"
+                                        style="background: {{ $c }}"></button>
+                            @endforeach
                         </div>
                     </div>
 
                     <!-- Secondary Accent -->
-                    <div class="space-y-1.5">
+                    <div class="space-y-2 p-3.5 rounded-xl border border-slate-200/80 bg-slate-50/50">
                         <label class="block text-xs font-bold text-slate-700 flex items-center justify-between">
                             <span>Secondary Accent Color</span>
                             <span class="text-[10px] font-mono text-slate-500">theme[accent_secondary]</span>
                         </label>
-                        <div class="flex items-center gap-3">
-                            <input type="color" name="theme[accent_secondary]" x-model="accentSecondary" class="w-12 h-10 p-0.5 rounded-xl border border-slate-200 cursor-pointer bg-white">
-                            <input type="text" x-model="accentSecondary" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-900">
+                        <div class="flex items-center gap-2.5">
+                            <input type="color" name="theme[accent_secondary]" x-model="accentSecondary" class="w-10 h-9 p-0.5 rounded-xl border border-slate-300 cursor-pointer bg-white shadow-sm shrink-0">
+                            <input type="text" x-model="accentSecondary" class="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-mono text-slate-900 shadow-sm">
+                        </div>
+                        <!-- Swatches -->
+                        <div class="flex items-center gap-1.5 pt-1">
+                            <span class="text-[10px] text-slate-400 font-semibold mr-1">Presets:</span>
+                            @foreach(['#0f766e', '#ca8a04', '#0284c7', '#7c3aed', '#e11d48', '#ea580c', '#1d4ed8', '#0b5f58'] as $c)
+                                <button type="button" @click="accentSecondary = '{{ $c }}'" title="{{ $c }}"
+                                        class="w-5 h-5 rounded-full border border-slate-300 shadow-sm transition hover:scale-125 focus:outline-none"
+                                        :class="accentSecondary === '{{ $c }}' ? 'ring-2 ring-brand-500 scale-110' : ''"
+                                        style="background: {{ $c }}"></button>
+                            @endforeach
                         </div>
                     </div>
                 </div>
