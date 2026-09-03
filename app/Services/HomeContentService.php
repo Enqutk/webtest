@@ -61,6 +61,14 @@ class HomeContentService
             : array_merge(Organization::defaultTheme(), [
                 'accent_soft' => Organization::hexToRgba(Organization::defaultTheme()['accent'], 0.12),
             ]);
+        $sitePages = $organization
+            ? [
+                'about' => $organization->sitePage('about'),
+                'contact' => $organization->sitePage('contact'),
+                'services' => $organization->sitePage('services'),
+                'portfolio' => $organization->sitePage('portfolio'),
+            ]
+            : Organization::defaultSitePages();
 
         $aboutImage = $aboutFeaturesBlock?->getFirstMediaUrl('images') ?: null;
 
@@ -126,6 +134,7 @@ class HomeContentService
             'tagline' => $activeTagline,
             'metaDescription' => $metaDescription,
             'theme' => $theme,
+            'sitePages' => $sitePages,
             'homeSections' => $homeSections,
             'logoUrl' => $logoUrl,
             'faviconUrl' => $faviconUrl,
@@ -140,32 +149,56 @@ class HomeContentService
 
             'heroFeatures' => $blocks->get('key-features'),
             'aboutFeatures' => [
-                'image' => $aboutImage,
-                'title' => $homeSections['about']['title'] ?? ($aboutFeaturesBlock?->title ?: 'Water expertise for living landscapes'),
-                'subtitle' => $homeSections['about']['eyebrow'] ?? ($aboutFeaturesBlock?->subtitle ?: 'Who we are'),
-                'description' => !empty($homeSections['about']['description'])
-                    ? nl2br(e($homeSections['about']['description']))
-                    : ($aboutFeaturesBlock ? html_entity_decode((string) $aboutFeaturesBlock->content) : ''),
-                'points' => $homeSections['about']['points'] ?? [],
+                'image' => Organization::themeFileUrl($sitePages['about']['intro']['image'] ?? null) ?: $aboutImage,
+                'title' => $sitePages['about']['intro']['title']
+                    ?? $homeSections['about']['title']
+                    ?? ($aboutFeaturesBlock?->title ?: 'Water expertise for living landscapes'),
+                'subtitle' => $sitePages['about']['intro']['eyebrow']
+                    ?? $homeSections['about']['eyebrow']
+                    ?? ($aboutFeaturesBlock?->subtitle ?: 'Who we are'),
+                'description' => !empty($sitePages['about']['intro']['description'])
+                    ? nl2br(e($sitePages['about']['intro']['description']))
+                    : (
+                        !empty($homeSections['about']['description'])
+                            ? nl2br(e($homeSections['about']['description']))
+                            : ($aboutFeaturesBlock ? html_entity_decode((string) $aboutFeaturesBlock->content) : '')
+                    ),
+                'points' => $sitePages['about']['intro']['points']
+                    ?? $homeSections['about']['points']
+                    ?? [],
             ],
 
-            'aboutSection1' => $aboutSection1Block
+            'aboutSection1' => !empty($sitePages['about']['story']['panels'][0] ?? null)
+                ? [
+                    'image' => Organization::themeFileUrl($sitePages['about']['story']['panels'][0]['image'] ?? null),
+                    'title' => $sitePages['about']['story']['panels'][0]['title'] ?? null,
+                    'subtitle' => $sitePages['about']['story']['eyebrow'] ?? null,
+                    'description' => nl2br(e((string) ($sitePages['about']['story']['panels'][0]['description'] ?? ''))),
+                ]
+                : ($aboutSection1Block
                 ? [
                     'image' => $aboutSection1Block->getFirstMediaUrl('images') ?: null,
                     'title' => $aboutSection1Block->title,
                     'subtitle' => $aboutSection1Block->subtitle,
                     'description' => html_entity_decode((string) $aboutSection1Block->content),
                 ]
-                : null,
+                : null),
 
-            'aboutSection2' => $aboutSection2Block
+            'aboutSection2' => !empty($sitePages['about']['story']['panels'][1] ?? null)
+                ? [
+                    'image' => Organization::themeFileUrl($sitePages['about']['story']['panels'][1]['image'] ?? null),
+                    'title' => $sitePages['about']['story']['panels'][1]['title'] ?? null,
+                    'subtitle' => $sitePages['about']['story']['eyebrow'] ?? null,
+                    'description' => nl2br(e((string) ($sitePages['about']['story']['panels'][1]['description'] ?? ''))),
+                ]
+                : ($aboutSection2Block
                 ? [
                     'image' => $aboutSection2Block->getFirstMediaUrl('images') ?: null,
                     'title' => $aboutSection2Block->title,
                     'subtitle' => $aboutSection2Block->subtitle,
                     'description' => html_entity_decode((string) $aboutSection2Block->content),
                 ]
-                : null,
+                : null),
 
             'videoSection' => $blocks->get('video-section'),
 

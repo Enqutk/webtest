@@ -1,16 +1,20 @@
 @extends('layouts.inner')
 
-@section('title', 'Portfolio')
-@section('eyebrow', 'Selected work')
-@section('page_title', 'Portfolio')
-@section('description', $data['metaDescription'] ?? ($data['tagline'] ?? ''))
+@php
+    $portfolioPage = $data['sitePages']['portfolio'] ?? [];
+@endphp
+
+@section('title', $portfolioPage['title'] ?? 'Portfolio')
+@section('eyebrow', $portfolioPage['eyebrow'] ?? 'Selected work')
+@section('page_title', $portfolioPage['title'] ?? 'Portfolio')
+@section('description', $portfolioPage['description'] ?? ($data['metaDescription'] ?? ($data['tagline'] ?? '')))
 
 @section('page')
-    @if($data['tagline'] ?? null)
+    @if(($portfolioPage['description'] ?? null) || ($data['tagline'] ?? null))
         <div class="hz-section pb-0">
             <div class="container">
                 <p class="hz-lead mb-0" style="max-width: 40rem;">
-                    {{ $data['tagline'] }}
+                    {{ $portfolioPage['description'] ?? $data['tagline'] }}
                 </p>
             </div>
         </div>

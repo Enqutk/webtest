@@ -1,9 +1,13 @@
 @extends('layouts.inner')
 
-@section('title', 'About Us')
-@section('eyebrow', 'Who we are')
-@section('page_title', 'About ' . ($data['siteName'] ?? config('app.name')))
-@section('description', $data['metaDescription'] ?? ($data['tagline'] ?? ''))
+@php
+    $aboutPage = $data['sitePages']['about'] ?? [];
+@endphp
+
+@section('title', $aboutPage['title'] ?? 'About Us')
+@section('eyebrow', $aboutPage['eyebrow'] ?? 'Who we are')
+@section('page_title', $aboutPage['title'] ?? ('About ' . ($data['siteName'] ?? config('app.name'))))
+@section('description', $aboutPage['description'] ?? ($data['metaDescription'] ?? ($data['tagline'] ?? '')))
 
 @section('page')
     <x-horizon.about
@@ -17,8 +21,8 @@
             <div class="container">
                 <div class="row justify-content-center mb-4">
                     <div class="col-lg-8 text-center">
-                        <p class="hz-eyebrow">Our story</p>
-                        <h2 class="hz-title">How we work</h2>
+                        <p class="hz-eyebrow">{{ $aboutPage['story']['eyebrow'] ?? 'Our story' }}</p>
+                        <h2 class="hz-title">{{ $aboutPage['story']['title'] ?? 'How we work' }}</h2>
                     </div>
                 </div>
                 <div class="row g-4">
@@ -63,12 +67,20 @@
         </section>
     @endif
 
-    <x-horizon.stats
-        :stats="$data['stats']"
-        :title="$data['statsTitle']"
-        :subtitle="$data['statsSubtitle']"
-    />
-    <x-horizon.team :team="$team" :show-bios="true" />
-    <x-horizon.clients :clients="$clients" />
-    <x-horizon.cta />
+    @if($aboutPage['show_stats'] ?? true)
+        <x-horizon.stats
+            :stats="$data['stats']"
+            :title="$data['statsTitle']"
+            :subtitle="$data['statsSubtitle']"
+        />
+    @endif
+    @if($aboutPage['show_team'] ?? true)
+        <x-horizon.team :team="$team" :show-bios="true" />
+    @endif
+    @if($aboutPage['show_clients'] ?? true)
+        <x-horizon.clients :clients="$clients" />
+    @endif
+    @if($aboutPage['show_cta'] ?? true)
+        <x-horizon.cta />
+    @endif
 @endsection

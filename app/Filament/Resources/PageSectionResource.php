@@ -36,11 +36,11 @@ class PageSectionResource extends Resource
                             ->required()
                             ->searchable()
                             ->preload(),
-                        
+
                         Forms\Components\TextInput::make('title')
                             ->required()
                             ->maxLength(255),
-                        
+
                         Forms\Components\Textarea::make('subtitle')
                             ->maxLength(500)
                             ->nullable(),
@@ -52,7 +52,7 @@ class PageSectionResource extends Resource
                             ->label('Active')
                             ->default(true)
                             ->helperText('Only active sections will be visible to visitors'),
-                        
+
                         Forms\Components\TextInput::make('display_order')
                             ->numeric()
                             ->default(0)
@@ -68,40 +68,40 @@ class PageSectionResource extends Resource
                 Tables\Columns\TextColumn::make('id')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                
+
                 Tables\Columns\TextColumn::make('page.title')
                     ->label('Page')
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
-                
+
                 Tables\Columns\TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
-                
+
                 Tables\Columns\TextColumn::make('subtitle')
                     ->limit(50)
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                
+
                 Tables\Columns\TextColumn::make('content_blocks_count')
                     ->counts('contentBlocks')
                     ->label('Content Blocks')
                     ->sortable(),
-                
+
                 Tables\Columns\TextColumn::make('display_order')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                
+
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean()
                     ->sortable(),
-                
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                
+
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
@@ -113,13 +113,13 @@ class PageSectionResource extends Resource
                     ->options(Page::active()->pluck('title', 'id'))
                     ->searchable()
                     ->preload(),
-                
+
                 Tables\Filters\TernaryFilter::make('is_active')
                     ->label('Status')
                     ->placeholder('All Sections')
                     ->trueLabel('Active Sections')
                     ->falseLabel('Inactive Sections'),
-                
+
                 Tables\Filters\Filter::make('has_content_blocks')
                     ->query(fn ($query) => $query->has('contentBlocks'))
                     ->label('Has Content Blocks'),

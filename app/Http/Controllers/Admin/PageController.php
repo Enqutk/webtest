@@ -15,6 +15,7 @@ class PageController extends Controller
         $currentOrg = Organization::resolveCurrent();
         $pages = Page::query()
             ->where('organization_id', $currentOrg->id)
+            ->whereNotIn('slug', Page::RESERVED_SLUGS)
             ->with(['media', 'sections'])
             ->orderBy('display_order')
             ->paginate(15);
@@ -37,6 +38,12 @@ class PageController extends Controller
 
         if (empty($validated['slug'])) {
             $validated['slug'] = Str::slug($validated['title']);
+        }
+
+        if (in_array($validated['slug'], Page::RESERVED_SLUGS, true)) {
+            return back()
+                ->withInput()
+                ->with('error', 'That slug is reserved for a built-in page. Use the dedicated page editors instead.');
         }
 
         $validated['organization_id'] = $currentOrg->id;
@@ -64,6 +71,12 @@ class PageController extends Controller
             'is_active' => ['nullable', 'boolean'],
             'hero_image' => ['nullable', 'image', 'max:5120'],
         ]);
+
+        if (in_array($validated['slug'], Page::RESERVED_SLUGS, true)) {
+            return back()
+                ->withInput()
+                ->with('error', 'That slug is reserved for a built-in page. Use the dedicated page editors instead.');
+        }
 
         $validated['is_active'] = $request->boolean('is_active');
         $page->update($validated);

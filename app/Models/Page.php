@@ -17,11 +17,26 @@ class Page extends Model implements HasMedia
 {
     use SoftDeletes, HasUserStamps, InteractsWithMedia, BelongsToOrganization;
 
+    public const RESERVED_SLUGS = [
+        'about',
+        'contact',
+        'our-services',
+        'portfolio',
+        'mgt',
+        'up',
+        'home',
+        'apply',
+        'cards',
+        'order',
+        'order-card',
+    ];
+
     protected $fillable = [
         'organization_id',
         'title',
         'slug',
         'short_description',
+        'content',
         'is_active',
         'display_order',
     ];
@@ -29,6 +44,7 @@ class Page extends Model implements HasMedia
     protected $casts = [
         'is_active' => 'boolean',
         'display_order' => 'integer',
+        'content' => 'array',
     ];
 
     // Relationships
@@ -94,5 +110,52 @@ class Page extends Model implements HasMedia
     public function getUrlAttribute()
     {
         return route('pages.show', $this->slug);
+    }
+
+    /**
+     * Page-owned sections. Uses content JSON first so admin does not
+     * need to open Page Sections or Content Blocks.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function displaySections(): array
+    {
+        $owned = collect($this->content ?? [])
+            ->filter(fn ($section) => is_array($section) && ($section['is_visible'] ?? true))
+            ->values()
+            ->all();
+
+        if ($owned !== []) {
+            return $owned;
+        }
+
+        return $this->activeSections
+            ->map(function ($section) {
+                $blocks = $section->activeContentBlocks->map(function ($block) {
+                    return [
+                        'type' => $block->type?->value ?? 'text',
+                        'eyebrow' => $block->subtitle,
+                        'heading' => $block->title,
+                        'body' => $block->content,
+                        'image' => $block->getFirstMediaUrl('images') ?: null,
+                        'video_url' => $block->video_url,
+                        'items' => $block->list_items ?? [],
+                        'is_visible' => true,
+                    ];
+                })->all();
+
+                return [
+                    'type' => 'group',
+                    'eyebrow' => $section->subtitle,
+                    'heading' => $section->title,
+                    'body' => null,
+                    'image' => null,
+                    'video_url' => null,
+                    'items' => [],
+                    'blocks' => $blocks,
+                    'is_visible' => true,
+                ];
+            })
+            ->all();
     }
 }

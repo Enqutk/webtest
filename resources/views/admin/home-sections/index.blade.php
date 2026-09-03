@@ -139,36 +139,22 @@
     <!-- Top Section Switcher Navigation -->
     <div class="bg-white rounded-2xl border border-slate-200/80 p-2 shadow-sm flex flex-wrap gap-1.5 sticky top-2 z-20 backdrop-blur-md bg-white/95">
         <button type="button" @click="activeSection = 'hero'" :class="activeSection === 'hero' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
-            <span>🌟</span>
-            <span>Hero Banner ({{ count($heroSlides) }})</span>
+            <span>Hero ({{ count($heroSlides) }})</span>
         </button>
         <button type="button" @click="activeSection = 'about'" :class="activeSection === 'about' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
-            <span>🏛️</span>
-            <span>About & Mission</span>
+            <span>About</span>
         </button>
         <button type="button" @click="activeSection = 'services'" :class="activeSection === 'services' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
-            <span>🔧</span>
-            <span>Services Section</span>
+            <span>Services</span>
         </button>
         <button type="button" @click="activeSection = 'stats'" :class="activeSection === 'stats' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
-            <span>📈</span>
             <span>Impact & Stats</span>
         </button>
         <button type="button" @click="activeSection = 'portfolio'" :class="activeSection === 'portfolio' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
-            <span>💼</span>
-            <span>Portfolio Section</span>
-        </button>
-        <button type="button" @click="activeSection = 'team'" :class="activeSection === 'team' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
-            <span>👥</span>
-            <span>Leadership Team ({{ $teamMembers->count() }})</span>
-        </button>
-        <button type="button" @click="activeSection = 'clients'" :class="activeSection === 'clients' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
-            <span>🤝</span>
-            <span>Clients & Partners</span>
+            <span>Portfolio</span>
         </button>
         <button type="button" @click="activeSection = 'cta'" :class="activeSection === 'cta' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
-            <span>📣</span>
-            <span>CTA Banner</span>
+            <span>CTA</span>
         </button>
     </div>
 

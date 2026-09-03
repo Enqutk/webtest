@@ -1,9 +1,13 @@
 @extends('layouts.inner')
 
-@section('title', 'Our Services')
-@section('eyebrow', 'What we do')
-@section('page_title', 'Our Services')
-@section('description', $data['metaDescription'] ?? ($data['tagline'] ?? ''))
+@php
+    $servicesPage = $data['sitePages']['services'] ?? [];
+@endphp
+
+@section('title', $servicesPage['title'] ?? 'Our Services')
+@section('eyebrow', $servicesPage['eyebrow'] ?? 'What we do')
+@section('page_title', $servicesPage['title'] ?? 'Our Services')
+@section('description', $servicesPage['description'] ?? ($data['metaDescription'] ?? ($data['tagline'] ?? '')))
 
 @section('page')
     <x-horizon.services :services="$services" :show-header="false" />

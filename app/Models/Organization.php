@@ -252,6 +252,9 @@ class Organization extends Model implements HasMedia, \Filament\Models\Contracts
 
             // Home Page Sections Customizer
             'home_sections' => self::defaultHomeSections(),
+
+            // Per-page copy (About, Contact, Services listing, Portfolio listing)
+            'pages' => self::defaultSitePages(),
         ];
     }
 
@@ -360,6 +363,110 @@ class Organization extends Model implements HasMedia, \Filament\Models\Contracts
                 'button_url' => '/contact',
             ],
         ];
+    }
+
+    public static function defaultSitePages(): array
+    {
+        return [
+            'about' => [
+                'eyebrow' => 'Who we are',
+                'title' => 'About us',
+                'description' => 'Field-first water engineering for counties, cooperatives, and utilities.',
+                'intro' => [
+                    'eyebrow' => 'Who we are',
+                    'title' => 'Water expertise for living landscapes',
+                    'description' => 'We combine technical hydrology, sustainable agriculture, and community governance to design water infrastructure that lasts generations.',
+                    'image' => null,
+                    'points' => [
+                        ['title' => 'Field-first design', 'icon' => 'bi bi-compass', 'description' => 'Hydrology, soils, and community routines drive every drawing — not desk assumptions.'],
+                        ['title' => 'Buildable packages', 'icon' => 'bi bi-hammer', 'description' => 'Specs that local contractors can price, build, and maintain with available spare parts.'],
+                        ['title' => 'Climate-aware', 'icon' => 'bi bi-cloud-sun', 'description' => 'Drought, flood, and energy constraints are designed in from the first concept note.'],
+                        ['title' => 'After the ribbon', 'icon' => 'bi bi-people', 'description' => 'Governance coaching and O&M tools so schemes keep running past the grant cycle.'],
+                    ],
+                ],
+                'story' => [
+                    'eyebrow' => 'Our story',
+                    'title' => 'How we work',
+                    'panels' => [
+                        [
+                            'title' => 'Our practice',
+                            'description' => 'Our team blends hydrogeology, irrigation agronomy, WASH engineering, GIS, and community governance. We specialise in schemes that stretch scarce water further.',
+                            'image' => null,
+                        ],
+                        [
+                            'title' => 'Our approach',
+                            'description' => 'Every engagement starts with listening — to farmers, operators, and county staff. We map what exists, sketch options people can afford, and leave behind tools that keep water flowing.',
+                            'image' => null,
+                        ],
+                    ],
+                ],
+                'show_stats' => true,
+                'show_team' => true,
+                'show_clients' => true,
+                'show_cta' => true,
+            ],
+            'contact' => [
+                'eyebrow' => 'Get in touch',
+                'title' => 'Contact us',
+                'description' => 'Share a brief about your project. We will respond with next steps.',
+                'intro' => 'Share a brief about your project. We’ll respond with next steps.',
+            ],
+            'services' => [
+                'eyebrow' => 'What we do',
+                'title' => 'Our services',
+                'description' => 'From feasibility studies to long-term asset management across the water cycle.',
+            ],
+            'portfolio' => [
+                'eyebrow' => 'Selected work',
+                'title' => 'Portfolio',
+                'description' => 'Irrigation schemes, dam rehabilitations, and municipal water supply projects in the field.',
+            ],
+        ];
+    }
+
+    public function sitePage(string $key): array
+    {
+        $defaults = self::defaultSitePages()[$key] ?? [];
+        $configured = is_array($this->theme['pages'][$key] ?? null)
+            ? $this->theme['pages'][$key]
+            : [];
+
+        $merged = array_replace_recursive($defaults, $configured);
+
+        if ($key === 'about') {
+            if (isset($configured['intro']['points']) && is_array($configured['intro']['points'])) {
+                $merged['intro']['points'] = $configured['intro']['points'];
+            }
+            if (isset($configured['story']['panels']) && is_array($configured['story']['panels'])) {
+                $merged['story']['panels'] = $configured['story']['panels'];
+            }
+        }
+
+        return $merged;
+    }
+
+    public static function themeFileUrl(mixed $value): ?string
+    {
+        if (blank($value)) {
+            return null;
+        }
+
+        if (is_array($value)) {
+            $value = array_values($value)[0] ?? null;
+        }
+
+        $value = trim((string) $value);
+        if ($value === '') {
+            return null;
+        }
+
+        if (str_starts_with($value, 'http://') || str_starts_with($value, 'https://') || str_starts_with($value, '/')) {
+            return $value;
+        }
+
+        $clean = ltrim(str_replace(['/storage/', 'storage/'], '', $value), '/');
+
+        return asset('storage/' . $clean);
     }
 
     public static function defaultHeroSlides(): array

@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\OrganizationController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PortfolioController;
 use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\SitePageController;
 use App\Http\Controllers\Admin\SocialController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\UserController;
@@ -71,6 +72,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Portfolio / Projects Management
         Route::resource('portfolio', PortfolioController::class)->except(['show']);
+
+        // Built-in website pages
+        Route::get('/site-pages/{page}', [SitePageController::class, 'edit'])->name('site-pages.edit');
+        Route::post('/site-pages/{page}', [SitePageController::class, 'update'])->name('site-pages.update');
 
         // Custom Pages
         Route::resource('pages', PageController::class)->except(['show']);
