@@ -91,138 +91,151 @@ class PageSeeder extends Seeder
         
 
         // Create content block for Home page features (as a list)
-        ContentBlock::create([
-            'section_id' => $heroFeatures->id,
-            'type' => 'list',
-            'title' => 'Key Features',
-            'slug' => 'key-features',
-            'list_items' => [
-                [
-                    'title' => 'Professionalism',
-                    'icon' => 'bi bi-shield-check',
-                    'description' => 'Our team consists of experienced leaders recognized regionally and...',
+        ContentBlock::updateOrCreate(
+            ['slug' => 'key-features'],
+            [
+                'section_id' => $heroFeatures->id,
+                'type' => 'list',
+                'title' => 'Key Features',
+                'list_items' => [
+                    [
+                        'title' => 'Professionalism',
+                        'icon' => 'bi bi-shield-check',
+                        'description' => 'Our team consists of experienced leaders recognized regionally and...',
+                    ],
+                    [
+                        'title' => 'Client-Centric Approach',
+                        'icon' => 'bi bi-person-heart',
+                        'description' => 'Getting our clients what they deserve is our mission. We prioritize...',
+                    ],
+                    [
+                        'title' => 'Regional Impact',
+                        'icon' => 'bi bi-globe',
+                        'description' => 'We address local development challenges using effective...',
+                    ],
                 ],
-                [
-                    'title' => 'Client-Centric Approach',
-                    'icon' => 'bi bi-person-heart',
-                    'description' => 'Getting our clients what they deserve is our mission. We prioritize...',
-                ],
-                [
-                    'title' => 'Regional Impact',
-                    'icon' => 'bi bi-globe',
-                    'description' => 'We address local development challenges using effective...',
-                ],
-            ],
-            'display_order' => 1,
-            'is_active' => true,
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
-        ]);
+                'display_order' => 1,
+                'is_active' => true,
+                'created_by' => $user->id,
+                'updated_by' => $user->id,
+            ]
+        );
 
-    
         // Create content block for About Us image
-        ContentBlock::create([
-            'section_id' => $aboutFeatures->id,
-            'type' => 'image',
-            'title' => 'MajiWorks',
-            'slug' => 'veritas-afrika-co-ltd',
-            'subtitle' => 'Who We Are',
-            'short_description' => "",
-            'content' => '<p>MajiWorks is a Nairobi-based consultancy for climate-smart irrigation, rural WASH, flood resilience, and water-resource GIS.</p>',
-            'display_order' => 2,
-            'is_active' => true,
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
-        ]);
+        ContentBlock::updateOrCreate(
+            ['slug' => 'veritas-afrika-co-ltd'],
+            [
+                'section_id' => $aboutFeatures->id,
+                'type' => 'image',
+                'title' => 'MajiWorks',
+                'subtitle' => 'Who We Are',
+                'short_description' => "",
+                'content' => '<p>MajiWorks is a Nairobi-based consultancy for climate-smart irrigation, rural WASH, flood resilience, and water-resource GIS.</p>',
+                'display_order' => 2,
+                'is_active' => true,
+                'created_by' => $user->id,
+                'updated_by' => $user->id,
+            ]
+        );
 
         // Create Video Section content block
-        ContentBlock::create([
-            'section_id' => $videoSection->id,
-            'type' => 'video',
-            'title' => 'Video Section',
-            'slug' => 'video-section',
-            'subtitle' => 'Working Process',
-            'short_description' => 'Company market share in the domestic market',
-            'content' => '',
-            'video_url' => 'https://www.youtube.com/watch?v=MDF2vmMFtQg&list=RDzHdAB4xj3GI&index=7',
-            'display_order' => 3,
-            'is_active' => true,
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
-        ]);
+        ContentBlock::updateOrCreate(
+            ['slug' => 'video-section'],
+            [
+                'section_id' => $videoSection->id,
+                'type' => 'video',
+                'title' => 'Video Section',
+                'subtitle' => 'Working Process',
+                'short_description' => 'Company market share in the domestic market',
+                'content' => '',
+                'video_url' => 'https://www.youtube.com/watch?v=MDF2vmMFtQg&list=RDzHdAB4xj3GI&index=7',
+                'display_order' => 3,
+                'is_active' => true,
+                'created_by' => $user->id,
+                'updated_by' => $user->id,
+            ]
+        );
 
         // Create image content block for Video section
-        ContentBlock::create([
-            'section_id' => $videoSection->id,
-            'type' => 'image',
-            'title' => 'Video Thumbnail',
-            'slug' => 'video-thumbnail',
-            'subtitle' => '',
-            'short_description' => '',
-            'content' => '',
-
-            'display_order' => 4,
-            'is_active' => true,
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
-        ]);
+        ContentBlock::updateOrCreate(
+            ['slug' => 'video-thumbnail'],
+            [
+                'section_id' => $videoSection->id,
+                'type' => 'image',
+                'title' => 'Video Thumbnail',
+                'subtitle' => '',
+                'short_description' => '',
+                'content' => '',
+                'display_order' => 4,
+                'is_active' => true,
+                'created_by' => $user->id,
+                'updated_by' => $user->id,
+            ]
+        );
 
         // Create image content block for Video section
-        ContentBlock::create([
-            'section_id' => $videoSection->id,
-            'type' => 'list',
-            'title' => 'Video Details',
-            'slug' => 'video-details',
-            'subtitle' => '',
-            'short_description' => 'Serving with expertise in industries as one of World leading Corporation ',
-            'list_items' => [
-                [
-                    'title' => 'Available To All Industries',
-                    'icon' => '',
-                    'description' => 'Our specialists offer manufacturing of complex machined precision parts, as well as turning and milling, to support a wide host of industries.',
+        ContentBlock::updateOrCreate(
+            ['slug' => 'video-details'],
+            [
+                'section_id' => $videoSection->id,
+                'type' => 'list',
+                'title' => 'Video Details',
+                'subtitle' => '',
+                'short_description' => 'Serving with expertise in industries as one of World leading Corporation ',
+                'list_items' => [
+                    [
+                        'title' => 'Available To All Industries',
+                        'icon' => '',
+                        'description' => 'Our specialists offer manufacturing of complex machined precision parts, as well as turning and milling, to support a wide host of industries.',
+                    ],
                 ],
-            ],
-            'metadata' => [
-                'data1' => 'Manufacturing',
-                'data2' => 'Pharmaceutical',
-                'data3' => 'Defense',
-                'data4' => 'Off-Road / Petroleum',
-                'data5' => 'Nuclear',
-                'data6' => 'Automotive',
-            ],
-            'display_order' => 5,
-            'is_active' => true,
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
-        ]);
+                'metadata' => [
+                    'data1' => 'Manufacturing',
+                    'data2' => 'Pharmaceutical',
+                    'data3' => 'Defense',
+                    'data4' => 'Off-Road / Petroleum',
+                    'data5' => 'Nuclear',
+                    'data6' => 'Automotive',
+                ],
+                'display_order' => 5,
+                'is_active' => true,
+                'created_by' => $user->id,
+                'updated_by' => $user->id,
+            ]
+        );
 
         // Create content block for About Us section
-        ContentBlock::create([ 
-            'section_id' => $aboutSection->id,
-            'type' => 'image',
-            'title' => 'About Section 1',
-            'slug' => 'about-section-1',
-            'subtitle' => 'About Us',
-            'short_description' => "",
-            'content' => '<p><strong>MajiWorks</strong> designs climate-smart irrigation, rural WASH, and flood-resilience schemes with counties, cooperatives, and NGO partners.</p>',
-            'display_order' => 6,
-            'is_active' => true,
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
-        ]);
-        ContentBlock::create([ 
-            'section_id' => $aboutSection->id,
-            'type' => 'image',
-            'title' => 'About Section 2',
-            'slug' => 'about-section-2',
-            'subtitle' => 'About Us',
-            'short_description' => "",
-            'content' => '<h2><strong>professional</strong></h2><p><em style="text-decoration: underline;">&nbsp;consultant</em>s specializing in a wide range of civil engineering works. We provide expert services to government, non-government, and private-sector customers.</p>',
-            'display_order' => 7,
-            'is_active' => true,
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
-        ]);
+        ContentBlock::updateOrCreate(
+            ['slug' => 'about-section-1'],
+            [
+                'section_id' => $aboutSection->id,
+                'type' => 'image',
+                'title' => 'About Section 1',
+                'subtitle' => 'About Us',
+                'short_description' => "",
+                'content' => '<p><strong>MajiWorks</strong> designs climate-smart irrigation, rural WASH, and flood-resilience schemes with counties, cooperatives, and NGO partners.</p>',
+                'display_order' => 6,
+                'is_active' => true,
+                'created_by' => $user->id,
+                'updated_by' => $user->id,
+            ]
+        );
+
+        ContentBlock::updateOrCreate(
+            ['slug' => 'about-section-2'],
+            [
+                'section_id' => $aboutSection->id,
+                'type' => 'image',
+                'title' => 'About Section 2',
+                'subtitle' => 'About Us',
+                'short_description' => "",
+                'content' => '<h2><strong>professional</strong></h2><p><em style="text-decoration: underline;">&nbsp;consultant</em>s specializing in a wide range of civil engineering works. We provide expert services to government, non-government, and private-sector customers.</p>',
+                'display_order' => 7,
+                'is_active' => true,
+                'created_by' => $user->id,
+                'updated_by' => $user->id,
+            ]
+        );
 
         ContentBlock::updateOrCreate(
             ['slug' => 'stats'],
