@@ -12,15 +12,65 @@
 @endphp
 
 <div class="space-y-6" x-data="{
-    activeTab: 'brand',
+    activeTab: 'styling',
     title: '{{ addslashes($organization->title) }}',
     tagline: '{{ addslashes($organization->tagline ?? '') }}',
-    accentColor: '{{ $theme['accent'] ?? '#ea580c' }}',
+    accentColor: '{{ $theme['accent'] ?? '#00e769' }}',
+    accentSecondary: '{{ $theme['accent_secondary'] ?? $theme['accent_dark'] ?? '#0f766e' }}',
+    bgColor: '{{ $theme['bg'] ?? '#f3f6f5' }}',
+    surfaceColor: '{{ $theme['surface'] ?? '#ffffff' }}',
+    textColor: '{{ $theme['ink'] ?? '#10211f' }}',
+    mutedColor: '{{ $theme['muted'] ?? '#5a6b68' }}',
+    lineColor: '{{ $theme['line'] ?? '#d7e0dd' }}',
     displayFont: '{{ $theme['font_display'] ?? 'Fraunces' }}',
     bodyFont: '{{ $theme['font_body'] ?? 'Outfit' }}',
     imageShape: '{{ $theme['image_shape'] ?? 'rounded-xl' }}',
     showBrandText: {{ !empty($theme['show_brand_text']) ? 'true' : 'false' }},
-    showTagline: {{ !empty($theme['show_tagline']) ? 'true' : 'false' }}
+    showTagline: {{ !empty($theme['show_tagline']) ? 'true' : 'false' }},
+
+    applyThemePreset(preset) {
+        if (preset === 'enku-dark') {
+            this.bgColor = '#0b0f19';
+            this.surfaceColor = '#111827';
+            this.textColor = '#f9fafb';
+            this.mutedColor = '#9ca3af';
+            this.lineColor = '#1f2937';
+            this.accentColor = '#00e769';
+            this.accentSecondary = '#0f766e';
+        } else if (preset === 'pure-black') {
+            this.bgColor = '#000000';
+            this.surfaceColor = '#0a0a0a';
+            this.textColor = '#ffffff';
+            this.mutedColor = '#a1a1aa';
+            this.lineColor = '#27272a';
+            this.accentColor = '#eab308';
+            this.accentSecondary = '#ca8a04';
+        } else if (preset === 'luxury-navy') {
+            this.bgColor = '#061122';
+            this.surfaceColor = '#0b1d3a';
+            this.textColor = '#ffffff';
+            this.mutedColor = '#94a3b8';
+            this.lineColor = '#1e293b';
+            this.accentColor = '#d4af37';
+            this.accentSecondary = '#f3cf58';
+        } else if (preset === 'executive-slate') {
+            this.bgColor = '#f8fafc';
+            this.surfaceColor = '#ffffff';
+            this.textColor = '#0f172a';
+            this.mutedColor = '#64748b';
+            this.lineColor = '#e2e8f0';
+            this.accentColor = '#0f766e';
+            this.accentSecondary = '#0b5f58';
+        } else if (preset === 'warm-ivory') {
+            this.bgColor = '#fdfbf7';
+            this.surfaceColor = '#ffffff';
+            this.textColor = '#1c1917';
+            this.mutedColor = '#78716c';
+            this.lineColor = '#e7e5e4';
+            this.accentColor = '#ea580c';
+            this.accentSecondary = '#c2410c';
+        }
+    }
 }">
 
     <!-- Top Live Visual Preview Sticky Card -->
@@ -31,6 +81,8 @@
                 <span class="text-xs font-bold text-slate-800 uppercase tracking-wider">Live Real-time Brand & Navbar Preview</span>
             </div>
             <div class="flex items-center gap-3 text-xs text-slate-500">
+                <span class="font-mono text-[11px]" x-text="'BG: ' + bgColor"></span>
+                <span>&bull;</span>
                 <span class="font-mono text-[11px]" x-text="'Accent: ' + accentColor"></span>
                 <span>&bull;</span>
                 <span class="font-mono text-[11px]" x-text="'Font: ' + displayFont"></span>
@@ -40,25 +92,25 @@
         </div>
 
         <!-- Live Header Bar Preview Container -->
-        <div class="rounded-xl border border-slate-200 p-4 transition-all" style="background: #fdfbf7;">
+        <div class="rounded-xl border p-4 transition-all shadow-inner" :style="'background: ' + bgColor + '; border-color: ' + lineColor + '; color: ' + textColor">
             <div class="flex items-center justify-between">
                 <!-- Brand Title / Logo Preview -->
                 <div class="flex items-center gap-3">
                     @if($logoUrl)
                         <img src="{{ $logoUrl }}" alt="Logo" class="h-8 w-auto object-contain">
                     @else
-                        <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-sm" :style="'background: ' + accentColor">
+                        <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-sm" :style="'background: ' + accentColor">
                             <span x-text="title.substring(0, 1) || 'O'"></span>
                         </div>
                     @endif
                     <div x-show="showBrandText">
-                        <span class="text-lg font-bold tracking-tight block leading-tight" :style="'font-family: ' + displayFont + ', serif; color: ' + accentColor" x-text="title || 'Your Brand'"></span>
-                        <span x-show="showTagline && tagline" class="text-[10px] text-slate-500 block" x-text="tagline"></span>
+                        <span class="text-lg font-bold tracking-tight block leading-tight" :style="'font-family: ' + displayFont + ', serif; color: ' + (bgColor === '#0b0f19' || bgColor === '#000000' || bgColor === '#061122' ? '#ffffff' : accentColor)" x-text="title || 'Your Brand'"></span>
+                        <span x-show="showTagline && tagline" class="text-[10px] block" :style="'color: ' + mutedColor" x-text="tagline"></span>
                     </div>
                 </div>
 
                 <!-- Nav Mock -->
-                <div class="hidden md:flex items-center gap-6 text-xs font-medium text-slate-700" :style="'font-family: ' + bodyFont + ', sans-serif;'">
+                <div class="hidden md:flex items-center gap-6 text-xs font-medium" :style="'font-family: ' + bodyFont + ', sans-serif; color: ' + mutedColor">
                     <span class="font-bold border-b-2 pb-0.5" :style="'color: ' + accentColor + '; border-color: ' + accentColor">Home</span>
                     <span>About</span>
                     <span>Services</span>
@@ -68,7 +120,7 @@
 
                 <!-- CTA Mock -->
                 <div>
-                    <span class="px-3.5 py-1.5 rounded-lg text-white font-bold text-xs shadow-sm" :style="'background: ' + accentColor" :style="'font-family: ' + bodyFont">
+                    <span class="px-3.5 py-1.5 rounded-lg text-white font-bold text-xs shadow-md" :style="'background: ' + accentColor + '; font-family: ' + bodyFont + '; color: ' + (accentColor === '#ffffff' ? '#0b1d3a' : '#ffffff')">
                         {{ $theme['header_cta_text'] ?? 'Get in touch' }}
                     </span>
                 </div>
@@ -81,6 +133,10 @@
         @csrf
         @method('PUT')
 
+        <!-- Hidden theme fields synced with Alpine -->
+        <input type="hidden" name="theme[accent_dark]" :value="accentSecondary">
+        <input type="hidden" name="theme[dark]" :value="bgColor === '#0b0f19' || bgColor === '#000000' ? '#030712' : '#0a1615'">
+
         <!-- Tabs Navigation -->
         <div class="bg-white rounded-2xl border border-slate-200/80 p-2 shadow-sm flex flex-wrap gap-1.5">
             <button type="button" @click="activeTab = 'brand'" :class="activeTab === 'brand' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
@@ -89,7 +145,7 @@
             </button>
             <button type="button" @click="activeTab = 'styling'" :class="activeTab === 'styling' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
                 <i class="bi bi-palette"></i>
-                <span>Colors, Fonts & Shapes</span>
+                <span>Background, Colors & Styling</span>
             </button>
             <button type="button" @click="activeTab = 'media'" :class="activeTab === 'media' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
                 <i class="bi bi-image"></i>
@@ -159,50 +215,200 @@
             </div>
         </div>
 
-        <!-- Tab 2: Colors, Fonts & Shapes -->
-        <div x-show="activeTab === 'styling'" class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 lg:p-8 space-y-6" x-cloak>
+        <!-- Tab 2: Colors, Background, Fonts & Shapes -->
+        <div x-show="activeTab === 'styling'" class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 lg:p-8 space-y-8" x-cloak>
             <div class="border-b border-slate-100 pb-4">
-                <h3 class="text-sm font-bold text-slate-900">Colors, Typography & Picture Shapes</h3>
-                <p class="text-xs text-slate-500">Pick tailored brand palette colors, curated Google Fonts, and site-wide geometric picture shape presets.</p>
+                <h3 class="text-sm font-bold text-slate-900">Background, Colors & Typography</h3>
+                <p class="text-xs text-slate-500">Pick from 1-click curated themes (like Enku's Dark Obsidian or Pitch Black), customize background canvas colors, and set typography.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Accent Color -->
-                <div class="space-y-1.5">
-                    <label class="block text-xs font-bold text-slate-700">Primary Brand Accent Color</label>
-                    <div class="flex items-center gap-3">
-                        <input type="color" name="theme[accent]" x-model="accentColor" class="w-12 h-10 p-0.5 rounded-xl border border-slate-200 cursor-pointer bg-white">
-                        <input type="text" x-model="accentColor" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-900">
+            <!-- 1-Click Background & Theme Presets -->
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider">1-Click Theme & Background Presets</label>
+                    <span class="text-[11px] text-slate-500">Instantly applies coordinated canvas, surface, and text colors</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                    <!-- Preset 1: Enku Dark -->
+                    <button type="button" @click="applyThemePreset('enku-dark')"
+                            :class="bgColor === '#0b0f19' ? 'ring-2 ring-emerald-500 border-emerald-500 shadow-md' : 'border-slate-800 hover:border-slate-600'"
+                            class="p-3.5 rounded-xl border bg-[#0b0f19] text-left transition relative group">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
+                            <span class="w-3 h-3 rounded-full bg-[#111827] border border-slate-700"></span>
+                            <span class="w-3 h-3 rounded-full bg-amber-400"></span>
+                        </div>
+                        <span class="text-xs font-bold text-white block">Obsidian Dark</span>
+                        <span class="text-[10px] text-emerald-400 font-mono block">Enku Black Style</span>
+                    </button>
+
+                    <!-- Preset 2: Pure OLED Black -->
+                    <button type="button" @click="applyThemePreset('pure-black')"
+                            :class="bgColor === '#000000' ? 'ring-2 ring-emerald-500 border-emerald-500 shadow-md' : 'border-slate-800 hover:border-slate-600'"
+                            class="p-3.5 rounded-xl border bg-black text-left transition relative group">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="w-3 h-3 rounded-full bg-white"></span>
+                            <span class="w-3 h-3 rounded-full bg-[#0a0a0a] border border-slate-800"></span>
+                            <span class="w-3 h-3 rounded-full bg-amber-400"></span>
+                        </div>
+                        <span class="text-xs font-bold text-white block">Pitch Black</span>
+                        <span class="text-[10px] text-slate-400 font-mono block">Pure OLED Mode</span>
+                    </button>
+
+                    <!-- Preset 3: Luxury Navy -->
+                    <button type="button" @click="applyThemePreset('luxury-navy')"
+                            :class="bgColor === '#061122' ? 'ring-2 ring-emerald-500 border-emerald-500 shadow-md' : 'border-slate-800 hover:border-slate-600'"
+                            class="p-3.5 rounded-xl border bg-[#061122] text-left transition relative group">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="w-3 h-3 rounded-full bg-[#d4af37]"></span>
+                            <span class="w-3 h-3 rounded-full bg-[#0b1d3a] border border-blue-900"></span>
+                            <span class="w-3 h-3 rounded-full bg-white"></span>
+                        </div>
+                        <span class="text-xs font-bold text-white block">Midnight Navy</span>
+                        <span class="text-[10px] text-sky-300 font-mono block">Deep Blue & Gold</span>
+                    </button>
+
+                    <!-- Preset 4: Executive Slate -->
+                    <button type="button" @click="applyThemePreset('executive-slate')"
+                            :class="bgColor === '#f8fafc' ? 'ring-2 ring-emerald-500 border-emerald-500 shadow-md' : 'border-slate-200 hover:border-slate-300'"
+                            class="p-3.5 rounded-xl border bg-slate-50 text-left transition relative group">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="w-3 h-3 rounded-full bg-[#0f766e]"></span>
+                            <span class="w-3 h-3 rounded-full bg-white border border-slate-300"></span>
+                            <span class="w-3 h-3 rounded-full bg-slate-900"></span>
+                        </div>
+                        <span class="text-xs font-bold text-slate-900 block">Clean Slate</span>
+                        <span class="text-[10px] text-teal-600 font-mono block">Maji Works Style</span>
+                    </button>
+
+                    <!-- Preset 5: Warm Ivory -->
+                    <button type="button" @click="applyThemePreset('warm-ivory')"
+                            :class="bgColor === '#fdfbf7' ? 'ring-2 ring-emerald-500 border-emerald-500 shadow-md' : 'border-slate-200 hover:border-slate-300'"
+                            class="p-3.5 rounded-xl border bg-[#fdfbf7] text-left transition relative group">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="w-3 h-3 rounded-full bg-[#ea580c]"></span>
+                            <span class="w-3 h-3 rounded-full bg-white border border-stone-300"></span>
+                            <span class="w-3 h-3 rounded-full bg-stone-900"></span>
+                        </div>
+                        <span class="text-xs font-bold text-stone-900 block">Warm Ivory</span>
+                        <span class="text-[10px] text-amber-700 font-mono block">Linen / Sand</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Detailed Color Palette Controls -->
+            <div class="pt-4 border-t border-slate-100 space-y-4">
+                <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider">Custom Color Palette</label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Canvas Background Color -->
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700 flex items-center justify-between">
+                            <span>Main Background Canvas</span>
+                            <span class="text-[10px] font-mono text-slate-500">theme[bg]</span>
+                        </label>
+                        <div class="flex items-center gap-3">
+                            <input type="color" name="theme[bg]" x-model="bgColor" class="w-12 h-10 p-0.5 rounded-xl border border-slate-200 cursor-pointer bg-white">
+                            <input type="text" x-model="bgColor" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-900">
+                        </div>
+                    </div>
+
+                    <!-- Surface / Card Color -->
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700 flex items-center justify-between">
+                            <span>Card & Section Surface</span>
+                            <span class="text-[10px] font-mono text-slate-500">theme[surface]</span>
+                        </label>
+                        <div class="flex items-center gap-3">
+                            <input type="color" name="theme[surface]" x-model="surfaceColor" class="w-12 h-10 p-0.5 rounded-xl border border-slate-200 cursor-pointer bg-white">
+                            <input type="text" x-model="surfaceColor" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-900">
+                        </div>
+                    </div>
+
+                    <!-- Main Text Color -->
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700 flex items-center justify-between">
+                            <span>Primary Heading & Text</span>
+                            <span class="text-[10px] font-mono text-slate-500">theme[ink]</span>
+                        </label>
+                        <div class="flex items-center gap-3">
+                            <input type="color" name="theme[ink]" x-model="textColor" class="w-12 h-10 p-0.5 rounded-xl border border-slate-200 cursor-pointer bg-white">
+                            <input type="text" x-model="textColor" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-900">
+                        </div>
+                    </div>
+
+                    <!-- Muted Text Color -->
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700 flex items-center justify-between">
+                            <span>Muted / Subtitle Text</span>
+                            <span class="text-[10px] font-mono text-slate-500">theme[muted]</span>
+                        </label>
+                        <div class="flex items-center gap-3">
+                            <input type="color" name="theme[muted]" x-model="mutedColor" class="w-12 h-10 p-0.5 rounded-xl border border-slate-200 cursor-pointer bg-white">
+                            <input type="text" x-model="mutedColor" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-900">
+                        </div>
+                    </div>
+
+                    <!-- Border / Line Color -->
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700 flex items-center justify-between">
+                            <span>Borders & Divider Lines</span>
+                            <span class="text-[10px] font-mono text-slate-500">theme[line]</span>
+                        </label>
+                        <div class="flex items-center gap-3">
+                            <input type="color" name="theme[line]" x-model="lineColor" class="w-12 h-10 p-0.5 rounded-xl border border-slate-200 cursor-pointer bg-white">
+                            <input type="text" x-model="lineColor" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-900">
+                        </div>
+                    </div>
+
+                    <!-- Primary Accent Color -->
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700 flex items-center justify-between">
+                            <span>Primary Accent Color</span>
+                            <span class="text-[10px] font-mono text-slate-500">theme[accent]</span>
+                        </label>
+                        <div class="flex items-center gap-3">
+                            <input type="color" name="theme[accent]" x-model="accentColor" class="w-12 h-10 p-0.5 rounded-xl border border-slate-200 cursor-pointer bg-white">
+                            <input type="text" x-model="accentColor" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-900">
+                        </div>
+                    </div>
+
+                    <!-- Secondary Accent -->
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700 flex items-center justify-between">
+                            <span>Secondary Accent Color</span>
+                            <span class="text-[10px] font-mono text-slate-500">theme[accent_secondary]</span>
+                        </label>
+                        <div class="flex items-center gap-3">
+                            <input type="color" name="theme[accent_secondary]" x-model="accentSecondary" class="w-12 h-10 p-0.5 rounded-xl border border-slate-200 cursor-pointer bg-white">
+                            <input type="text" x-model="accentSecondary" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-900">
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Secondary Accent -->
-                <div class="space-y-1.5">
-                    <label class="block text-xs font-bold text-slate-700">Secondary Accent Color</label>
-                    <div class="flex items-center gap-3">
-                        <input type="color" name="theme[accent_secondary]" value="{{ $theme['accent_secondary'] ?? '#0f766e' }}" class="w-12 h-10 p-0.5 rounded-xl border border-slate-200 cursor-pointer bg-white">
-                        <input type="text" name="theme[accent_secondary]" value="{{ $theme['accent_secondary'] ?? '#0f766e' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-900">
+            <!-- Typography Settings -->
+            <div class="pt-4 border-t border-slate-100 space-y-4">
+                <label class="block text-xs font-bold text-slate-800 uppercase tracking-wider">Typography & Google Fonts</label>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Display Font -->
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700">Display / Headline Font</label>
+                        <select name="theme[font_display]" x-model="displayFont" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                            @foreach($fontOptions as $font => $label)
+                                <option value="{{ $font }}">{{ $label }}</option>
+                            @endforeach
+                        </select>
                     </div>
-                </div>
 
-                <!-- Display Font -->
-                <div class="space-y-1.5">
-                    <label class="block text-xs font-bold text-slate-700">Display / Headline Font</label>
-                    <select name="theme[font_display]" x-model="displayFont" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
-                        @foreach($fontOptions as $font => $label)
-                            <option value="{{ $font }}">{{ $label }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <!-- Body Font -->
-                <div class="space-y-1.5">
-                    <label class="block text-xs font-bold text-slate-700">Body & Navigation Font</label>
-                    <select name="theme[font_body]" x-model="bodyFont" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
-                        @foreach($fontOptions as $font => $label)
-                            <option value="{{ $font }}">{{ $label }}</option>
-                        @endforeach
-                    </select>
+                    <!-- Body Font -->
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700">Body & Navigation Font</label>
+                        <select name="theme[font_body]" x-model="bodyFont" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                            @foreach($fontOptions as $font => $label)
+                                <option value="{{ $font }}">{{ $label }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
             </div>
 
