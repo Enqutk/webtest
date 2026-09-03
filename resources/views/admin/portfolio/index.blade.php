@@ -5,6 +5,31 @@
 @section('page-subtitle', $currentOrg->title)
 
 @section('content')
+@php
+    $livePortfolioUrl = route('card.portfolio.index', ['slug' => $currentOrg->slug]);
+@endphp
+
+<div class="mb-5 bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+    <div class="flex items-center justify-between p-4 border-b border-slate-100">
+        <div class="space-y-0.5">
+            <h3 class="text-sm font-bold text-slate-900">Live Portfolio Preview</h3>
+            <p class="text-xs text-slate-500">This iframe shows the currently saved portfolio page.</p>
+        </div>
+        <a href="{{ $livePortfolioUrl }}" target="_blank" rel="noopener"
+           class="inline-flex items-center gap-2 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition">
+            <i class="bi bi-box-arrow-up-right"></i>
+            Open live
+        </a>
+    </div>
+    <iframe
+        src="{{ $livePortfolioUrl }}"
+        class="w-full"
+        style="height: 520px; border: 0; background: white;"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+    ></iframe>
+</div>
+
 <div class="space-y-6" x-data="{
     openModal: false,
     editingId: null,

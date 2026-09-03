@@ -27,6 +27,10 @@
     imageShape: '{{ $theme['image_shape'] ?? 'rounded-xl' }}',
     showBrandText: {{ !empty($theme['show_brand_text']) ? 'true' : 'false' }},
     showTagline: {{ !empty($theme['show_tagline']) ? 'true' : 'false' }},
+    showLogo: {{ !empty($theme['show_logo']) ? 'true' : 'false' }},
+    showHeaderLogo: {{ !empty($theme['show_header_logo']) ? 'true' : 'false' }},
+    showHeaderCta: {{ !empty($theme['show_header_cta']) ? 'true' : 'false' }},
+    headerCtaText: '{{ addslashes($theme['header_cta_text'] ?? 'Get in touch') }}',
 
     applyThemePreset(preset) {
         if (preset === 'enku-dark') {
@@ -97,9 +101,20 @@
                 <!-- Brand Title / Logo Preview -->
                 <div class="flex items-center gap-3">
                     @if($logoUrl)
-                        <img src="{{ $logoUrl }}" alt="Logo" class="h-8 w-auto object-contain">
+                        <img
+                            src="{{ $logoUrl }}"
+                            alt="Logo"
+                            class="h-8 w-auto object-contain"
+                            x-show="showLogo && showHeaderLogo"
+                            x-cloak
+                        >
                     @else
-                        <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-sm" :style="'background: ' + accentColor">
+                        <div
+                            class="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-sm"
+                            :style="'background: ' + accentColor"
+                            x-show="showLogo && showHeaderLogo"
+                            x-cloak
+                        >
                             <span x-text="title.substring(0, 1) || 'O'"></span>
                         </div>
                     @endif
@@ -119,10 +134,12 @@
                 </div>
 
                 <!-- CTA Mock -->
-                <div>
-                    <span class="px-3.5 py-1.5 rounded-lg text-white font-bold text-xs shadow-md" :style="'background: ' + accentColor + '; font-family: ' + bodyFont + '; color: ' + (accentColor === '#ffffff' ? '#0b1d3a' : '#ffffff')">
-                        {{ $theme['header_cta_text'] ?? 'Get in touch' }}
-                    </span>
+                <div x-show="showHeaderCta" x-cloak>
+                    <span
+                        class="px-3.5 py-1.5 rounded-lg text-white font-bold text-xs shadow-md"
+                        :style="'background: ' + accentColor + '; font-family: ' + bodyFont + '; color: ' + (accentColor === '#ffffff' ? '#0b1d3a' : '#ffffff')"
+                        x-text="headerCtaText"
+                    ></span>
                 </div>
             </div>
         </div>
@@ -204,14 +221,35 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-slate-100">
+                <input type="hidden" name="theme[show_brand_text]" value="0">
                 <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer">
                     <input type="checkbox" name="theme[show_brand_text]" value="1" x-model="showBrandText" class="w-4 h-4 rounded text-brand-600">
                     <span class="text-xs font-semibold text-slate-700">Show Brand Name Text in Header</span>
                 </label>
+                <input type="hidden" name="theme[show_tagline]" value="0">
                 <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer">
                     <input type="checkbox" name="theme[show_tagline]" value="1" x-model="showTagline" class="w-4 h-4 rounded text-brand-600">
                     <span class="text-xs font-semibold text-slate-700">Show Tagline in Header</span>
                 </label>
+            </div>
+
+            <div class="pt-4 border-t border-slate-100 space-y-4">
+                <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Header CTA Button</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="hidden" name="theme[show_header_cta]" value="0">
+                    <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer">
+                        <input type="checkbox" name="theme[show_header_cta]" value="1" x-model="showHeaderCta" class="w-4 h-4 rounded text-brand-600">
+                        <span class="text-xs font-semibold text-slate-700">Show CTA button in header</span>
+                    </label>
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700">CTA Button Text</label>
+                        <input type="text" name="theme[header_cta_text]" x-model="headerCtaText" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:outline-none focus:border-brand-500 transition">
+                    </div>
+                </div>
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-700">CTA Button URL</label>
+                    <input type="text" name="theme[header_cta_url]" value="{{ $theme['header_cta_url'] ?? '/contact' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 font-mono focus:bg-white focus:outline-none focus:border-brand-500 transition">
+                </div>
             </div>
         </div>
 
@@ -512,6 +550,20 @@
                 <!-- Logo -->
                 <div class="space-y-3">
                     <label class="block text-xs font-bold text-slate-700">Brand Logo</label>
+
+                    <!-- Toggles so you can hide/show logo without uploading -->
+                    <input type="hidden" name="theme[show_logo]" value="0">
+                    <label class="flex items-center gap-3 text-xs font-semibold text-slate-700 cursor-pointer">
+                        <input type="checkbox" name="theme[show_logo]" value="1" x-model="showLogo" class="w-4 h-4 rounded text-brand-600">
+                        <span>Show logo on the whole site</span>
+                    </label>
+
+                    <input type="hidden" name="theme[show_header_logo]" value="0">
+                    <label class="flex items-center gap-3 text-xs font-semibold text-slate-700 cursor-pointer">
+                        <input type="checkbox" name="theme[show_header_logo]" value="1" x-model="showHeaderLogo" class="w-4 h-4 rounded text-brand-600">
+                        <span>Show logo specifically in header</span>
+                    </label>
+
                     @if($logoUrl)
                         <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-center">
                             <img src="{{ $logoUrl }}" alt="Logo" class="max-h-16 w-auto object-contain">
@@ -523,6 +575,13 @@
                 <!-- Favicon -->
                 <div class="space-y-3">
                     <label class="block text-xs font-bold text-slate-700">Site Favicon</label>
+
+                    <input type="hidden" name="theme[show_favicon]" value="0">
+                    <label class="flex items-center gap-3 text-xs font-semibold text-slate-700 cursor-pointer">
+                        <input type="checkbox" name="theme[show_favicon]" value="1" {{ !empty($theme['show_favicon']) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">
+                        <span>Show favicon in browser tab</span>
+                    </label>
+
                     @if($faviconUrl)
                         <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-center">
                             <img src="{{ $faviconUrl }}" alt="Favicon" class="w-10 h-10 object-contain">
@@ -577,6 +636,49 @@
             <div class="space-y-1.5">
                 <label class="block text-xs font-bold text-slate-700">Google Map Embed Link</label>
                 <input type="text" name="map_url" value="{{ $organization->map_url }}" placeholder="https://maps.google.com/..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+            </div>
+
+            <div class="space-y-2 pt-4 border-t border-slate-100">
+                <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Footer visibility</h4>
+                <p class="text-[11px] text-slate-500">These toggles control what appears in the website footer.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="hidden" name="theme[show_footer_tagline]" value="0">
+                    <label class="flex items-center gap-3 text-xs font-semibold text-slate-700 cursor-pointer">
+                        <input type="checkbox" name="theme[show_footer_tagline]" value="1" {{ !empty($theme['show_footer_tagline']) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">
+                        <span>Show footer tagline</span>
+                    </label>
+
+                    <input type="hidden" name="theme[show_footer_nav]" value="0">
+                    <label class="flex items-center gap-3 text-xs font-semibold text-slate-700 cursor-pointer">
+                        <input type="checkbox" name="theme[show_footer_nav]" value="1" {{ !empty($theme['show_footer_nav']) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">
+                        <span>Show footer Explore/Connect links</span>
+                    </label>
+
+                    <input type="hidden" name="theme[show_footer_social]" value="0">
+                    <label class="flex items-center gap-3 text-xs font-semibold text-slate-700 cursor-pointer">
+                        <input type="checkbox" name="theme[show_footer_social]" value="1" {{ !empty($theme['show_footer_social']) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">
+                        <span>Show footer social icons</span>
+                    </label>
+
+                    <input type="hidden" name="theme[show_social_links]" value="0">
+                    <label class="flex items-center gap-3 text-xs font-semibold text-slate-700 cursor-pointer">
+                        <input type="checkbox" name="theme[show_social_links]" value="1" {{ !empty($theme['show_social_links']) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">
+                        <span>Enable social links</span>
+                    </label>
+
+                    <input type="hidden" name="theme[show_footer_contact]" value="0">
+                    <label class="flex items-center gap-3 text-xs font-semibold text-slate-700 cursor-pointer">
+                        <input type="checkbox" name="theme[show_footer_contact]" value="1" {{ !empty($theme['show_footer_contact']) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">
+                        <span>Show footer contact block</span>
+                    </label>
+
+                    <input type="hidden" name="theme[show_footer_credit]" value="0">
+                    <label class="flex items-center gap-3 text-xs font-semibold text-slate-700 cursor-pointer">
+                        <input type="checkbox" name="theme[show_footer_credit]" value="1" {{ !empty($theme['show_footer_credit']) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">
+                        <span>Show footer “Developed by” credit</span>
+                    </label>
+                </div>
             </div>
         </div>
 

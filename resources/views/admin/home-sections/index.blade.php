@@ -6,6 +6,10 @@
 
 @section('content')
 @php
+    $liveHomeUrl = route('card.home', ['slug' => $currentOrg->slug]);
+@endphp
+
+@php
     $hero = $sections['hero'] ?? \App\Models\Organization::defaultHomeSections()['hero'];
     $about = $sections['about'] ?? \App\Models\Organization::defaultHomeSections()['about'];
     $servicesSec = $sections['services'] ?? \App\Models\Organization::defaultHomeSections()['services'];
@@ -170,6 +174,33 @@
             <span>📣</span>
             <span>CTA Banner</span>
         </button>
+    </div>
+
+    <!-- Live Homepage Preview (collapsible) -->
+    <div x-data="{ previewOpen: true }" class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+        <button type="button" @click="previewOpen = !previewOpen" class="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition">
+            <div class="flex items-center gap-2">
+                <i class="bi bi-eye text-brand-600"></i>
+                <span class="text-sm font-bold text-slate-900">Live Homepage Preview</span>
+                <span class="text-xs text-slate-400">(saved version)</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="{{ $liveHomeUrl }}" target="_blank" rel="noopener" @click.stop
+                   class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition">
+                    <i class="bi bi-box-arrow-up-right"></i> Open live
+                </a>
+                <i class="bi text-slate-400 transition-transform" :class="previewOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+            </div>
+        </button>
+        <div x-show="previewOpen" x-collapse>
+            <iframe
+                src="{{ $liveHomeUrl }}"
+                class="w-full border-t border-slate-100"
+                style="height: 480px; border: 0; background: white;"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+        </div>
     </div>
 
     <!-- 🌟 SECTION 1: HERO BANNER & SLIDES -->
