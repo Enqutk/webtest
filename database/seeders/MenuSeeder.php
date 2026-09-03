@@ -10,15 +10,21 @@ class MenuSeeder extends Seeder
 {
     public function run(): void
     {
-        // Insert menu location
-        $menuLocationId = DB::table('menu_locations')->insertGetId([
-            'name' => 'Main Menu',
-            'slug' => 'main-menu',
-            'location' => 'navbar',
-            'description' => 'Default main navigation menu',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-        ]);
+        // Insert menu location if not already existing
+        $menuLocation = DB::table('menu_locations')->where('slug', 'main-menu')->first();
+        if ($menuLocation) {
+            $menuLocationId = $menuLocation->id;
+            DB::table('menu_items')->where('menu_id', $menuLocationId)->delete();
+        } else {
+            $menuLocationId = DB::table('menu_locations')->insertGetId([
+                'name' => 'Main Menu',
+                'slug' => 'main-menu',
+                'location' => 'navbar',
+                'description' => 'Default main navigation menu',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]);
+        }
 
         // Insert top-level menu items
         $homeId = DB::table('menu_items')->insertGetId([
