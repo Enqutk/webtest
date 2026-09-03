@@ -45,7 +45,7 @@
                 <div class="col-6 col-lg-2">
                     <h6 class="text-white mb-3">Connect</h6>
                     <ul class="list-unstyled d-grid gap-2">
-                        <li><a href="{{ route('contact') }}">Contact</a></li>
+                        <li><a href="{{ $data['contactUrl'] ?? route('contact') }}">Contact</a></li>
                         <li><a href="{{ url('/mgt') }}">Admin</a></li>
                     </ul>
                 </div>

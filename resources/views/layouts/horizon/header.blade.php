@@ -7,9 +7,17 @@
     $logoUrl = $showLogo ? ($data['logoUrl'] ?? null) : null;
     $showHeaderCta = (bool) ($theme['show_header_cta'] ?? true);
     $headerCtaText = !empty($theme['header_cta_text']) ? $theme['header_cta_text'] : 'Get in touch';
-    $routeSlug = request()->route('slug');
+    $routeSlug = request()->route('slug') ?? ($data['routeSlug'] ?? ($data['organization']->slug ?? null));
     $brandHomeUrl = $data['brandHomeUrl'] ?? ($routeSlug ? route('card.home', ['slug' => $routeSlug]) : url('/'));
-    $headerCtaUrl = !empty($theme['header_cta_url']) ? $theme['header_cta_url'] : ($routeSlug ? route('card.contact', ['slug' => $routeSlug]) : route('contact'));
+
+    $rawCta = $theme['header_cta_url'] ?? '';
+    if (empty($rawCta) || $rawCta === '/contact' || $rawCta === 'contact' || $rawCta === route('contact')) {
+        $headerCtaUrl = $data['contactUrl'] ?? ($routeSlug ? route('card.contact', ['slug' => $routeSlug]) : route('contact'));
+    } elseif ($routeSlug && str_starts_with($rawCta, '/') && !str_starts_with($rawCta, "/card/{$routeSlug}")) {
+        $headerCtaUrl = url("/card/{$routeSlug}" . $rawCta);
+    } else {
+        $headerCtaUrl = $rawCta;
+    }
 @endphp
 
 <header class="hz-header" data-hz-header>

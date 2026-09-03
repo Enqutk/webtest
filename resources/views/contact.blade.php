@@ -11,6 +11,8 @@
         'fri' => 'Fri', 'sat' => 'Sat', 'sun' => 'Sun',
     ];
     $recipient = $data['email'][0] ?? config('mail.from.address');
+    $routeSlug = request()->route('slug') ?? ($data['routeSlug'] ?? ($data['organization']->slug ?? null));
+    $formAction = $routeSlug ? route('card.contact.send', ['slug' => $routeSlug, 'recipient' => $recipient]) : route('contact.send', ['recipient' => $recipient]);
 @endphp
 
 @section('page')
@@ -50,7 +52,7 @@
                     </div>
                 @endif
 
-                <form class="hz-form" method="POST" action="{{ route('contact.send', ['recipient' => $recipient]) }}" novalidate>
+                <form class="hz-form" method="POST" action="{{ $formAction }}" novalidate>
                     @csrf
                     <div class="row g-3">
                         <div class="col-md-6">

@@ -133,7 +133,8 @@ class NavigationService
         $fragment = parse_url($url, PHP_URL_FRAGMENT);
         $mapped = $aliases[$path] ?? $path;
 
-        $routeSlug = request()->route('slug');
+        $org = \App\Models\Organization::resolvePublicCurrent();
+        $routeSlug = request()->route('slug') ?? ($org?->slug ?: null);
         if ($routeSlug && !str_starts_with($mapped, "/card/{$routeSlug}")) {
             $mapped = ($mapped === '/') ? "/card/{$routeSlug}" : "/card/{$routeSlug}" . $mapped;
         }

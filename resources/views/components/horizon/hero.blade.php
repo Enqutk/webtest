@@ -37,9 +37,9 @@
     $heroHeadline = $heroConfig['title'] ?? null;
     $heroCopy = $heroConfig['description'] ?? $tagline;
     $heroCtaText = $heroConfig['cta_text'] ?? 'Explore services';
-    $heroCtaUrl = $heroConfig['cta_url'] ?? route('services.index');
+    $heroCtaUrl = !empty($heroConfig['cta_url']) ? $heroConfig['cta_url'] : ($data['servicesUrl'] ?? route('services.index'));
     $heroSecCtaText = $heroConfig['secondary_cta_text'] ?? 'Talk to us';
-    $heroSecCtaUrl = $heroConfig['secondary_cta_url'] ?? route('contact');
+    $heroSecCtaUrl = !empty($heroConfig['secondary_cta_url']) ? $heroConfig['secondary_cta_url'] : ($data['contactUrl'] ?? route('contact'));
 @endphp
 
 <section class="hz-hero" aria-label="Homepage hero">
@@ -111,12 +111,12 @@
                                     @endif
 
                                     <div class="d-flex flex-wrap gap-3">
-                                        <a href="{{ $hero->button_link ?: route('services.index') }}" class="btn-hz">
-                                            {{ $hero->text_link ?: 'Explore services' }}
-                                            <i class="bi bi-arrow-right"></i>
-                                        </a>
-                                        <a href="{{ route('contact') }}" class="btn-hz-outline">Talk to us</a>
-                                    </div>
+                                        <a href="{{ $hero->button_link ?: ($data['servicesUrl'] ?? route('services.index')) }}" class="btn-hz">
+                                             {{ $hero->text_link ?: 'Explore services' }}
+                                             <i class="bi bi-arrow-right"></i>
+                                         </a>
+                                         <a href="{{ $data['contactUrl'] ?? route('contact') }}" class="btn-hz-outline">Talk to us</a>
+                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     @if($hero->image_url)

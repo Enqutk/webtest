@@ -19,7 +19,7 @@
                 <p class="mb-0">{{ $copy }}</p>
             </div>
             <div class="col-lg-4 text-lg-end">
-                <a href="{{ $href ?? route('contact') }}" class="btn-hz">
+                <a href="{{ $href ?? ($data['contactUrl'] ?? route('contact')) }}" class="btn-hz">
                     {{ $button }} <i class="bi bi-arrow-right"></i>
                 </a>
             </div>

@@ -92,15 +92,36 @@ class HomeContentService
             ? $homeSections['stats']['items']
             : ($statsBlock?->list_items ?? []);
 
-        $routeSlug = request()->route('slug');
+        $routeSlug = request()->route('slug') ?? ($organization?->slug ?: null);
 
         $brandHomeUrl = $routeSlug
             ? route('card.home', ['slug' => $routeSlug])
             : ($organization ? route('card.home', ['slug' => $organization->slug ?: \Illuminate\Support\Str::slug($organization->title) ?: 'default']) : url('/'));
 
+        $contactUrl = $routeSlug
+            ? route('card.contact', ['slug' => $routeSlug])
+            : ($organization ? route('card.contact', ['slug' => $organization->slug]) : route('contact'));
+
+        $aboutUrl = $routeSlug
+            ? route('card.about', ['slug' => $routeSlug])
+            : ($organization ? route('card.about', ['slug' => $organization->slug]) : route('about'));
+
+        $servicesUrl = $routeSlug
+            ? route('card.services.index', ['slug' => $routeSlug])
+            : ($organization ? route('card.services.index', ['slug' => $organization->slug]) : route('services.index'));
+
+        $portfolioUrl = $routeSlug
+            ? route('card.portfolio.index', ['slug' => $routeSlug])
+            : ($organization ? route('card.portfolio.index', ['slug' => $organization->slug]) : route('portfolio.index'));
+
         return [
             'organization' => $organization,
             'brandHomeUrl' => $brandHomeUrl,
+            'contactUrl' => $contactUrl,
+            'aboutUrl' => $aboutUrl,
+            'servicesUrl' => $servicesUrl,
+            'portfolioUrl' => $portfolioUrl,
+            'routeSlug' => $routeSlug,
             'siteName' => $siteName,
             'tagline' => $activeTagline,
             'metaDescription' => $metaDescription,
