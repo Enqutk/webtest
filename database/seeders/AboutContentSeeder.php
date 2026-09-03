@@ -13,6 +13,23 @@ class AboutContentSeeder extends Seeder
     {
         $userId = User::query()->value('id');
         $sectionId = PageSection::query()->value('id');
+        if (! $sectionId) {
+            $pageId = \App\Models\Page::query()->value('id');
+            if ($pageId) {
+                $section = PageSection::create([
+                    'page_id' => $pageId,
+                    'title' => 'About Section',
+                    'subtitle' => 'About Us',
+                    'display_order' => 1,
+                    'is_active' => true,
+                    'created_by' => $userId,
+                    'updated_by' => $userId,
+                ]);
+                $sectionId = $section->id;
+            } else {
+                return;
+            }
+        }
         $base = public_path('assets/images/majiworks');
 
         $about = ContentBlock::query()->updateOrCreate(
