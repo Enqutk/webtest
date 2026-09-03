@@ -20,67 +20,74 @@ class PageSeeder extends Seeder
         ]);
 
         // Create Home page
-        $homePage = Page::create([
-            'title' => 'Home',
-            'slug' => 'home',
-            'short_description' => 'Welcome to MajiWorks — water systems that feed people',
-            'is_active' => true,
-            'display_order' => 0,
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
-        ]);
+        $homePage = Page::firstOrCreate(
+            ['slug' => 'home'],
+            [
+                'title' => 'Home',
+                'short_description' => 'Welcome to MajiWorks — water systems that feed people',
+                'is_active' => true,
+                'display_order' => 0,
+                'created_by' => $user->id,
+                'updated_by' => $user->id,
+            ]
+        );
 
-        $aboutPage = Page::create([
-            'title' => 'About',
-            'slug' => 'about',
-            'short_description' => 'Learn more about MajiWorks',
-            'is_active' => true,
-            'display_order' => 1,
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
-        ]);
-
+        $aboutPage = Page::firstOrCreate(
+            ['slug' => 'about'],
+            [
+                'title' => 'About',
+                'short_description' => 'Learn more about MajiWorks',
+                'is_active' => true,
+                'display_order' => 1,
+                'created_by' => $user->id,
+                'updated_by' => $user->id,
+            ]
+        );
 
         // Create section for Home page (Features)
-        $heroFeatures = PageSection::create([
-            'page_id' => $homePage->id,
-            'title' => 'hero Features',
-            'subtitle' => 'Discover Our Key Features',
-            'display_order' => 1,
-            'is_active' => true,
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
-        ]);
+        $heroFeatures = PageSection::firstOrCreate(
+            ['page_id' => $homePage->id, 'title' => 'hero Features'],
+            [
+                'subtitle' => 'Discover Our Key Features',
+                'display_order' => 1,
+                'is_active' => true,
+                'created_by' => $user->id,
+                'updated_by' => $user->id,
+            ]
+        );
 
-        $aboutFeatures = PageSection::create([
-            'page_id' => $homePage->id,
-            'title' => 'About Features',
-            'subtitle' => 'Who We Are',
-            'display_order' => 2,
-            'is_active' => true,
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
-        ]);
+        $aboutFeatures = PageSection::firstOrCreate(
+            ['page_id' => $homePage->id, 'title' => 'About Features'],
+            [
+                'subtitle' => 'Who We Are',
+                'display_order' => 2,
+                'is_active' => true,
+                'created_by' => $user->id,
+                'updated_by' => $user->id,
+            ]
+        );
 
-        $videoSection = PageSection::create([
-            'page_id' => $homePage->id,
-            'title' => 'Video Section',
-            'subtitle' => 'Watch Our Introduction',
-            'display_order' => 3,
-            'is_active' => true,
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
-        ]);
+        $videoSection = PageSection::firstOrCreate(
+            ['page_id' => $homePage->id, 'title' => 'Video Section'],
+            [
+                'subtitle' => 'Watch Our Introduction',
+                'display_order' => 3,
+                'is_active' => true,
+                'created_by' => $user->id,
+                'updated_by' => $user->id,
+            ]
+        );
 
-        $aboutSection = PageSection::create([
-            'page_id' => $aboutPage->id,
-            'title' => 'About Us',
-            'subtitle' => 'Learn More About Us',
-            'display_order' => 4,
-            'is_active' => true,
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
-        ]);
+        $aboutSection = PageSection::firstOrCreate(
+            ['page_id' => $aboutPage->id, 'title' => 'About Us'],
+            [
+                'subtitle' => 'Learn More About Us',
+                'display_order' => 4,
+                'is_active' => true,
+                'created_by' => $user->id,
+                'updated_by' => $user->id,
+            ]
+        );
         
 
         // Create content block for Home page features (as a list)
