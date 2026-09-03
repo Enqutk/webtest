@@ -1,4 +1,4 @@
-DirectoryIndex index.php index.html
+DirectoryIndex public/index.php index.php index.html
 
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
@@ -11,13 +11,7 @@ DirectoryIndex index.php index.html
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Redirect Trailing Slashes If Not A Folder...
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_URI} (.+)/$
-    RewriteRule ^ %1 [L,R=301]
-
-    # Send Requests To Front Controller...
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ public/index.php [L]
+    # Redirect all requests into public/ folder so assets (CSS, JS, images) and routes resolve properly
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>
