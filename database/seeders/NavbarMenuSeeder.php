@@ -33,7 +33,7 @@ class NavbarMenuSeeder extends Seeder
             'order_number' => 1,
         ]);
 
-        $about = MenuItem::query()->create([
+        MenuItem::query()->create([
             'menu_id' => $location->id,
             'parent_id' => null,
             'title' => 'About',
@@ -41,16 +41,6 @@ class NavbarMenuSeeder extends Seeder
             'url' => '/about',
             'target' => '_self',
             'order_number' => 2,
-        ]);
-
-        MenuItem::query()->create([
-            'menu_id' => $location->id,
-            'parent_id' => $about->id,
-            'title' => 'Our Team',
-            'link_type' => 'internal',
-            'url' => '/about#team',
-            'target' => '_self',
-            'order_number' => 1,
         ]);
 
         MenuItem::query()->create([

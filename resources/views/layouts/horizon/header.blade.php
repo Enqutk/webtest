@@ -78,61 +78,22 @@
             <div class="collapse navbar-collapse hz-nav-collapse" id="hzMainNav">
                 <ul class="navbar-nav ms-auto align-items-lg-center hz-nav">
                     @foreach ($navItems as $link)
-                        @if(!empty($link['children']))
-                            <li class="nav-item dropdown">
-                                <a
-                                    class="nav-link dropdown-toggle {{ !empty($link['active']) || collect($link['children'])->contains(fn ($c) => !empty($c['active'])) ? 'active' : '' }}"
-                                    href="{{ $link['url'] }}"
-                                    id="nav-{{ \Illuminate\Support\Str::slug($link['label']) }}"
-                                    role="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                    @if($adminPreview)
-                                        data-admin-section="site-nav"
-                                        data-admin-compact="1"
-                                        data-admin-label="Edit Nav Links"
-                                        data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('navigation') }}"
-                                    @endif
-                                >
-                                    {{ $link['label'] }}
-                                </a>
-                                <ul class="dropdown-menu hz-dropdown" aria-labelledby="nav-{{ \Illuminate\Support\Str::slug($link['label']) }}">
-                                    <li>
-                                        <a class="dropdown-item {{ !empty($link['active']) ? 'active' : '' }}" href="{{ $link['url'] }}">
-                                            Overview
-                                        </a>
-                                    </li>
-                                    @foreach ($link['children'] as $child)
-                                        <li>
-                                            <a
-                                                class="dropdown-item {{ !empty($child['active']) ? 'active' : '' }}"
-                                                href="{{ $child['url'] }}"
-                                                target="{{ $child['target'] ?? '_self' }}"
-                                            >
-                                                {{ $child['label'] }}
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </li>
-                        @else
-                            <li class="nav-item">
-                                <a
-                                    class="nav-link {{ !empty($link['active']) ? 'active' : '' }}"
-                                    href="{{ $link['url'] }}"
-                                    target="{{ $link['target'] ?? '_self' }}"
-                                    @if(!empty($link['active'])) aria-current="page" @endif
-                                    @if($adminPreview)
-                                        data-admin-section="site-nav"
-                                        data-admin-compact="1"
-                                        data-admin-label="Edit Nav Links"
-                                        data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('navigation') }}"
-                                    @endif
-                                >
-                                    {{ $link['label'] }}
-                                </a>
-                            </li>
-                        @endif
+                        <li class="nav-item">
+                            <a
+                                class="nav-link {{ !empty($link['active']) || collect($link['children'] ?? [])->contains(fn ($c) => !empty($c['active'])) ? 'active' : '' }}"
+                                href="{{ $link['url'] }}"
+                                target="{{ $link['target'] ?? '_self' }}"
+                                @if(!empty($link['active'])) aria-current="page" @endif
+                                @if($adminPreview)
+                                    data-admin-section="site-nav"
+                                    data-admin-compact="1"
+                                    data-admin-label="Edit Nav Links"
+                                    data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('navigation') }}"
+                                @endif
+                            >
+                                {{ $link['label'] }}
+                            </a>
+                        </li>
                     @endforeach
                     @if($showHeaderCta)
                         <li class="nav-item hz-nav-cta">

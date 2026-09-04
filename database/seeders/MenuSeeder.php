@@ -40,7 +40,7 @@ class MenuSeeder extends Seeder
             'updated_at' => Carbon::now(),
         ]);
 
-        $aboutId = DB::table('menu_items')->insertGetId([
+        DB::table('menu_items')->insertGetId([
             'menu_id' => $menuLocationId,
             'parent_id' => null,
             'title' => 'About',
@@ -51,34 +51,6 @@ class MenuSeeder extends Seeder
             'order_number' => 2,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
-        ]);
-
-        // Submenus under About
-        DB::table('menu_items')->insert([
-            [
-                'menu_id' => $menuLocationId,
-                'parent_id' => $aboutId,
-                'title' => 'Our History',
-                'icon' => null,
-                'link_type' => 'internal',
-                'url' => '/about/history',
-                'target' => '_self',
-                'order_number' => 1,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-            [
-                'menu_id' => $menuLocationId,
-                'parent_id' => $aboutId,
-                'title' => 'Our Team',
-                'icon' => null,
-                'link_type' => 'internal',
-                'url' => '/about/team',
-                'target' => '_self',
-                'order_number' => 2,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
         ]);
 
         DB::table('menu_items')->insert([
