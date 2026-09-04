@@ -36,6 +36,43 @@ class HomePageController extends Controller
                 ->value('list_items') ?? Organization::defaultSitePages()['about']['intro']['points'];
         }
 
+        $statsItems = $sections['stats']['items'] ?? [];
+        if ($statsItems === []) {
+            for ($i = 1; $i <= 3; $i++) {
+                $label = $sections['stats']["stat_{$i}_label"] ?? null;
+                $value = $sections['stats']["stat_{$i}_value"] ?? null;
+                if (filled($label) || filled($value)) {
+                    $statsItems[] = ['value' => $value ?? '', 'label' => $label ?? ''];
+                }
+            }
+        }
+        if ($statsItems === []) {
+            $blockItems = ContentBlock::query()
+                ->where('organization_id', $currentOrg->id)
+                ->where('slug', 'stats')
+                ->value('list_items') ?? [];
+            if ($blockItems !== []) {
+                $statsItems = collect($blockItems)->map(function ($item) {
+                    $value = $item['value'] ?? $item['number'] ?? '';
+                    if (isset($item['suffix']) && $item['suffix'] !== '') {
+                        $value = $value . $item['suffix'];
+                    }
+
+                    return [
+                        'value' => (string) $value,
+                        'label' => $item['label'] ?? '',
+                    ];
+                })->values()->all();
+            }
+        }
+        if ($statsItems === []) {
+            $statsItems = Organization::defaultHomeSections()['stats']['items'] ?? [];
+        }
+        $statsItems = collect($statsItems)->map(fn ($item) => [
+            'value' => (string) ($item['value'] ?? $item['number'] ?? ''),
+            'label' => $item['label'] ?? '',
+        ])->values()->all();
+
         return view('admin.home-sections.index', compact(
             'currentOrg',
             'sections',
@@ -46,6 +83,7 @@ class HomePageController extends Controller
             'services',
             'nextServiceOrder',
             'aboutPoints',
+            'statsItems',
         ));
     }
 
@@ -66,6 +104,13 @@ class HomePageController extends Controller
             $data['points'] = array_values(array_filter(
                 $data['points'],
                 fn ($point) => filled($point['title'] ?? null) || filled($point['description'] ?? null)
+            ));
+        }
+
+        if (isset($data['items']) && is_array($data['items'])) {
+            $data['items'] = array_values(array_filter(
+                $data['items'],
+                fn ($item) => filled($item['label'] ?? null) || filled($item['value'] ?? null)
             ));
         }
 

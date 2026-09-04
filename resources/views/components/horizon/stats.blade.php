@@ -7,10 +7,30 @@
 @php
     $items = collect($stats)->filter(fn ($stat) => filled($stat['label'] ?? $stat['title'] ?? null))->values();
     $showForPreview = request()->boolean('admin_preview');
+
+    $parseStatValue = function ($stat): array {
+        $raw = (string) ($stat['value'] ?? $stat['number'] ?? '0');
+        if (isset($stat['suffix']) && $stat['suffix'] !== '' && ! str_contains($raw, (string) $stat['suffix'])) {
+            $raw .= $stat['suffix'];
+        }
+        if (preg_match('/^(\d+)(.*)$/', $raw, $matches)) {
+            return [
+                'display' => $raw,
+                'counter' => (int) $matches[1],
+                'suffix' => $matches[2],
+            ];
+        }
+
+        return [
+            'display' => $raw,
+            'counter' => (int) $raw,
+            'suffix' => '',
+        ];
+    };
 @endphp
 
 @if($items->isNotEmpty() || $showForPreview)
-<section class="hz-section hz-stats hz-section-dark" aria-label="Impact statistics">
+        <section class="hz-section hz-stats hz-section-dark" id="stats" aria-label="Impact statistics">
     <div class="container">
         <div class="row justify-content-between align-items-end mb-4 g-3">
             <div class="col-lg-7">
@@ -20,15 +40,20 @@
         </div>
 
         <div class="row g-0 hz-stats-grid">
-            @forelse($items as $stat)
+            @forelse($items as $index => $stat)
+                @php $parsed = $parseStatValue($stat); @endphp
                 <div class="col-6 col-lg-3">
-                    <div class="hz-stat">
+                    <div
+                        class="hz-stat"
+                        {!! \App\Support\AdminPreviewAttrs::html('stats', 'stat_'.$index, 'Edit Stat', false) !!}
+                    >
                         <div
                             class="hz-stat-value"
-                            data-counter="{{ (int) ($stat['value'] ?? 0) }}"
-                            data-suffix="{{ $stat['suffix'] ?? '' }}"
-                        >0{{ $stat['suffix'] ?? '' }}</div>
-                        <div class="hz-stat-label">{{ $stat['label'] ?? ($stat['title'] ?? '') }}</div>
+                            data-preview-field="stat-{{ $index }}-value"
+                            data-counter="{{ $parsed['counter'] }}"
+                            data-suffix="{{ $parsed['suffix'] }}"
+                        >0{{ $parsed['suffix'] }}</div>
+                        <div class="hz-stat-label" data-preview-field="stat-{{ $index }}-label">{{ $stat['label'] ?? ($stat['title'] ?? '') }}</div>
                     </div>
                 </div>
             @empty

@@ -634,21 +634,32 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="space-y-1.5">
-                    <label class="block text-xs font-bold text-slate-700">Stat 1 (Value & Label)</label>
-                    <input type="text" name="stat_1_value" value="{{ $statsSec['stat_1_value'] ?? '120+' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:bg-white transition mb-1.5">
-                    <input type="text" name="stat_1_label" value="{{ $statsSec['stat_1_label'] ?? 'Projects completed' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+            <div class="pt-4 border-t border-slate-100 space-y-3">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Impact numbers</h4>
+                        <p class="text-[11px] text-slate-500 mt-0.5">The metrics shown in the dark stats row (25+, Counties served, etc.).</p>
+                    </div>
+                    <button type="button" @click="statsItems.push({ value: '', label: '' })" class="text-[11px] font-bold text-brand-700">+ Add stat</button>
                 </div>
-                <div class="space-y-1.5">
-                    <label class="block text-xs font-bold text-slate-700">Stat 2 (Value & Label)</label>
-                    <input type="text" name="stat_2_value" value="{{ $statsSec['stat_2_value'] ?? '2.4M' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:bg-white transition mb-1.5">
-                    <input type="text" name="stat_2_label" value="{{ $statsSec['stat_2_label'] ?? 'People served' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
-                </div>
-                <div class="space-y-1.5">
-                    <label class="block text-xs font-bold text-slate-700">Stat 3 (Value & Label)</label>
-                    <input type="text" name="stat_3_value" value="{{ $statsSec['stat_3_value'] ?? '99.2%' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:bg-white transition mb-1.5">
-                    <input type="text" name="stat_3_label" value="{{ $statsSec['stat_3_label'] ?? 'Scheme uptime' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <template x-for="(stat, i) in statsItems" :key="'stat-item-'+i">
+                        <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/80 space-y-3" :id="'stat-' + i">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[11px] font-bold text-slate-600" x-text="'Stat ' + (i + 1)"></span>
+                                <button type="button" @click="statsItems.splice(i, 1)" x-show="statsItems.length > 1" class="text-rose-500 text-xs"><i class="bi bi-trash"></i></button>
+                            </div>
+                            <div class="space-y-1.5">
+                                <label class="block text-xs font-bold text-slate-700">Value</label>
+                                <input type="text" :id="'stat-' + i + '-value'" :name="'items['+i+'][value]'" x-model="statsItems[i].value" placeholder="e.g. 25+ or 140k+" class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-bold">
+                            </div>
+                            <div class="space-y-1.5">
+                                <label class="block text-xs font-bold text-slate-700">Label</label>
+                                <input type="text" :id="'stat-' + i + '-label'" :name="'items['+i+'][label]'" x-model="statsItems[i].label" placeholder="e.g. Counties served" class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs">
+                            </div>
+                        </div>
+                    </template>
                 </div>
             </div>
 

@@ -78,6 +78,7 @@ document.addEventListener('alpine:init', () => {
 
         statsEyebrow: @json($statsSec['eyebrow'] ?? 'By the numbers'),
         statsTitle: @json($statsSec['title'] ?? ($statsSec['stat_1_label'] ? 'Impact & Statistics' : 'Impact that compounds across communities')),
+        statsItems: @json(collect($statsItems)->values()->all()),
 
         portfolioEyebrow: @json($portfolioSec['eyebrow'] ?? 'Featured Projects'),
         portfolioTitle: @json($portfolioSec['title'] ?? 'Delivering resilient infrastructure across East Africa'),
@@ -202,7 +203,9 @@ document.addEventListener('alpine:init', () => {
             this.postToPreview({ type: 'update-field', section: section, field: field, value: value });
             const doc = this.previewDoc();
             if (!doc) return;
-            doc.querySelectorAll('[data-admin-section="' + section + '"][data-preview-field="' + field + '"]').forEach((el) => {
+            const sectionRoot = doc.getElementById(section) || doc.querySelector('[data-admin-section="' + section + '"]');
+            const scope = sectionRoot || doc;
+            scope.querySelectorAll('[data-preview-field="' + field + '"]').forEach((el) => {
                 if (el.tagName === 'IMG') {
                     if (value) el.setAttribute('src', value);
                     return;
@@ -247,6 +250,15 @@ document.addEventListener('alpine:init', () => {
                             const svc = this.findServiceById(id);
                             if (svc) {
                                 this.editService(svc);
+                            }
+                        }
+                        if (!input && /^stat_\d+$/.test(options.field)) {
+                            const idx = options.field.replace('stat_', '');
+                            input = form.querySelector('#stat-' + idx + '-value')
+                                || form.querySelector('[name="items[' + idx + '][value]"]');
+                            const card = form.querySelector('#stat-' + idx);
+                            if (card) {
+                                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
                             }
                         }
                         if (input) {
@@ -295,6 +307,10 @@ document.addEventListener('alpine:init', () => {
             if (this.activeSection === 'stats') {
                 this.pushField('stats', 'eyebrow', this.statsEyebrow);
                 this.pushField('stats', 'title', this.statsTitle);
+                this.statsItems.forEach((stat, index) => {
+                    this.pushField('stats', 'stat-' + index + '-value', stat.value || '');
+                    this.pushField('stats', 'stat-' + index + '-label', stat.label || '');
+                });
             }
             if (this.activeSection === 'portfolio') {
                 this.pushField('portfolio', 'eyebrow', this.portfolioEyebrow);
@@ -391,6 +407,12 @@ document.addEventListener('alpine:init', () => {
             this.$watch('servicesDescription', (v) => this.pushField('services', 'description', v));
             this.$watch('statsEyebrow', (v) => this.pushField('stats', 'eyebrow', v));
             this.$watch('statsTitle', (v) => this.pushField('stats', 'title', v));
+            this.$watch('statsItems', () => {
+                this.statsItems.forEach((stat, index) => {
+                    this.pushField('stats', 'stat-' + index + '-value', stat.value || '');
+                    this.pushField('stats', 'stat-' + index + '-label', stat.label || '');
+                });
+            }, { deep: true });
             this.$watch('portfolioEyebrow', (v) => this.pushField('portfolio', 'eyebrow', v));
             this.$watch('portfolioTitle', (v) => this.pushField('portfolio', 'title', v));
             this.$watch('teamEyebrow', (v) => this.pushField('team', 'eyebrow', v));

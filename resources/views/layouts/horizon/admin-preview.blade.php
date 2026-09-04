@@ -128,7 +128,9 @@
     }
 
     function applyFieldUpdate(section, field, value) {
-        document.querySelectorAll('[data-admin-section="' + section + '"][data-preview-field="' + field + '"]').forEach(function (el) {
+        var sectionRoot = document.getElementById(section) || document.querySelector('[data-admin-section="' + section + '"]');
+        var scope = sectionRoot || document;
+        scope.querySelectorAll('[data-preview-field="' + field + '"]').forEach(function (el) {
             if (el.tagName === 'IMG') {
                 if (value) el.setAttribute('src', value);
                 return;
