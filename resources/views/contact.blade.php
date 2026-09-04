@@ -20,11 +20,23 @@
 @endphp
 
 @section('page')
-<section class="hz-section hz-contact">
+@php
+    $adminPreview = request()->boolean('admin_preview');
+    $contactEditBase = $adminPreview ? route('admin.site-pages.edit', 'contact') : null;
+    $hoursPreview = collect($data['working_days'] ?? [])->map(function ($slot) use ($dayLabels) {
+        if (!isset($slot['days'], $slot['from'], $slot['to'])) {
+            return null;
+        }
+        $days = collect($slot['days'])->map(fn ($d) => $dayLabels[$d] ?? $d)->implode('–');
+
+        return $days . ': ' . substr($slot['from'], 0, 5) . ' – ' . substr($slot['to'], 0, 5);
+    })->filter()->implode("\n");
+@endphp
+<section class="hz-section hz-contact" id="contact-page">
     <div class="container">
         <div class="row g-4 g-xl-5">
             <div class="col-lg-7">
-                <p class="hz-lead mb-4">
+                <p class="hz-lead mb-4" id="contact-page-intro" data-preview-field="intro" @if($adminPreview) {!! \App\Support\AdminPreviewAttrs::html('contact-page-intro', 'intro', 'Edit Intro', true, $contactEditBase ? $contactEditBase . '#contact-intro' : null) !!} @endif>
                     {{ $contactPage['intro'] ?? $data['tagline'] ?? 'Share a brief about your project. We will respond with next steps.' }}
                 </p>
 
@@ -94,50 +106,55 @@
             </div>
 
             <div class="col-lg-5">
-                <aside class="hz-contact-panel">
+                <aside class="hz-contact-panel" id="contact-page-details"
+                    @if($adminPreview)
+                        data-admin-section="contact-page-details"
+                        data-admin-label="Edit Contact Details"
+                        data-admin-edit-url="{{ $contactEditBase }}#contact-details"
+                    @endif
+                >
                     <h3>Contact details</h3>
 
-                    <div class="hz-contact-item">
+                    <div class="hz-contact-item" id="contact-preview-email"
+                        {!! $adminPreview ? \App\Support\AdminPreviewAttrs::html('contact-page-details', 'email', 'Edit Email', true, $contactEditBase ? $contactEditBase . '#contact-emails' : null) : '' !!}
+                    >
                         <div class="label"><i class="bi bi-envelope"></i> Email</div>
                         @forelse(($data['email'] ?? []) as $email)
-                            <div><a href="mailto:{{ $email }}">{{ $email }}</a></div>
+                            <div data-preview-field="email"><a href="mailto:{{ $email }}">{{ $email }}</a></div>
                         @empty
-                            <div class="opacity-75">Not configured</div>
+                            <div class="opacity-75" data-preview-field="email">Not configured</div>
                         @endforelse
                     </div>
 
-                    <div class="hz-contact-item">
+                    <div class="hz-contact-item" id="contact-preview-phone"
+                        {!! $adminPreview ? \App\Support\AdminPreviewAttrs::html('contact-page-details', 'phone', 'Edit Phone', true, $contactEditBase ? $contactEditBase . '#contact-phones' : null) : '' !!}
+                    >
                         <div class="label"><i class="bi bi-telephone"></i> Phone</div>
                         @forelse(($data['phone'] ?? []) as $phone)
-                            <div><a href="tel:{{ preg_replace('/\s+/', '', $phone) }}">{{ $phone }}</a></div>
+                            <div data-preview-field="phone"><a href="tel:{{ preg_replace('/\s+/', '', $phone) }}">{{ $phone }}</a></div>
                         @empty
-                            <div class="opacity-75">Not configured</div>
+                            <div class="opacity-75" data-preview-field="phone">Not configured</div>
                         @endforelse
                     </div>
 
-                    <div class="hz-contact-item">
+                    <div class="hz-contact-item" id="contact-preview-address"
+                        {!! $adminPreview ? \App\Support\AdminPreviewAttrs::html('contact-page-details', 'address', 'Edit Address', true, $contactEditBase ? $contactEditBase . '#contact-address' : null) : '' !!}
+                    >
                         <div class="label"><i class="bi bi-geo-alt"></i> Address</div>
-                        <div>{{ $data['address'] ?? 'Not configured' }}</div>
+                        <div data-preview-field="address">{{ $data['address'] ?? 'Not configured' }}</div>
                     </div>
 
-                    <div class="hz-contact-item">
+                    <div class="hz-contact-item" id="contact-preview-hours"
+                        {!! $adminPreview ? \App\Support\AdminPreviewAttrs::html('contact-page-details', 'hours', 'Edit Hours', true, $contactEditBase ? $contactEditBase . '#contact-hours' : null) : '' !!}
+                    >
                         <div class="label"><i class="bi bi-clock"></i> Working hours</div>
-                        @forelse(($data['working_days'] ?? []) as $slot)
-                            @if(isset($slot['days'], $slot['from'], $slot['to']))
-                                @php
-                                    $days = collect($slot['days'])->map(fn ($d) => $dayLabels[$d] ?? $d)->implode('–');
-                                @endphp
-                                <div>{{ $days }}: {{ substr($slot['from'], 0, 5) }} – {{ substr($slot['to'], 0, 5) }}</div>
-                            @endif
-                        @empty
-                            <div class="opacity-75">Not configured</div>
-                        @endforelse
+                        <div data-preview-field="hours" style="white-space: pre-line;">{{ $hoursPreview !== '' ? $hoursPreview : 'Not configured' }}</div>
                     </div>
 
-                    <div class="hz-contact-item mb-0">
+                    <div class="hz-contact-item mb-0" id="contact-preview-social">
                         <div class="label">Social</div>
                         <div class="hz-social hz-social-on-dark">
-                            <x-social-media />
+                            <x-social-media :contact-page-edit="true" />
                         </div>
                     </div>
                 </aside>

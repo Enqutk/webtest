@@ -3,14 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\Concerns\ResolvesSitePageEditorContext;
+use App\Http\Controllers\Admin\Concerns\SyncsOrganizationContacts;
 use App\Http\Controllers\Controller;
+use App\Enums\StatusEnum;
 use App\Models\Organization;
+use App\Models\OrganizationContact;
+use App\Models\SocialRef;
 use App\Support\ThemeMedia;
 use Illuminate\Http\Request;
 
 class SitePageController extends Controller
 {
     use ResolvesSitePageEditorContext;
+    use SyncsOrganizationContacts;
 
     public const PAGES = [
         'about' => [
@@ -47,9 +52,25 @@ class SitePageController extends Controller
         $meta = self::PAGES[$page];
         $context = $this->sitePageEditorContext($currentOrg, $page, $meta);
 
+        $extras = [];
+        if ($page === 'contact') {
+            $contacts = OrganizationContact::query()
+                ->where('organization_id', $currentOrg->id)
+                ->where('status', StatusEnum::active)
+                ->orderBy('id')
+                ->get()
+                ->groupBy('type');
+            $socials = SocialRef::query()
+                ->where('organization_id', $currentOrg->id)
+                ->orderBy('order')
+                ->get();
+            $extras = compact('contacts', 'socials');
+        }
+
         return view('admin.site-pages.' . $page, array_merge(
             compact('currentOrg', 'page'),
-            $context
+            $context,
+            $extras
         ));
     }
 
@@ -63,12 +84,7 @@ class SitePageController extends Controller
 
         $payload = match ($page) {
             'about' => $this->aboutPayload($request, $existing),
-            'contact' => [
-                'eyebrow' => $request->input('eyebrow'),
-                'title' => $request->input('title'),
-                'description' => $request->input('description'),
-                'intro' => $request->input('intro'),
-            ],
+            'contact' => $this->contactPayload($request),
             default => [
                 'eyebrow' => $request->input('eyebrow'),
                 'title' => $request->input('title'),
@@ -80,7 +96,64 @@ class SitePageController extends Controller
         $currentOrg->theme = $theme;
         $currentOrg->save();
 
+        if ($page === 'contact') {
+            $this->saveContactDetails($request, $currentOrg);
+        }
+
         return back()->with('success', self::PAGES[$page]['label'] . ' saved. This page only — other pages are unchanged.');
+    }
+
+    private function contactPayload(Request $request): array
+    {
+        return [
+            'eyebrow' => $request->input('eyebrow'),
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'intro' => $request->input('intro'),
+        ];
+    }
+
+    private function saveContactDetails(Request $request, Organization $currentOrg): void
+    {
+        $validated = $request->validate([
+            'address' => ['nullable', 'string', 'max:500'],
+            'contact_emails' => ['nullable', 'array'],
+            'contact_emails.*' => ['nullable', 'email', 'max:255'],
+            'contact_phones' => ['nullable', 'array'],
+            'contact_phones.*' => ['nullable', 'string', 'max:50'],
+            'opening_hours' => ['nullable', 'array'],
+            'opening_hours.*.days' => ['nullable', 'array'],
+            'opening_hours.*.days.*' => ['nullable', 'string', 'max:10'],
+            'opening_hours.*.from' => ['nullable', 'string', 'max:10'],
+            'opening_hours.*.to' => ['nullable', 'string', 'max:10'],
+        ]);
+
+        $openingHours = collect($validated['opening_hours'] ?? [])
+            ->map(function ($slot) {
+                $days = array_values(array_filter($slot['days'] ?? []));
+                $from = $slot['from'] ?? '';
+                $to = $slot['to'] ?? '';
+                if ($days === [] || $from === '' || $to === '') {
+                    return null;
+                }
+
+                return [
+                    'days' => $days,
+                    'from' => strlen($from) === 5 ? $from . ':00' : $from,
+                    'to' => strlen($to) === 5 ? $to . ':00' : $to,
+                ];
+            })
+            ->filter()
+            ->values()
+            ->all();
+
+        $currentOrg->update([
+            'address' => $validated['address'] ?? null,
+            'opening_hours' => $openingHours,
+        ]);
+
+        $this->syncContacts($currentOrg, 'email', $validated['contact_emails'] ?? []);
+        $this->syncContacts($currentOrg, 'phone', $validated['contact_phones'] ?? []);
     }
 
     private function aboutPayload(Request $request, array $existing): array

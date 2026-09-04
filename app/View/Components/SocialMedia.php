@@ -13,8 +13,11 @@ class SocialMedia extends Component
 {
     public $socialRefs;
 
-    public function __construct()
+    public bool $contactPageEdit;
+
+    public function __construct(bool $contactPageEdit = false)
     {
+        $this->contactPageEdit = $contactPageEdit;
         $org = Organization::resolvePublicCurrent();
         $theme = $org ? $org->resolvedTheme() : Organization::defaultTheme();
 

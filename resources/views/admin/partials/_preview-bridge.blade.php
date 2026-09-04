@@ -16,6 +16,10 @@
         return window.location.pathname.endsWith('/admin/site-pages/about');
     }
 
+    function isContactPageEditor() {
+        return window.location.pathname.endsWith('/admin/site-pages/contact');
+    }
+
     function isSameAdminPath(url) {
         if (!url) return false;
         try {
@@ -38,6 +42,7 @@
         if (!editTargets[section]) return false;
         if (isHomeBuilderPage() && homeSections.indexOf(section) !== -1) return false;
         if (isAboutPageEditor() && (section === 'about-page-intro' || section === 'about-page-story' || section === 'page-hero' || section === 'about')) return false;
+        if (isContactPageEditor() && (section === 'contact-page-intro' || section === 'contact-page-details' || section === 'contact-page-social' || section === 'page-hero' || section === 'site-social')) return false;
         return true;
     }
 
@@ -134,6 +139,45 @@
             var storyInputName = field ? (storyFieldMap[field] || null) : null;
             var storyInput = storyInputName ? story.querySelector('[name="' + storyInputName + '"]') : story.querySelector('input, textarea');
             if (storyInput) storyInput.focus();
+            return true;
+        }
+
+        if (section === 'contact-page-intro') {
+            var intro = document.getElementById('contact-intro');
+            if (!intro) return false;
+            intro.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            var introInput = intro.querySelector('[name="intro"]');
+            if (introInput) introInput.focus();
+            return true;
+        }
+
+        if (section === 'contact-page-details') {
+            var details = document.getElementById('contact-details');
+            if (!details) return false;
+            details.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            var contactFieldMap = {
+                email: '#contact-emails',
+                phone: '#contact-phones',
+                address: '#contact-address',
+                hours: '#contact-hours',
+            };
+            var anchor = field ? contactFieldMap[field] : null;
+            if (anchor) {
+                var block = details.querySelector(anchor);
+                if (block) {
+                    block.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    var input = block.querySelector('input, textarea');
+                    if (input) input.focus();
+                }
+            }
+            return true;
+        }
+
+        if (section === 'contact-page-social' || section === 'site-social') {
+            if (!isContactPageEditor()) return false;
+            var social = document.getElementById('contact-social');
+            if (!social) return false;
+            social.scrollIntoView({ behavior: 'smooth', block: 'start' });
             return true;
         }
 

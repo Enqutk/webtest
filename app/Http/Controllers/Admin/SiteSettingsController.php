@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\StatusEnum;
 use App\Http\Controllers\Admin\Concerns\ResolvesSitePageEditorContext;
+use App\Http\Controllers\Admin\Concerns\SyncsOrganizationContacts;
 use App\Http\Controllers\Controller;
 use App\Models\Organization;
 use App\Models\OrganizationContact;
@@ -14,6 +15,7 @@ use Illuminate\Http\Request;
 class SiteSettingsController extends Controller
 {
     use ResolvesSitePageEditorContext;
+    use SyncsOrganizationContacts;
 
     public function __construct(
         private readonly NavbarMenuService $navbarMenuService,
@@ -121,27 +123,5 @@ class SiteSettingsController extends Controller
         return redirect()
             ->to(route('admin.site-settings.index') . '#' . $hash)
             ->with('success', 'Site settings saved.');
-    }
-
-    private function syncContacts(Organization $org, string $type, array $values): void
-    {
-        OrganizationContact::query()
-            ->where('organization_id', $org->id)
-            ->where('type', $type)
-            ->delete();
-
-        foreach ($values as $value) {
-            $value = trim((string) $value);
-            if ($value === '') {
-                continue;
-            }
-
-            OrganizationContact::create([
-                'organization_id' => $org->id,
-                'type' => $type,
-                'value' => $value,
-                'status' => StatusEnum::active,
-            ]);
-        }
     }
 }

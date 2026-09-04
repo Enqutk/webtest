@@ -790,7 +790,7 @@
             <div class="flex items-center justify-between border-b border-slate-100 pb-4">
                 <div>
                     <h3 class="text-sm font-bold text-slate-900">Clients & Partners Section</h3>
-                    <p class="text-xs text-slate-500">Configure the clients section headlines. Logos are managed under Portfolio / Entities.</p>
+                    <p class="text-xs text-slate-500">Section headlines plus individual client and partner logos below.</p>
                 </div>
                 <label class="flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer">
                     <input type="checkbox" name="is_visible" value="1" {{ !empty($clientsSec['is_visible']) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">

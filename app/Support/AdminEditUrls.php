@@ -102,6 +102,9 @@ class AdminEditUrls
 
         $targets['about-page-intro'] = self::sitePages('about', 'about-page-intro');
         $targets['about-page-story'] = self::sitePages('about', 'about-page-story');
+        $targets['contact-page-intro'] = self::sitePages('contact', 'contact-intro');
+        $targets['contact-page-details'] = self::sitePages('contact', 'contact-details');
+        $targets['contact-page-social'] = self::sitePages('contact', 'contact-social');
 
         return array_filter($targets);
     }

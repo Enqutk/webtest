@@ -36,10 +36,10 @@
             @endphp
             <a href="{{ $link }}" target="_blank" rel="noopener noreferrer" title="{{ $title }}" aria-label="{{ $title }}" class="hz-social-btn"
                 @if($adminPreview)
-                    data-admin-section="site-social"
+                    data-admin-section="{{ $contactPageEdit ? 'contact-page-social' : 'site-social' }}"
                     data-admin-compact="1"
                     data-admin-label="Edit Social"
-                    data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('social') }}"
+                    data-admin-edit-url="{{ $contactPageEdit ? route('admin.site-pages.edit', 'contact') . '#contact-social' : \App\Support\AdminEditUrls::siteSettings('social') }}"
                 @endif
             >
                 <i class="{{ $icon }}"></i>
