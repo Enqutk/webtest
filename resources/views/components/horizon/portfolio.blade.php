@@ -16,20 +16,22 @@
     $targetCtaUrl = $ctaUrl ?: route('portfolio.index');
 @endphp
 
-<section class="hz-section hz-portfolio" id="portfolio">
+<section class="hz-section hz-portfolio" id="portfolio" data-admin-section="portfolio" data-admin-label="Edit Portfolio">
     <div class="container">
         @if($showHeader)
             <div class="row justify-content-between align-items-end mb-4 g-3">
                 <div class="col-lg-7">
-                    <p class="hz-eyebrow">{{ $eyebrow }}</p>
-                    <h2 class="hz-title mb-0">{{ $title }}</h2>
+                    <p class="hz-eyebrow" data-preview-field="eyebrow">{{ $eyebrow }}</p>
+                    <h2 class="hz-title mb-0" data-preview-field="title">{{ $title }}</h2>
                     @if($description)
-                        <p class="hz-lead text-muted mt-2 mb-0">{{ $description }}</p>
+                        <p class="hz-lead text-muted mt-2 mb-0" data-preview-field="description">{{ $description }}</p>
+                    @else
+                        <p class="hz-lead text-muted mt-2 mb-0" data-preview-field="description" style="display:none"></p>
                     @endif
                 </div>
                 @if(!$showFilters)
                     <div class="col-lg-auto">
-                        <a href="{{ $targetCtaUrl }}" class="btn-hz-outline">{{ $ctaText }}</a>
+                        <a href="{{ $targetCtaUrl }}" class="btn-hz-outline" data-preview-field="cta_text">{{ $ctaText }}</a>
                     </div>
                 @endif
             </div>

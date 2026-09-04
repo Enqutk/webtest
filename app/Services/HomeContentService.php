@@ -156,13 +156,23 @@ class HomeContentService
                 'subtitle' => $sitePages['about']['intro']['eyebrow']
                     ?? $homeSections['about']['eyebrow']
                     ?? ($aboutFeaturesBlock?->subtitle ?: 'Who we are'),
-                'description' => !empty($sitePages['about']['intro']['description'])
-                    ? nl2br(e($sitePages['about']['intro']['description']))
-                    : (
-                        !empty($homeSections['about']['description'])
-                            ? nl2br(e($homeSections['about']['description']))
-                            : ($aboutFeaturesBlock ? html_entity_decode((string) $aboutFeaturesBlock->content) : '')
-                    ),
+                'description' => (function () use ($sitePages, $homeSections, $aboutFeaturesBlock) {
+                    if (!empty($sitePages['about']['intro']['description'])) {
+                        return nl2br(e($sitePages['about']['intro']['description']));
+                    }
+                    $about = $homeSections['about'] ?? [];
+                    $copy = $about['description']
+                        ?? trim(collect([
+                            $about['paragraph_1'] ?? null,
+                            $about['paragraph_2'] ?? null,
+                        ])->filter()->implode("\n\n"));
+                    if ($copy !== '') {
+                        return nl2br(e($copy));
+                    }
+                    return $aboutFeaturesBlock
+                        ? html_entity_decode((string) $aboutFeaturesBlock->content)
+                        : '';
+                })(),
                 'points' => $sitePages['about']['intro']['points']
                     ?? $homeSections['about']['points']
                     ?? [],

@@ -4,7 +4,56 @@
 @section('page-title', 'Home Page Visual Builder')
 @section('page-subtitle', $currentOrg->title)
 
+@push('styles')
+<style>
+    /* Side-by-side builder: forms left, live preview right (works inside admin sidebar layout) */
+    .home-builder-shell {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+        width: 100%;
+    }
+    @media (min-width: 768px) {
+        .home-builder-shell {
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+        .home-builder-editor {
+            flex: 0 0 38%;
+            width: 38%;
+            max-width: 38%;
+            min-width: 0;
+        }
+        .home-builder-preview {
+            flex: 1 1 62%;
+            width: 62%;
+            min-width: 0;
+            position: sticky;
+            top: 0.75rem;
+            align-self: flex-start;
+        }
+    }
+    @media (min-width: 1280px) {
+        .home-builder-editor {
+            flex-basis: 34%;
+            width: 34%;
+            max-width: 34%;
+        }
+        .home-builder-preview {
+            flex-basis: 66%;
+            width: 66%;
+        }
+    }
+</style>
+@endpush
+
 @section('content')
+@php
+    $liveHomeUrl = route('card.home', ['slug' => $currentOrg->slug, 'admin_preview' => 1]);
+    $liveHomeOpenUrl = route('card.home', ['slug' => $currentOrg->slug]);
+@endphp
+
 @php
     $hero = $sections['hero'] ?? \App\Models\Organization::defaultHomeSections()['hero'];
     $about = $sections['about'] ?? \App\Models\Organization::defaultHomeSections()['about'];
@@ -16,10 +65,23 @@
     $ctaSec = $sections['cta'] ?? \App\Models\Organization::defaultHomeSections()['cta'];
 
     $heroSlides = $hero['slides'] ?? \App\Models\Organization::defaultHeroSlides();
+    $sectionLabels = [
+        'hero' => 'Hero Banner',
+        'about' => 'About & Mission',
+        'services' => 'Services Section',
+        'stats' => 'Impact & Stats',
+        'portfolio' => 'Portfolio Section',
+        'team' => 'Leadership Team',
+        'clients' => 'Clients & Partners',
+        'cta' => 'CTA Banner',
+    ];
 @endphp
 
 <div class="space-y-6" x-data="{
     activeSection: 'hero',
+    previewOpen: true,
+    previewReady: false,
+    sectionLabels: @json($sectionLabels),
     openSlideModal: false,
     editingSlideIndex: null,
     slideTitle: '',
@@ -30,7 +92,6 @@
     slideShape: 'inherit',
     slideVisible: true,
 
-    // Team Modal
     openTeamModal: false,
     editingMemberId: null,
     memberFirst: '',
@@ -40,6 +101,36 @@
     memberOrder: 1,
     memberStatus: 'active',
     memberFounder: false,
+
+    // Live preview drafts (exact text being edited)
+    heroBadge: @json($hero['badge'] ?? 'Infrastructure · Engineering · Impact'),
+    heroSubtitle: @json($hero['subtitle'] ?? 'Engineering Excellence'),
+    heroTitle: @json($hero['title'] ?? 'Building resilient infrastructure for lasting communities'),
+    heroDescription: @json($hero['description'] ?? ''),
+    heroCtaText: @json($hero['cta_text'] ?? 'Explore Our Work'),
+    heroSecondaryCtaText: @json($hero['secondary_cta_text'] ?? 'Our Services'),
+
+    aboutEyebrow: @json($about['eyebrow'] ?? 'About our firm'),
+    aboutTitle: @json($about['title'] ?? 'Rooted in East Africa, built for scale'),
+    aboutP1: @json($about['paragraph_1'] ?? ($about['description'] ?? '')),
+    aboutP2: @json($about['paragraph_2'] ?? ''),
+
+    servicesEyebrow: @json($servicesSec['eyebrow'] ?? 'Core Capabilities'),
+    servicesTitle: @json($servicesSec['title'] ?? 'Integrated solutions for complex infrastructure'),
+    servicesDescription: @json($servicesSec['description'] ?? ''),
+
+    statsEyebrow: @json($statsSec['eyebrow'] ?? 'By the numbers'),
+    statsTitle: @json($statsSec['title'] ?? ($statsSec['stat_1_label'] ? 'Impact & Statistics' : 'Impact that compounds across communities')),
+
+    portfolioEyebrow: @json($portfolioSec['eyebrow'] ?? 'Featured Projects'),
+    portfolioTitle: @json($portfolioSec['title'] ?? 'Delivering resilient infrastructure across East Africa'),
+
+    teamEyebrow: @json($teamSec['eyebrow'] ?? 'Leadership & Team'),
+    teamTitle: @json($teamSec['title'] ?? 'Experienced engineers & hydrologists'),
+    teamDescription: @json($teamSec['description'] ?? ''),
+
+    ctaTitle: @json($ctaSec['title'] ?? 'Ready to build water infrastructure that lasts?'),
+    ctaButtonText: @json($ctaSec['button_text'] ?? 'Talk to an engineer'),
 
     editSlide(index, slide) {
         this.editingSlideIndex = index;
@@ -87,6 +178,217 @@
         this.memberStatus = 'active';
         this.memberFounder = false;
         this.openTeamModal = true;
+    },
+
+    previewFrame() {
+        return this.$refs.previewFrame || null;
+    },
+
+    previewDoc() {
+        const frame = this.previewFrame();
+        if (!frame) return null;
+        try {
+            return frame.contentDocument || frame.contentWindow.document;
+        } catch (e) {
+            return null;
+        }
+    },
+
+    postToPreview(payload) {
+        const frame = this.previewFrame();
+        if (!frame || !frame.contentWindow) return;
+        frame.contentWindow.postMessage({
+            source: 'admin-home-preview-parent',
+            ...payload,
+        }, '*');
+    },
+
+    focusPreviewSection(section = this.activeSection) {
+        this.postToPreview({ type: 'focus-section', section });
+        const doc = this.previewDoc();
+        if (!doc) return;
+        doc.querySelectorAll('[data-admin-section]').forEach((el) => el.classList.remove('is-admin-focused'));
+        const target = doc.querySelector('[data-admin-section="' + section + '"]');
+        if (!target) return;
+        target.classList.add('is-admin-focused');
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    },
+
+    pushField(section, field, value) {
+        this.postToPreview({ type: 'update-field', section, field, value });
+        const doc = this.previewDoc();
+        if (!doc) return;
+        const root = doc.querySelector('[data-admin-section="' + section + '"]');
+        if (!root) return;
+        root.querySelectorAll('[data-preview-field="' + field + '"]').forEach((el) => {
+            if (el.tagName === 'IMG') {
+                if (value) el.setAttribute('src', value);
+                return;
+            }
+            if (el.getAttribute('data-preview-html') === '1') {
+                el.innerHTML = value || '';
+            } else {
+                el.textContent = value || '';
+            }
+            if (el.style && el.style.display === 'none') {
+                el.style.display = value ? '' : 'none';
+            }
+        });
+    },
+
+    selectSection(section, { fromPreview = false } = {}) {
+        if (!section) return;
+        this.activeSection = section;
+        this.$nextTick(() => {
+            this.focusPreviewSection(section);
+            const form = document.getElementById('admin-form-' + section);
+            if (form) {
+                form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        });
+    },
+
+    aboutPreviewHtml() {
+        const parts = [this.aboutP1, this.aboutP2].filter(Boolean);
+        return parts.map((p) => p.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>')).join('<br><br>');
+    },
+
+    syncActiveSectionToPreview() {
+        if (!this.previewReady) return;
+        this.focusPreviewSection(this.activeSection);
+
+        if (this.activeSection === 'hero') {
+            this.pushField('hero', 'badge', this.heroBadge);
+            this.pushField('hero', 'title', this.heroTitle);
+            this.pushField('hero', 'description', this.heroDescription);
+            this.pushField('hero', 'cta_text', this.heroCtaText);
+            this.pushField('hero', 'secondary_cta_text', this.heroSecondaryCtaText);
+        }
+        if (this.activeSection === 'about') {
+            this.pushField('about', 'eyebrow', this.aboutEyebrow);
+            this.pushField('about', 'title', this.aboutTitle);
+            this.pushField('about', 'description', this.aboutPreviewHtml());
+        }
+        if (this.activeSection === 'services') {
+            this.pushField('services', 'eyebrow', this.servicesEyebrow);
+            this.pushField('services', 'title', this.servicesTitle);
+            this.pushField('services', 'description', this.servicesDescription);
+        }
+        if (this.activeSection === 'stats') {
+            this.pushField('stats', 'eyebrow', this.statsEyebrow);
+            this.pushField('stats', 'title', this.statsTitle);
+        }
+        if (this.activeSection === 'portfolio') {
+            this.pushField('portfolio', 'eyebrow', this.portfolioEyebrow);
+            this.pushField('portfolio', 'title', this.portfolioTitle);
+        }
+        if (this.activeSection === 'team') {
+            this.pushField('team', 'eyebrow', this.teamEyebrow);
+            this.pushField('team', 'title', this.teamTitle);
+            this.pushField('team', 'description', this.teamDescription);
+        }
+        if (this.activeSection === 'cta') {
+            this.pushField('cta', 'title', this.ctaTitle);
+            this.pushField('cta', 'button_text', this.ctaButtonText);
+        }
+    },
+
+    wirePreviewInteractions() {
+        const doc = this.previewDoc();
+        if (!doc || !doc.body) return;
+
+        doc.body.classList.add('admin-preview-mode');
+
+        if (!doc.getElementById('admin-preview-parent-style')) {
+            const style = doc.createElement('style');
+            style.id = 'admin-preview-parent-style';
+            style.textContent = `
+                body.admin-preview-mode [data-admin-section]{position:relative;cursor:pointer!important;outline:2px solid transparent;outline-offset:-2px}
+                body.admin-preview-mode [data-admin-section]::after{content:attr(data-admin-label);position:absolute;top:10px;right:10px;z-index:9999;background:rgba(15,23,42,.9);color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;padding:6px 10px;border-radius:8px;opacity:0;pointer-events:none}
+                body.admin-preview-mode [data-admin-section]:hover{outline-color:rgba(234,88,12,.7);box-shadow:inset 0 0 0 9999px rgba(234,88,12,.07)}
+                body.admin-preview-mode [data-admin-section]:hover::after,body.admin-preview-mode [data-admin-section].is-admin-focused::after{opacity:1}
+                body.admin-preview-mode [data-admin-section].is-admin-focused{outline-color:#ea580c;box-shadow:inset 0 0 0 9999px rgba(234,88,12,.1)}
+                body.admin-preview-mode [data-admin-section].is-admin-focused::after{background:#ea580c}
+                body.admin-preview-mode a,body.admin-preview-mode button{pointer-events:none!important}
+            `;
+            (doc.head || doc.body).appendChild(style);
+        }
+
+        const map = [
+            { key: 'hero', label: 'Edit Hero', sel: '[data-admin-section="hero"], section.hz-hero, .hz-hero' },
+            { key: 'about', label: 'Edit About', sel: '[data-admin-section="about"], #about, section.hz-about' },
+            { key: 'services', label: 'Edit Services', sel: '[data-admin-section="services"], #services, section.hz-services' },
+            { key: 'stats', label: 'Edit Stats', sel: '[data-admin-section="stats"], section.hz-stats' },
+            { key: 'portfolio', label: 'Edit Portfolio', sel: '[data-admin-section="portfolio"], #portfolio, section.hz-portfolio' },
+            { key: 'clients', label: 'Edit Clients', sel: '[data-admin-section="clients"], section.hz-clients' },
+            { key: 'team', label: 'Edit Team', sel: '[data-admin-section="team"], #team, section.hz-team' },
+            { key: 'cta', label: 'Edit CTA', sel: '[data-admin-section="cta"], section.hz-cta' },
+        ];
+
+        const self = this;
+        map.forEach(({ key, label, sel }) => {
+            doc.querySelectorAll(sel).forEach((el) => {
+                if (!el.getAttribute('data-admin-section')) {
+                    el.setAttribute('data-admin-section', key);
+                }
+                el.setAttribute('data-admin-label', label);
+                if (el.dataset.adminWired === '1') return;
+                el.dataset.adminWired = '1';
+                el.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    self.selectSection(key, { fromPreview: true });
+                }, true);
+            });
+        });
+
+        this.previewReady = true;
+        this.syncActiveSectionToPreview();
+    },
+
+    onPreviewLoad() {
+        // Give the iframe a tick to finish painting scripts/DOM
+        setTimeout(() => this.wirePreviewInteractions(), 50);
+        setTimeout(() => this.wirePreviewInteractions(), 300);
+    },
+
+    init() {
+        window.addEventListener('message', (event) => {
+            const data = event.data || {};
+            if (data.source !== 'admin-home-preview') return;
+
+            if (data.type === 'ready') {
+                this.previewReady = true;
+                this.wirePreviewInteractions();
+            }
+
+            if (data.type === 'section-click' && data.section) {
+                this.selectSection(data.section, { fromPreview: true });
+            }
+        });
+
+        this.$watch('activeSection', () => this.syncActiveSectionToPreview());
+        this.$watch('heroBadge', (v) => this.pushField('hero', 'badge', v));
+        this.$watch('heroTitle', (v) => this.pushField('hero', 'title', v));
+        this.$watch('heroDescription', (v) => this.pushField('hero', 'description', v));
+        this.$watch('heroCtaText', (v) => this.pushField('hero', 'cta_text', v));
+        this.$watch('heroSecondaryCtaText', (v) => this.pushField('hero', 'secondary_cta_text', v));
+        this.$watch('aboutEyebrow', (v) => this.pushField('about', 'eyebrow', v));
+        this.$watch('aboutTitle', (v) => this.pushField('about', 'title', v));
+        this.$watch('aboutP1', () => this.pushField('about', 'description', this.aboutPreviewHtml()));
+        this.$watch('aboutP2', () => this.pushField('about', 'description', this.aboutPreviewHtml()));
+        this.$watch('servicesEyebrow', (v) => this.pushField('services', 'eyebrow', v));
+        this.$watch('servicesTitle', (v) => this.pushField('services', 'title', v));
+        this.$watch('servicesDescription', (v) => this.pushField('services', 'description', v));
+        this.$watch('statsEyebrow', (v) => this.pushField('stats', 'eyebrow', v));
+        this.$watch('statsTitle', (v) => this.pushField('stats', 'title', v));
+        this.$watch('portfolioEyebrow', (v) => this.pushField('portfolio', 'eyebrow', v));
+        this.$watch('portfolioTitle', (v) => this.pushField('portfolio', 'title', v));
+        this.$watch('teamEyebrow', (v) => this.pushField('team', 'eyebrow', v));
+        this.$watch('teamTitle', (v) => this.pushField('team', 'title', v));
+        this.$watch('teamDescription', (v) => this.pushField('team', 'description', v));
+        this.$watch('ctaTitle', (v) => this.pushField('cta', 'title', v));
+        this.$watch('ctaButtonText', (v) => this.pushField('cta', 'button_text', v));
     }
 }">
 
@@ -138,28 +440,38 @@
 
     <!-- Top Section Switcher Navigation -->
     <div class="bg-white rounded-2xl border border-slate-200/80 p-2 shadow-sm flex flex-wrap gap-1.5 sticky top-2 z-20 backdrop-blur-md bg-white/95">
-        <button type="button" @click="activeSection = 'hero'" :class="activeSection === 'hero' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+        <button type="button" @click="selectSection('hero')" :class="activeSection === 'hero' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
             <span>Hero ({{ count($heroSlides) }})</span>
         </button>
-        <button type="button" @click="activeSection = 'about'" :class="activeSection === 'about' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+        <button type="button" @click="selectSection('about')" :class="activeSection === 'about' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
             <span>About</span>
         </button>
-        <button type="button" @click="activeSection = 'services'" :class="activeSection === 'services' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+        <button type="button" @click="selectSection('services')" :class="activeSection === 'services' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
             <span>Services</span>
         </button>
-        <button type="button" @click="activeSection = 'stats'" :class="activeSection === 'stats' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+        <button type="button" @click="selectSection('stats')" :class="activeSection === 'stats' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
             <span>Impact & Stats</span>
         </button>
-        <button type="button" @click="activeSection = 'portfolio'" :class="activeSection === 'portfolio' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+        <button type="button" @click="selectSection('portfolio')" :class="activeSection === 'portfolio' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
             <span>Portfolio</span>
         </button>
-        <button type="button" @click="activeSection = 'cta'" :class="activeSection === 'cta' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+        <button type="button" @click="selectSection('team')" :class="activeSection === 'team' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+            <span>Team ({{ $teamMembers->count() }})</span>
+        </button>
+        <button type="button" @click="selectSection('clients')" :class="activeSection === 'clients' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+            <span>Clients</span>
+        </button>
+        <button type="button" @click="selectSection('cta')" :class="activeSection === 'cta' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
             <span>CTA</span>
         </button>
     </div>
 
+    <div class="home-builder-shell">
+        <!-- LEFT: forms -->
+        <div class="home-builder-editor space-y-6">
+
     <!-- 🌟 SECTION 1: HERO BANNER & SLIDES -->
-    <div x-show="activeSection === 'hero'" class="space-y-6">
+    <div id="admin-form-hero" x-show="activeSection === 'hero'" class="space-y-6">
         <!-- Banner Settings Form -->
         <form action="{{ route('admin.home-sections.update') }}" method="POST" class="bg-white rounded-2xl border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-6">
             @csrf
@@ -179,11 +491,11 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Eyebrow / Badge</label>
-                    <input type="text" name="badge" value="{{ $hero['badge'] ?? 'Infrastructure · Engineering · Impact' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    <input type="text" name="badge" x-model="heroBadge" value="{{ $hero['badge'] ?? 'Infrastructure · Engineering · Impact' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Category / Subtitle</label>
-                    <input type="text" name="subtitle" value="{{ $hero['subtitle'] ?? 'Engineering Excellence' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    <input type="text" name="subtitle" x-model="heroSubtitle" value="{{ $hero['subtitle'] ?? 'Engineering Excellence' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Hero Photo Shape Preset</label>
@@ -197,19 +509,19 @@
 
             <div class="space-y-1.5">
                 <label class="block text-xs font-bold text-slate-700">Main Headline <span class="text-rose-500">*</span></label>
-                <input type="text" name="title" value="{{ $hero['title'] ?? 'Building resilient infrastructure for lasting communities' }}" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:bg-white transition">
+                <input type="text" name="title" x-model="heroTitle" value="{{ $hero['title'] ?? 'Building resilient infrastructure for lasting communities' }}" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:bg-white transition">
             </div>
 
             <div class="space-y-1.5">
                 <label class="block text-xs font-bold text-slate-700">Supporting Description</label>
-                <textarea name="description" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $hero['description'] ?? '' }}</textarea>
+                <textarea name="description" x-model="heroDescription" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $hero['description'] ?? '' }}</textarea>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-100">
                 <div class="grid grid-cols-2 gap-3">
                     <div class="space-y-1.5">
                         <label class="block text-xs font-bold text-slate-700">Primary Button Text</label>
-                        <input type="text" name="cta_text" value="{{ $hero['cta_text'] ?? 'Explore Our Work' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                        <input type="text" name="cta_text" x-model="heroCtaText" value="{{ $hero['cta_text'] ?? 'Explore Our Work' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                     </div>
                     <div class="space-y-1.5">
                         <label class="block text-xs font-bold text-slate-700">Primary Link</label>
@@ -220,7 +532,7 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div class="space-y-1.5">
                         <label class="block text-xs font-bold text-slate-700">Secondary Button Text</label>
-                        <input type="text" name="secondary_cta_text" value="{{ $hero['secondary_cta_text'] ?? 'Our Services' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                        <input type="text" name="secondary_cta_text" x-model="heroSecondaryCtaText" value="{{ $hero['secondary_cta_text'] ?? 'Our Services' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                     </div>
                     <div class="space-y-1.5">
                         <label class="block text-xs font-bold text-slate-700">Secondary Link</label>
@@ -304,7 +616,7 @@
     </div>
 
     <!-- 👥 SECTION 6: LEADERSHIP TEAM -->
-    <div x-show="activeSection === 'team'" class="space-y-6" x-cloak>
+    <div id="admin-form-team" x-show="activeSection === 'team'" class="space-y-6" x-cloak>
         <!-- Team Section Header Config -->
         <form action="{{ route('admin.home-sections.update') }}" method="POST" class="bg-white rounded-2xl border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-6">
             @csrf
@@ -324,11 +636,11 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Section Eyebrow</label>
-                    <input type="text" name="eyebrow" value="{{ $teamSec['eyebrow'] ?? 'Leadership & Team' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    <input type="text" name="eyebrow" x-model="teamEyebrow" value="{{ $teamSec['eyebrow'] ?? 'Leadership & Team' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Section Heading</label>
-                    <input type="text" name="title" value="{{ $teamSec['title'] ?? 'Experienced engineers & hydrologists' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    <input type="text" name="title" x-model="teamTitle" value="{{ $teamSec['title'] ?? 'Experienced engineers & hydrologists' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Team Photo Shape Preset</label>
@@ -342,7 +654,7 @@
 
             <div class="space-y-1.5">
                 <label class="block text-xs font-bold text-slate-700">Section Description</label>
-                <textarea name="description" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $teamSec['description'] ?? '' }}</textarea>
+                <textarea name="description" x-model="teamDescription" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $teamSec['description'] ?? '' }}</textarea>
             </div>
 
             <div class="flex justify-end pt-2">
@@ -410,7 +722,7 @@
     </div>
 
     <!-- 🏛️ SECTION 2: ABOUT SECTION -->
-    <div x-show="activeSection === 'about'" class="space-y-6" x-cloak>
+    <div id="admin-form-about" x-show="activeSection === 'about'" class="space-y-6" x-cloak>
         <form action="{{ route('admin.home-sections.update') }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-2xl border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-6">
             @csrf
             <input type="hidden" name="section" value="about">
@@ -429,11 +741,11 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Eyebrow</label>
-                    <input type="text" name="eyebrow" value="{{ $about['eyebrow'] ?? 'About our firm' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    <input type="text" name="eyebrow" x-model="aboutEyebrow" value="{{ $about['eyebrow'] ?? 'About our firm' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Headline</label>
-                    <input type="text" name="title" value="{{ $about['title'] ?? 'Rooted in East Africa, built for scale' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    <input type="text" name="title" x-model="aboutTitle" value="{{ $about['title'] ?? 'Rooted in East Africa, built for scale' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">About Photo Shape Preset</label>
@@ -447,12 +759,12 @@
 
             <div class="space-y-1.5">
                 <label class="block text-xs font-bold text-slate-700">Paragraph 1</label>
-                <textarea name="paragraph_1" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $about['paragraph_1'] ?? '' }}</textarea>
+                <textarea name="paragraph_1" x-model="aboutP1" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $about['paragraph_1'] ?? '' }}</textarea>
             </div>
 
             <div class="space-y-1.5">
                 <label class="block text-xs font-bold text-slate-700">Paragraph 2</label>
-                <textarea name="paragraph_2" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $about['paragraph_2'] ?? '' }}</textarea>
+                <textarea name="paragraph_2" x-model="aboutP2" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $about['paragraph_2'] ?? '' }}</textarea>
             </div>
 
             <div class="flex justify-end pt-2">
@@ -464,7 +776,7 @@
     </div>
 
     <!-- 🔧 SECTION 3: SERVICES SECTION -->
-    <div x-show="activeSection === 'services'" class="space-y-6" x-cloak>
+    <div id="admin-form-services" x-show="activeSection === 'services'" class="space-y-6" x-cloak>
         <form action="{{ route('admin.home-sections.update') }}" method="POST" class="bg-white rounded-2xl border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-6">
             @csrf
             <input type="hidden" name="section" value="services">
@@ -483,17 +795,17 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Eyebrow</label>
-                    <input type="text" name="eyebrow" value="{{ $servicesSec['eyebrow'] ?? 'Core Capabilities' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    <input type="text" name="eyebrow" x-model="servicesEyebrow" value="{{ $servicesSec['eyebrow'] ?? 'Core Capabilities' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Heading</label>
-                    <input type="text" name="title" value="{{ $servicesSec['title'] ?? 'Integrated solutions for complex infrastructure' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    <input type="text" name="title" x-model="servicesTitle" value="{{ $servicesSec['title'] ?? 'Integrated solutions for complex infrastructure' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
             </div>
 
             <div class="space-y-1.5">
                 <label class="block text-xs font-bold text-slate-700">Description</label>
-                <textarea name="description" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $servicesSec['description'] ?? '' }}</textarea>
+                <textarea name="description" x-model="servicesDescription" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $servicesSec['description'] ?? '' }}</textarea>
             </div>
 
             <div class="flex justify-end pt-2">
@@ -505,7 +817,7 @@
     </div>
 
     <!-- 📈 SECTION 4: STATS SECTION -->
-    <div x-show="activeSection === 'stats'" class="space-y-6" x-cloak>
+    <div id="admin-form-stats" x-show="activeSection === 'stats'" class="space-y-6" x-cloak>
         <form action="{{ route('admin.home-sections.update') }}" method="POST" class="bg-white rounded-2xl border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-6">
             @csrf
             <input type="hidden" name="section" value="stats">
@@ -519,6 +831,17 @@
                     <input type="checkbox" name="is_visible" value="1" {{ !empty($statsSec['is_visible']) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">
                     <span>Show Stats Section ON</span>
                 </label>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-700">Eyebrow</label>
+                    <input type="text" name="eyebrow" x-model="statsEyebrow" value="{{ $statsSec['eyebrow'] ?? 'By the numbers' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                </div>
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-700">Section Heading</label>
+                    <input type="text" name="title" x-model="statsTitle" value="{{ $statsSec['title'] ?? 'Impact that compounds across communities' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -548,7 +871,7 @@
     </div>
 
     <!-- 💼 SECTION 5: PORTFOLIO SECTION -->
-    <div x-show="activeSection === 'portfolio'" class="space-y-6" x-cloak>
+    <div id="admin-form-portfolio" x-show="activeSection === 'portfolio'" class="space-y-6" x-cloak>
         <form action="{{ route('admin.home-sections.update') }}" method="POST" class="bg-white rounded-2xl border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-6">
             @csrf
             <input type="hidden" name="section" value="portfolio">
@@ -567,11 +890,11 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Eyebrow</label>
-                    <input type="text" name="eyebrow" value="{{ $portfolioSec['eyebrow'] ?? 'Featured Projects' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    <input type="text" name="eyebrow" x-model="portfolioEyebrow" value="{{ $portfolioSec['eyebrow'] ?? 'Featured Projects' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Heading</label>
-                    <input type="text" name="title" value="{{ $portfolioSec['title'] ?? 'Delivering resilient infrastructure across East Africa' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    <input type="text" name="title" x-model="portfolioTitle" value="{{ $portfolioSec['title'] ?? 'Delivering resilient infrastructure across East Africa' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Project Card Photo Shape Preset</label>
@@ -591,8 +914,49 @@
         </form>
     </div>
 
+    <!-- 🤝 SECTION: CLIENTS -->
+    <div id="admin-form-clients" x-show="activeSection === 'clients'" class="space-y-6" x-cloak>
+        <form action="{{ route('admin.home-sections.update') }}" method="POST" class="bg-white rounded-2xl border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-6">
+            @csrf
+            <input type="hidden" name="section" value="clients">
+
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div>
+                    <h3 class="text-sm font-bold text-slate-900">Clients & Partners Section</h3>
+                    <p class="text-xs text-slate-500">Configure the clients section headlines. Logos are managed under Portfolio / Entities.</p>
+                </div>
+                <label class="flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer">
+                    <input type="checkbox" name="is_visible" value="1" {{ !empty($clientsSec['is_visible']) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">
+                    <span>Show Clients Section ON</span>
+                </label>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-700">Eyebrow</label>
+                    <input type="text" name="eyebrow" value="{{ $clientsSec['eyebrow'] ?? 'Trusted partners' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition" @input="pushField('clients', 'eyebrow', $event.target.value)">
+                </div>
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-700">Heading</label>
+                    <input type="text" name="title" value="{{ $clientsSec['title'] ?? 'Organizations we work alongside' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition" @input="pushField('clients', 'title', $event.target.value)">
+                </div>
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="block text-xs font-bold text-slate-700">Description</label>
+                <textarea name="description" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition" @input="pushField('clients', 'description', $event.target.value)">{{ $clientsSec['description'] ?? '' }}</textarea>
+            </div>
+
+            <div class="flex justify-end pt-2">
+                <button type="submit" class="px-5 py-2.5 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-brand-600/30 transition">
+                    Save Clients Settings
+                </button>
+            </div>
+        </form>
+    </div>
+
     <!-- 📣 SECTION 7: CTA BANNER -->
-    <div x-show="activeSection === 'cta'" class="space-y-6" x-cloak>
+    <div id="admin-form-cta" x-show="activeSection === 'cta'" class="space-y-6" x-cloak>
         <form action="{{ route('admin.home-sections.update') }}" method="POST" class="bg-white rounded-2xl border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-6">
             @csrf
             <input type="hidden" name="section" value="cta">
@@ -611,12 +975,12 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Banner Headline</label>
-                    <input type="text" name="title" value="{{ $ctaSec['title'] ?? 'Ready to build water infrastructure that lasts?' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    <input type="text" name="title" x-model="ctaTitle" value="{{ $ctaSec['title'] ?? 'Ready to build water infrastructure that lasts?' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Button Text & Link</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <input type="text" name="button_text" value="{{ $ctaSec['button_text'] ?? 'Talk to an engineer' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                        <input type="text" name="button_text" x-model="ctaButtonText" value="{{ $ctaSec['button_text'] ?? 'Talk to an engineer' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                         <input type="text" name="button_url" value="{{ $ctaSec['button_url'] ?? '/contact' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                     </div>
                 </div>
@@ -629,6 +993,38 @@
             </div>
         </form>
     </div>
+
+        </div><!-- /forms column -->
+
+        <!-- RIGHT: sticky live preview -->
+        <aside class="home-builder-preview">
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden h-full">
+                <div class="flex items-center justify-between gap-3 p-3 sm:p-4 border-b border-slate-100 bg-slate-50/80">
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <i class="bi bi-eye text-brand-600"></i>
+                            <span class="text-sm font-bold text-slate-900">Live Preview</span>
+                            <span class="px-2 py-0.5 rounded-md bg-brand-50 text-brand-700 text-[11px] font-bold" x-text="sectionLabels[activeSection] || activeSection"></span>
+                        </div>
+                        <p class="text-[11px] text-slate-500 mt-0.5">Click a section here → form opens on the left.</p>
+                    </div>
+                    <a href="{{ $liveHomeOpenUrl }}" target="_blank" rel="noopener"
+                       class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-lg transition">
+                        <i class="bi bi-box-arrow-up-right"></i> Open
+                    </a>
+                </div>
+                <iframe
+                    x-ref="previewFrame"
+                    src="{{ $liveHomeUrl }}"
+                    class="w-full bg-white block"
+                    style="height: min(75vh, 780px); border: 0;"
+                    loading="eager"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    @load="onPreviewLoad()"
+                ></iframe>
+            </div>
+        </aside>
+    </div><!-- /side-by-side shell -->
 
     <!-- MODAL 1: ADD / EDIT HERO SLIDE -->
     <div x-show="openSlideModal" class="fixed inset-0 z-50 overflow-y-auto" x-cloak>

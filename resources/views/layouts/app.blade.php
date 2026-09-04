@@ -104,5 +104,9 @@
     @include('layouts.horizon.footer')
 
     @stack('scripts')
+
+    @if(request()->boolean('admin_preview'))
+        @include('layouts.horizon.admin-preview')
+    @endif
 </body>
 </html>

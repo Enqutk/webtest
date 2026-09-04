@@ -12,7 +12,7 @@
     $featureItems = collect($features?->list_items ?? [])->take(4);
 @endphp
 
-<section class="hz-section hz-about" id="about">
+<section class="hz-section hz-about" id="about" data-admin-section="about" data-admin-label="Edit About">
     <div class="container">
         <div class="row align-items-center g-5">
             <div class="col-lg-6">
@@ -23,9 +23,9 @@
                 @endif
             </div>
             <div class="col-lg-6">
-                <p class="hz-eyebrow">{{ $eyebrow }}</p>
-                <h2 class="hz-title hz-about-title">{{ $title }}</h2>
-                <div class="hz-lead hz-about-copy">{!! $about['description'] !!}</div>
+                <p class="hz-eyebrow" data-preview-field="eyebrow">{{ $eyebrow }}</p>
+                <h2 class="hz-title hz-about-title" data-preview-field="title">{{ $title }}</h2>
+                <div class="hz-lead hz-about-copy" data-preview-field="description" data-preview-html="1">{!! $about['description'] !!}</div>
 
                 @if($featureItems->isNotEmpty())
                     <div class="row g-3 mt-1">
