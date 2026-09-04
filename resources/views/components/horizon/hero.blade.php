@@ -42,27 +42,27 @@
     $heroSecCtaUrl = !empty($heroConfig['secondary_cta_url']) ? $heroConfig['secondary_cta_url'] : ($data['contactUrl'] ?? route('contact'));
 @endphp
 
-<section class="hz-hero" aria-label="Homepage hero">
+<section class="hz-hero" aria-label="Homepage hero" data-admin-section="hero" data-admin-label="Edit Hero">
     @if($slides->isEmpty())
         <div class="container">
             <div class="row align-items-center g-5 hz-hero-slide">
                 <div class="col-lg-6">
                     @if($heroBadge)
-                        <p class="hz-eyebrow">{{ $heroBadge }}</p>
+                        <p class="hz-eyebrow" data-preview-field="badge">{{ $heroBadge }}</p>
                     @endif
                     @if($heroHeadline)
-                        <h1 class="hz-hero-title mb-3">{{ $heroHeadline }}</h1>
+                        <h1 class="hz-hero-title mb-3" data-preview-field="title">{{ $heroHeadline }}</h1>
                     @else
                         <x-site-brand as="h1" class="hz-hero-brand" :name="$siteName" />
                     @endif
                     @if($heroCopy)
-                        <p class="hz-hero-copy">{{ $heroCopy }}</p>
+                        <p class="hz-hero-copy" data-preview-field="description">{{ $heroCopy }}</p>
                     @endif
                     <div class="d-flex flex-wrap gap-3">
                         <a href="{{ $heroCtaUrl }}" class="btn-hz">
-                            {{ $heroCtaText }} <i class="bi bi-arrow-right"></i>
+                            <span data-preview-field="cta_text">{{ $heroCtaText }}</span> <i class="bi bi-arrow-right"></i>
                         </a>
-                        <a href="{{ $heroSecCtaUrl }}" class="btn-hz-outline">{{ $heroSecCtaText }}</a>
+                        <a href="{{ $heroSecCtaUrl }}" class="btn-hz-outline" data-preview-field="secondary_cta_text">{{ $heroSecCtaText }}</a>
                     </div>
                 </div>
             </div>
@@ -95,7 +95,7 @@
                             <div class="row align-items-center g-5 hz-hero-slide">
                                 <div class="col-lg-6">
                                     @if($hero->subtitle)
-                                        <p class="hz-eyebrow">{{ $hero->subtitle }}</p>
+                                        <p class="hz-eyebrow" data-preview-field="badge">{{ $hero->subtitle }}</p>
                                     @endif
 
                                     <x-site-brand
@@ -104,18 +104,18 @@
                                         :name="$siteName"
                                     />
 
-                                    <h2 class="hz-hero-title">{{ $hero->title }}</h2>
+                                    <h2 class="hz-hero-title" data-preview-field="title">{{ $hero->title }}</h2>
 
                                     @if($hero->description)
-                                        <p class="hz-hero-copy">{{ $hero->description }}</p>
+                                        <p class="hz-hero-copy" data-preview-field="description">{{ $hero->description }}</p>
                                     @endif
 
                                     <div class="d-flex flex-wrap gap-3">
                                         <a href="{{ $hero->button_link ?: ($data['servicesUrl'] ?? route('services.index')) }}" class="btn-hz">
-                                             {{ $hero->text_link ?: 'Explore services' }}
+                                             <span data-preview-field="cta_text">{{ $hero->text_link ?: 'Explore services' }}</span>
                                              <i class="bi bi-arrow-right"></i>
                                          </a>
-                                         <a href="{{ $data['contactUrl'] ?? route('contact') }}" class="btn-hz-outline">Talk to us</a>
+                                         <a href="{{ $data['contactUrl'] ?? route('contact') }}" class="btn-hz-outline" data-preview-field="secondary_cta_text">Talk to us</a>
                                      </div>
                                 </div>
                                 <div class="col-lg-6">

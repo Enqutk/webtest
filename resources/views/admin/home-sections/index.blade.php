@@ -6,7 +6,8 @@
 
 @section('content')
 @php
-    $liveHomeUrl = route('card.home', ['slug' => $currentOrg->slug]);
+    $liveHomeUrl = route('card.home', ['slug' => $currentOrg->slug, 'admin_preview' => 1]);
+    $liveHomeOpenUrl = route('card.home', ['slug' => $currentOrg->slug]);
 @endphp
 
 @php
@@ -20,10 +21,23 @@
     $ctaSec = $sections['cta'] ?? \App\Models\Organization::defaultHomeSections()['cta'];
 
     $heroSlides = $hero['slides'] ?? \App\Models\Organization::defaultHeroSlides();
+    $sectionLabels = [
+        'hero' => 'Hero Banner',
+        'about' => 'About & Mission',
+        'services' => 'Services Section',
+        'stats' => 'Impact & Stats',
+        'portfolio' => 'Portfolio Section',
+        'team' => 'Leadership Team',
+        'clients' => 'Clients & Partners',
+        'cta' => 'CTA Banner',
+    ];
 @endphp
 
 <div class="space-y-6" x-data="{
     activeSection: 'hero',
+    previewOpen: true,
+    previewReady: false,
+    sectionLabels: @json($sectionLabels),
     openSlideModal: false,
     editingSlideIndex: null,
     slideTitle: '',
@@ -34,7 +48,6 @@
     slideShape: 'inherit',
     slideVisible: true,
 
-    // Team Modal
     openTeamModal: false,
     editingMemberId: null,
     memberFirst: '',
@@ -44,6 +57,36 @@
     memberOrder: 1,
     memberStatus: 'active',
     memberFounder: false,
+
+    // Live preview drafts (exact text being edited)
+    heroBadge: @json($hero['badge'] ?? 'Infrastructure · Engineering · Impact'),
+    heroSubtitle: @json($hero['subtitle'] ?? 'Engineering Excellence'),
+    heroTitle: @json($hero['title'] ?? 'Building resilient infrastructure for lasting communities'),
+    heroDescription: @json($hero['description'] ?? ''),
+    heroCtaText: @json($hero['cta_text'] ?? 'Explore Our Work'),
+    heroSecondaryCtaText: @json($hero['secondary_cta_text'] ?? 'Our Services'),
+
+    aboutEyebrow: @json($about['eyebrow'] ?? 'About our firm'),
+    aboutTitle: @json($about['title'] ?? 'Rooted in East Africa, built for scale'),
+    aboutP1: @json($about['paragraph_1'] ?? ($about['description'] ?? '')),
+    aboutP2: @json($about['paragraph_2'] ?? ''),
+
+    servicesEyebrow: @json($servicesSec['eyebrow'] ?? 'Core Capabilities'),
+    servicesTitle: @json($servicesSec['title'] ?? 'Integrated solutions for complex infrastructure'),
+    servicesDescription: @json($servicesSec['description'] ?? ''),
+
+    statsEyebrow: @json($statsSec['eyebrow'] ?? 'By the numbers'),
+    statsTitle: @json($statsSec['title'] ?? ($statsSec['stat_1_label'] ? 'Impact & Statistics' : 'Impact that compounds across communities')),
+
+    portfolioEyebrow: @json($portfolioSec['eyebrow'] ?? 'Featured Projects'),
+    portfolioTitle: @json($portfolioSec['title'] ?? 'Delivering resilient infrastructure across East Africa'),
+
+    teamEyebrow: @json($teamSec['eyebrow'] ?? 'Leadership & Team'),
+    teamTitle: @json($teamSec['title'] ?? 'Experienced engineers & hydrologists'),
+    teamDescription: @json($teamSec['description'] ?? ''),
+
+    ctaTitle: @json($ctaSec['title'] ?? 'Ready to build water infrastructure that lasts?'),
+    ctaButtonText: @json($ctaSec['button_text'] ?? 'Talk to an engineer'),
 
     editSlide(index, slide) {
         this.editingSlideIndex = index;
@@ -91,6 +134,124 @@
         this.memberStatus = 'active';
         this.memberFounder = false;
         this.openTeamModal = true;
+    },
+
+    previewFrame() {
+        return this.$refs.previewFrame || null;
+    },
+
+    postToPreview(payload) {
+        const frame = this.previewFrame();
+        if (!frame || !frame.contentWindow) return;
+        frame.contentWindow.postMessage({
+            source: 'admin-home-preview-parent',
+            ...payload,
+        }, '*');
+    },
+
+    focusPreviewSection(section = this.activeSection) {
+        this.postToPreview({ type: 'focus-section', section });
+    },
+
+    pushField(section, field, value) {
+        this.postToPreview({ type: 'update-field', section, field, value });
+    },
+
+    selectSection(section, { fromPreview = false } = {}) {
+        this.activeSection = section;
+        this.previewOpen = true;
+        this.$nextTick(() => {
+            this.focusPreviewSection(section);
+            if (!fromPreview) return;
+            const form = document.getElementById('admin-form-' + section);
+            if (form) {
+                form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    },
+
+    aboutPreviewHtml() {
+        const parts = [this.aboutP1, this.aboutP2].filter(Boolean);
+        return parts.map((p) => p.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>')).join('<br><br>');
+    },
+
+    syncActiveSectionToPreview() {
+        if (!this.previewReady) return;
+        this.focusPreviewSection(this.activeSection);
+
+        if (this.activeSection === 'hero') {
+            this.pushField('hero', 'badge', this.heroBadge);
+            this.pushField('hero', 'title', this.heroTitle);
+            this.pushField('hero', 'description', this.heroDescription);
+            this.pushField('hero', 'cta_text', this.heroCtaText);
+            this.pushField('hero', 'secondary_cta_text', this.heroSecondaryCtaText);
+        }
+        if (this.activeSection === 'about') {
+            this.pushField('about', 'eyebrow', this.aboutEyebrow);
+            this.pushField('about', 'title', this.aboutTitle);
+            this.pushField('about', 'description', this.aboutPreviewHtml());
+        }
+        if (this.activeSection === 'services') {
+            this.pushField('services', 'eyebrow', this.servicesEyebrow);
+            this.pushField('services', 'title', this.servicesTitle);
+            this.pushField('services', 'description', this.servicesDescription);
+        }
+        if (this.activeSection === 'stats') {
+            this.pushField('stats', 'eyebrow', this.statsEyebrow);
+            this.pushField('stats', 'title', this.statsTitle);
+        }
+        if (this.activeSection === 'portfolio') {
+            this.pushField('portfolio', 'eyebrow', this.portfolioEyebrow);
+            this.pushField('portfolio', 'title', this.portfolioTitle);
+        }
+        if (this.activeSection === 'team') {
+            this.pushField('team', 'eyebrow', this.teamEyebrow);
+            this.pushField('team', 'title', this.teamTitle);
+            this.pushField('team', 'description', this.teamDescription);
+        }
+        if (this.activeSection === 'cta') {
+            this.pushField('cta', 'title', this.ctaTitle);
+            this.pushField('cta', 'button_text', this.ctaButtonText);
+        }
+    },
+
+    init() {
+        window.addEventListener('message', (event) => {
+            const data = event.data || {};
+            if (data.source !== 'admin-home-preview') return;
+
+            if (data.type === 'ready') {
+                this.previewReady = true;
+                this.syncActiveSectionToPreview();
+            }
+
+            if (data.type === 'section-click' && data.section) {
+                this.selectSection(data.section, { fromPreview: true });
+            }
+        });
+
+        this.$watch('activeSection', () => this.syncActiveSectionToPreview());
+        this.$watch('heroBadge', (v) => this.pushField('hero', 'badge', v));
+        this.$watch('heroTitle', (v) => this.pushField('hero', 'title', v));
+        this.$watch('heroDescription', (v) => this.pushField('hero', 'description', v));
+        this.$watch('heroCtaText', (v) => this.pushField('hero', 'cta_text', v));
+        this.$watch('heroSecondaryCtaText', (v) => this.pushField('hero', 'secondary_cta_text', v));
+        this.$watch('aboutEyebrow', (v) => this.pushField('about', 'eyebrow', v));
+        this.$watch('aboutTitle', (v) => this.pushField('about', 'title', v));
+        this.$watch('aboutP1', () => this.pushField('about', 'description', this.aboutPreviewHtml()));
+        this.$watch('aboutP2', () => this.pushField('about', 'description', this.aboutPreviewHtml()));
+        this.$watch('servicesEyebrow', (v) => this.pushField('services', 'eyebrow', v));
+        this.$watch('servicesTitle', (v) => this.pushField('services', 'title', v));
+        this.$watch('servicesDescription', (v) => this.pushField('services', 'description', v));
+        this.$watch('statsEyebrow', (v) => this.pushField('stats', 'eyebrow', v));
+        this.$watch('statsTitle', (v) => this.pushField('stats', 'title', v));
+        this.$watch('portfolioEyebrow', (v) => this.pushField('portfolio', 'eyebrow', v));
+        this.$watch('portfolioTitle', (v) => this.pushField('portfolio', 'title', v));
+        this.$watch('teamEyebrow', (v) => this.pushField('team', 'eyebrow', v));
+        this.$watch('teamTitle', (v) => this.pushField('team', 'title', v));
+        this.$watch('teamDescription', (v) => this.pushField('team', 'description', v));
+        this.$watch('ctaTitle', (v) => this.pushField('cta', 'title', v));
+        this.$watch('ctaButtonText', (v) => this.pushField('cta', 'button_text', v));
     }
 }">
 
@@ -142,69 +303,64 @@
 
     <!-- Top Section Switcher Navigation -->
     <div class="bg-white rounded-2xl border border-slate-200/80 p-2 shadow-sm flex flex-wrap gap-1.5 sticky top-2 z-20 backdrop-blur-md bg-white/95">
-        <button type="button" @click="activeSection = 'hero'" :class="activeSection === 'hero' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
-            <span>🌟</span>
-            <span>Hero Banner ({{ count($heroSlides) }})</span>
+        <button type="button" @click="selectSection('hero')" :class="activeSection === 'hero' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+            <span>Hero ({{ count($heroSlides) }})</span>
         </button>
-        <button type="button" @click="activeSection = 'about'" :class="activeSection === 'about' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
-            <span>🏛️</span>
-            <span>About & Mission</span>
+        <button type="button" @click="selectSection('about')" :class="activeSection === 'about' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+            <span>About</span>
         </button>
-        <button type="button" @click="activeSection = 'services'" :class="activeSection === 'services' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
-            <span>🔧</span>
-            <span>Services Section</span>
+        <button type="button" @click="selectSection('services')" :class="activeSection === 'services' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+            <span>Services</span>
         </button>
-        <button type="button" @click="activeSection = 'stats'" :class="activeSection === 'stats' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
-            <span>📈</span>
+        <button type="button" @click="selectSection('stats')" :class="activeSection === 'stats' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
             <span>Impact & Stats</span>
         </button>
-        <button type="button" @click="activeSection = 'portfolio'" :class="activeSection === 'portfolio' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
-            <span>💼</span>
-            <span>Portfolio Section</span>
+        <button type="button" @click="selectSection('portfolio')" :class="activeSection === 'portfolio' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+            <span>Portfolio</span>
         </button>
-        <button type="button" @click="activeSection = 'team'" :class="activeSection === 'team' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
-            <span>👥</span>
-            <span>Leadership Team ({{ $teamMembers->count() }})</span>
+        <button type="button" @click="selectSection('team')" :class="activeSection === 'team' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+            <span>Team ({{ $teamMembers->count() }})</span>
         </button>
-        <button type="button" @click="activeSection = 'clients'" :class="activeSection === 'clients' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
-            <span>🤝</span>
-            <span>Clients & Partners</span>
+        <button type="button" @click="selectSection('clients')" :class="activeSection === 'clients' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+            <span>Clients</span>
         </button>
-        <button type="button" @click="activeSection = 'cta'" :class="activeSection === 'cta' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
-            <span>📣</span>
-            <span>CTA Banner</span>
+        <button type="button" @click="selectSection('cta')" :class="activeSection === 'cta' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+            <span>CTA</span>
         </button>
     </div>
 
-    <!-- Live Homepage Preview (collapsible) -->
-    <div x-data="{ previewOpen: true }" class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+    <!-- Live Homepage Preview (click a section to jump to its form) -->
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden sticky top-16 z-10">
         <button type="button" @click="previewOpen = !previewOpen" class="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition">
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 flex-wrap">
                 <i class="bi bi-eye text-brand-600"></i>
-                <span class="text-sm font-bold text-slate-900">Live Homepage Preview</span>
-                <span class="text-xs text-slate-400">(saved version)</span>
+                <span class="text-sm font-bold text-slate-900">Live Preview</span>
+                <span class="px-2 py-0.5 rounded-md bg-brand-50 text-brand-700 text-[11px] font-bold" x-text="'Showing: ' + (sectionLabels[activeSection] || activeSection)"></span>
+                <span class="text-xs text-slate-400">Click a section in the preview to open its form · typing updates instantly</span>
             </div>
             <div class="flex items-center gap-3">
-                <a href="{{ $liveHomeUrl }}" target="_blank" rel="noopener" @click.stop
+                <a href="{{ $liveHomeOpenUrl }}" target="_blank" rel="noopener" @click.stop
                    class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition">
                     <i class="bi bi-box-arrow-up-right"></i> Open live
                 </a>
                 <i class="bi text-slate-400 transition-transform" :class="previewOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
             </div>
         </button>
-        <div x-show="previewOpen" x-collapse>
+        <div x-show="previewOpen" x-cloak>
             <iframe
+                x-ref="previewFrame"
                 src="{{ $liveHomeUrl }}"
                 class="w-full border-t border-slate-100"
-                style="height: 480px; border: 0; background: white;"
-                loading="lazy"
+                style="height: 420px; border: 0; background: white;"
+                loading="eager"
                 referrerpolicy="no-referrer-when-downgrade"
+                @load="previewReady = true; syncActiveSectionToPreview()"
             ></iframe>
         </div>
     </div>
 
     <!-- 🌟 SECTION 1: HERO BANNER & SLIDES -->
-    <div x-show="activeSection === 'hero'" class="space-y-6">
+    <div id="admin-form-hero" x-show="activeSection === 'hero'" class="space-y-6">
         <!-- Banner Settings Form -->
         <form action="{{ route('admin.home-sections.update') }}" method="POST" class="bg-white rounded-2xl border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-6">
             @csrf
@@ -224,11 +380,11 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Eyebrow / Badge</label>
-                    <input type="text" name="badge" value="{{ $hero['badge'] ?? 'Infrastructure · Engineering · Impact' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    <input type="text" name="badge" x-model="heroBadge" value="{{ $hero['badge'] ?? 'Infrastructure · Engineering · Impact' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Category / Subtitle</label>
-                    <input type="text" name="subtitle" value="{{ $hero['subtitle'] ?? 'Engineering Excellence' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    <input type="text" name="subtitle" x-model="heroSubtitle" value="{{ $hero['subtitle'] ?? 'Engineering Excellence' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Hero Photo Shape Preset</label>
@@ -242,19 +398,19 @@
 
             <div class="space-y-1.5">
                 <label class="block text-xs font-bold text-slate-700">Main Headline <span class="text-rose-500">*</span></label>
-                <input type="text" name="title" value="{{ $hero['title'] ?? 'Building resilient infrastructure for lasting communities' }}" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:bg-white transition">
+                <input type="text" name="title" x-model="heroTitle" value="{{ $hero['title'] ?? 'Building resilient infrastructure for lasting communities' }}" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:bg-white transition">
             </div>
 
             <div class="space-y-1.5">
                 <label class="block text-xs font-bold text-slate-700">Supporting Description</label>
-                <textarea name="description" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $hero['description'] ?? '' }}</textarea>
+                <textarea name="description" x-model="heroDescription" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $hero['description'] ?? '' }}</textarea>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-100">
                 <div class="grid grid-cols-2 gap-3">
                     <div class="space-y-1.5">
                         <label class="block text-xs font-bold text-slate-700">Primary Button Text</label>
-                        <input type="text" name="cta_text" value="{{ $hero['cta_text'] ?? 'Explore Our Work' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                        <input type="text" name="cta_text" x-model="heroCtaText" value="{{ $hero['cta_text'] ?? 'Explore Our Work' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                     </div>
                     <div class="space-y-1.5">
                         <label class="block text-xs font-bold text-slate-700">Primary Link</label>
@@ -265,7 +421,7 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div class="space-y-1.5">
                         <label class="block text-xs font-bold text-slate-700">Secondary Button Text</label>
-                        <input type="text" name="secondary_cta_text" value="{{ $hero['secondary_cta_text'] ?? 'Our Services' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                        <input type="text" name="secondary_cta_text" x-model="heroSecondaryCtaText" value="{{ $hero['secondary_cta_text'] ?? 'Our Services' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                     </div>
                     <div class="space-y-1.5">
                         <label class="block text-xs font-bold text-slate-700">Secondary Link</label>
@@ -349,7 +505,7 @@
     </div>
 
     <!-- 👥 SECTION 6: LEADERSHIP TEAM -->
-    <div x-show="activeSection === 'team'" class="space-y-6" x-cloak>
+    <div id="admin-form-team" x-show="activeSection === 'team'" class="space-y-6" x-cloak>
         <!-- Team Section Header Config -->
         <form action="{{ route('admin.home-sections.update') }}" method="POST" class="bg-white rounded-2xl border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-6">
             @csrf
@@ -369,11 +525,11 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Section Eyebrow</label>
-                    <input type="text" name="eyebrow" value="{{ $teamSec['eyebrow'] ?? 'Leadership & Team' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    <input type="text" name="eyebrow" x-model="teamEyebrow" value="{{ $teamSec['eyebrow'] ?? 'Leadership & Team' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Section Heading</label>
-                    <input type="text" name="title" value="{{ $teamSec['title'] ?? 'Experienced engineers & hydrologists' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    <input type="text" name="title" x-model="teamTitle" value="{{ $teamSec['title'] ?? 'Experienced engineers & hydrologists' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Team Photo Shape Preset</label>
@@ -387,7 +543,7 @@
 
             <div class="space-y-1.5">
                 <label class="block text-xs font-bold text-slate-700">Section Description</label>
-                <textarea name="description" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $teamSec['description'] ?? '' }}</textarea>
+                <textarea name="description" x-model="teamDescription" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $teamSec['description'] ?? '' }}</textarea>
             </div>
 
             <div class="flex justify-end pt-2">
@@ -455,7 +611,7 @@
     </div>
 
     <!-- 🏛️ SECTION 2: ABOUT SECTION -->
-    <div x-show="activeSection === 'about'" class="space-y-6" x-cloak>
+    <div id="admin-form-about" x-show="activeSection === 'about'" class="space-y-6" x-cloak>
         <form action="{{ route('admin.home-sections.update') }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-2xl border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-6">
             @csrf
             <input type="hidden" name="section" value="about">
@@ -474,11 +630,11 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Eyebrow</label>
-                    <input type="text" name="eyebrow" value="{{ $about['eyebrow'] ?? 'About our firm' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    <input type="text" name="eyebrow" x-model="aboutEyebrow" value="{{ $about['eyebrow'] ?? 'About our firm' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Headline</label>
-                    <input type="text" name="title" value="{{ $about['title'] ?? 'Rooted in East Africa, built for scale' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    <input type="text" name="title" x-model="aboutTitle" value="{{ $about['title'] ?? 'Rooted in East Africa, built for scale' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">About Photo Shape Preset</label>
@@ -492,12 +648,12 @@
 
             <div class="space-y-1.5">
                 <label class="block text-xs font-bold text-slate-700">Paragraph 1</label>
-                <textarea name="paragraph_1" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $about['paragraph_1'] ?? '' }}</textarea>
+                <textarea name="paragraph_1" x-model="aboutP1" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $about['paragraph_1'] ?? '' }}</textarea>
             </div>
 
             <div class="space-y-1.5">
                 <label class="block text-xs font-bold text-slate-700">Paragraph 2</label>
-                <textarea name="paragraph_2" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $about['paragraph_2'] ?? '' }}</textarea>
+                <textarea name="paragraph_2" x-model="aboutP2" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $about['paragraph_2'] ?? '' }}</textarea>
             </div>
 
             <div class="flex justify-end pt-2">
@@ -509,7 +665,7 @@
     </div>
 
     <!-- 🔧 SECTION 3: SERVICES SECTION -->
-    <div x-show="activeSection === 'services'" class="space-y-6" x-cloak>
+    <div id="admin-form-services" x-show="activeSection === 'services'" class="space-y-6" x-cloak>
         <form action="{{ route('admin.home-sections.update') }}" method="POST" class="bg-white rounded-2xl border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-6">
             @csrf
             <input type="hidden" name="section" value="services">
@@ -528,17 +684,17 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Eyebrow</label>
-                    <input type="text" name="eyebrow" value="{{ $servicesSec['eyebrow'] ?? 'Core Capabilities' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    <input type="text" name="eyebrow" x-model="servicesEyebrow" value="{{ $servicesSec['eyebrow'] ?? 'Core Capabilities' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Heading</label>
-                    <input type="text" name="title" value="{{ $servicesSec['title'] ?? 'Integrated solutions for complex infrastructure' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    <input type="text" name="title" x-model="servicesTitle" value="{{ $servicesSec['title'] ?? 'Integrated solutions for complex infrastructure' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
             </div>
 
             <div class="space-y-1.5">
                 <label class="block text-xs font-bold text-slate-700">Description</label>
-                <textarea name="description" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $servicesSec['description'] ?? '' }}</textarea>
+                <textarea name="description" x-model="servicesDescription" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $servicesSec['description'] ?? '' }}</textarea>
             </div>
 
             <div class="flex justify-end pt-2">
@@ -550,7 +706,7 @@
     </div>
 
     <!-- 📈 SECTION 4: STATS SECTION -->
-    <div x-show="activeSection === 'stats'" class="space-y-6" x-cloak>
+    <div id="admin-form-stats" x-show="activeSection === 'stats'" class="space-y-6" x-cloak>
         <form action="{{ route('admin.home-sections.update') }}" method="POST" class="bg-white rounded-2xl border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-6">
             @csrf
             <input type="hidden" name="section" value="stats">
@@ -564,6 +720,17 @@
                     <input type="checkbox" name="is_visible" value="1" {{ !empty($statsSec['is_visible']) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">
                     <span>Show Stats Section ON</span>
                 </label>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-700">Eyebrow</label>
+                    <input type="text" name="eyebrow" x-model="statsEyebrow" value="{{ $statsSec['eyebrow'] ?? 'By the numbers' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                </div>
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-700">Section Heading</label>
+                    <input type="text" name="title" x-model="statsTitle" value="{{ $statsSec['title'] ?? 'Impact that compounds across communities' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -593,7 +760,7 @@
     </div>
 
     <!-- 💼 SECTION 5: PORTFOLIO SECTION -->
-    <div x-show="activeSection === 'portfolio'" class="space-y-6" x-cloak>
+    <div id="admin-form-portfolio" x-show="activeSection === 'portfolio'" class="space-y-6" x-cloak>
         <form action="{{ route('admin.home-sections.update') }}" method="POST" class="bg-white rounded-2xl border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-6">
             @csrf
             <input type="hidden" name="section" value="portfolio">
@@ -612,11 +779,11 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Eyebrow</label>
-                    <input type="text" name="eyebrow" value="{{ $portfolioSec['eyebrow'] ?? 'Featured Projects' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    <input type="text" name="eyebrow" x-model="portfolioEyebrow" value="{{ $portfolioSec['eyebrow'] ?? 'Featured Projects' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Heading</label>
-                    <input type="text" name="title" value="{{ $portfolioSec['title'] ?? 'Delivering resilient infrastructure across East Africa' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    <input type="text" name="title" x-model="portfolioTitle" value="{{ $portfolioSec['title'] ?? 'Delivering resilient infrastructure across East Africa' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Project Card Photo Shape Preset</label>
@@ -636,8 +803,49 @@
         </form>
     </div>
 
+    <!-- 🤝 SECTION: CLIENTS -->
+    <div id="admin-form-clients" x-show="activeSection === 'clients'" class="space-y-6" x-cloak>
+        <form action="{{ route('admin.home-sections.update') }}" method="POST" class="bg-white rounded-2xl border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-6">
+            @csrf
+            <input type="hidden" name="section" value="clients">
+
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div>
+                    <h3 class="text-sm font-bold text-slate-900">Clients & Partners Section</h3>
+                    <p class="text-xs text-slate-500">Configure the clients section headlines. Logos are managed under Portfolio / Entities.</p>
+                </div>
+                <label class="flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer">
+                    <input type="checkbox" name="is_visible" value="1" {{ !empty($clientsSec['is_visible']) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">
+                    <span>Show Clients Section ON</span>
+                </label>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-700">Eyebrow</label>
+                    <input type="text" name="eyebrow" value="{{ $clientsSec['eyebrow'] ?? 'Trusted partners' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition" @input="pushField('clients', 'eyebrow', $event.target.value)">
+                </div>
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-700">Heading</label>
+                    <input type="text" name="title" value="{{ $clientsSec['title'] ?? 'Organizations we work alongside' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition" @input="pushField('clients', 'title', $event.target.value)">
+                </div>
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="block text-xs font-bold text-slate-700">Description</label>
+                <textarea name="description" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition" @input="pushField('clients', 'description', $event.target.value)">{{ $clientsSec['description'] ?? '' }}</textarea>
+            </div>
+
+            <div class="flex justify-end pt-2">
+                <button type="submit" class="px-5 py-2.5 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-brand-600/30 transition">
+                    Save Clients Settings
+                </button>
+            </div>
+        </form>
+    </div>
+
     <!-- 📣 SECTION 7: CTA BANNER -->
-    <div x-show="activeSection === 'cta'" class="space-y-6" x-cloak>
+    <div id="admin-form-cta" x-show="activeSection === 'cta'" class="space-y-6" x-cloak>
         <form action="{{ route('admin.home-sections.update') }}" method="POST" class="bg-white rounded-2xl border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-6">
             @csrf
             <input type="hidden" name="section" value="cta">
@@ -656,12 +864,12 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Banner Headline</label>
-                    <input type="text" name="title" value="{{ $ctaSec['title'] ?? 'Ready to build water infrastructure that lasts?' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    <input type="text" name="title" x-model="ctaTitle" value="{{ $ctaSec['title'] ?? 'Ready to build water infrastructure that lasts?' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Button Text & Link</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <input type="text" name="button_text" value="{{ $ctaSec['button_text'] ?? 'Talk to an engineer' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                        <input type="text" name="button_text" x-model="ctaButtonText" value="{{ $ctaSec['button_text'] ?? 'Talk to an engineer' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                         <input type="text" name="button_url" value="{{ $ctaSec['button_url'] ?? '/contact' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                     </div>
                 </div>

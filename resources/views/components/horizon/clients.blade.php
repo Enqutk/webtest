@@ -6,14 +6,16 @@
 ])
 
 @if($clients->isNotEmpty())
-<section class="hz-section hz-clients bg-surface border-top border-bottom border-hz">
+<section class="hz-section hz-clients bg-surface border-top border-bottom border-hz" data-admin-section="clients" data-admin-label="Edit Clients">
     <div class="container">
         <div class="row justify-content-between align-items-end mb-4 g-3">
             <div class="col-lg-8">
-                <p class="hz-eyebrow">{{ $eyebrow }}</p>
-                <h2 class="hz-title mb-0">{{ $title }}</h2>
+                <p class="hz-eyebrow" data-preview-field="eyebrow">{{ $eyebrow }}</p>
+                <h2 class="hz-title mb-0" data-preview-field="title">{{ $title }}</h2>
                 @if($description)
-                    <p class="hz-lead text-muted mt-2 mb-0">{{ $description }}</p>
+                    <p class="hz-lead text-muted mt-2 mb-0" data-preview-field="description">{{ $description }}</p>
+                @else
+                    <p class="hz-lead text-muted mt-2 mb-0" data-preview-field="description" style="display:none"></p>
                 @endif
             </div>
         </div>

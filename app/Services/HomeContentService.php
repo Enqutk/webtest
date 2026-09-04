@@ -140,12 +140,25 @@ class HomeContentService
 
             'heroFeatures' => $blocks->get('key-features'),
             'aboutFeatures' => [
-                'image' => $aboutImage,
+                'image' => $aboutImage ?: ($homeSections['about']['image'] ?? null),
                 'title' => $homeSections['about']['title'] ?? ($aboutFeaturesBlock?->title ?: 'Water expertise for living landscapes'),
                 'subtitle' => $homeSections['about']['eyebrow'] ?? ($aboutFeaturesBlock?->subtitle ?: 'Who we are'),
-                'description' => !empty($homeSections['about']['description'])
-                    ? nl2br(e($homeSections['about']['description']))
-                    : ($aboutFeaturesBlock ? html_entity_decode((string) $aboutFeaturesBlock->content) : ''),
+                'description' => (function () use ($homeSections, $aboutFeaturesBlock) {
+                    $about = $homeSections['about'] ?? [];
+                    $copy = $about['description']
+                        ?? trim(collect([
+                            $about['paragraph_1'] ?? null,
+                            $about['paragraph_2'] ?? null,
+                        ])->filter()->implode("\n\n"));
+
+                    if ($copy !== '') {
+                        return nl2br(e($copy));
+                    }
+
+                    return $aboutFeaturesBlock
+                        ? html_entity_decode((string) $aboutFeaturesBlock->content)
+                        : '';
+                })(),
                 'points' => $homeSections['about']['points'] ?? [],
             ],
 
