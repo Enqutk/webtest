@@ -1,8 +1,13 @@
+@props([
+    'title' => 'Navigation links',
+    'description' => 'Every link appears in the header. Choose whether it also shows in the footer Explore column.',
+])
+
 <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm space-y-4" x-data="sitePageNavLinks">
     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
         <div>
-            <h3 class="text-sm font-bold text-slate-900">Header navigation links</h3>
-            <p class="text-xs text-slate-500 mt-0.5">These links appear in the top menu on every page.</p>
+            <h3 class="text-sm font-bold text-slate-900">{{ $title }}</h3>
+            <p class="text-xs text-slate-500 mt-0.5">{{ $description }}</p>
         </div>
         <button type="button" @click="openAdd()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg transition">
             + Add link
@@ -13,7 +18,12 @@
         @forelse($navItems as $item)
             <div class="flex items-center justify-between gap-2 p-3 rounded-xl bg-slate-50 border border-slate-200/80">
                 <div class="min-w-0 flex-1">
-                    <div class="text-xs font-bold text-slate-900 truncate">{{ $item->title }}</div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span class="text-xs font-bold text-slate-900 truncate">{{ $item->title }}</span>
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold {{ $item->show_in_footer ? 'bg-brand-50 text-brand-700' : 'bg-slate-200 text-slate-600' }}">
+                            {{ $item->show_in_footer ? 'Header + footer' : 'Header only' }}
+                        </span>
+                    </div>
                     <div class="text-[11px] text-slate-500 font-mono truncate">{{ $item->url }}</div>
                 </div>
                 <div class="flex items-center gap-1 shrink-0">
@@ -34,7 +44,6 @@
         @endforelse
     </div>
 
-    {{-- Add / edit modal --}}
     <div x-show="openModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto">
         <div class="min-h-full px-4 py-8 flex items-center justify-center">
             <div class="fixed inset-0 bg-slate-900/60" @click="openModal = false"></div>
@@ -53,6 +62,13 @@
                     <div class="space-y-1.5">
                         <label class="block text-xs font-bold text-slate-700">URL</label>
                         <input type="text" name="url" x-model="itemUrl" required placeholder="/about or /contact" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700">Show in</label>
+                        <select name="show_in_footer" x-model="itemShowInFooter" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                            <option value="1">Header and footer</option>
+                            <option value="0">Header only</option>
+                        </select>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
                         <div class="space-y-1.5">
@@ -77,6 +93,7 @@
     </div>
 </div>
 
+@once
 @push('scripts')
 <script>
 document.addEventListener('alpine:init', () => {
@@ -87,12 +104,14 @@ document.addEventListener('alpine:init', () => {
         itemUrl: '/',
         itemOrder: {{ ($navItems->max('order_number') ?? 0) + 1 }},
         itemTarget: '_self',
+        itemShowInFooter: '1',
         openAdd() {
             this.editingId = null;
             this.itemTitle = '';
             this.itemUrl = '/';
             this.itemOrder = {{ ($navItems->max('order_number') ?? 0) + 1 }};
             this.itemTarget = '_self';
+            this.itemShowInFooter = '1';
             this.openModal = true;
         },
         openEdit(item) {
@@ -101,9 +120,11 @@ document.addEventListener('alpine:init', () => {
             this.itemUrl = item.url || '/';
             this.itemOrder = item.order_number || 1;
             this.itemTarget = item.target || '_self';
+            this.itemShowInFooter = item.show_in_footer === false || item.show_in_footer === 0 ? '0' : '1';
             this.openModal = true;
         },
     }));
 });
 </script>
 @endpush
+@endonce

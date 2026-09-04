@@ -57,6 +57,7 @@ class AppServiceProvider extends ServiceProvider
             $view->with([
                 'data' => app(HomeContentService::class)->getHomeContent(),
                 'navItems' => app(NavigationService::class)->navbarItems(),
+                'footerNavItems' => app(NavigationService::class)->footerNavItems(),
             ]);
         });
     }

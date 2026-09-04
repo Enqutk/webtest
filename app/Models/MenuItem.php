@@ -18,7 +18,12 @@ class MenuItem extends Model
         'link_type',
         'url',
         'target',
-        'order_number'
+        'order_number',
+        'show_in_footer',
+    ];
+
+    protected $casts = [
+        'show_in_footer' => 'boolean',
     ];
 
     public function menu()

@@ -10,53 +10,49 @@ use Illuminate\Support\Facades\Cache;
 
 class NavigationService
 {
+    public function __construct(
+        private readonly NavbarMenuService $navbarMenuService,
+    ) {}
+
     public function navbarItems(): Collection
+    {
+        return $this->itemsForPlacement('header');
+    }
+
+    public function footerNavItems(): Collection
+    {
+        return $this->itemsForPlacement('footer');
+    }
+
+    private function itemsForPlacement(string $placement): Collection
     {
         $org = \App\Models\Organization::resolvePublicCurrent();
         $theme = is_array($org?->theme) ? $org->theme : [];
-        $themeNavItems = $theme['nav_items'] ?? null;
 
         $showServices = $theme['home_sections']['services']['is_visible'] ?? true;
         $showPortfolio = $theme['home_sections']['portfolio']['is_visible'] ?? true;
         $showAbout = $theme['home_sections']['about']['is_visible'] ?? true;
 
-        if (is_array($themeNavItems) && ! empty($themeNavItems)) {
-            $items = collect($themeNavItems)
-                ->filter(fn ($item) => !isset($item['is_visible']) || (bool)$item['is_visible'])
-                ->map(function ($item) {
-                    $url = $this->normalizeUrl((string) ($item['url'] ?? '/'));
-                    return [
-                        'label' => $item['label'] ?? 'Link',
-                        'url' => $url,
-                        'target' => $item['target'] ?? '_self',
-                        'children' => [],
-                    ];
-                });
-        } else {
-            $location = MenuLocation::query()
-                ->where('location', MenuLocationEnum::Navbar)
-                ->when($org?->id, fn ($query, $orgId) => $query->where('organization_id', $orgId))
-                ->first();
-
-            if ($location) {
-                $dbItems = MenuItem::query()
-                    ->where('menu_id', $location->id)
-                    ->whereNull('parent_id')
-                    ->orderBy('order_number')
-                    ->with(['children' => fn ($q) => $q->orderBy('order_number')])
-                    ->get();
-
-                if ($dbItems->isNotEmpty()) {
-                    $items = $dbItems->map(fn (MenuItem $item) => $this->mapItemRaw($item));
-                } else {
-                    $items = $this->fallbackNavbarRaw();
-                }
-            } else {
-                $items = $this->fallbackNavbarRaw();
-            }
+        if (!$org) {
+            return $this->fallbackNavbarRaw();
         }
 
-        // Automatically hide navbar items if section is disabled for this organization
+        $menu = $this->navbarMenuService->resolveMenu($org);
+
+        $dbItems = MenuItem::query()
+            ->where('menu_id', $menu->id)
+            ->whereNull('parent_id')
+            ->when($placement === 'footer', fn ($query) => $query->where('show_in_footer', true))
+            ->orderBy('order_number')
+            ->with(['children' => fn ($q) => $q->orderBy('order_number')])
+            ->get();
+
+        if ($dbItems->isEmpty()) {
+            $items = $this->fallbackNavbarRaw();
+        } else {
+            $items = $dbItems->map(fn (MenuItem $item) => $this->mapItemRaw($item));
+        }
+
         $items = $items->filter(function ($item) use ($showServices, $showPortfolio, $showAbout) {
             $label = strtolower($item['label'] ?? '');
             $url = strtolower($item['url'] ?? '');
@@ -70,18 +66,20 @@ class NavigationService
             if (!$showAbout && (str_contains($label, 'about') || str_contains($url, '/about'))) {
                 return false;
             }
+
             return true;
         })->values();
 
-        // Compute active dynamically per request
         return $items->map(function ($item) {
             $item['active'] = $this->isActive($item['url']);
             if (!empty($item['children'])) {
                 $item['children'] = collect($item['children'])->map(function ($child) {
                     $child['active'] = $this->isActive($child['url']);
+
                     return $child;
                 })->all();
             }
+
             return $item;
         });
     }
@@ -100,6 +98,7 @@ class NavigationService
             'label' => $item->title,
             'url' => $url,
             'target' => $item->target ?: '_self',
+            'show_in_footer' => (bool) ($item->show_in_footer ?? true),
             'children' => $item->children
                 ->map(fn (MenuItem $child) => $this->mapItemRaw($child))
                 ->values()
@@ -119,7 +118,6 @@ class NavigationService
             return $url;
         }
 
-        // Legacy / incorrect seeded paths → real routes
         $aliases = [
             '/home' => '/',
             '/service' => '/our-services',
@@ -140,7 +138,7 @@ class NavigationService
             $mapped = ($mapped === '/') ? "/card/{$routeSlug}" : "/card/{$routeSlug}" . $mapped;
         }
 
-        if ($fragment && ! str_contains($mapped, '#')) {
+        if ($fragment && !str_contains($mapped, '#')) {
             $mapped .= '#' . $fragment;
         }
 
@@ -159,40 +157,26 @@ class NavigationService
             $current = '/';
         }
 
-        // Exact match
         if ($current === $path) {
             return true;
         }
 
-        // Home URL (either '/' or '/card/{slug}') must only match exactly
         $routeSlug = request()->route('slug');
         if ($path === '/' || ($routeSlug && $path === "/card/{$routeSlug}")) {
             return $current === $path;
         }
 
-        // Sub-pages can match nested sub-routes (e.g. /card/slug/portfolio/1 matches /card/slug/portfolio)
         return str_starts_with($current, $path . '/');
     }
 
     private function fallbackNavbarRaw(): Collection
     {
         return collect([
-            ['label' => 'Home', 'url' => url('/'), 'target' => '_self', 'children' => []],
-            ['label' => 'About', 'url' => url('/about'), 'target' => '_self', 'children' => []],
-            ['label' => 'Services', 'url' => url('/our-services'), 'target' => '_self', 'children' => []],
-            ['label' => 'Portfolio', 'url' => url('/portfolio'), 'target' => '_self', 'children' => []],
-            ['label' => 'Contact', 'url' => url('/contact'), 'target' => '_self', 'children' => []],
-        ]);
-    }
-
-    private function fallbackNavbar(): Collection
-    {
-        return collect([
-            ['label' => 'Home', 'url' => url('/'), 'target' => '_self', 'active' => request()->routeIs('home'), 'children' => []],
-            ['label' => 'About', 'url' => url('/about'), 'target' => '_self', 'active' => request()->routeIs('about'), 'children' => []],
-            ['label' => 'Services', 'url' => url('/our-services'), 'target' => '_self', 'active' => request()->routeIs('services.*'), 'children' => []],
-            ['label' => 'Portfolio', 'url' => url('/portfolio'), 'target' => '_self', 'active' => request()->routeIs('portfolio.*'), 'children' => []],
-            ['label' => 'Contact', 'url' => url('/contact'), 'target' => '_self', 'active' => request()->routeIs('contact'), 'children' => []],
+            ['label' => 'Home', 'url' => url('/'), 'target' => '_self', 'show_in_footer' => true, 'children' => []],
+            ['label' => 'About', 'url' => url('/about'), 'target' => '_self', 'show_in_footer' => true, 'children' => []],
+            ['label' => 'Services', 'url' => url('/our-services'), 'target' => '_self', 'show_in_footer' => true, 'children' => []],
+            ['label' => 'Portfolio', 'url' => url('/portfolio'), 'target' => '_self', 'show_in_footer' => true, 'children' => []],
+            ['label' => 'Contact', 'url' => url('/contact'), 'target' => '_self', 'show_in_footer' => true, 'children' => []],
         ]);
     }
 }

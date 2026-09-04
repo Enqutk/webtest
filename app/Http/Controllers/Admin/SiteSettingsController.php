@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enums\MenuLocationEnum;
 use App\Enums\StatusEnum;
 use App\Http\Controllers\Admin\Concerns\ResolvesSitePageEditorContext;
 use App\Http\Controllers\Controller;
-use App\Models\MenuLocation;
 use App\Models\Organization;
 use App\Models\OrganizationContact;
+use App\Models\SocialRef;
+use App\Services\NavbarMenuService;
 use Illuminate\Http\Request;
 
 class SiteSettingsController extends Controller
 {
     use ResolvesSitePageEditorContext;
+
+    public function __construct(
+        private readonly NavbarMenuService $navbarMenuService,
+    ) {}
 
     public function index()
     {
@@ -21,23 +25,24 @@ class SiteSettingsController extends Controller
         $theme = is_array($currentOrg->theme) ? $currentOrg->theme : Organization::defaultTheme();
         $logoUrl = $currentOrg->getFirstMediaUrl('logo');
 
-        $headerMenu = MenuLocation::firstOrCreate(
-            [
-                'organization_id' => $currentOrg->id,
-                'location' => MenuLocationEnum::Navbar,
-            ],
-            [
-                'name' => 'Header Navigation',
-                'slug' => 'header-navigation-' . $currentOrg->id,
-            ]
-        );
-        $navItems = $headerMenu->items()->orderBy('order_number')->get();
+        $headerMenu = $this->navbarMenuService->resolveMenu($currentOrg);
+        $navItems = $this->navbarMenuService->topLevelItems($currentOrg);
 
         $contacts = OrganizationContact::query()
             ->where('organization_id', $currentOrg->id)
             ->where('status', StatusEnum::active)
+            ->orderBy('id')
             ->get()
             ->groupBy('type');
+
+        $socials = SocialRef::query()
+            ->where('organization_id', $currentOrg->id)
+            ->orderBy('order')
+            ->get();
+
+        $connectLinks = $theme['footer_connect_links'] ?? [
+            ['label' => 'Contact', 'url' => '/contact'],
+        ];
 
         $meta = ['label' => 'Site Settings'];
         $liveUrl = route('card.home', ['slug' => $currentOrg->slug]);
@@ -50,6 +55,8 @@ class SiteSettingsController extends Controller
             'headerMenu',
             'navItems',
             'contacts',
+            'socials',
+            'connectLinks',
             'meta',
             'liveUrl',
             'previewUrl'
@@ -65,14 +72,32 @@ class SiteSettingsController extends Controller
             'tagline' => ['nullable', 'string', 'max:500'],
             'address' => ['nullable', 'string', 'max:500'],
             'po_box' => ['nullable', 'string', 'max:100'],
-            'contact_email' => ['nullable', 'email', 'max:255'],
-            'contact_phone' => ['nullable', 'string', 'max:50'],
+            'contact_emails' => ['nullable', 'array'],
+            'contact_emails.*' => ['nullable', 'email', 'max:255'],
+            'contact_phones' => ['nullable', 'array'],
+            'contact_phones.*' => ['nullable', 'string', 'max:50'],
+            'connect_links' => ['nullable', 'array'],
+            'connect_links.*.label' => ['nullable', 'string', 'max:100'],
+            'connect_links.*.url' => ['nullable', 'string', 'max:255'],
             'logo' => ['nullable', 'image', 'max:5120'],
         ]);
 
         $currentTheme = is_array($currentOrg->theme) ? $currentOrg->theme : Organization::defaultTheme();
         if ($request->has('theme') && is_array($request->theme)) {
             $currentTheme = array_merge($currentTheme, $request->theme);
+        }
+
+        $connectLinks = collect($validated['connect_links'] ?? [])
+            ->map(fn ($link) => [
+                'label' => trim($link['label'] ?? ''),
+                'url' => trim($link['url'] ?? ''),
+            ])
+            ->filter(fn ($link) => $link['label'] !== '' && $link['url'] !== '')
+            ->values()
+            ->all();
+
+        if ($connectLinks !== []) {
+            $currentTheme['footer_connect_links'] = $connectLinks;
         }
 
         $currentOrg->update([
@@ -88,8 +113,8 @@ class SiteSettingsController extends Controller
             $currentOrg->addMediaFromRequest('logo')->toMediaCollection('logo');
         }
 
-        $this->syncContact($currentOrg, 'email', $validated['contact_email'] ?? null);
-        $this->syncContact($currentOrg, 'phone', $validated['contact_phone'] ?? null);
+        $this->syncContacts($currentOrg, 'email', $validated['contact_emails'] ?? []);
+        $this->syncContacts($currentOrg, 'phone', $validated['contact_phones'] ?? []);
 
         $hash = $request->input('_tab', 'header');
 
@@ -98,16 +123,19 @@ class SiteSettingsController extends Controller
             ->with('success', 'Site settings saved.');
     }
 
-    private function syncContact(Organization $org, string $type, ?string $value): void
+    private function syncContacts(Organization $org, string $type, array $values): void
     {
-        $value = trim((string) $value);
-
         OrganizationContact::query()
             ->where('organization_id', $org->id)
             ->where('type', $type)
             ->delete();
 
-        if ($value !== '') {
+        foreach ($values as $value) {
+            $value = trim((string) $value);
+            if ($value === '') {
+                continue;
+            }
+
             OrganizationContact::create([
                 'organization_id' => $org->id,
                 'type' => $type,
