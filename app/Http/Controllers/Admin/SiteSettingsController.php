@@ -116,7 +116,7 @@ class SiteSettingsController extends Controller
         $this->syncContacts($currentOrg, 'email', $validated['contact_emails'] ?? []);
         $this->syncContacts($currentOrg, 'phone', $validated['contact_phones'] ?? []);
 
-        $hash = $request->input('_tab', 'header');
+        $hash = preg_replace('/[^a-z0-9\-]/', '', (string) $request->input('_hash', 'header')) ?: 'header';
 
         return redirect()
             ->to(route('admin.site-settings.index') . '#' . $hash)

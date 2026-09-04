@@ -61,7 +61,7 @@
                         <span class="text-sm font-bold text-slate-900">Live Preview</span>
                         <span class="px-2 py-0.5 rounded-md bg-brand-50 text-brand-700 text-[11px] font-bold">{{ $meta['label'] ?? 'Page' }}</span>
                     </div>
-                    <p class="text-[11px] text-slate-500 mt-0.5">Click header, footer, or page areas in the preview to jump to the editor.</p>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Click any area in the preview to jump to that setting.</p>
                 </div>
                 <a href="{{ $liveUrl }}" target="_blank" rel="noopener"
                    class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-lg transition">

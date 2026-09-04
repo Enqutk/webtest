@@ -1,4 +1,10 @@
-<div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm space-y-4" x-data="{
+@props(['bare' => false])
+
+@php
+    $wrapperClass = $bare ? 'space-y-2' : 'bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm space-y-4';
+@endphp
+
+<div class="{{ $wrapperClass }}" x-data="{
     openModal: false,
     editingId: null,
     title: '',
@@ -25,20 +31,26 @@
         this.openModal = true;
     }
 }">
+    @unless($bare)
     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
         <div>
             <h3 class="text-sm font-bold text-slate-900">Social icons</h3>
-            <p class="text-xs text-slate-500 mt-0.5">Facebook, LinkedIn, X, YouTube, etc. shown under the footer logo.</p>
+            <p class="text-xs text-slate-500 mt-0.5">Shown under the footer logo.</p>
         </div>
         <button type="button" @click="create()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg transition">+ Add</button>
     </div>
+    @else
+    <div class="flex justify-end mb-1">
+        <button type="button" @click="create()" class="text-[11px] font-bold text-brand-700 hover:text-brand-600">+ Add social link</button>
+    </div>
+    @endunless
 
     <div class="space-y-2">
         @forelse($socials as $soc)
-            <div class="flex items-center justify-between gap-2 p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+            <div class="flex items-center justify-between gap-2 p-2.5 rounded-lg bg-slate-50/80 border border-slate-200/60">
                 <div class="flex items-center gap-2 min-w-0 flex-1">
-                    <span class="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-slate-600 shrink-0">
-                        <i class="bi {{ $soc->icon_class ?: 'bi-link-45deg' }}"></i>
+                    <span class="w-7 h-7 rounded-md bg-white border border-slate-200 flex items-center justify-center text-slate-600 shrink-0">
+                        <i class="bi {{ $soc->icon_class ?: 'bi-link-45deg' }} text-sm"></i>
                     </span>
                     <div class="min-w-0">
                         <div class="text-xs font-bold text-slate-900 truncate">{{ $soc->title }}</div>
@@ -55,7 +67,7 @@
                 </div>
             </div>
         @empty
-            <p class="text-xs text-slate-500 p-3 rounded-xl bg-slate-50 border border-dashed border-slate-200">No social links yet.</p>
+            <p class="text-xs text-slate-500 p-3 rounded-lg bg-slate-50 border border-dashed border-slate-200">No social links yet.</p>
         @endforelse
     </div>
 

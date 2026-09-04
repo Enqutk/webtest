@@ -14,9 +14,12 @@ class AdminEditUrls
     public static function forCommonSection(string $section): ?string
     {
         return match ($section) {
-            'site-header', 'site-brand', 'site-header-cta' => self::siteSettings('header'),
+            'site-header', 'site-brand' => self::siteSettings('company-name'),
+            'site-header-cta' => self::siteSettings('header-cta'),
             'site-nav' => self::siteSettings('navigation'),
-            'site-footer', 'site-social', 'site-contact' => self::siteSettings('footer'),
+            'site-social' => self::siteSettings('social'),
+            'site-contact' => self::siteSettings('contact'),
+            'site-footer' => self::siteSettings('footer-display'),
             default => null,
         };
     }

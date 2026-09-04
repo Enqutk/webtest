@@ -1,9 +1,17 @@
 @props([
     'title' => 'Navigation links',
     'description' => 'Every link appears in the header. Choose whether it also shows in the footer Explore column.',
+    'bare' => false,
 ])
 
-<div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm space-y-4" x-data="sitePageNavLinks">
+@php
+    $wrapperClass = $bare
+        ? 'space-y-3'
+        : 'bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm space-y-4';
+@endphp
+
+<div class="{{ $wrapperClass }}" x-data="sitePageNavLinks">
+    @unless($bare)
     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
         <div>
             <h3 class="text-sm font-bold text-slate-900">{{ $title }}</h3>
@@ -13,15 +21,20 @@
             + Add link
         </button>
     </div>
+    @else
+    <div class="flex justify-end mb-1">
+        <button type="button" @click="openAdd()" class="text-[11px] font-bold text-brand-700 hover:text-brand-600">+ Add link</button>
+    </div>
+    @endunless
 
     <div class="space-y-2">
         @forelse($navItems as $item)
-            <div class="flex items-center justify-between gap-2 p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+            <div class="flex items-center justify-between gap-2 p-2.5 rounded-lg bg-slate-50/80 border border-slate-200/60">
                 <div class="min-w-0 flex-1">
                     <div class="flex items-center gap-2 flex-wrap">
                         <span class="text-xs font-bold text-slate-900 truncate">{{ $item->title }}</span>
-                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold {{ $item->show_in_footer ? 'bg-brand-50 text-brand-700' : 'bg-slate-200 text-slate-600' }}">
-                            {{ $item->show_in_footer ? 'Header + footer' : 'Header only' }}
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold {{ ($item->show_in_footer ?? true) ? 'bg-brand-50 text-brand-700' : 'bg-slate-200 text-slate-600' }}">
+                            {{ ($item->show_in_footer ?? true) ? 'Header + footer' : 'Header only' }}
                         </span>
                     </div>
                     <div class="text-[11px] text-slate-500 font-mono truncate">{{ $item->url }}</div>
@@ -40,7 +53,7 @@
                 </div>
             </div>
         @empty
-            <p class="text-xs text-slate-500 p-3 rounded-xl bg-slate-50 border border-dashed border-slate-200">No links yet. Add Home, About, Services, Portfolio, Contact.</p>
+            <p class="text-xs text-slate-500 p-3 rounded-lg bg-slate-50 border border-dashed border-slate-200">No links yet.</p>
         @endforelse
     </div>
 
@@ -57,11 +70,11 @@
                     <input type="hidden" name="menu_id" value="{{ $headerMenu->id }}">
                     <div class="space-y-1.5">
                         <label class="block text-xs font-bold text-slate-700">Label</label>
-                        <input type="text" name="title" x-model="itemTitle" required placeholder="e.g. About" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                        <input type="text" name="title" x-model="itemTitle" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs">
                     </div>
                     <div class="space-y-1.5">
                         <label class="block text-xs font-bold text-slate-700">URL</label>
-                        <input type="text" name="url" x-model="itemUrl" required placeholder="/about or /contact" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono">
+                        <input type="text" name="url" x-model="itemUrl" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono">
                     </div>
                     <div class="space-y-1.5">
                         <label class="block text-xs font-bold text-slate-700">Show in</label>
