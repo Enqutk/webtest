@@ -12,9 +12,14 @@
         return window.location.pathname.endsWith('/admin/home-sections');
     }
 
+    function isAboutPageEditor() {
+        return window.location.pathname.endsWith('/admin/site-pages/about');
+    }
+
     function shouldNavigateForSection(section) {
         if (!editTargets[section]) return false;
         if (isHomeBuilderPage() && homeSections.indexOf(section) !== -1) return false;
+        if (isAboutPageEditor() && (section === 'about-page-intro' || section === 'about-page-story' || section === 'page-hero')) return false;
         return true;
     }
 
@@ -68,14 +73,49 @@
         return true;
     }
 
-    function focusLocalPageEditor(section) {
-        if (section !== 'page-hero') return false;
-        var header = document.getElementById('page-header');
-        if (!header) return false;
-        header.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        var focusInput = header.querySelector('input[name="title"], textarea, input');
-        if (focusInput) focusInput.focus();
-        return true;
+    function focusLocalPageEditor(section, field) {
+        if (section === 'page-hero') {
+            var header = document.getElementById('page-header');
+            if (!header) return false;
+            header.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            var focusInput = header.querySelector('input[name="title"], textarea, input');
+            if (focusInput) focusInput.focus();
+            return true;
+        }
+
+        if (section === 'about-page-intro') {
+            var intro = document.getElementById('about-page-intro');
+            if (!intro) return false;
+            intro.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            if (field && /^point_\d+$/.test(field)) {
+                var idx = field.replace('point_', '');
+                var card = document.getElementById('about-point-' + idx);
+                if (card) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    var titleInput = card.querySelector('input[name="points[' + idx + '][title]"]');
+                    if (titleInput) titleInput.focus();
+                    return true;
+                }
+            }
+            var fieldMap = { eyebrow: 'intro_eyebrow', title: 'intro_title', description: 'intro_description' };
+            var inputName = fieldMap[field] || null;
+            var input = inputName ? intro.querySelector('[name="' + inputName + '"]') : intro.querySelector('input, textarea');
+            if (input) input.focus();
+            return true;
+        }
+
+        if (section === 'about-page-story') {
+            var story = document.getElementById('about-page-story');
+            if (!story) return false;
+            story.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            var storyFieldMap = { eyebrow: 'story_eyebrow', title: 'story_title' };
+            var storyInputName = field ? (storyFieldMap[field] || null) : null;
+            var storyInput = storyInputName ? story.querySelector('[name="' + storyInputName + '"]') : story.querySelector('input, textarea');
+            if (storyInput) storyInput.focus();
+            return true;
+        }
+
+        return false;
     }
 
     window.AdminPreview = {
@@ -143,7 +183,7 @@
                     return true;
                 }
 
-                if (focusLocalPageEditor(data.section)) {
+                if (focusLocalPageEditor(data.section, data.field || null)) {
                     return true;
                 }
 

@@ -38,6 +38,13 @@ class AdminEditUrls
         return $url;
     }
 
+    public static function sitePages(string $page, ?string $anchor = null): string
+    {
+        $url = route('admin.site-pages.edit', $page);
+
+        return $anchor ? $url . '#' . ltrim($anchor, '#') : $url;
+    }
+
     public static function forCommonSection(string $section): ?string
     {
         return match ($section) {
@@ -92,6 +99,9 @@ class AdminEditUrls
         foreach (self::HOME_SECTIONS as $section) {
             $targets[$section] = self::homeSections($section);
         }
+
+        $targets['about-page-intro'] = self::sitePages('about', 'about-page-intro');
+        $targets['about-page-story'] = self::sitePages('about', 'about-page-story');
 
         return array_filter($targets);
     }

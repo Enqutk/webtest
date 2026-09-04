@@ -14,15 +14,24 @@
         :about="$data['aboutFeatures']"
         :features="$data['heroFeatures']"
         :show-link="false"
+        preview-context="about-page"
     />
 
     @if($data['aboutSection1'] || $data['aboutSection2'])
-        <section class="hz-section hz-about-story bg-surface border-top border-bottom border-hz">
+        <section
+            class="hz-section hz-about-story bg-surface border-top border-bottom border-hz"
+            id="about-page-story"
+            @if(request()->boolean('admin_preview'))
+                data-admin-section="about-page-story"
+                data-admin-label="Edit Story Section"
+                data-admin-edit-url="{{ route('admin.site-pages.edit', 'about') }}#about-page-story"
+            @endif
+        >
             <div class="container">
                 <div class="row justify-content-center mb-4">
                     <div class="col-lg-8 text-center">
-                        <p class="hz-eyebrow">{{ $aboutPage['story']['eyebrow'] ?? 'Our story' }}</p>
-                        <h2 class="hz-title">{{ $aboutPage['story']['title'] ?? 'How we work' }}</h2>
+                        <p class="hz-eyebrow" data-preview-field="eyebrow" {!! \App\Support\AdminPreviewAttrs::html('about-page-story', 'eyebrow', 'Edit Eyebrow', true, route('admin.site-pages.edit', 'about') . '#about-page-story') !!}>{{ $aboutPage['story']['eyebrow'] ?? 'Our story' }}</p>
+                        <h2 class="hz-title" data-preview-field="title" {!! \App\Support\AdminPreviewAttrs::html('about-page-story', 'title', 'Edit Heading', true, route('admin.site-pages.edit', 'about') . '#about-page-story') !!}>{{ $aboutPage['story']['title'] ?? 'How we work' }}</h2>
                     </div>
                 </div>
                 <div class="row g-4">
