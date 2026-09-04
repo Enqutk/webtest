@@ -36,13 +36,24 @@
     }
     @media (min-width: 1280px) {
         .home-builder-editor {
-            flex-basis: 34%;
-            width: 34%;
-            max-width: 34%;
+            flex-basis: 32%;
+            width: 32%;
+            max-width: 32%;
         }
         .home-builder-preview {
-            flex-basis: 66%;
-            width: 66%;
+            flex-basis: 68%;
+            width: 68%;
+        }
+    }
+    @media (min-width: 1536px) {
+        .home-builder-editor {
+            flex-basis: 30%;
+            width: 30%;
+            max-width: 30%;
+        }
+        .home-builder-preview {
+            flex-basis: 70%;
+            width: 70%;
         }
     }
 </style>

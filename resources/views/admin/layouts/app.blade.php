@@ -48,13 +48,39 @@
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        @media (min-width: 1024px) {
+            .admin-sidebar {
+                width: 18rem;
+                transition: width 0.25s ease, transform 0.25s ease, opacity 0.2s ease;
+            }
+            .admin-sidebar.is-collapsed {
+                width: 0;
+                min-width: 0;
+                opacity: 0;
+                pointer-events: none;
+                overflow: hidden;
+                border-width: 0;
+            }
+        }
     </style>
 
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.5/dist/cdn.min.js"></script>
     @stack('styles')
 </head>
-<body class="h-full font-sans antialiased text-slate-800 bg-slate-50 flex" x-data="{ sidebarOpen: false }">
+<body class="h-full font-sans antialiased text-slate-800 bg-slate-50 flex" x-data="{
+    sidebarOpen: false,
+    sidebarCollapsed: (() => {
+        const stored = localStorage.getItem('adminSidebarCollapsed');
+        if (stored !== null) return stored === '1';
+        return /\/admin\/(site-settings|home-sections|site-pages|services|portfolio|team)/.test(window.location.pathname);
+    })(),
+    toggleSidebarCollapse() {
+        this.sidebarCollapsed = !this.sidebarCollapsed;
+        localStorage.setItem('adminSidebarCollapsed', this.sidebarCollapsed ? '1' : '0');
+    }
+}">
 
     <!-- Mobile Sidebar Backdrop -->
     <div x-show="sidebarOpen"
@@ -69,8 +95,13 @@
          x-cloak></div>
 
     <!-- Sidebar Navigation -->
-    <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
-           class="fixed inset-y-0 left-0 z-50 w-72 bg-slate-900 text-slate-300 flex flex-col transition-transform duration-300 ease-in-out lg:static shadow-xl">
+    <aside
+        :class="[
+            sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
+            sidebarCollapsed ? 'is-collapsed' : '',
+        ]"
+        class="admin-sidebar fixed inset-y-0 left-0 z-50 bg-slate-900 text-slate-300 flex flex-col transition-transform duration-300 ease-in-out lg:static shadow-xl shrink-0"
+    >
         
         <!-- Brand / App Logo -->
         <div class="h-16 px-6 flex items-center justify-between border-b border-slate-800/80 bg-slate-950/40">
@@ -282,6 +313,14 @@
             <div class="flex items-center gap-3">
                 <button @click="sidebarOpen = true" class="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100">
                     <i class="bi bi-list text-xl"></i>
+                </button>
+                <button
+                    @click="toggleSidebarCollapse()"
+                    class="hidden lg:inline-flex p-2 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-800 transition"
+                    :title="sidebarCollapsed ? 'Show navigation sidebar' : 'Hide navigation sidebar'"
+                    type="button"
+                >
+                    <i class="bi text-lg" :class="sidebarCollapsed ? 'bi-layout-sidebar-inset' : 'bi-layout-sidebar-inset-reverse'"></i>
                 </button>
                 <div class="flex items-center gap-2">
                     <h1 class="text-base font-bold text-slate-900">@yield('page-title', 'Dashboard')</h1>
