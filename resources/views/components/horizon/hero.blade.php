@@ -134,17 +134,6 @@
                     </div>
                 @endforeach
             </div>
-
-            @if($hasMultiple)
-                <button class="carousel-control-prev hz-hero-control" type="button" data-bs-target="#hzHeroCarousel" data-bs-slide="prev">
-                    <span class="hz-hero-control-icon" aria-hidden="true"><i class="bi bi-chevron-left"></i></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next hz-hero-control" type="button" data-bs-target="#hzHeroCarousel" data-bs-slide="next">
-                    <span class="hz-hero-control-icon" aria-hidden="true"><i class="bi bi-chevron-right"></i></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
-            @endif
         </div>
     @endif
 </section>
