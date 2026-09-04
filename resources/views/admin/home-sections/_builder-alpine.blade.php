@@ -1,3 +1,19 @@
+@php
+    $previewCommonSections = [
+        'site-header' => \App\Support\AdminEditUrls::siteSettings('company-name'),
+        'site-brand' => \App\Support\AdminEditUrls::siteSettings('company-name'),
+        'site-company-name' => \App\Support\AdminEditUrls::siteSettings('company-name'),
+        'site-logo' => \App\Support\AdminEditUrls::siteSettings('logo'),
+        'site-tagline' => \App\Support\AdminEditUrls::siteSettings('tagline'),
+        'site-nav' => \App\Support\AdminEditUrls::siteSettings('navigation'),
+        'site-connect' => \App\Support\AdminEditUrls::siteSettings('navigation'),
+        'site-header-cta' => \App\Support\AdminEditUrls::siteSettings('header-cta'),
+        'site-footer' => \App\Support\AdminEditUrls::siteSettings('footer-display'),
+        'site-footer-credit' => \App\Support\AdminEditUrls::siteSettings('footer-display'),
+        'site-social' => \App\Support\AdminEditUrls::siteSettings('social'),
+        'site-contact' => \App\Support\AdminEditUrls::siteSettings('contact'),
+    ];
+@endphp
 @push('scripts')
 <script>
 document.addEventListener('alpine:init', () => {
@@ -275,20 +291,7 @@ document.addEventListener('alpine:init', () => {
                         window.location.href = data.editUrl;
                         return;
                     }
-                    const common = @json([
-                        'site-header' => \App\Support\AdminEditUrls::siteSettings('company-name'),
-                        'site-brand' => \App\Support\AdminEditUrls::siteSettings('company-name'),
-                        'site-company-name' => \App\Support\AdminEditUrls::siteSettings('company-name'),
-                        'site-logo' => \App\Support\AdminEditUrls::siteSettings('logo'),
-                        'site-tagline' => \App\Support\AdminEditUrls::siteSettings('tagline'),
-                        'site-nav' => \App\Support\AdminEditUrls::siteSettings('navigation'),
-                        'site-connect' => \App\Support\AdminEditUrls::siteSettings('navigation'),
-                        'site-header-cta' => \App\Support\AdminEditUrls::siteSettings('header-cta'),
-                        'site-footer' => \App\Support\AdminEditUrls::siteSettings('footer-display'),
-                        'site-footer-credit' => \App\Support\AdminEditUrls::siteSettings('footer-display'),
-                        'site-social' => \App\Support\AdminEditUrls::siteSettings('social'),
-                        'site-contact' => \App\Support\AdminEditUrls::siteSettings('contact'),
-                    ]);
+                    const common = @json($previewCommonSections);
                     if (common[data.section]) {
                         window.location.href = common[data.section];
                         return;
