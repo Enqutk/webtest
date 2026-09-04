@@ -1,10 +1,10 @@
-@extends('admin.layouts.app')
+@extends('admin.site-pages.layout')
 
 @section('title', 'Leadership Team')
 @section('page-title', 'Leadership Team')
 @section('page-subtitle', $currentOrg->title)
 
-@section('content')
+@section('page-form')
 <div class="space-y-6" x-data="{
     openMemberModal: false,
     editingId: null,

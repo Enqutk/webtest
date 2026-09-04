@@ -124,12 +124,12 @@
 
             <div id="company-name" class="space-y-1.5 scroll-mt-4">
                 <label class="block text-xs font-bold text-slate-700">Company name</label>
-                <input type="text" name="title" value="{{ $currentOrg->title }}" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                <input type="text" name="title" value="{{ $currentOrg->title }}" required data-preview-bind="site-company-name:company-name" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
             </div>
 
             <div id="tagline" class="space-y-1.5 scroll-mt-4">
                 <label class="block text-xs font-bold text-slate-700">Tagline</label>
-                <input type="text" name="tagline" value="{{ $currentOrg->tagline }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                <input type="text" name="tagline" value="{{ $currentOrg->tagline }}" data-preview-bind="site-tagline:tagline" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                     <input type="hidden" name="theme[show_brand_text]" value="0">
                     <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer">
@@ -165,7 +165,7 @@
                     <span class="text-xs font-semibold text-slate-700">Show button in header</span>
                 </label>
                 <div class="grid grid-cols-1 gap-3">
-                    <input type="text" name="theme[header_cta_text]" value="{{ $theme['header_cta_text'] ?? 'Get in touch' }}" placeholder="Button text" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                    <input type="text" name="theme[header_cta_text]" value="{{ $theme['header_cta_text'] ?? 'Get in touch' }}" placeholder="Button text" data-preview-bind="site-header-cta:header-cta-text" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
                     <input type="text" name="theme[header_cta_url]" value="{{ $theme['header_cta_url'] ?? '/contact' }}" placeholder="/contact" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono">
                 </div>
             </div>
@@ -213,7 +213,7 @@
                     </template>
                     <button type="button" @click="addPhone()" class="text-[11px] font-bold text-brand-700">+ Add phone</button>
 
-                    <textarea name="address" rows="2" placeholder="Street address" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs mt-2">{{ $currentOrg->address }}</textarea>
+                    <textarea name="address" rows="2" placeholder="Street address" data-preview-bind="site-contact:address" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs mt-2">{{ $currentOrg->address }}</textarea>
                     <input type="text" name="po_box" value="{{ $currentOrg->po_box }}" placeholder="P.O. Box" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
                 </div>
             </div>

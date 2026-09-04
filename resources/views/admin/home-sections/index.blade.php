@@ -137,7 +137,7 @@
             <span>Services ({{ $services->count() }})</span>
         </button>
         <button type="button" @click="selectSection('stats')" :class="activeSection === 'stats' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
-            <span>Impact & Stats</span>
+            <span>Impact & Stats ({{ count($statsItems) }})</span>
         </button>
         <button type="button" @click="selectSection('portfolio')" :class="activeSection === 'portfolio' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
             <span>Portfolio</span>
@@ -1031,4 +1031,5 @@
 
 </div>
 @include('admin.home-sections._builder-alpine')
+@include('admin.partials._preview-bridge')
 @endsection

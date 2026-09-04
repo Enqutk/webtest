@@ -1,18 +1,4 @@
 @php
-    $previewCommonSections = [
-        'site-header' => \App\Support\AdminEditUrls::siteSettings('company-name'),
-        'site-brand' => \App\Support\AdminEditUrls::siteSettings('company-name'),
-        'site-company-name' => \App\Support\AdminEditUrls::siteSettings('company-name'),
-        'site-logo' => \App\Support\AdminEditUrls::siteSettings('logo'),
-        'site-tagline' => \App\Support\AdminEditUrls::siteSettings('tagline'),
-        'site-nav' => \App\Support\AdminEditUrls::siteSettings('navigation'),
-        'site-connect' => \App\Support\AdminEditUrls::siteSettings('navigation'),
-        'site-header-cta' => \App\Support\AdminEditUrls::siteSettings('header-cta'),
-        'site-footer' => \App\Support\AdminEditUrls::siteSettings('footer-display'),
-        'site-footer-credit' => \App\Support\AdminEditUrls::siteSettings('footer-display'),
-        'site-social' => \App\Support\AdminEditUrls::siteSettings('social'),
-        'site-contact' => \App\Support\AdminEditUrls::siteSettings('contact'),
-    ];
     $servicesListForJs = $services->map(fn ($s) => [
         'id' => $s->id,
         'title' => $s->title,
@@ -177,48 +163,21 @@ document.addEventListener('alpine:init', () => {
         },
 
         postToPreview(payload) {
-            const frame = this.previewFrame();
-            if (!frame || !frame.contentWindow) return;
-            frame.contentWindow.postMessage(Object.assign({
-                source: 'admin-home-preview-parent',
-            }, payload), '*');
+            if (window.AdminPreview) {
+                window.AdminPreview.post(payload);
+            }
         },
 
         focusPreviewSection(section, field) {
-            section = section || this.activeSection;
-            this.postToPreview({ type: 'focus-section', section: section, field: field || null });
-            const doc = this.previewDoc();
-            if (!doc) return;
-            doc.querySelectorAll('[data-admin-section]').forEach((el) => el.classList.remove('is-admin-focused'));
-            const sel = field
-                ? '[data-admin-section="' + section + '"][data-admin-field="' + field + '"]'
-                : '[data-admin-section="' + section + '"]';
-            const target = doc.querySelector(sel);
-            if (!target) return;
-            target.classList.add('is-admin-focused');
-            target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            if (window.AdminPreview) {
+                window.AdminPreview.focusPreviewSection(section || this.activeSection, field || null);
+            }
         },
 
         pushField(section, field, value) {
-            this.postToPreview({ type: 'update-field', section: section, field: field, value: value });
-            const doc = this.previewDoc();
-            if (!doc) return;
-            const sectionRoot = doc.getElementById(section) || doc.querySelector('[data-admin-section="' + section + '"]');
-            const scope = sectionRoot || doc;
-            scope.querySelectorAll('[data-preview-field="' + field + '"]').forEach((el) => {
-                if (el.tagName === 'IMG') {
-                    if (value) el.setAttribute('src', value);
-                    return;
-                }
-                if (el.getAttribute('data-preview-html') === '1') {
-                    el.innerHTML = value || '';
-                } else {
-                    el.textContent = value || '';
-                }
-                if (el.style && el.style.display === 'none') {
-                    el.style.display = value ? '' : 'none';
-                }
-            });
+            if (window.AdminPreview) {
+                window.AdminPreview.pushField(section, field, value);
+            }
         },
 
         selectSection(section, options) {
@@ -328,37 +287,35 @@ document.addEventListener('alpine:init', () => {
         },
 
         wirePreviewInteractions() {
-            const doc = this.previewDoc();
-            if (!doc || !doc.body) return;
-
-            doc.body.classList.add('admin-preview-mode');
-
-            if (!doc.getElementById('admin-preview-parent-style')) {
-                const style = doc.createElement('style');
-                style.id = 'admin-preview-parent-style';
-                style.textContent = [
-                    'body.admin-preview-mode [data-admin-section]{position:relative;cursor:pointer!important;outline:2px solid transparent;outline-offset:2px;border-radius:6px}',
-                    'body.admin-preview-mode [data-admin-section][data-admin-compact]{display:inline-block;width:fit-content;max-width:100%;vertical-align:middle}',
-                    'body.admin-preview-mode [data-admin-section][data-admin-compact]::after{content:attr(data-admin-label);position:absolute;top:-26px;left:0;z-index:9999;background:rgba(15,23,42,.92);color:#fff;font-size:9px;font-weight:700;text-transform:uppercase;padding:3px 7px;border-radius:6px;opacity:0;pointer-events:none;white-space:nowrap}',
-                    'body.admin-preview-mode [data-admin-section][data-admin-compact]:hover,body.admin-preview-mode [data-admin-section][data-admin-compact].is-admin-focused{outline-color:#ea580c;background:rgba(234,88,12,.12);box-shadow:none}',
-                    'body.admin-preview-mode [data-admin-section][data-admin-compact]:hover::after,body.admin-preview-mode [data-admin-section][data-admin-compact].is-admin-focused::after{opacity:1}',
-                    'body.admin-preview-mode [data-admin-section]:not([data-admin-compact]):hover{outline-color:rgba(234,88,12,.7);box-shadow:inset 0 0 0 9999px rgba(234,88,12,.07)}',
-                    'body.admin-preview-mode [data-admin-section]:not([data-admin-compact]).is-admin-focused{outline-color:#ea580c;box-shadow:inset 0 0 0 9999px rgba(234,88,12,.1)}',
-                    'body.admin-preview-mode a,body.admin-preview-mode button{pointer-events:none!important}',
-                ].join('');
-                (doc.head || doc.body).appendChild(style);
-            }
-
             this.previewReady = true;
             this.syncActiveSectionToPreview();
         },
 
         onPreviewLoad() {
+            if (this.$refs.previewFrame && window.AdminPreview) {
+                window.AdminPreview.registerFrame(this.$refs.previewFrame);
+            }
             setTimeout(() => this.wirePreviewInteractions(), 50);
             setTimeout(() => this.wirePreviewInteractions(), 300);
+            if (window.AdminPreview) {
+                window.AdminPreview.onFrameLoad();
+            }
         },
 
         init() {
+            if (window.AdminPreview) {
+                window.AdminPreview.handlers.onSectionClick = (section, field) => {
+                    this.selectSection(section, { fromPreview: true, field: field || null });
+                };
+            }
+
+            const hash = window.location.hash.replace('#', '');
+            if (hash.startsWith('admin-form-')) {
+                const section = hash.replace('admin-form-', '');
+                const field = new URLSearchParams(window.location.search).get('field');
+                this.$nextTick(() => this.selectSection(section, { field: field }));
+            }
+
             window.addEventListener('message', (event) => {
                 const data = event.data || {};
                 if (data.source !== 'admin-home-preview') return;
@@ -366,23 +323,6 @@ document.addEventListener('alpine:init', () => {
                 if (data.type === 'ready') {
                     this.previewReady = true;
                     this.wirePreviewInteractions();
-                }
-
-                if (data.type === 'section-click' && data.section) {
-                    if (data.editUrl) {
-                        window.location.href = data.editUrl;
-                        return;
-                    }
-                    const common = @json($previewCommonSections);
-                    if (common[data.section]) {
-                        window.location.href = common[data.section];
-                        return;
-                    }
-                    this.selectSection(data.section, { fromPreview: true, field: data.field || null });
-                }
-
-                if (data.type === 'navigate-edit' && data.url) {
-                    window.location.href = data.url;
                 }
             });
 

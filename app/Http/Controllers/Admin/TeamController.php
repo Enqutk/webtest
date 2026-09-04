@@ -19,7 +19,11 @@ class TeamController extends Controller
             ->orderBy('order')
             ->paginate(20);
 
-        return view('admin.team.index', compact('members', 'currentOrg'));
+        $liveUrl = route('card.home', ['slug' => $currentOrg->slug]) . '#team';
+        $previewUrl = route('card.home', ['slug' => $currentOrg->slug, 'admin_preview' => 1]) . '#team';
+        $meta = ['label' => 'Team section'];
+
+        return view('admin.team.index', compact('members', 'currentOrg', 'liveUrl', 'previewUrl', 'meta'));
     }
 
     public function create()

@@ -42,7 +42,7 @@
     $heroSecCtaUrl = !empty($heroConfig['secondary_cta_url']) ? $heroConfig['secondary_cta_url'] : ($data['contactUrl'] ?? route('contact'));
 @endphp
 
-<section class="hz-hero" aria-label="Homepage hero">
+<section class="hz-hero" id="hero" aria-label="Homepage hero">
     @if($slides->isEmpty())
         <div class="container">
             <div class="row align-items-center g-5 hz-hero-slide">

@@ -14,17 +14,17 @@
     }
 @endphp
 
-<section class="hz-page-hero"
+<section class="hz-page-hero" id="page-hero"
     @if($adminPreview && $pageHeroEditUrl)
         data-admin-section="page-hero"
         data-admin-label="Edit Page Header"
         data-admin-edit-url="{{ $pageHeroEditUrl }}"
     @endif>
     <div class="container">
-        <div class="eyebrow">@yield('eyebrow', $data['siteName'] ?? config('app.name'))</div>
-        <h1>@yield('page_title')</h1>
+        <div class="eyebrow" @if($adminPreview) data-preview-field="eyebrow" @endif>@yield('eyebrow', $data['siteName'] ?? config('app.name'))</div>
+        <h1 @if($adminPreview) data-preview-field="title" @endif>@yield('page_title')</h1>
         @hasSection('description')
-            <p>@yield('description')</p>
+            <p @if($adminPreview) data-preview-field="description" @endif>@yield('description')</p>
         @endif
     </div>
 </section>

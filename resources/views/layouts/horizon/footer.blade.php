@@ -57,9 +57,11 @@
                         class="mb-3 hz-footer-tagline"
                         @if($adminPreview)
                             data-admin-section="site-tagline"
+                            data-admin-field="tagline"
                             data-admin-compact="1"
                             data-admin-label="Edit Tagline"
                             data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('tagline') }}"
+                            data-preview-field="tagline"
                         @endif
                     >{{ $tagline }}</p>
                 @endif
@@ -124,9 +126,11 @@
                             class="mb-2 hz-address"
                             @if($adminPreview)
                                 data-admin-section="site-contact"
+                                data-admin-field="address"
                                 data-admin-compact="1"
                                 data-admin-label="Edit Contact"
                                 data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('contact') }}"
+                                data-preview-field="address"
                             @endif
                         >{{ $data['address'] }}</p>
                     @endif

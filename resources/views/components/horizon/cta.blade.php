@@ -11,7 +11,7 @@
         ?: 'Tell us about your project — we’ll help shape a clear path from concept to delivery.';
 @endphp
 
-<section class="hz-cta">
+<section class="hz-cta" id="cta">
     <div class="container">
         <div class="row align-items-center g-4">
             <div class="col-lg-8">

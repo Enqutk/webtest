@@ -48,9 +48,11 @@
                             class="hz-brand-text"
                             @if($adminPreview)
                                 data-admin-section="site-company-name"
+                                data-admin-field="company-name"
                                 data-admin-compact="1"
                                 data-admin-label="Edit Company Name"
                                 data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('company-name') }}"
+                                data-preview-field="company-name"
                             @endif
                         >
                             {{ $brandFirst }}@if($brandRest) <span>{{ $brandRest }}</span>@endif
@@ -139,9 +141,11 @@
                                 href="{{ $headerCtaUrl }}"
                                 @if($adminPreview)
                                     data-admin-section="site-header-cta"
+                                    data-admin-field="header-cta-text"
                                     data-admin-compact="1"
                                     data-admin-label="Edit CTA Button"
                                     data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('header-cta') }}"
+                                    data-preview-field="header-cta-text"
                                 @endif
                             >{{ $headerCtaText }}</a>
                         </li>
