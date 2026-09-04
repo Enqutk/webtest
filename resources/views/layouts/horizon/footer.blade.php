@@ -64,15 +64,7 @@
                     >{{ $tagline }}</p>
                 @endif
                 @if($showFooterSocial)
-                    <div
-                        class="hz-social"
-                        @if($adminPreview)
-                            data-admin-section="site-social"
-                            data-admin-compact="1"
-                            data-admin-label="Edit Social Icons"
-                            data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('social') }}"
-                        @endif
-                    >
+                    <div class="hz-social">
                         <x-social-media />
                     </div>
                 @endif
@@ -82,14 +74,14 @@
                     <h6 class="text-white mb-3">Explore</h6>
                     <ul class="list-unstyled d-grid gap-2">
                         @forelse($footerNavItems as $link)
-                            <li
+                            <li><a href="{{ $link['url'] }}"
                                 @if($adminPreview)
                                     data-admin-section="site-nav"
                                     data-admin-compact="1"
                                     data-admin-label="Edit Nav Links"
                                     data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('navigation') }}"
                                 @endif
-                            ><a href="{{ $link['url'] }}">{{ $link['label'] }}</a></li>
+                            >{{ $link['label'] }}</a></li>
                         @empty
                             <li><a href="{{ route('home') }}">Home</a></li>
                             <li><a href="{{ route('about') }}">About</a></li>
@@ -112,14 +104,14 @@
                                     $linkUrl = $rawUrl;
                                 }
                             @endphp
-                            <li
+                            <li><a href="{{ $linkUrl }}"
                                 @if($adminPreview)
                                     data-admin-section="site-nav"
                                     data-admin-compact="1"
                                     data-admin-label="Edit Nav Links"
                                     data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('navigation') }}"
                                 @endif
-                            ><a href="{{ $linkUrl }}">{{ $link['label'] ?? 'Link' }}</a></li>
+                            >{{ $link['label'] ?? 'Link' }}</a></li>
                         @endforeach
                     </ul>
                 </div>

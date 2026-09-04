@@ -3,11 +3,52 @@
     body.admin-preview-mode [data-admin-section] {
         position: relative;
         cursor: pointer !important;
-        transition: box-shadow 0.15s ease, outline-color 0.15s ease;
+        transition: outline-color 0.15s ease, background-color 0.15s ease;
         outline: 2px solid transparent;
-        outline-offset: -2px;
+        outline-offset: 2px;
+        border-radius: 6px;
     }
-    body.admin-preview-mode [data-admin-section]::after {
+    /* Site chrome: tight highlight on the exact component only */
+    body.admin-preview-mode [data-admin-section][data-admin-compact] {
+        display: inline-block;
+        width: fit-content;
+        max-width: 100%;
+        vertical-align: middle;
+    }
+    body.admin-preview-mode [data-admin-section][data-admin-compact]::after {
+        content: attr(data-admin-label);
+        position: absolute;
+        top: -26px;
+        left: 0;
+        z-index: 9999;
+        background: rgba(15, 23, 42, 0.92);
+        color: #fff;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        padding: 3px 7px;
+        border-radius: 6px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.12s ease;
+        white-space: nowrap;
+    }
+    body.admin-preview-mode [data-admin-section][data-admin-compact]:hover,
+    body.admin-preview-mode [data-admin-section][data-admin-compact].is-admin-focused {
+        outline-color: #ea580c;
+        background: rgba(234, 88, 12, 0.12);
+        box-shadow: none;
+    }
+    body.admin-preview-mode [data-admin-section][data-admin-compact]:hover::after,
+    body.admin-preview-mode [data-admin-section][data-admin-compact].is-admin-focused::after {
+        opacity: 1;
+    }
+    body.admin-preview-mode [data-admin-section][data-admin-compact].is-admin-focused::after {
+        background: #ea580c;
+    }
+    /* Home page sections: full-section overlay (no data-admin-compact) */
+    body.admin-preview-mode [data-admin-section]:not([data-admin-compact])::after {
         content: attr(data-admin-label);
         position: absolute;
         top: 10px;
@@ -26,29 +67,19 @@
         transition: opacity 0.15s ease;
         white-space: nowrap;
     }
-    body.admin-preview-mode [data-admin-section][data-admin-compact]::after {
-        top: 2px;
-        right: 2px;
-        font-size: 9px;
-        padding: 3px 6px;
-        border-radius: 6px;
-    }
-    body.admin-preview-mode [data-admin-section][data-admin-compact]:hover {
-        outline-offset: 0;
-    }
-    body.admin-preview-mode [data-admin-section]:hover {
+    body.admin-preview-mode [data-admin-section]:not([data-admin-compact]):hover {
         outline-color: rgba(234, 88, 12, 0.7);
         box-shadow: inset 0 0 0 9999px rgba(234, 88, 12, 0.07);
     }
-    body.admin-preview-mode [data-admin-section]:hover::after,
-    body.admin-preview-mode [data-admin-section].is-admin-focused::after {
+    body.admin-preview-mode [data-admin-section]:not([data-admin-compact]):hover::after,
+    body.admin-preview-mode [data-admin-section]:not([data-admin-compact]).is-admin-focused::after {
         opacity: 1;
     }
-    body.admin-preview-mode [data-admin-section].is-admin-focused {
+    body.admin-preview-mode [data-admin-section]:not([data-admin-compact]).is-admin-focused {
         outline-color: #ea580c;
         box-shadow: inset 0 0 0 9999px rgba(234, 88, 12, 0.1);
     }
-    body.admin-preview-mode [data-admin-section].is-admin-focused::after {
+    body.admin-preview-mode [data-admin-section]:not([data-admin-compact]).is-admin-focused::after {
         background: #ea580c;
     }
     body.admin-preview-mode a,
@@ -58,7 +89,6 @@
 </style>
 <script>
 (function () {
-    // Always mark preview mode when this script loads
     document.body.classList.add('admin-preview-mode');
 
     function post(type, extra) {
@@ -69,14 +99,32 @@
         }, extra || {}), '*');
     }
 
-    function focusSection(key) {
-        document.querySelectorAll('[data-admin-section]').forEach(function (el) {
-            el.classList.remove('is-admin-focused');
+    function focusElement(el) {
+        document.querySelectorAll('[data-admin-section]').forEach(function (node) {
+            node.classList.remove('is-admin-focused');
         });
-        var target = document.querySelector('[data-admin-section="' + key + '"]');
-        if (!target) return;
-        target.classList.add('is-admin-focused');
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (!el) return;
+        el.classList.add('is-admin-focused');
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function findTargetAt(x, y) {
+        var candidates = Array.prototype.slice.call(
+            document.querySelectorAll('[data-admin-section]')
+        ).filter(function (el) {
+            var rect = el.getBoundingClientRect();
+            return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+        });
+
+        if (!candidates.length) return null;
+
+        candidates.sort(function (a, b) {
+            var ra = a.getBoundingClientRect();
+            var rb = b.getBoundingClientRect();
+            return (ra.width * ra.height) - (rb.width * rb.height);
+        });
+
+        return candidates[0];
     }
 
     function applyFieldUpdate(section, field, value) {
@@ -98,18 +146,15 @@
         });
     }
 
-    // Capture-phase clicks so nested links/buttons cannot swallow the event
     document.addEventListener('click', function (event) {
-        var el = event.target && event.target.closest
-            ? event.target.closest('[data-admin-section]')
-            : null;
+        var el = findTargetAt(event.clientX, event.clientY);
         if (!el) return;
         event.preventDefault();
         event.stopPropagation();
         var section = el.getAttribute('data-admin-section');
         if (!section) return;
         var editUrl = el.getAttribute('data-admin-edit-url');
-        focusSection(section);
+        focusElement(el);
         if (editUrl) {
             post('navigate-edit', { url: editUrl, section: section });
             return;
@@ -120,7 +165,10 @@
     window.addEventListener('message', function (event) {
         var data = event.data || {};
         if (data.source !== 'admin-home-preview-parent') return;
-        if (data.type === 'focus-section' && data.section) focusSection(data.section);
+        if (data.type === 'focus-section' && data.section) {
+            var target = document.querySelector('[data-admin-section="' + data.section + '"]');
+            focusElement(target);
+        }
         if (data.type === 'update-field' && data.section && data.field) {
             applyFieldUpdate(data.section, data.field, data.value);
         }

@@ -77,14 +77,7 @@
                 <ul class="navbar-nav ms-auto align-items-lg-center hz-nav">
                     @foreach ($navItems as $link)
                         @if(!empty($link['children']))
-                            <li class="nav-item dropdown"
-                                @if($adminPreview)
-                                    data-admin-section="site-nav"
-                                    data-admin-compact="1"
-                                    data-admin-label="Edit Nav Links"
-                                    data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('navigation') }}"
-                                @endif
-                            >
+                            <li class="nav-item dropdown">
                                 <a
                                     class="nav-link dropdown-toggle {{ !empty($link['active']) || collect($link['children'])->contains(fn ($c) => !empty($c['active'])) ? 'active' : '' }}"
                                     href="{{ $link['url'] }}"
@@ -92,6 +85,12 @@
                                     role="button"
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false"
+                                    @if($adminPreview)
+                                        data-admin-section="site-nav"
+                                        data-admin-compact="1"
+                                        data-admin-label="Edit Nav Links"
+                                        data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('navigation') }}"
+                                    @endif
                                 >
                                     {{ $link['label'] }}
                                 </a>
@@ -115,19 +114,18 @@
                                 </ul>
                             </li>
                         @else
-                            <li class="nav-item"
-                                @if($adminPreview)
-                                    data-admin-section="site-nav"
-                                    data-admin-compact="1"
-                                    data-admin-label="Edit Nav Links"
-                                    data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('navigation') }}"
-                                @endif
-                            >
+                            <li class="nav-item">
                                 <a
                                     class="nav-link {{ !empty($link['active']) ? 'active' : '' }}"
                                     href="{{ $link['url'] }}"
                                     target="{{ $link['target'] ?? '_self' }}"
                                     @if(!empty($link['active'])) aria-current="page" @endif
+                                    @if($adminPreview)
+                                        data-admin-section="site-nav"
+                                        data-admin-compact="1"
+                                        data-admin-label="Edit Nav Links"
+                                        data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('navigation') }}"
+                                    @endif
                                 >
                                     {{ $link['label'] }}
                                 </a>
@@ -135,15 +133,17 @@
                         @endif
                     @endforeach
                     @if($showHeaderCta)
-                        <li class="nav-item hz-nav-cta"
-                            @if($adminPreview)
-                                data-admin-section="site-header-cta"
-                                data-admin-compact="1"
-                                data-admin-label="Edit CTA Button"
-                                data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('header-cta') }}"
-                            @endif
-                        >
-                            <a class="btn-hz btn-hz-sm" href="{{ $headerCtaUrl }}">{{ $headerCtaText }}</a>
+                        <li class="nav-item hz-nav-cta">
+                            <a
+                                class="btn-hz btn-hz-sm"
+                                href="{{ $headerCtaUrl }}"
+                                @if($adminPreview)
+                                    data-admin-section="site-header-cta"
+                                    data-admin-compact="1"
+                                    data-admin-label="Edit CTA Button"
+                                    data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('header-cta') }}"
+                                @endif
+                            >{{ $headerCtaText }}</a>
                         </li>
                     @endif
                 </ul>

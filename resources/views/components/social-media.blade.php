@@ -1,4 +1,5 @@
 @if(isset($socialRefs) && $socialRefs->isNotEmpty())
+    @php $adminPreview = request()->boolean('admin_preview'); @endphp
     <div class="d-inline-flex flex-wrap align-items-center gap-2">
         @foreach ($socialRefs as $ref)
             @php
@@ -33,7 +34,14 @@
                     $icon = 'bi bi-link-45deg';
                 }
             @endphp
-            <a href="{{ $link }}" target="_blank" rel="noopener noreferrer" title="{{ $title }}" aria-label="{{ $title }}" class="hz-social-btn">
+            <a href="{{ $link }}" target="_blank" rel="noopener noreferrer" title="{{ $title }}" aria-label="{{ $title }}" class="hz-social-btn"
+                @if($adminPreview)
+                    data-admin-section="site-social"
+                    data-admin-compact="1"
+                    data-admin-label="Edit Social"
+                    data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('social') }}"
+                @endif
+            >
                 <i class="{{ $icon }}"></i>
             </a>
         @endforeach
