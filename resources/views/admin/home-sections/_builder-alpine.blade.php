@@ -53,6 +53,7 @@ document.addEventListener('alpine:init', () => {
         aboutTitle: @json($about['title'] ?? 'Rooted in East Africa, built for scale'),
         aboutP1: @json($about['paragraph_1'] ?? ($about['description'] ?? '')),
         aboutP2: @json($about['paragraph_2'] ?? ''),
+        aboutPoints: @json(collect($aboutPoints)->values()->all()),
 
         servicesEyebrow: @json($servicesSec['eyebrow'] ?? 'Core Capabilities'),
         servicesTitle: @json($servicesSec['title'] ?? 'Integrated solutions for complex infrastructure'),
@@ -186,7 +187,16 @@ document.addEventListener('alpine:init', () => {
                 if (form) {
                     form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                     if (options.field) {
-                        const input = form.querySelector('[name="' + options.field + '"]');
+                        let input = form.querySelector('[name="' + options.field + '"]');
+                        if (!input && /^point_\d+$/.test(options.field)) {
+                            const idx = options.field.replace('point_', '');
+                            input = form.querySelector('#about-point-' + idx + '-title')
+                                || form.querySelector('[name="points[' + idx + '][title]"]');
+                            const card = form.querySelector('#about-point-' + idx);
+                            if (card) {
+                                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                        }
                         if (input) {
                             input.focus();
                             input.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -220,6 +230,10 @@ document.addEventListener('alpine:init', () => {
                 this.pushField('about', 'eyebrow', this.aboutEyebrow);
                 this.pushField('about', 'title', this.aboutTitle);
                 this.pushField('about', 'description', this.aboutPreviewHtml());
+                this.aboutPoints.forEach((point, index) => {
+                    this.pushField('about', 'point-' + index + '-title', point.title || '');
+                    this.pushField('about', 'point-' + index + '-description', point.description || '');
+                });
             }
             if (this.activeSection === 'services') {
                 this.pushField('services', 'eyebrow', this.servicesEyebrow);
@@ -314,6 +328,12 @@ document.addEventListener('alpine:init', () => {
             this.$watch('aboutTitle', (v) => this.pushField('about', 'title', v));
             this.$watch('aboutP1', () => this.pushField('about', 'description', this.aboutPreviewHtml()));
             this.$watch('aboutP2', () => this.pushField('about', 'description', this.aboutPreviewHtml()));
+            this.$watch('aboutPoints', () => {
+                this.aboutPoints.forEach((point, index) => {
+                    this.pushField('about', 'point-' + index + '-title', point.title || '');
+                    this.pushField('about', 'point-' + index + '-description', point.description || '');
+                });
+            }, { deep: true });
             this.$watch('servicesEyebrow', (v) => this.pushField('services', 'eyebrow', v));
             this.$watch('servicesTitle', (v) => this.pushField('services', 'title', v));
             this.$watch('servicesDescription', (v) => this.pushField('services', 'description', v));

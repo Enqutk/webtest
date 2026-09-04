@@ -23,6 +23,7 @@
                 'title' => $hs['about']['title'] ?? ($data['aboutFeatures']['title'] ?? null),
                 'subtitle' => $hs['about']['eyebrow'] ?? ($data['aboutFeatures']['subtitle'] ?? null),
                 'description' => $aboutCopy !== '' ? nl2br(e($aboutCopy)) : ($data['aboutFeatures']['description'] ?? ''),
+                'points' => $hs['about']['points'] ?? $data['aboutFeatures']['points'] ?? [],
             ])"
             :features="$data['heroFeatures'] ?? null"
         />

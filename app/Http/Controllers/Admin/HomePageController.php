@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ContentBlock;
 use App\Models\Organization;
 use App\Models\Team;
 use Illuminate\Http\Request;
@@ -20,7 +21,23 @@ class HomePageController extends Controller
         $fontOptions = Organization::getFontOptions();
         $teamMembers = Team::query()->where('organization_id', $currentOrg->id)->orderBy('order')->get();
 
-        return view('admin.home-sections.index', compact('currentOrg', 'sections', 'theme', 'shapeOptions', 'fontOptions', 'teamMembers'));
+        $aboutPoints = $sections['about']['points'] ?? [];
+        if ($aboutPoints === []) {
+            $aboutPoints = ContentBlock::query()
+                ->where('organization_id', $currentOrg->id)
+                ->where('slug', 'key-features')
+                ->value('list_items') ?? Organization::defaultSitePages()['about']['intro']['points'];
+        }
+
+        return view('admin.home-sections.index', compact(
+            'currentOrg',
+            'sections',
+            'theme',
+            'shapeOptions',
+            'fontOptions',
+            'teamMembers',
+            'aboutPoints',
+        ));
     }
 
     public function updateSection(Request $request)
@@ -34,6 +51,13 @@ class HomePageController extends Controller
         if ($request->hasFile('about_image')) {
             $path = $request->file('about_image')->store('about', 'public');
             $data['image_path'] = $path;
+        }
+
+        if (isset($data['points']) && is_array($data['points'])) {
+            $data['points'] = array_values(array_filter(
+                $data['points'],
+                fn ($point) => filled($point['title'] ?? null) || filled($point['description'] ?? null)
+            ));
         }
 
         if (!isset($theme['home_sections'])) {

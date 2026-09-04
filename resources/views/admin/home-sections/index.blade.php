@@ -454,6 +454,49 @@
                 <textarea name="paragraph_2" x-model="aboutP2" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $about['paragraph_2'] ?? '' }}</textarea>
             </div>
 
+            <div class="pt-4 border-t border-slate-100 space-y-3">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Feature highlights</h4>
+                        <p class="text-[11px] text-slate-500 mt-0.5">The four cards under the about text (Field-first design, etc.).</p>
+                    </div>
+                    <button type="button" @click="aboutPoints.push({ title: '', description: '', icon: 'bi bi-compass' })" class="text-[11px] font-bold text-brand-700">+ Add feature</button>
+                </div>
+
+                <div class="space-y-3">
+                    <template x-for="(point, i) in aboutPoints" :key="'about-point-'+i">
+                        <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/80 space-y-3" :id="'about-point-' + i">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[11px] font-bold text-slate-600" x-text="'Feature ' + (i + 1)"></span>
+                                <button type="button" @click="aboutPoints.splice(i, 1)" x-show="aboutPoints.length > 1" class="text-rose-500 text-xs"><i class="bi bi-trash"></i></button>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div class="space-y-1.5">
+                                    <label class="block text-xs font-bold text-slate-700">Title</label>
+                                    <input type="text" :id="'about-point-' + i + '-title'" :name="'points['+i+'][title]'" x-model="aboutPoints[i].title" class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs">
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label class="block text-xs font-bold text-slate-700">Icon</label>
+                                    <select :name="'points['+i+'][icon]'" x-model="aboutPoints[i].icon" class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs">
+                                        <option value="bi bi-compass">Compass</option>
+                                        <option value="bi bi-hammer">Hammer</option>
+                                        <option value="bi bi-cloud-sun">Cloud / sun</option>
+                                        <option value="bi bi-people">People</option>
+                                        <option value="bi bi-shield-check">Shield</option>
+                                        <option value="bi bi-globe">Globe</option>
+                                        <option value="bi bi-check-lg">Check</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="space-y-1.5">
+                                <label class="block text-xs font-bold text-slate-700">Description</label>
+                                <textarea :name="'points['+i+'][description]'" x-model="aboutPoints[i].description" rows="2" class="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs"></textarea>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
             <div class="flex justify-end pt-2">
                 <button type="submit" class="px-5 py-2.5 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-brand-600/30 transition">
                     Save About Settings

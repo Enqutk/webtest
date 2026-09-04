@@ -9,7 +9,7 @@
     $image = $about['image'] ?? null;
     $eyebrow = $about['subtitle'] ?: 'Who we are';
     $title = $about['title'] ?: ($data['siteName'] ?? config('app.name'));
-    $featureItems = collect($features?->list_items ?? [])->take(4);
+    $featureItems = collect($about['points'] ?? $features?->list_items ?? [])->take(4);
 @endphp
 
 <section class="hz-section hz-about" id="about">
@@ -29,15 +29,18 @@
 
                 @if($featureItems->isNotEmpty())
                     <div class="row g-3 mt-1">
-                        @foreach($featureItems as $item)
+                        @foreach($featureItems as $index => $item)
                             <div class="col-sm-6">
-                                <div class="hz-about-feature">
+                                <div
+                                    class="hz-about-feature"
+                                    {!! \App\Support\AdminPreviewAttrs::html('about', 'point_'.$index, 'Edit Feature') !!}
+                                >
                                     <div class="hz-card-icon flex-shrink-0" aria-hidden="true">
                                         <i class="{{ $item['icon'] ?? 'bi bi-check-lg' }}"></i>
                                     </div>
                                     <div>
-                                        <h3 class="h6 mb-1">{{ $item['title'] ?? '' }}</h3>
-                                        <p class="small mb-0">{{ $item['description'] ?? '' }}</p>
+                                        <h3 class="h6 mb-1" data-preview-field="point-{{ $index }}-title">{{ $item['title'] ?? '' }}</h3>
+                                        <p class="small mb-0" data-preview-field="point-{{ $index }}-description">{{ $item['description'] ?? '' }}</p>
                                     </div>
                                 </div>
                             </div>
