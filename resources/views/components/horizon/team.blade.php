@@ -9,14 +9,14 @@
 ])
 
 @if($team->isNotEmpty())
-<section class="hz-section hz-team" id="team" data-admin-section="team" data-admin-label="Edit Team">
+<section class="hz-section hz-team" id="team">
     <div class="container">
         <div class="row justify-content-between align-items-end mb-4 g-3">
             <div class="col-lg-7">
-                <p class="hz-eyebrow" data-preview-field="eyebrow">{{ $eyebrow }}</p>
-                <h2 class="hz-title mb-0" data-preview-field="title">{{ $title }}</h2>
+                <p class="hz-eyebrow" data-preview-field="eyebrow" {!! \App\Support\AdminPreviewAttrs::html('team', 'eyebrow', 'Edit Eyebrow') !!}>{{ $eyebrow }}</p>
+                <h2 class="hz-title mb-0" data-preview-field="title" {!! \App\Support\AdminPreviewAttrs::html('team', 'title', 'Edit Title') !!}>{{ $title }}</h2>
                 @if($description)
-                    <p class="hz-lead text-muted mt-2 mb-0" data-preview-field="description">{{ $description }}</p>
+                    <p class="hz-lead text-muted mt-2 mb-0" data-preview-field="description" {!! \App\Support\AdminPreviewAttrs::html('team', 'description', 'Edit Description') !!}>{{ $description }}</p>
                 @else
                     <p class="hz-lead text-muted mt-2 mb-0" data-preview-field="description" style="display:none"></p>
                 @endif

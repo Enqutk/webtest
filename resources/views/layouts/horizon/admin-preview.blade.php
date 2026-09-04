@@ -128,9 +128,7 @@
     }
 
     function applyFieldUpdate(section, field, value) {
-        var root = document.querySelector('[data-admin-section="' + section + '"]');
-        if (!root) return;
-        root.querySelectorAll('[data-preview-field="' + field + '"]').forEach(function (el) {
+        document.querySelectorAll('[data-admin-section="' + section + '"][data-preview-field="' + field + '"]').forEach(function (el) {
             if (el.tagName === 'IMG') {
                 if (value) el.setAttribute('src', value);
                 return;
@@ -153,21 +151,24 @@
         event.stopPropagation();
         var section = el.getAttribute('data-admin-section');
         if (!section) return;
+        var field = el.getAttribute('data-admin-field');
         var editUrl = el.getAttribute('data-admin-edit-url');
         focusElement(el);
         if (editUrl) {
-            post('navigate-edit', { url: editUrl, section: section });
+            post('navigate-edit', { url: editUrl, section: section, field: field });
             return;
         }
-        post('section-click', { section: section, editUrl: editUrl || null });
+        post('section-click', { section: section, field: field, editUrl: editUrl || null });
     }, true);
 
     window.addEventListener('message', function (event) {
         var data = event.data || {};
         if (data.source !== 'admin-home-preview-parent') return;
         if (data.type === 'focus-section' && data.section) {
-            var target = document.querySelector('[data-admin-section="' + data.section + '"]');
-            focusElement(target);
+            var sel = data.field
+                ? '[data-admin-section="' + data.section + '"][data-admin-field="' + data.field + '"]'
+                : '[data-admin-section="' + data.section + '"]';
+            focusElement(document.querySelector(sel));
         }
         if (data.type === 'update-field' && data.section && data.field) {
             applyFieldUpdate(data.section, data.field, data.value);

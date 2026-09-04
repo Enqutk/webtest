@@ -14,21 +14,21 @@
     $targetCtaUrl = $ctaUrl ?: route('services.index');
 @endphp
 
-<section class="hz-section hz-services bg-surface border-top border-bottom border-hz" id="services" data-admin-section="services" data-admin-label="Edit Services">
+<section class="hz-section hz-services bg-surface border-top border-bottom border-hz" id="services">
     <div class="container">
         @if($showHeader)
             <div class="row justify-content-between align-items-end mb-4 g-3">
                 <div class="col-lg-7">
-                    <p class="hz-eyebrow" data-preview-field="eyebrow">{{ $eyebrow }}</p>
-                    <h2 class="hz-title mb-0" data-preview-field="title">{{ $title }}</h2>
+                    <p class="hz-eyebrow" data-preview-field="eyebrow" {!! \App\Support\AdminPreviewAttrs::html('services', 'eyebrow', 'Edit Eyebrow') !!}>{{ $eyebrow }}</p>
+                    <h2 class="hz-title mb-0" data-preview-field="title" {!! \App\Support\AdminPreviewAttrs::html('services', 'title', 'Edit Title') !!}>{{ $title }}</h2>
                     @if($description)
-                        <p class="hz-lead text-muted mt-2 mb-0" data-preview-field="description">{{ $description }}</p>
+                        <p class="hz-lead text-muted mt-2 mb-0" data-preview-field="description" {!! \App\Support\AdminPreviewAttrs::html('services', 'description', 'Edit Description') !!}>{{ $description }}</p>
                     @else
                         <p class="hz-lead text-muted mt-2 mb-0" data-preview-field="description" style="display:none"></p>
                     @endif
                 </div>
                 <div class="col-lg-auto">
-                    <a href="{{ $targetCtaUrl }}" class="btn-hz-outline" data-preview-field="cta_text">{{ $ctaText }}</a>
+                    <a href="{{ $targetCtaUrl }}" class="btn-hz-outline" data-preview-field="cta_text" {!! \App\Support\AdminPreviewAttrs::html('services', 'cta_text', 'Edit Button') !!}>{{ $ctaText }}</a>
                 </div>
             </div>
         @endif

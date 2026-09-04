@@ -16,22 +16,22 @@
     $targetCtaUrl = $ctaUrl ?: route('portfolio.index');
 @endphp
 
-<section class="hz-section hz-portfolio" id="portfolio" data-admin-section="portfolio" data-admin-label="Edit Portfolio">
+<section class="hz-section hz-portfolio" id="portfolio">
     <div class="container">
         @if($showHeader)
             <div class="row justify-content-between align-items-end mb-4 g-3">
                 <div class="col-lg-7">
-                    <p class="hz-eyebrow" data-preview-field="eyebrow">{{ $eyebrow }}</p>
-                    <h2 class="hz-title mb-0" data-preview-field="title">{{ $title }}</h2>
+                    <p class="hz-eyebrow" data-preview-field="eyebrow" {!! \App\Support\AdminPreviewAttrs::html('portfolio', 'eyebrow', 'Edit Eyebrow') !!}>{{ $eyebrow }}</p>
+                    <h2 class="hz-title mb-0" data-preview-field="title" {!! \App\Support\AdminPreviewAttrs::html('portfolio', 'title', 'Edit Title') !!}>{{ $title }}</h2>
                     @if($description)
-                        <p class="hz-lead text-muted mt-2 mb-0" data-preview-field="description">{{ $description }}</p>
+                        <p class="hz-lead text-muted mt-2 mb-0" data-preview-field="description" {!! \App\Support\AdminPreviewAttrs::html('portfolio', 'description', 'Edit Description') !!}>{{ $description }}</p>
                     @else
                         <p class="hz-lead text-muted mt-2 mb-0" data-preview-field="description" style="display:none"></p>
                     @endif
                 </div>
                 @if(!$showFilters)
                     <div class="col-lg-auto">
-                        <a href="{{ $targetCtaUrl }}" class="btn-hz-outline" data-preview-field="cta_text">{{ $ctaText }}</a>
+                        <a href="{{ $targetCtaUrl }}" class="btn-hz-outline" data-preview-field="cta_text" {!! \App\Support\AdminPreviewAttrs::html('portfolio', 'cta_text', 'Edit Button') !!}>{{ $ctaText }}</a>
                     </div>
                 @endif
             </div>

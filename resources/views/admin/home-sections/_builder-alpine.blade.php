@@ -125,25 +125,26 @@ document.addEventListener('alpine:init', () => {
             }, payload), '*');
         },
 
-        focusPreviewSection(section) {
+        focusPreviewSection(section, field) {
             section = section || this.activeSection;
-            this.postToPreview({ type: 'focus-section', section: section });
+            this.postToPreview({ type: 'focus-section', section: section, field: field || null });
             const doc = this.previewDoc();
             if (!doc) return;
             doc.querySelectorAll('[data-admin-section]').forEach((el) => el.classList.remove('is-admin-focused'));
-            const target = doc.querySelector('[data-admin-section="' + section + '"]');
+            const sel = field
+                ? '[data-admin-section="' + section + '"][data-admin-field="' + field + '"]'
+                : '[data-admin-section="' + section + '"]';
+            const target = doc.querySelector(sel);
             if (!target) return;
             target.classList.add('is-admin-focused');
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         },
 
         pushField(section, field, value) {
             this.postToPreview({ type: 'update-field', section: section, field: field, value: value });
             const doc = this.previewDoc();
             if (!doc) return;
-            const root = doc.querySelector('[data-admin-section="' + section + '"]');
-            if (!root) return;
-            root.querySelectorAll('[data-preview-field="' + field + '"]').forEach((el) => {
+            doc.querySelectorAll('[data-admin-section="' + section + '"][data-preview-field="' + field + '"]').forEach((el) => {
                 if (el.tagName === 'IMG') {
                     if (value) el.setAttribute('src', value);
                     return;
@@ -164,10 +165,17 @@ document.addEventListener('alpine:init', () => {
             if (!section) return;
             this.activeSection = section;
             this.$nextTick(() => {
-                this.focusPreviewSection(section);
+                this.focusPreviewSection(section, options.field || null);
                 const form = document.getElementById('admin-form-' + section);
                 if (form) {
                     form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    if (options.field) {
+                        const input = form.querySelector('[name="' + options.field + '"]');
+                        if (input) {
+                            input.focus();
+                            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }
                 }
             });
         },
@@ -243,43 +251,6 @@ document.addEventListener('alpine:init', () => {
                 (doc.head || doc.body).appendChild(style);
             }
 
-            const map = [
-                { key: 'hero', label: 'Edit Hero', sel: '[data-admin-section="hero"], section.hz-hero, .hz-hero' },
-                { key: 'about', label: 'Edit About', sel: '[data-admin-section="about"], #about, section.hz-about' },
-                { key: 'services', label: 'Edit Services', sel: '[data-admin-section="services"], #services, section.hz-services' },
-                { key: 'stats', label: 'Edit Stats', sel: '[data-admin-section="stats"], section.hz-stats' },
-                { key: 'portfolio', label: 'Edit Portfolio', sel: '[data-admin-section="portfolio"], #portfolio, section.hz-portfolio' },
-                { key: 'clients', label: 'Edit Clients', sel: '[data-admin-section="clients"], section.hz-clients' },
-                { key: 'team', label: 'Edit Team', sel: '[data-admin-section="team"], #team, section.hz-team' },
-                { key: 'cta', label: 'Edit CTA', sel: '[data-admin-section="cta"], section.hz-cta' },
-            ];
-
-            const self = this;
-            map.forEach(({ key, label, sel, editUrl }) => {
-                doc.querySelectorAll(sel).forEach((el) => {
-                    if (el.querySelector('[data-admin-section]')) return;
-                    if (!el.getAttribute('data-admin-section')) {
-                        el.setAttribute('data-admin-section', key);
-                    }
-                    el.setAttribute('data-admin-label', label);
-                    if (editUrl) {
-                        el.setAttribute('data-admin-edit-url', editUrl);
-                    }
-                    if (el.dataset.adminWired === '1') return;
-                    el.dataset.adminWired = '1';
-                    el.addEventListener('click', (event) => {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        const url = el.getAttribute('data-admin-edit-url');
-                        if (url) {
-                            window.location.href = url;
-                            return;
-                        }
-                        self.selectSection(key, { fromPreview: true });
-                    }, true);
-                });
-            });
-
             this.previewReady = true;
             this.syncActiveSectionToPreview();
         },
@@ -322,7 +293,7 @@ document.addEventListener('alpine:init', () => {
                         window.location.href = common[data.section];
                         return;
                     }
-                    this.selectSection(data.section, { fromPreview: true });
+                    this.selectSection(data.section, { fromPreview: true, field: data.field || null });
                 }
 
                 if (data.type === 'navigate-edit' && data.url) {

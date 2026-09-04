@@ -10,12 +10,12 @@
 @endphp
 
 @if($items->isNotEmpty() || $showForPreview)
-<section class="hz-section hz-stats hz-section-dark" aria-label="Impact statistics" data-admin-section="stats" data-admin-label="Edit Stats">
+<section class="hz-section hz-stats hz-section-dark" aria-label="Impact statistics">
     <div class="container">
         <div class="row justify-content-between align-items-end mb-4 g-3">
             <div class="col-lg-7">
-                <p class="hz-eyebrow hz-eyebrow-light" data-preview-field="eyebrow">{{ $subtitle }}</p>
-                <h2 class="hz-title text-white mb-0" data-preview-field="title">{{ $title }}</h2>
+                <p class="hz-eyebrow hz-eyebrow-light" data-preview-field="eyebrow" {!! \App\Support\AdminPreviewAttrs::html('stats', 'eyebrow', 'Edit Eyebrow') !!}>{{ $subtitle }}</p>
+                <h2 class="hz-title text-white mb-0" data-preview-field="title" {!! \App\Support\AdminPreviewAttrs::html('stats', 'title', 'Edit Title') !!}>{{ $title }}</h2>
             </div>
         </div>
 
