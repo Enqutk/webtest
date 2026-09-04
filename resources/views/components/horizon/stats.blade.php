@@ -10,6 +10,9 @@
 
 @if($items->isNotEmpty())
 <section class="hz-section hz-stats hz-section-dark" aria-label="Impact statistics" data-admin-section="stats" data-admin-label="Edit Stats">
+@else
+<section class="hz-section hz-stats hz-section-dark" aria-label="Impact statistics" data-admin-section="stats" data-admin-label="Edit Stats" @if(!request()->boolean('admin_preview')) style="display:none" @endif>
+@endif
     <div class="container">
         <div class="row justify-content-between align-items-end mb-4 g-3">
             <div class="col-lg-7">
@@ -19,7 +22,7 @@
         </div>
 
         <div class="row g-0 hz-stats-grid">
-            @foreach($items as $stat)
+            @forelse($items as $stat)
                 <div class="col-6 col-lg-3">
                     <div class="hz-stat">
                         <div
@@ -30,8 +33,13 @@
                         <div class="hz-stat-label">{{ $stat['label'] ?? ($stat['title'] ?? '') }}</div>
                     </div>
                 </div>
-            @endforeach
+            @empty
+                @if(request()->boolean('admin_preview'))
+                    <div class="col-12 p-4 text-white-50">Stats will appear here after you add values.</div>
+                @endif
+            @endforelse
         </div>
     </div>
 </section>
+@if($items->isNotEmpty() || request()->boolean('admin_preview'))
 @endif

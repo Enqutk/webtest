@@ -140,6 +140,16 @@
         return this.$refs.previewFrame || null;
     },
 
+    previewDoc() {
+        const frame = this.previewFrame();
+        if (!frame) return null;
+        try {
+            return frame.contentDocument || frame.contentWindow.document;
+        } catch (e) {
+            return null;
+        }
+    },
+
     postToPreview(payload) {
         const frame = this.previewFrame();
         if (!frame || !frame.contentWindow) return;
@@ -151,21 +161,45 @@
 
     focusPreviewSection(section = this.activeSection) {
         this.postToPreview({ type: 'focus-section', section });
+        const doc = this.previewDoc();
+        if (!doc) return;
+        doc.querySelectorAll('[data-admin-section]').forEach((el) => el.classList.remove('is-admin-focused'));
+        const target = doc.querySelector('[data-admin-section="' + section + '"]');
+        if (!target) return;
+        target.classList.add('is-admin-focused');
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     },
 
     pushField(section, field, value) {
         this.postToPreview({ type: 'update-field', section, field, value });
+        const doc = this.previewDoc();
+        if (!doc) return;
+        const root = doc.querySelector('[data-admin-section="' + section + '"]');
+        if (!root) return;
+        root.querySelectorAll('[data-preview-field="' + field + '"]').forEach((el) => {
+            if (el.tagName === 'IMG') {
+                if (value) el.setAttribute('src', value);
+                return;
+            }
+            if (el.getAttribute('data-preview-html') === '1') {
+                el.innerHTML = value || '';
+            } else {
+                el.textContent = value || '';
+            }
+            if (el.style && el.style.display === 'none') {
+                el.style.display = value ? '' : 'none';
+            }
+        });
     },
 
     selectSection(section, { fromPreview = false } = {}) {
+        if (!section) return;
         this.activeSection = section;
-        this.previewOpen = true;
         this.$nextTick(() => {
             this.focusPreviewSection(section);
-            if (!fromPreview) return;
             const form = document.getElementById('admin-form-' + section);
             if (form) {
-                form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
         });
     },
@@ -215,6 +249,65 @@
         }
     },
 
+    wirePreviewInteractions() {
+        const doc = this.previewDoc();
+        if (!doc || !doc.body) return;
+
+        doc.body.classList.add('admin-preview-mode');
+
+        if (!doc.getElementById('admin-preview-parent-style')) {
+            const style = doc.createElement('style');
+            style.id = 'admin-preview-parent-style';
+            style.textContent = `
+                body.admin-preview-mode [data-admin-section]{position:relative;cursor:pointer!important;outline:2px solid transparent;outline-offset:-2px}
+                body.admin-preview-mode [data-admin-section]::after{content:attr(data-admin-label);position:absolute;top:10px;right:10px;z-index:9999;background:rgba(15,23,42,.9);color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;padding:6px 10px;border-radius:8px;opacity:0;pointer-events:none}
+                body.admin-preview-mode [data-admin-section]:hover{outline-color:rgba(234,88,12,.7);box-shadow:inset 0 0 0 9999px rgba(234,88,12,.07)}
+                body.admin-preview-mode [data-admin-section]:hover::after,body.admin-preview-mode [data-admin-section].is-admin-focused::after{opacity:1}
+                body.admin-preview-mode [data-admin-section].is-admin-focused{outline-color:#ea580c;box-shadow:inset 0 0 0 9999px rgba(234,88,12,.1)}
+                body.admin-preview-mode [data-admin-section].is-admin-focused::after{background:#ea580c}
+                body.admin-preview-mode a,body.admin-preview-mode button{pointer-events:none!important}
+            `;
+            (doc.head || doc.body).appendChild(style);
+        }
+
+        const map = [
+            { key: 'hero', label: 'Edit Hero', sel: '[data-admin-section="hero"], section.hz-hero, .hz-hero' },
+            { key: 'about', label: 'Edit About', sel: '[data-admin-section="about"], #about, section.hz-about' },
+            { key: 'services', label: 'Edit Services', sel: '[data-admin-section="services"], #services, section.hz-services' },
+            { key: 'stats', label: 'Edit Stats', sel: '[data-admin-section="stats"], section.hz-stats' },
+            { key: 'portfolio', label: 'Edit Portfolio', sel: '[data-admin-section="portfolio"], #portfolio, section.hz-portfolio' },
+            { key: 'clients', label: 'Edit Clients', sel: '[data-admin-section="clients"], section.hz-clients' },
+            { key: 'team', label: 'Edit Team', sel: '[data-admin-section="team"], #team, section.hz-team' },
+            { key: 'cta', label: 'Edit CTA', sel: '[data-admin-section="cta"], section.hz-cta' },
+        ];
+
+        const self = this;
+        map.forEach(({ key, label, sel }) => {
+            doc.querySelectorAll(sel).forEach((el) => {
+                if (!el.getAttribute('data-admin-section')) {
+                    el.setAttribute('data-admin-section', key);
+                }
+                el.setAttribute('data-admin-label', label);
+                if (el.dataset.adminWired === '1') return;
+                el.dataset.adminWired = '1';
+                el.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    self.selectSection(key, { fromPreview: true });
+                }, true);
+            });
+        });
+
+        this.previewReady = true;
+        this.syncActiveSectionToPreview();
+    },
+
+    onPreviewLoad() {
+        // Give the iframe a tick to finish painting scripts/DOM
+        setTimeout(() => this.wirePreviewInteractions(), 50);
+        setTimeout(() => this.wirePreviewInteractions(), 300);
+    },
+
     init() {
         window.addEventListener('message', (event) => {
             const data = event.data || {};
@@ -222,7 +315,7 @@
 
             if (data.type === 'ready') {
                 this.previewReady = true;
-                this.syncActiveSectionToPreview();
+                this.wirePreviewInteractions();
             }
 
             if (data.type === 'section-click' && data.section) {
@@ -329,35 +422,9 @@
         </button>
     </div>
 
-    <!-- Live Homepage Preview (click a section to jump to its form) -->
-    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden sticky top-16 z-10">
-        <button type="button" @click="previewOpen = !previewOpen" class="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition">
-            <div class="flex items-center gap-2 flex-wrap">
-                <i class="bi bi-eye text-brand-600"></i>
-                <span class="text-sm font-bold text-slate-900">Live Preview</span>
-                <span class="px-2 py-0.5 rounded-md bg-brand-50 text-brand-700 text-[11px] font-bold" x-text="'Showing: ' + (sectionLabels[activeSection] || activeSection)"></span>
-                <span class="text-xs text-slate-400">Click a section in the preview to open its form · typing updates instantly</span>
-            </div>
-            <div class="flex items-center gap-3">
-                <a href="{{ $liveHomeOpenUrl }}" target="_blank" rel="noopener" @click.stop
-                   class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition">
-                    <i class="bi bi-box-arrow-up-right"></i> Open live
-                </a>
-                <i class="bi text-slate-400 transition-transform" :class="previewOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
-            </div>
-        </button>
-        <div x-show="previewOpen" x-cloak>
-            <iframe
-                x-ref="previewFrame"
-                src="{{ $liveHomeUrl }}"
-                class="w-full border-t border-slate-100"
-                style="height: 420px; border: 0; background: white;"
-                loading="eager"
-                referrerpolicy="no-referrer-when-downgrade"
-                @load="previewReady = true; syncActiveSectionToPreview()"
-            ></iframe>
-        </div>
-    </div>
+    <div class="lg:grid lg:grid-cols-12 lg:gap-6 lg:items-start">
+        <!-- LEFT: forms -->
+        <div class="lg:col-span-5 xl:col-span-5 space-y-6 order-2 lg:order-1">
 
     <!-- 🌟 SECTION 1: HERO BANNER & SLIDES -->
     <div id="admin-form-hero" x-show="activeSection === 'hero'" class="space-y-6">
@@ -882,6 +949,38 @@
             </div>
         </form>
     </div>
+
+        </div><!-- /forms column -->
+
+        <!-- RIGHT: sticky live preview -->
+        <aside class="lg:col-span-7 xl:col-span-7 order-1 lg:order-2 mb-6 lg:mb-0">
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden lg:sticky lg:top-20">
+                <div class="flex items-center justify-between gap-3 p-3 sm:p-4 border-b border-slate-100 bg-slate-50/80">
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <i class="bi bi-eye text-brand-600"></i>
+                            <span class="text-sm font-bold text-slate-900">Live Preview</span>
+                            <span class="px-2 py-0.5 rounded-md bg-brand-50 text-brand-700 text-[11px] font-bold" x-text="sectionLabels[activeSection] || activeSection"></span>
+                        </div>
+                        <p class="text-[11px] text-slate-500 mt-0.5">Click any section on the right to open its form on the left.</p>
+                    </div>
+                    <a href="{{ $liveHomeOpenUrl }}" target="_blank" rel="noopener"
+                       class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-lg transition">
+                        <i class="bi bi-box-arrow-up-right"></i> Open
+                    </a>
+                </div>
+                <iframe
+                    x-ref="previewFrame"
+                    src="{{ $liveHomeUrl }}"
+                    class="w-full bg-white"
+                    style="height: min(78vh, 820px); border: 0;"
+                    loading="eager"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    @load="onPreviewLoad()"
+                ></iframe>
+            </div>
+        </aside>
+    </div><!-- /side-by-side grid -->
 
     <!-- MODAL 1: ADD / EDIT HERO SLIDE -->
     <div x-show="openSlideModal" class="fixed inset-0 z-50 overflow-y-auto" x-cloak>

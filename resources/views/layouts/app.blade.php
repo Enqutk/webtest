@@ -105,7 +105,7 @@
 
     @stack('scripts')
 
-    @if(request()->boolean('admin_preview') && auth()->check())
+    @if(request()->boolean('admin_preview'))
         @include('layouts.horizon.admin-preview')
     @endif
 </body>
