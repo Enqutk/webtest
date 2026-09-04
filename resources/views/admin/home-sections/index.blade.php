@@ -4,6 +4,50 @@
 @section('page-title', 'Home Page Visual Builder')
 @section('page-subtitle', $currentOrg->title)
 
+@push('styles')
+<style>
+    /* Side-by-side builder: forms left, live preview right (works inside admin sidebar layout) */
+    .home-builder-shell {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+        width: 100%;
+    }
+    @media (min-width: 768px) {
+        .home-builder-shell {
+            flex-direction: row;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+        .home-builder-editor {
+            flex: 0 0 38%;
+            width: 38%;
+            max-width: 38%;
+            min-width: 0;
+        }
+        .home-builder-preview {
+            flex: 1 1 62%;
+            width: 62%;
+            min-width: 0;
+            position: sticky;
+            top: 0.75rem;
+            align-self: flex-start;
+        }
+    }
+    @media (min-width: 1280px) {
+        .home-builder-editor {
+            flex-basis: 34%;
+            width: 34%;
+            max-width: 34%;
+        }
+        .home-builder-preview {
+            flex-basis: 66%;
+            width: 66%;
+        }
+    }
+</style>
+@endpush
+
 @section('content')
 @php
     $liveHomeUrl = route('card.home', ['slug' => $currentOrg->slug, 'admin_preview' => 1]);
@@ -422,9 +466,9 @@
         </button>
     </div>
 
-    <div class="lg:grid lg:grid-cols-12 lg:gap-6 lg:items-start">
+    <div class="home-builder-shell">
         <!-- LEFT: forms -->
-        <div class="lg:col-span-5 xl:col-span-5 space-y-6 order-2 lg:order-1">
+        <div class="home-builder-editor space-y-6">
 
     <!-- 🌟 SECTION 1: HERO BANNER & SLIDES -->
     <div id="admin-form-hero" x-show="activeSection === 'hero'" class="space-y-6">
@@ -953,8 +997,8 @@
         </div><!-- /forms column -->
 
         <!-- RIGHT: sticky live preview -->
-        <aside class="lg:col-span-7 xl:col-span-7 order-1 lg:order-2 mb-6 lg:mb-0">
-            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden lg:sticky lg:top-20">
+        <aside class="home-builder-preview">
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden h-full">
                 <div class="flex items-center justify-between gap-3 p-3 sm:p-4 border-b border-slate-100 bg-slate-50/80">
                     <div class="min-w-0">
                         <div class="flex items-center gap-2 flex-wrap">
@@ -962,7 +1006,7 @@
                             <span class="text-sm font-bold text-slate-900">Live Preview</span>
                             <span class="px-2 py-0.5 rounded-md bg-brand-50 text-brand-700 text-[11px] font-bold" x-text="sectionLabels[activeSection] || activeSection"></span>
                         </div>
-                        <p class="text-[11px] text-slate-500 mt-0.5">Click any section on the right to open its form on the left.</p>
+                        <p class="text-[11px] text-slate-500 mt-0.5">Click a section here → form opens on the left.</p>
                     </div>
                     <a href="{{ $liveHomeOpenUrl }}" target="_blank" rel="noopener"
                        class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-lg transition">
@@ -972,15 +1016,15 @@
                 <iframe
                     x-ref="previewFrame"
                     src="{{ $liveHomeUrl }}"
-                    class="w-full bg-white"
-                    style="height: min(78vh, 820px); border: 0;"
+                    class="w-full bg-white block"
+                    style="height: min(75vh, 780px); border: 0;"
                     loading="eager"
                     referrerpolicy="no-referrer-when-downgrade"
                     @load="onPreviewLoad()"
                 ></iframe>
             </div>
         </aside>
-    </div><!-- /side-by-side grid -->
+    </div><!-- /side-by-side shell -->
 
     <!-- MODAL 1: ADD / EDIT HERO SLIDE -->
     <div x-show="openSlideModal" class="fixed inset-0 z-50 overflow-y-auto" x-cloak>

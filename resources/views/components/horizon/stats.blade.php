@@ -6,13 +6,11 @@
 
 @php
     $items = collect($stats)->filter(fn ($stat) => filled($stat['label'] ?? $stat['title'] ?? null))->values();
+    $showForPreview = request()->boolean('admin_preview');
 @endphp
 
-@if($items->isNotEmpty())
+@if($items->isNotEmpty() || $showForPreview)
 <section class="hz-section hz-stats hz-section-dark" aria-label="Impact statistics" data-admin-section="stats" data-admin-label="Edit Stats">
-@else
-<section class="hz-section hz-stats hz-section-dark" aria-label="Impact statistics" data-admin-section="stats" data-admin-label="Edit Stats" @if(!request()->boolean('admin_preview')) style="display:none" @endif>
-@endif
     <div class="container">
         <div class="row justify-content-between align-items-end mb-4 g-3">
             <div class="col-lg-7">
@@ -34,12 +32,9 @@
                     </div>
                 </div>
             @empty
-                @if(request()->boolean('admin_preview'))
-                    <div class="col-12 p-4 text-white-50">Stats will appear here after you add values.</div>
-                @endif
+                <div class="col-12 p-4 text-white-50">Add stats values in the admin form.</div>
             @endforelse
         </div>
     </div>
 </section>
-@if($items->isNotEmpty() || request()->boolean('admin_preview'))
 @endif
