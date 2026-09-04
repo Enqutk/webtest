@@ -1,4 +1,4 @@
-<form action="{{ route('admin.site-pages.update', $pageKey) }}" method="POST" class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm space-y-4">
+<form id="page-header" action="{{ route('admin.site-pages.update', $pageKey) }}" method="POST" class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm space-y-4">
     @csrf
     <h3 class="text-sm font-bold text-slate-900 border-b border-slate-100 pb-3">Page header</h3>
     <div class="grid grid-cols-1 gap-4">

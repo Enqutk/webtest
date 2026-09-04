@@ -97,8 +97,13 @@
         event.stopPropagation();
         var section = el.getAttribute('data-admin-section');
         if (!section) return;
+        var editUrl = el.getAttribute('data-admin-edit-url');
         focusSection(section);
-        post('section-click', { section: section });
+        if (editUrl) {
+            post('navigate-edit', { url: editUrl, section: section });
+            return;
+        }
+        post('section-click', { section: section, editUrl: editUrl || null });
     }, true);
 
     window.addEventListener('message', function (event) {

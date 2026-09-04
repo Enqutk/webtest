@@ -18,13 +18,18 @@
     } else {
         $headerCtaUrl = $rawCta;
     }
+
+    $adminPreview = request()->boolean('admin_preview');
+    $editHeaderUrl = $adminPreview ? \App\Support\AdminEditUrls::siteSettings('header') : null;
+    $editNavUrl = $adminPreview ? \App\Support\AdminEditUrls::siteSettings('navigation') : null;
 @endphp
 
 <header class="hz-header" data-hz-header>
     <nav class="navbar navbar-expand-lg hz-navbar" aria-label="Primary">
         <div class="container hz-navbar-inner">
             @if($logoUrl || $showBrandText)
-                <a class="navbar-brand hz-brand" href="{{ $brandHomeUrl }}">
+                <a class="navbar-brand hz-brand" href="{{ $brandHomeUrl }}"
+                   @if($adminPreview) data-admin-section="site-brand" data-admin-label="Edit Header" data-admin-edit-url="{{ $editHeaderUrl }}" @endif>
                     <x-site-brand :name="$siteName" :logo="$logoUrl" :show-text="$showBrandText" />
                 </a>
             @endif
@@ -43,7 +48,8 @@
                 <span></span>
             </button>
 
-            <div class="collapse navbar-collapse hz-nav-collapse" id="hzMainNav">
+            <div class="collapse navbar-collapse hz-nav-collapse" id="hzMainNav"
+                 @if($adminPreview) data-admin-section="site-nav" data-admin-label="Edit Navigation" data-admin-edit-url="{{ $editNavUrl }}" @endif>
                 <ul class="navbar-nav ms-auto align-items-lg-center hz-nav">
                     @foreach ($navItems as $link)
                         @if(!empty($link['children']))
@@ -91,7 +97,8 @@
                         @endif
                     @endforeach
                     @if($showHeaderCta)
-                        <li class="nav-item hz-nav-cta">
+                        <li class="nav-item hz-nav-cta"
+                            @if($adminPreview) data-admin-section="site-header-cta" data-admin-label="Edit Header Button" data-admin-edit-url="{{ $editHeaderUrl }}" @endif>
                             <a class="btn-hz btn-hz-sm" href="{{ $headerCtaUrl }}">{{ $headerCtaText }}</a>
                         </li>
                     @endif

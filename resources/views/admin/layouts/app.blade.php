@@ -169,6 +169,11 @@
             <div>
                 <div class="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">Website Content & Sections</div>
                 <div class="space-y-1">
+                    <a href="{{ route('admin.site-settings.index') }}"
+                       class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-semibold transition {{ request()->routeIs('admin.site-settings.*') ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/20' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <i class="bi bi-sliders text-base"></i>
+                        <span>Site Settings</span>
+                    </a>
                     <a href="{{ route('admin.home-sections.index') }}"
                        class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-semibold transition {{ request()->routeIs('admin.home-sections.*') ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/20' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                         <i class="bi bi-layout-text-window-reverse text-base"></i>
@@ -349,7 +354,7 @@
 
         <!-- Main Body -->
         <main class="flex-1 overflow-y-auto p-4 lg:p-8 custom-scrollbar">
-            @if(!request()->routeIs('admin.organizations.edit', 'admin.home-sections.*', 'admin.site-pages.*', 'admin.services.*', 'admin.portfolio.*'))
+            @if(!request()->routeIs('admin.organizations.edit', 'admin.home-sections.*', 'admin.site-pages.*', 'admin.services.*', 'admin.portfolio.*', 'admin.site-settings.*'))
                 @php
                     $activeOrg = $currentOrg ?? \App\Models\Organization::resolveCurrent();
                 @endphp

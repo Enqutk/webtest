@@ -39,7 +39,15 @@
 @section('content')
 <div class="home-builder-shell">
     <div class="home-builder-editor space-y-6">
-        @include('admin.site-pages._nav-links')
+        @if(!request()->routeIs('admin.site-settings.*'))
+        <a href="{{ route('admin.site-settings.index') }}" class="flex items-center justify-between gap-3 p-4 rounded-2xl border border-slate-200/80 bg-white shadow-sm hover:border-brand-200 hover:bg-brand-50/30 transition group">
+            <div class="min-w-0">
+                <div class="text-xs font-bold text-slate-900 group-hover:text-brand-800">Header, footer & navigation</div>
+                <p class="text-[11px] text-slate-500 mt-0.5">Edit shared site chrome used on every page.</p>
+            </div>
+            <i class="bi bi-gear-fill text-brand-600 shrink-0"></i>
+        </a>
+        @endif
 
         @yield('page-form')
     </div>
@@ -53,7 +61,7 @@
                         <span class="text-sm font-bold text-slate-900">Live Preview</span>
                         <span class="px-2 py-0.5 rounded-md bg-brand-50 text-brand-700 text-[11px] font-bold">{{ $meta['label'] ?? 'Page' }}</span>
                     </div>
-                    <p class="text-[11px] text-slate-500 mt-0.5">Shows the saved page. Save your form to refresh.</p>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Click header, footer, or page areas in the preview to jump to the editor.</p>
                 </div>
                 <a href="{{ $liveUrl }}" target="_blank" rel="noopener"
                    class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-lg transition">
@@ -71,3 +79,7 @@
     </aside>
 </div>
 @endsection
+
+@push('scripts')
+@include('admin.partials.preview-navigate')
+@endpush

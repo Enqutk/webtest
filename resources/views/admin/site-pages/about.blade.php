@@ -23,7 +23,7 @@
     <form action="{{ route('admin.site-pages.update', 'about') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
 
-        <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm space-y-4">
+        <div id="page-header" class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm space-y-4">
             <h3 class="text-sm font-bold text-slate-900 border-b border-slate-100 pb-3">Page header</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="space-y-1.5">

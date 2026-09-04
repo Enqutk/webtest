@@ -243,6 +243,13 @@ document.addEventListener('alpine:init', () => {
             }
 
             const map = [
+                { key: 'site-header', label: 'Edit Header', sel: 'header.hz-header, .hz-header', editUrl: @json(\App\Support\AdminEditUrls::siteSettings('header')) },
+                { key: 'site-brand', label: 'Edit Header', sel: '.hz-brand', editUrl: @json(\App\Support\AdminEditUrls::siteSettings('header')) },
+                { key: 'site-nav', label: 'Edit Navigation', sel: '.hz-nav-collapse, .hz-nav', editUrl: @json(\App\Support\AdminEditUrls::siteSettings('navigation')) },
+                { key: 'site-header-cta', label: 'Edit Header Button', sel: '.hz-nav-cta', editUrl: @json(\App\Support\AdminEditUrls::siteSettings('header')) },
+                { key: 'site-footer', label: 'Edit Footer', sel: 'footer.hz-footer, .hz-footer', editUrl: @json(\App\Support\AdminEditUrls::siteSettings('footer')) },
+                { key: 'site-social', label: 'Edit Social Links', sel: '.hz-social', editUrl: @json(\App\Support\AdminEditUrls::siteSettings('footer')) },
+                { key: 'site-contact', label: 'Edit Contact Info', sel: '.hz-footer .col-lg-3:last-child', editUrl: @json(\App\Support\AdminEditUrls::siteSettings('footer')) },
                 { key: 'hero', label: 'Edit Hero', sel: '[data-admin-section="hero"], section.hz-hero, .hz-hero' },
                 { key: 'about', label: 'Edit About', sel: '[data-admin-section="about"], #about, section.hz-about' },
                 { key: 'services', label: 'Edit Services', sel: '[data-admin-section="services"], #services, section.hz-services' },
@@ -254,17 +261,25 @@ document.addEventListener('alpine:init', () => {
             ];
 
             const self = this;
-            map.forEach(({ key, label, sel }) => {
+            map.forEach(({ key, label, sel, editUrl }) => {
                 doc.querySelectorAll(sel).forEach((el) => {
                     if (!el.getAttribute('data-admin-section')) {
                         el.setAttribute('data-admin-section', key);
                     }
                     el.setAttribute('data-admin-label', label);
+                    if (editUrl) {
+                        el.setAttribute('data-admin-edit-url', editUrl);
+                    }
                     if (el.dataset.adminWired === '1') return;
                     el.dataset.adminWired = '1';
                     el.addEventListener('click', (event) => {
                         event.preventDefault();
                         event.stopPropagation();
+                        const url = el.getAttribute('data-admin-edit-url');
+                        if (url) {
+                            window.location.href = url;
+                            return;
+                        }
                         self.selectSection(key, { fromPreview: true });
                     }, true);
                 });
@@ -290,7 +305,28 @@ document.addEventListener('alpine:init', () => {
                 }
 
                 if (data.type === 'section-click' && data.section) {
+                    if (data.editUrl) {
+                        window.location.href = data.editUrl;
+                        return;
+                    }
+                    const common = @json([
+                        'site-header' => \App\Support\AdminEditUrls::siteSettings('header'),
+                        'site-brand' => \App\Support\AdminEditUrls::siteSettings('header'),
+                        'site-nav' => \App\Support\AdminEditUrls::siteSettings('navigation'),
+                        'site-header-cta' => \App\Support\AdminEditUrls::siteSettings('header'),
+                        'site-footer' => \App\Support\AdminEditUrls::siteSettings('footer'),
+                        'site-social' => \App\Support\AdminEditUrls::siteSettings('footer'),
+                        'site-contact' => \App\Support\AdminEditUrls::siteSettings('footer'),
+                    ]);
+                    if (common[data.section]) {
+                        window.location.href = common[data.section];
+                        return;
+                    }
                     this.selectSection(data.section, { fromPreview: true });
+                }
+
+                if (data.type === 'navigate-edit' && data.url) {
+                    window.location.href = data.url;
                 }
             });
 

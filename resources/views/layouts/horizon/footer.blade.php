@@ -10,9 +10,14 @@
     $showFooterSocial = (bool) ($theme['show_footer_social'] ?? true) && (bool) ($theme['show_social_links'] ?? true);
     $showFooterContact = (bool) ($theme['show_footer_contact'] ?? true);
     $showFooterCredit = (bool) ($theme['show_footer_credit'] ?? true);
+
+    $adminPreview = request()->boolean('admin_preview');
+    $editFooterUrl = $adminPreview ? \App\Support\AdminEditUrls::siteSettings('footer') : null;
+    $editNavUrl = $adminPreview ? \App\Support\AdminEditUrls::siteSettings('navigation') : null;
 @endphp
 
-<footer class="hz-footer">
+<footer class="hz-footer"
+    @if($adminPreview) data-admin-section="site-footer" data-admin-label="Edit Footer" data-admin-edit-url="{{ $editFooterUrl }}" @endif>
     <div class="container">
         <div class="row g-4">
             <div class="col-lg-5">
@@ -23,13 +28,15 @@
                     <p class="mb-3 hz-footer-tagline">{{ $tagline }}</p>
                 @endif
                 @if($showFooterSocial)
-                    <div class="hz-social">
+                    <div class="hz-social"
+                         @if($adminPreview) data-admin-section="site-social" data-admin-label="Edit Social Links" data-admin-edit-url="{{ $editFooterUrl }}" @endif>
                         <x-social-media />
                     </div>
                 @endif
             </div>
             @if($showFooterNav)
-                <div class="col-6 col-lg-2">
+                <div class="col-6 col-lg-2"
+                     @if($adminPreview) data-admin-section="site-nav" data-admin-label="Edit Navigation" data-admin-edit-url="{{ $editNavUrl }}" @endif>
                     <h6 class="text-white mb-3">Explore</h6>
                     <ul class="list-unstyled d-grid gap-2">
                         @forelse($navItems as $link)
@@ -51,7 +58,8 @@
                 </div>
             @endif
             @if($showFooterContact)
-                <div class="col-lg-3">
+                <div class="col-lg-3"
+                     @if($adminPreview) data-admin-section="site-contact" data-admin-label="Edit Contact Info" data-admin-edit-url="{{ $editFooterUrl }}" @endif>
                     <h6 class="text-white mb-3">Contact</h6>
                     @if(!empty($data['address'] ?? null))
                         <p class="mb-2 hz-address">{{ $data['address'] }}</p>
