@@ -27,12 +27,12 @@ class AdminEditUrls
     {
         $url = route('admin.home-sections.index');
 
-        if ($section) {
-            $url .= '#admin-form-' . $section;
+        if ($field) {
+            $url .= '?field=' . urlencode($field);
         }
 
-        if ($field) {
-            $url .= (str_contains($url, '?') ? '&' : '?') . 'field=' . urlencode($field);
+        if ($section) {
+            $url .= '#admin-form-' . $section;
         }
 
         return $url;

@@ -309,10 +309,14 @@ document.addEventListener('alpine:init', () => {
                 };
             }
 
-            const hash = window.location.hash.replace('#', '');
+            const rawHash = window.location.hash.replace('#', '');
+            const hash = rawHash.split('?')[0];
+            let field = new URLSearchParams(window.location.search).get('field');
+            if (!field && rawHash.includes('?')) {
+                field = new URLSearchParams(rawHash.split('?')[1] || '').get('field');
+            }
             if (hash.startsWith('admin-form-')) {
                 const section = hash.replace('admin-form-', '');
-                const field = new URLSearchParams(window.location.search).get('field');
                 this.$nextTick(() => this.selectSection(section, { field: field }));
             }
 

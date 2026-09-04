@@ -11,7 +11,8 @@
     $eyebrow = $about['subtitle'] ?: 'Who we are';
     $title = $about['title'] ?: ($data['siteName'] ?? config('app.name'));
     $featureItems = collect($about['points'] ?? $features?->list_items ?? [])->take(4);
-    $isAboutPage = $previewContext === 'about-page';
+    $isAboutPage = $previewContext === 'about-page'
+        || request()->routeIs('card.about', 'about');
     $previewSection = $isAboutPage ? 'about-page-intro' : 'about';
     $sectionId = $isAboutPage ? 'about-page-intro' : 'about';
     $aboutPageEditUrl = $isAboutPage ? route('admin.site-pages.edit', 'about') : null;

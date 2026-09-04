@@ -16,10 +16,28 @@
         return window.location.pathname.endsWith('/admin/site-pages/about');
     }
 
+    function isSameAdminPath(url) {
+        if (!url) return false;
+        try {
+            return new URL(url, window.location.origin).pathname === window.location.pathname;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    function appendFieldParam(url, field) {
+        if (!field || url.indexOf('field=') !== -1) return url;
+        var hashIdx = url.indexOf('#');
+        var base = hashIdx === -1 ? url : url.slice(0, hashIdx);
+        var hash = hashIdx === -1 ? '' : url.slice(hashIdx);
+        var sep = base.indexOf('?') === -1 ? '?' : '&';
+        return base + sep + 'field=' + encodeURIComponent(field) + hash;
+    }
+
     function shouldNavigateForSection(section) {
         if (!editTargets[section]) return false;
         if (isHomeBuilderPage() && homeSections.indexOf(section) !== -1) return false;
-        if (isAboutPageEditor() && (section === 'about-page-intro' || section === 'about-page-story' || section === 'page-hero')) return false;
+        if (isAboutPageEditor() && (section === 'about-page-intro' || section === 'about-page-story' || section === 'page-hero' || section === 'about')) return false;
         return true;
     }
 
@@ -74,6 +92,10 @@
     }
 
     function focusLocalPageEditor(section, field) {
+        if (section === 'about') {
+            section = 'about-page-intro';
+        }
+
         if (section === 'page-hero') {
             var header = document.getElementById('page-header');
             if (!header) return false;
@@ -97,7 +119,7 @@
                     return true;
                 }
             }
-            var fieldMap = { eyebrow: 'intro_eyebrow', title: 'intro_title', description: 'intro_description' };
+            var fieldMap = { eyebrow: 'intro_eyebrow', title: 'intro_title', description: 'intro_description', paragraph_1: 'intro_description' };
             var inputName = fieldMap[field] || null;
             var input = inputName ? intro.querySelector('[name="' + inputName + '"]') : intro.querySelector('input, textarea');
             if (input) input.focus();
@@ -169,12 +191,24 @@
             }
 
             if (data.type === 'navigate-edit' && data.url) {
+                if (isSameAdminPath(data.url) && focusLocalPageEditor(data.section, data.field || null)) {
+                    if (data.url.indexOf('#') !== -1) {
+                        window.location.hash = data.url.split('#')[1].split('?')[0];
+                    }
+                    return true;
+                }
                 window.location.href = data.url;
                 return true;
             }
 
             if (data.type === 'section-click' && data.section) {
                 if (data.editUrl) {
+                    if (isSameAdminPath(data.editUrl) && focusLocalPageEditor(data.section, data.field || null)) {
+                        if (data.editUrl.indexOf('#') !== -1) {
+                            window.location.hash = data.editUrl.split('#')[1].split('?')[0];
+                        }
+                        return true;
+                    }
                     window.location.href = data.editUrl;
                     return true;
                 }
@@ -189,8 +223,8 @@
 
                 if (shouldNavigateForSection(data.section)) {
                     var url = editTargets[data.section];
-                    if (data.field && url.indexOf('field=') === -1) {
-                        url += (url.indexOf('?') === -1 ? '?' : '&') + 'field=' + encodeURIComponent(data.field);
+                    if (data.field) {
+                        url = appendFieldParam(url, data.field);
                     }
                     window.location.href = url;
                     return true;
