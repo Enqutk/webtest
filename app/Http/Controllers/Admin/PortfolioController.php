@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\EntityTypeEnum;
 use App\Enums\StatusEnum;
+use App\Http\Controllers\Admin\Concerns\ResolvesSitePageEditorContext;
 use App\Http\Controllers\Controller;
 use App\Models\Entity;
 use App\Models\Organization;
@@ -11,6 +12,8 @@ use Illuminate\Http\Request;
 
 class PortfolioController extends Controller
 {
+    use ResolvesSitePageEditorContext;
+
     public function index()
     {
         $currentOrg = Organization::resolveCurrent();
@@ -21,7 +24,14 @@ class PortfolioController extends Controller
             ->orderBy('order')
             ->paginate(15);
 
-        return view('admin.portfolio.index', compact('projects', 'currentOrg'));
+        $meta = SitePageController::PAGES['portfolio'];
+        $context = $this->sitePageEditorContext($currentOrg, 'portfolio', $meta);
+        $nextOrder = (Entity::where('organization_id', $currentOrg->id)->where('type', EntityTypeEnum::project)->max('order') ?? 0) + 1;
+
+        return view('admin.portfolio.index', array_merge(
+            compact('projects', 'currentOrg', 'nextOrder'),
+            $context
+        ));
     }
 
     public function create()

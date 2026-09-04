@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\StatusEnum;
+use App\Http\Controllers\Admin\Concerns\ResolvesSitePageEditorContext;
 use App\Http\Controllers\Controller;
 use App\Models\Organization;
 use App\Models\Service;
@@ -11,6 +12,8 @@ use Illuminate\Support\Str;
 
 class ServiceController extends Controller
 {
+    use ResolvesSitePageEditorContext;
+
     public function index()
     {
         $currentOrg = Organization::resolveCurrent();
@@ -20,7 +23,14 @@ class ServiceController extends Controller
             ->orderBy('order')
             ->paginate(15);
 
-        return view('admin.services.index', compact('services', 'currentOrg'));
+        $meta = SitePageController::PAGES['services'];
+        $context = $this->sitePageEditorContext($currentOrg, 'services', $meta);
+        $nextOrder = (Service::where('organization_id', $currentOrg->id)->max('order') ?? 0) + 1;
+
+        return view('admin.services.index', array_merge(
+            compact('services', 'currentOrg', 'nextOrder'),
+            $context
+        ));
     }
 
     public function create()

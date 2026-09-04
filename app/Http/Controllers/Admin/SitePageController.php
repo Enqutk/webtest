@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enums\MenuLocationEnum;
+use App\Http\Controllers\Admin\Concerns\ResolvesSitePageEditorContext;
 use App\Http\Controllers\Controller;
-use App\Models\MenuLocation;
 use App\Models\Organization;
 use App\Support\ThemeMedia;
 use Illuminate\Http\Request;
 
 class SitePageController extends Controller
 {
+    use ResolvesSitePageEditorContext;
+
     public const PAGES = [
         'about' => [
             'label' => 'About page',
@@ -34,15 +35,22 @@ class SitePageController extends Controller
     {
         abort_unless(isset(self::PAGES[$page]), 404);
 
-        $currentOrg = Organization::resolveCurrent();
-        $data = $currentOrg->sitePage($page);
-        $meta = self::PAGES[$page];
-        $liveUrl = route($meta['route'], ['slug' => $currentOrg->slug]);
-        $previewUrl = $liveUrl . (str_contains($liveUrl, '?') ? '&' : '?') . 'admin_preview=1';
-        $headerMenu = $this->headerMenuFor($currentOrg);
-        $navItems = $headerMenu->items()->orderBy('order_number')->get();
+        if ($page === 'services') {
+            return redirect()->route('admin.services.index');
+        }
 
-        return view('admin.site-pages.' . $page, compact('currentOrg', 'data', 'page', 'meta', 'liveUrl', 'previewUrl', 'headerMenu', 'navItems'));
+        if ($page === 'portfolio') {
+            return redirect()->route('admin.portfolio.index');
+        }
+
+        $currentOrg = Organization::resolveCurrent();
+        $meta = self::PAGES[$page];
+        $context = $this->sitePageEditorContext($currentOrg, $page, $meta);
+
+        return view('admin.site-pages.' . $page, array_merge(
+            compact('currentOrg', 'page'),
+            $context
+        ));
     }
 
     public function update(Request $request, string $page)
@@ -127,17 +135,4 @@ class SitePageController extends Controller
         ];
     }
 
-    private function headerMenuFor(Organization $org): MenuLocation
-    {
-        return MenuLocation::firstOrCreate(
-            [
-                'organization_id' => $org->id,
-                'location' => MenuLocationEnum::Navbar,
-            ],
-            [
-                'name' => 'Header Navigation',
-                'slug' => 'header-navigation-' . $org->id,
-            ]
-        );
-    }
 }
