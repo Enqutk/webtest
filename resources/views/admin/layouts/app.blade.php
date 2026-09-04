@@ -354,7 +354,7 @@
 
         <!-- Main Body -->
         <main class="flex-1 overflow-y-auto p-4 lg:p-8 custom-scrollbar">
-            @if(!request()->routeIs('admin.organizations.edit', 'admin.home-sections.*', 'admin.site-pages.*', 'admin.services.*', 'admin.portfolio.*', 'admin.site-settings.*'))
+            @if(!request()->routeIs('admin.dashboard', 'admin.organizations.edit', 'admin.home-sections.*', 'admin.site-pages.*', 'admin.services.*', 'admin.portfolio.*', 'admin.site-settings.*'))
                 @php
                     $activeOrg = $currentOrg ?? \App\Models\Organization::resolveCurrent();
                 @endphp
