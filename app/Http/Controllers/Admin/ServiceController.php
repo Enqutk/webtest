@@ -62,12 +62,40 @@ class ServiceController extends Controller
         $service = Service::create($validated);
 
         if ($request->hasFile('image')) {
-            $service->clearMediaCollection('service-images');
-            $service->addMediaFromRequest('image')->toMediaCollection('service-images');
+            $service->clearMediaCollection('main_image');
+            $service->addMediaFromRequest('image')->toMediaCollection('main_image');
         }
 
         return redirect()->route('admin.services.index')
             ->with('success', "Service '{$service->title}' created successfully!");
+    }
+
+    public function quickStore(Request $request)
+    {
+        $currentOrg = Organization::resolveCurrent();
+
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'short_description' => ['nullable', 'string', 'max:500'],
+            'quote' => ['nullable', 'string', 'max:500'],
+            'order' => ['nullable', 'integer'],
+            'status' => ['nullable', 'in:active,inactive'],
+            'image' => ['nullable', 'image', 'max:5120'],
+        ]);
+
+        $validated['organization_id'] = $currentOrg->id;
+        $validated['slug'] = Str::slug($validated['title']);
+        $validated['order'] = $validated['order'] ?? ((Service::where('organization_id', $currentOrg->id)->max('order') ?? 0) + 1);
+        $validated['status'] = $validated['status'] ?? 'active';
+
+        $service = Service::create($validated);
+
+        if ($request->hasFile('image')) {
+            $service->clearMediaCollection('main_image');
+            $service->addMediaFromRequest('image')->toMediaCollection('main_image');
+        }
+
+        return back()->with('success', "Service '{$service->title}' created!");
     }
 
     public function edit(Service $service)
@@ -92,12 +120,37 @@ class ServiceController extends Controller
         $service->update($validated);
 
         if ($request->hasFile('image')) {
-            $service->clearMediaCollection('service-images');
-            $service->addMediaFromRequest('image')->toMediaCollection('service-images');
+            $service->clearMediaCollection('main_image');
+            $service->addMediaFromRequest('image')->toMediaCollection('main_image');
         }
 
         return redirect()->route('admin.services.index')
             ->with('success', "Service '{$service->title}' updated successfully!");
+    }
+
+    public function quickUpdate(Request $request, Service $service)
+    {
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'short_description' => ['nullable', 'string', 'max:500'],
+            'quote' => ['nullable', 'string', 'max:500'],
+            'order' => ['required', 'integer'],
+            'status' => ['required', 'in:active,inactive'],
+            'image' => ['nullable', 'image', 'max:5120'],
+        ]);
+
+        if ($service->title !== $validated['title']) {
+            $validated['slug'] = Str::slug($validated['title']);
+        }
+
+        $service->update($validated);
+
+        if ($request->hasFile('image')) {
+            $service->clearMediaCollection('main_image');
+            $service->addMediaFromRequest('image')->toMediaCollection('main_image');
+        }
+
+        return back()->with('success', "Service '{$service->title}' updated!");
     }
 
     public function destroy(Service $service)

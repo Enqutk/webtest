@@ -70,6 +70,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Services Management
         Route::resource('services', ServiceController::class)->except(['show']);
+        Route::post('/services/quick-store', [ServiceController::class, 'quickStore'])->name('services.quick-store');
+        Route::post('/services/quick-update/{service}', [ServiceController::class, 'quickUpdate'])->name('services.quick-update');
 
         // Portfolio / Projects Management
         Route::resource('portfolio', PortfolioController::class)->except(['show']);

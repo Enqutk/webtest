@@ -49,7 +49,7 @@
 
             <div class="space-y-3">
                 @forelse($services as $srv)
-                    @php $img = $srv->getFirstMediaUrl('service-images'); @endphp
+                    @php $img = $srv->main_image_url; @endphp
                     <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
                         <div class="flex items-start gap-3">
                             @if($img)

@@ -13,6 +13,14 @@
         'site-social' => \App\Support\AdminEditUrls::siteSettings('social'),
         'site-contact' => \App\Support\AdminEditUrls::siteSettings('contact'),
     ];
+    $servicesListForJs = $services->map(fn ($s) => [
+        'id' => $s->id,
+        'title' => $s->title,
+        'short_description' => $s->short_description,
+        'quote' => $s->quote,
+        'order' => $s->order,
+        'status' => $s->status->value ?? $s->status,
+    ])->values();
 @endphp
 @push('scripts')
 <script>
@@ -41,6 +49,15 @@ document.addEventListener('alpine:init', () => {
         memberOrder: {{ ($teamMembers->max('order') ?? 0) + 1 }},
         memberStatus: 'active',
         memberFounder: false,
+
+        openServiceModal: false,
+        editingServiceId: null,
+        serviceTitle: '',
+        serviceShortDesc: '',
+        serviceQuote: '',
+        serviceOrder: {{ $nextServiceOrder }},
+        serviceStatus: 'active',
+        servicesList: @json($servicesListForJs),
 
         heroBadge: @json($hero['badge'] ?? 'Infrastructure · Engineering · Impact'),
         heroSubtitle: @json($hero['subtitle'] ?? 'Engineering Excellence'),
@@ -120,6 +137,30 @@ document.addEventListener('alpine:init', () => {
             this.openTeamModal = true;
         },
 
+        editService(s) {
+            this.editingServiceId = s.id;
+            this.serviceTitle = s.title || '';
+            this.serviceShortDesc = s.short_description || '';
+            this.serviceQuote = s.quote || '';
+            this.serviceOrder = s.order || 1;
+            this.serviceStatus = s.status?.value || s.status || 'active';
+            this.openServiceModal = true;
+        },
+
+        newService() {
+            this.editingServiceId = null;
+            this.serviceTitle = '';
+            this.serviceShortDesc = '';
+            this.serviceQuote = '';
+            this.serviceOrder = {{ $nextServiceOrder }};
+            this.serviceStatus = 'active';
+            this.openServiceModal = true;
+        },
+
+        findServiceById(id) {
+            return this.servicesList.find((s) => String(s.id) === String(id)) || null;
+        },
+
         previewFrame() {
             return this.$refs.previewFrame || null;
         },
@@ -195,6 +236,17 @@ document.addEventListener('alpine:init', () => {
                             const card = form.querySelector('#about-point-' + idx);
                             if (card) {
                                 card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                        }
+                        if (!input && /^service_\d+$/.test(options.field)) {
+                            const id = options.field.replace('service_', '');
+                            const card = form.querySelector('#service-' + id);
+                            if (card) {
+                                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                            const svc = this.findServiceById(id);
+                            if (svc) {
+                                this.editService(svc);
                             }
                         }
                         if (input) {

@@ -134,7 +134,7 @@
             <span>About</span>
         </button>
         <button type="button" @click="selectSection('services')" :class="activeSection === 'services' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
-            <span>Services</span>
+            <span>Services ({{ $services->count() }})</span>
         </button>
         <button type="button" @click="selectSection('stats')" :class="activeSection === 'stats' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
             <span>Impact & Stats</span>
@@ -544,6 +544,66 @@
                 </button>
             </div>
         </form>
+
+        <div class="bg-white rounded-2xl border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div>
+                    <h3 class="text-sm font-bold text-slate-900">Service cards on homepage</h3>
+                    <p class="text-xs text-slate-500">Solar drip, Rural WASH, and other offerings shown in the services grid.</p>
+                </div>
+                <button type="button" @click="newService()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center gap-2">
+                    <i class="bi bi-plus-circle-fill"></i>
+                    <span>Add Service</span>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                @foreach($services as $srv)
+                    @php $img = $srv->main_image_url; @endphp
+                    <div id="service-{{ $srv->id }}" class="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-200/80">
+                        <div class="flex items-center gap-3.5 min-w-0">
+                            <div class="w-14 h-14 rounded-xl bg-slate-200 overflow-hidden shrink-0 border border-slate-300 flex items-center justify-center">
+                                @if($img)
+                                    <img src="{{ $img }}" alt="" class="w-full h-full object-cover">
+                                @else
+                                    <i class="bi bi-wrench text-slate-400"></i>
+                                @endif
+                            </div>
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-bold text-slate-900 truncate">{{ $srv->title }}</span>
+                                    <span class="px-1.5 py-0.5 rounded text-[10px] font-bold {{ $srv->status === \App\Enums\StatusEnum::active ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600' }}">
+                                        {{ ucfirst($srv->status->value ?? 'active') }}
+                                    </span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 line-clamp-2 mt-0.5">{{ $srv->short_description }}</p>
+                                <span class="text-[10px] text-slate-400">Order: {{ $srv->order }}</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 shrink-0">
+                            <button type="button" @click="editService({{ json_encode([
+                                'id' => $srv->id,
+                                'title' => $srv->title,
+                                'short_description' => $srv->short_description,
+                                'quote' => $srv->quote,
+                                'order' => $srv->order,
+                                'status' => $srv->status->value ?? $srv->status,
+                            ]) }})" class="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 text-xs font-bold rounded-lg transition">
+                                Edit
+                            </button>
+                            <form action="{{ route('admin.services.destroy', $srv) }}" method="POST" onsubmit="return confirm('Delete this service?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
     </div>
 
     <!-- 📈 SECTION 4: STATS SECTION -->
@@ -895,6 +955,63 @@
                             <button type="button" @click="openTeamModal = false" class="px-4 py-2 bg-slate-100 text-slate-700 text-xs font-bold rounded-xl">Cancel</button>
                             <button type="submit" class="px-5 py-2 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-brand-600/30">Save Member</button>
                         </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: ADD / EDIT SERVICE -->
+    <div x-show="openServiceModal" class="fixed inset-0 z-50 overflow-y-auto" x-cloak>
+        <div class="min-h-full px-4 py-8 flex items-center justify-center">
+            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" @click="openServiceModal = false"></div>
+
+            <div class="relative bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-lg w-full p-6 lg:p-8 space-y-6 z-10">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                    <h3 class="text-base font-bold text-slate-900" x-text="editingServiceId !== null ? 'Edit Service' : 'Add Service'"></h3>
+                    <button @click="openServiceModal = false" class="text-slate-400 hover:text-slate-700"><i class="bi bi-x-lg"></i></button>
+                </div>
+
+                <form :action="editingServiceId ? ('/admin/services/quick-update/' + editingServiceId) : '{{ route('admin.services.quick-store') }}'" method="POST" enctype="multipart/form-data" class="space-y-4">
+                    @csrf
+
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700">Title <span class="text-rose-500">*</span></label>
+                        <input type="text" name="title" x-model="serviceTitle" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700">Short summary</label>
+                        <textarea name="short_description" x-model="serviceShortDesc" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition"></textarea>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700">Highlight quote</label>
+                        <input type="text" name="quote" x-model="serviceQuote" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700">Display order</label>
+                            <input type="number" name="order" x-model="serviceOrder" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700">Status</label>
+                            <select name="status" x-model="serviceStatus" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700">Cover photo</label>
+                        <input type="file" name="image" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-100 flex justify-end gap-3">
+                        <button type="button" @click="openServiceModal = false" class="px-4 py-2 bg-slate-100 text-slate-700 text-xs font-bold rounded-xl">Cancel</button>
+                        <button type="submit" class="px-5 py-2 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-brand-600/30">Save Service</button>
                     </div>
                 </form>
             </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ContentBlock;
 use App\Models\Organization;
+use App\Models\Service;
 use App\Models\Team;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -20,6 +21,12 @@ class HomePageController extends Controller
         $shapeOptions = Organization::imageShapeOptions(true);
         $fontOptions = Organization::getFontOptions();
         $teamMembers = Team::query()->where('organization_id', $currentOrg->id)->orderBy('order')->get();
+        $services = Service::query()
+            ->where('organization_id', $currentOrg->id)
+            ->with('media')
+            ->orderBy('order')
+            ->get();
+        $nextServiceOrder = (Service::where('organization_id', $currentOrg->id)->max('order') ?? 0) + 1;
 
         $aboutPoints = $sections['about']['points'] ?? [];
         if ($aboutPoints === []) {
@@ -36,6 +43,8 @@ class HomePageController extends Controller
             'shapeOptions',
             'fontOptions',
             'teamMembers',
+            'services',
+            'nextServiceOrder',
             'aboutPoints',
         ));
     }

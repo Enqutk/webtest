@@ -39,7 +39,10 @@
                     $image = $service->main_image_url;
                 @endphp
                 <div class="col-md-6 col-lg-4">
-                    <article class="hz-service-card">
+                    <article
+                        class="hz-service-card"
+                        {!! \App\Support\AdminPreviewAttrs::html('services', 'service_'.$service->id, 'Edit Service', false) !!}
+                    >
                         <a href="{{ route('services.show', $service->slug) }}" class="hz-service-card-media">
                             @if($image)
                                 <img src="{{ $image }}" alt="{{ $service->title }}">
