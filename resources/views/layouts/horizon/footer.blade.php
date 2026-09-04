@@ -13,40 +13,83 @@
     $showFooterCredit = (bool) ($theme['show_footer_credit'] ?? true);
 
     $adminPreview = request()->boolean('admin_preview');
-    $editFooterUrl = $adminPreview ? \App\Support\AdminEditUrls::siteSettings('footer') : null;
-    $editNavUrl = $adminPreview ? \App\Support\AdminEditUrls::siteSettings('explore') : null;
-    $editSocialUrl = $adminPreview ? \App\Support\AdminEditUrls::siteSettings('social') : null;
-    $editContactUrl = $adminPreview ? \App\Support\AdminEditUrls::siteSettings('contact') : null;
-
     $routeSlug = request()->route('slug') ?? ($data['routeSlug'] ?? ($data['organization']->slug ?? null));
     $connectLinks = $theme['footer_connect_links'] ?? [['label' => 'Contact', 'url' => '/contact']];
+    $brandParts = preg_split('/\s+/', trim($siteName), 2) ?: [trim($siteName)];
+    $brandFirst = $brandParts[0] ?? $siteName;
+    $brandRest = $brandParts[1] ?? null;
 @endphp
 
-<footer class="hz-footer"
-    @if($adminPreview) data-admin-section="site-footer" data-admin-label="Edit Footer" data-admin-edit-url="{{ $editFooterUrl }}" @endif>
+<footer class="hz-footer">
     <div class="container">
         <div class="row g-4">
             <div class="col-lg-5">
                 <a href="{{ $data['brandHomeUrl'] ?? url('/') }}" class="hz-footer-brand d-inline-block text-decoration-none">
-                    <x-site-brand :name="$siteName" :logo="$logoUrl" :show-text="$showBrandText" />
+                    @if($logoUrl)
+                        <span
+                            class="hz-brand-mark d-inline-block"
+                            @if($adminPreview)
+                                data-admin-section="site-logo"
+                                data-admin-compact="1"
+                                data-admin-label="Edit Logo"
+                                data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('logo') }}"
+                            @endif
+                        >
+                            <img src="{{ $logoUrl }}" alt="{{ $siteName }}" class="hz-brand-logo">
+                        </span>
+                    @endif
+                    @if($showBrandText)
+                        <span
+                            class="hz-brand-text d-inline-block"
+                            @if($adminPreview)
+                                data-admin-section="site-company-name"
+                                data-admin-compact="1"
+                                data-admin-label="Edit Company Name"
+                                data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('company-name') }}"
+                            @endif
+                        >
+                            {{ $brandFirst }}@if($brandRest) <span>{{ $brandRest }}</span>@endif
+                        </span>
+                    @endif
                 </a>
                 @if($tagline)
-                    <p class="mb-3 hz-footer-tagline">{{ $tagline }}</p>
+                    <p
+                        class="mb-3 hz-footer-tagline"
+                        @if($adminPreview)
+                            data-admin-section="site-tagline"
+                            data-admin-compact="1"
+                            data-admin-label="Edit Tagline"
+                            data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('tagline') }}"
+                        @endif
+                    >{{ $tagline }}</p>
                 @endif
                 @if($showFooterSocial)
-                    <div class="hz-social"
-                         @if($adminPreview) data-admin-section="site-social" data-admin-label="Edit Social Links" data-admin-edit-url="{{ $editSocialUrl }}" @endif>
+                    <div
+                        class="hz-social"
+                        @if($adminPreview)
+                            data-admin-section="site-social"
+                            data-admin-compact="1"
+                            data-admin-label="Edit Social Icons"
+                            data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('social') }}"
+                        @endif
+                    >
                         <x-social-media />
                     </div>
                 @endif
             </div>
             @if($showFooterNav)
-                <div class="col-6 col-lg-2"
-                     @if($adminPreview) data-admin-section="site-nav" data-admin-label="Edit Navigation" data-admin-edit-url="{{ $editNavUrl }}" @endif>
+                <div class="col-6 col-lg-2">
                     <h6 class="text-white mb-3">Explore</h6>
                     <ul class="list-unstyled d-grid gap-2">
                         @forelse($footerNavItems as $link)
-                            <li><a href="{{ $link['url'] }}">{{ $link['label'] }}</a></li>
+                            <li
+                                @if($adminPreview)
+                                    data-admin-section="site-nav"
+                                    data-admin-compact="1"
+                                    data-admin-label="Edit Nav Links"
+                                    data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('navigation') }}"
+                                @endif
+                            ><a href="{{ $link['url'] }}">{{ $link['label'] }}</a></li>
                         @empty
                             <li><a href="{{ route('home') }}">Home</a></li>
                             <li><a href="{{ route('about') }}">About</a></li>
@@ -57,8 +100,7 @@
                 </div>
                 <div class="col-6 col-lg-2">
                     <h6 class="text-white mb-3">Connect</h6>
-                    <ul class="list-unstyled d-grid gap-2"
-                        @if($adminPreview) data-admin-section="site-connect" data-admin-label="Edit Connect Links" data-admin-edit-url="{{ $editFooterUrl }}#connect" @endif>
+                    <ul class="list-unstyled d-grid gap-2">
                         @foreach($connectLinks as $link)
                             @php
                                 $rawUrl = $link['url'] ?? '/contact';
@@ -70,26 +112,64 @@
                                     $linkUrl = $rawUrl;
                                 }
                             @endphp
-                            <li><a href="{{ $linkUrl }}">{{ $link['label'] ?? 'Link' }}</a></li>
+                            <li
+                                @if($adminPreview)
+                                    data-admin-section="site-nav"
+                                    data-admin-compact="1"
+                                    data-admin-label="Edit Nav Links"
+                                    data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('navigation') }}"
+                                @endif
+                            ><a href="{{ $linkUrl }}">{{ $link['label'] ?? 'Link' }}</a></li>
                         @endforeach
                     </ul>
                 </div>
             @endif
             @if($showFooterContact)
-                <div class="col-lg-3"
-                     @if($adminPreview) data-admin-section="site-contact" data-admin-label="Edit Contact Info" data-admin-edit-url="{{ $editContactUrl }}" @endif>
+                <div class="col-lg-3">
                     <h6 class="text-white mb-3">Contact</h6>
                     @if(!empty($data['address'] ?? null))
-                        <p class="mb-2 hz-address">{{ $data['address'] }}</p>
+                        <p
+                            class="mb-2 hz-address"
+                            @if($adminPreview)
+                                data-admin-section="site-contact"
+                                data-admin-compact="1"
+                                data-admin-label="Edit Contact"
+                                data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('contact') }}"
+                            @endif
+                        >{{ $data['address'] }}</p>
                     @endif
                     @if(!empty($data['po_box'] ?? null))
-                        <p class="mb-2 opacity-75 hz-pobox"><small>P.O. Box: {{ $data['po_box'] }}</small></p>
+                        <p
+                            class="mb-2 opacity-75 hz-pobox"
+                            @if($adminPreview)
+                                data-admin-section="site-contact"
+                                data-admin-compact="1"
+                                data-admin-label="Edit Contact"
+                                data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('contact') }}"
+                            @endif
+                        ><small>P.O. Box: {{ $data['po_box'] }}</small></p>
                     @endif
                     @foreach(($data['email'] ?? []) as $email)
-                        <p class="mb-1"><a href="mailto:{{ $email }}">{{ $email }}</a></p>
+                        <p
+                            class="mb-1"
+                            @if($adminPreview)
+                                data-admin-section="site-contact"
+                                data-admin-compact="1"
+                                data-admin-label="Edit Contact"
+                                data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('contact') }}"
+                            @endif
+                        ><a href="mailto:{{ $email }}">{{ $email }}</a></p>
                     @endforeach
                     @foreach(($data['phone'] ?? []) as $phone)
-                        <p class="mb-1"><a href="tel:{{ preg_replace('/\s+/', '', $phone) }}">{{ $phone }}</a></p>
+                        <p
+                            class="mb-1"
+                            @if($adminPreview)
+                                data-admin-section="site-contact"
+                                data-admin-compact="1"
+                                data-admin-label="Edit Contact"
+                                data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('contact') }}"
+                            @endif
+                        ><a href="tel:{{ preg_replace('/\s+/', '', $phone) }}">{{ $phone }}</a></p>
                     @endforeach
                 </div>
             @endif
@@ -98,7 +178,14 @@
         <div class="hz-footer-bottom d-flex flex-column flex-md-row justify-content-between gap-2">
             <div>&copy; {{ date('Y') }} {{ $siteName }}. All rights reserved.</div>
             @if($showFooterCredit)
-                <div>Developed by <a href="https://tetercreatives.com" target="_blank" rel="noopener">Teter PLC</a></div>
+                <div
+                    @if($adminPreview)
+                        data-admin-section="site-footer-credit"
+                        data-admin-compact="1"
+                        data-admin-label="Edit Footer Visibility"
+                        data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('footer-display') }}"
+                    @endif
+                >Developed by <a href="https://tetercreatives.com" target="_blank" rel="noopener">Teter PLC</a></div>
             @endif
         </div>
     </div>

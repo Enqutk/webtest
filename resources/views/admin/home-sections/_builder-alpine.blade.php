@@ -232,7 +232,8 @@ document.addEventListener('alpine:init', () => {
                 style.id = 'admin-preview-parent-style';
                 style.textContent = [
                     'body.admin-preview-mode [data-admin-section]{position:relative;cursor:pointer!important;outline:2px solid transparent;outline-offset:-2px}',
-                    'body.admin-preview-mode [data-admin-section]::after{content:attr(data-admin-label);position:absolute;top:10px;right:10px;z-index:9999;background:rgba(15,23,42,.9);color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;padding:6px 10px;border-radius:8px;opacity:0;pointer-events:none}',
+                    'body.admin-preview-mode [data-admin-section]::after{content:attr(data-admin-label);position:absolute;top:10px;right:10px;z-index:9999;background:rgba(15,23,42,.9);color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;padding:6px 10px;border-radius:8px;opacity:0;pointer-events:none;white-space:nowrap}',
+                    'body.admin-preview-mode [data-admin-section][data-admin-compact]::after{top:2px;right:2px;font-size:9px;padding:3px 6px;border-radius:6px}',
                     'body.admin-preview-mode [data-admin-section]:hover{outline-color:rgba(234,88,12,.7);box-shadow:inset 0 0 0 9999px rgba(234,88,12,.07)}',
                     'body.admin-preview-mode [data-admin-section]:hover::after,body.admin-preview-mode [data-admin-section].is-admin-focused::after{opacity:1}',
                     'body.admin-preview-mode [data-admin-section].is-admin-focused{outline-color:#ea580c;box-shadow:inset 0 0 0 9999px rgba(234,88,12,.1)}',
@@ -243,13 +244,6 @@ document.addEventListener('alpine:init', () => {
             }
 
             const map = [
-                { key: 'site-header', label: 'Edit Header', sel: 'header.hz-header, .hz-header', editUrl: @json(\App\Support\AdminEditUrls::siteSettings('header')) },
-                { key: 'site-brand', label: 'Edit Header', sel: '.hz-brand', editUrl: @json(\App\Support\AdminEditUrls::siteSettings('header')) },
-                { key: 'site-nav', label: 'Edit Navigation', sel: '.hz-nav-collapse, .hz-nav', editUrl: @json(\App\Support\AdminEditUrls::siteSettings('navigation')) },
-                { key: 'site-header-cta', label: 'Edit Header Button', sel: '.hz-nav-cta', editUrl: @json(\App\Support\AdminEditUrls::siteSettings('header')) },
-                { key: 'site-footer', label: 'Edit Footer', sel: 'footer.hz-footer, .hz-footer', editUrl: @json(\App\Support\AdminEditUrls::siteSettings('footer')) },
-                { key: 'site-social', label: 'Edit Social Links', sel: '.hz-social', editUrl: @json(\App\Support\AdminEditUrls::siteSettings('footer')) },
-                { key: 'site-contact', label: 'Edit Contact Info', sel: '.hz-footer .col-lg-3:last-child', editUrl: @json(\App\Support\AdminEditUrls::siteSettings('footer')) },
                 { key: 'hero', label: 'Edit Hero', sel: '[data-admin-section="hero"], section.hz-hero, .hz-hero' },
                 { key: 'about', label: 'Edit About', sel: '[data-admin-section="about"], #about, section.hz-about' },
                 { key: 'services', label: 'Edit Services', sel: '[data-admin-section="services"], #services, section.hz-services' },
@@ -263,6 +257,7 @@ document.addEventListener('alpine:init', () => {
             const self = this;
             map.forEach(({ key, label, sel, editUrl }) => {
                 doc.querySelectorAll(sel).forEach((el) => {
+                    if (el.querySelector('[data-admin-section]')) return;
                     if (!el.getAttribute('data-admin-section')) {
                         el.setAttribute('data-admin-section', key);
                     }
@@ -310,13 +305,18 @@ document.addEventListener('alpine:init', () => {
                         return;
                     }
                     const common = @json([
-                        'site-header' => \App\Support\AdminEditUrls::siteSettings('header'),
-                        'site-brand' => \App\Support\AdminEditUrls::siteSettings('header'),
+                        'site-header' => \App\Support\AdminEditUrls::siteSettings('company-name'),
+                        'site-brand' => \App\Support\AdminEditUrls::siteSettings('company-name'),
+                        'site-company-name' => \App\Support\AdminEditUrls::siteSettings('company-name'),
+                        'site-logo' => \App\Support\AdminEditUrls::siteSettings('logo'),
+                        'site-tagline' => \App\Support\AdminEditUrls::siteSettings('tagline'),
                         'site-nav' => \App\Support\AdminEditUrls::siteSettings('navigation'),
-                        'site-header-cta' => \App\Support\AdminEditUrls::siteSettings('header'),
-                        'site-footer' => \App\Support\AdminEditUrls::siteSettings('footer'),
-                        'site-social' => \App\Support\AdminEditUrls::siteSettings('footer'),
-                        'site-contact' => \App\Support\AdminEditUrls::siteSettings('footer'),
+                        'site-connect' => \App\Support\AdminEditUrls::siteSettings('navigation'),
+                        'site-header-cta' => \App\Support\AdminEditUrls::siteSettings('header-cta'),
+                        'site-footer' => \App\Support\AdminEditUrls::siteSettings('footer-display'),
+                        'site-footer-credit' => \App\Support\AdminEditUrls::siteSettings('footer-display'),
+                        'site-social' => \App\Support\AdminEditUrls::siteSettings('social'),
+                        'site-contact' => \App\Support\AdminEditUrls::siteSettings('contact'),
                     ]);
                     if (common[data.section]) {
                         window.location.href = common[data.section];

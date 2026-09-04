@@ -20,17 +20,42 @@
     }
 
     $adminPreview = request()->boolean('admin_preview');
-    $editHeaderUrl = $adminPreview ? \App\Support\AdminEditUrls::siteSettings('header') : null;
-    $editNavUrl = $adminPreview ? \App\Support\AdminEditUrls::siteSettings('navigation') : null;
+    $brandParts = preg_split('/\s+/', trim($siteName), 2) ?: [trim($siteName)];
+    $brandFirst = $brandParts[0] ?? $siteName;
+    $brandRest = $brandParts[1] ?? null;
 @endphp
 
 <header class="hz-header" data-hz-header>
     <nav class="navbar navbar-expand-lg hz-navbar" aria-label="Primary">
         <div class="container hz-navbar-inner">
             @if($logoUrl || $showBrandText)
-                <a class="navbar-brand hz-brand" href="{{ $brandHomeUrl }}"
-                   @if($adminPreview) data-admin-section="site-brand" data-admin-label="Edit Header" data-admin-edit-url="{{ $editHeaderUrl }}" @endif>
-                    <x-site-brand :name="$siteName" :logo="$logoUrl" :show-text="$showBrandText" />
+                <a class="navbar-brand hz-brand" href="{{ $brandHomeUrl }}">
+                    @if($logoUrl)
+                        <span
+                            class="hz-brand-mark"
+                            @if($adminPreview)
+                                data-admin-section="site-logo"
+                                data-admin-compact="1"
+                                data-admin-label="Edit Logo"
+                                data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('logo') }}"
+                            @endif
+                        >
+                            <img src="{{ $logoUrl }}" alt="{{ $siteName }}" class="hz-brand-logo">
+                        </span>
+                    @endif
+                    @if($showBrandText)
+                        <span
+                            class="hz-brand-text"
+                            @if($adminPreview)
+                                data-admin-section="site-company-name"
+                                data-admin-compact="1"
+                                data-admin-label="Edit Company Name"
+                                data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('company-name') }}"
+                            @endif
+                        >
+                            {{ $brandFirst }}@if($brandRest) <span>{{ $brandRest }}</span>@endif
+                        </span>
+                    @endif
                 </a>
             @endif
 
@@ -48,12 +73,18 @@
                 <span></span>
             </button>
 
-            <div class="collapse navbar-collapse hz-nav-collapse" id="hzMainNav"
-                 @if($adminPreview) data-admin-section="site-nav" data-admin-label="Edit Navigation" data-admin-edit-url="{{ $editNavUrl }}" @endif>
+            <div class="collapse navbar-collapse hz-nav-collapse" id="hzMainNav">
                 <ul class="navbar-nav ms-auto align-items-lg-center hz-nav">
                     @foreach ($navItems as $link)
                         @if(!empty($link['children']))
-                            <li class="nav-item dropdown">
+                            <li class="nav-item dropdown"
+                                @if($adminPreview)
+                                    data-admin-section="site-nav"
+                                    data-admin-compact="1"
+                                    data-admin-label="Edit Nav Links"
+                                    data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('navigation') }}"
+                                @endif
+                            >
                                 <a
                                     class="nav-link dropdown-toggle {{ !empty($link['active']) || collect($link['children'])->contains(fn ($c) => !empty($c['active'])) ? 'active' : '' }}"
                                     href="{{ $link['url'] }}"
@@ -84,7 +115,14 @@
                                 </ul>
                             </li>
                         @else
-                            <li class="nav-item">
+                            <li class="nav-item"
+                                @if($adminPreview)
+                                    data-admin-section="site-nav"
+                                    data-admin-compact="1"
+                                    data-admin-label="Edit Nav Links"
+                                    data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('navigation') }}"
+                                @endif
+                            >
                                 <a
                                     class="nav-link {{ !empty($link['active']) ? 'active' : '' }}"
                                     href="{{ $link['url'] }}"
@@ -98,7 +136,13 @@
                     @endforeach
                     @if($showHeaderCta)
                         <li class="nav-item hz-nav-cta"
-                            @if($adminPreview) data-admin-section="site-header-cta" data-admin-label="Edit Header Button" data-admin-edit-url="{{ $editHeaderUrl }}" @endif>
+                            @if($adminPreview)
+                                data-admin-section="site-header-cta"
+                                data-admin-compact="1"
+                                data-admin-label="Edit CTA Button"
+                                data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('header-cta') }}"
+                            @endif
+                        >
                             <a class="btn-hz btn-hz-sm" href="{{ $headerCtaUrl }}">{{ $headerCtaText }}</a>
                         </li>
                     @endif

@@ -24,6 +24,17 @@
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.15s ease;
+        white-space: nowrap;
+    }
+    body.admin-preview-mode [data-admin-section][data-admin-compact]::after {
+        top: 2px;
+        right: 2px;
+        font-size: 9px;
+        padding: 3px 6px;
+        border-radius: 6px;
+    }
+    body.admin-preview-mode [data-admin-section][data-admin-compact]:hover {
+        outline-offset: 0;
     }
     body.admin-preview-mode [data-admin-section]:hover {
         outline-color: rgba(234, 88, 12, 0.7);
