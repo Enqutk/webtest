@@ -13,24 +13,7 @@
     $introImage = \App\Models\Organization::themeFileUrl($intro['image'] ?? null);
 @endphp
 
-<div x-data="{
-    points: @json($points),
-    panels: @json($panels),
-    addPoint() { this.points.push({ title: '', icon: 'bi bi-check-lg', description: '' }); },
-    addPanel() { this.panels.push({ title: '', description: '', image: null }); },
-    pushIntroField(field, value) {
-        if (field === 'description') {
-            value = (value || '').replace(/\n/g, '<br>');
-        }
-        window.AdminPreview?.pushField('about-page-intro', field, value);
-    },
-    pushPointField(index, field, value) {
-        window.AdminPreview?.pushField('about-page-intro', 'point-' + index + '-' + field, value);
-    },
-    pushStoryField(field, value) {
-        window.AdminPreview?.pushField('about-page-story', field, value);
-    }
-}">
+<div x-data="aboutPageForm">
 
     <form action="{{ route('admin.site-pages.update', 'about') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
@@ -148,3 +131,32 @@
     </form>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('alpine:init', () => {
+    Alpine.data('aboutPageForm', () => ({
+        points: @json($points),
+        panels: @json($panels),
+        addPoint() {
+            this.points.push({ title: '', icon: 'bi bi-check-lg', description: '' });
+        },
+        addPanel() {
+            this.panels.push({ title: '', description: '', image: null });
+        },
+        pushIntroField(field, value) {
+            if (field === 'description') {
+                value = (value || '').replace(/\n/g, '<br>');
+            }
+            window.AdminPreview?.pushField('about-page-intro', field, value);
+        },
+        pushPointField(index, field, value) {
+            window.AdminPreview?.pushField('about-page-intro', 'point-' + index + '-' + field, value);
+        },
+        pushStoryField(field, value) {
+            window.AdminPreview?.pushField('about-page-story', field, value);
+        },
+    }));
+});
+</script>
+@endpush
