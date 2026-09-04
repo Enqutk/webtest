@@ -35,6 +35,7 @@ class NavigationService
         } else {
             $location = MenuLocation::query()
                 ->where('location', MenuLocationEnum::Navbar)
+                ->when($org?->id, fn ($query, $orgId) => $query->where('organization_id', $orgId))
                 ->first();
 
             if ($location) {

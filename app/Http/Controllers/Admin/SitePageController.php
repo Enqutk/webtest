@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\MenuLocationEnum;
 use App\Http\Controllers\Controller;
+use App\Models\MenuLocation;
 use App\Models\Organization;
 use App\Support\ThemeMedia;
 use Illuminate\Http\Request;
@@ -36,8 +38,11 @@ class SitePageController extends Controller
         $data = $currentOrg->sitePage($page);
         $meta = self::PAGES[$page];
         $liveUrl = route($meta['route'], ['slug' => $currentOrg->slug]);
+        $previewUrl = $liveUrl . (str_contains($liveUrl, '?') ? '&' : '?') . 'admin_preview=1';
+        $headerMenu = $this->headerMenuFor($currentOrg);
+        $navItems = $headerMenu->items()->orderBy('order_number')->get();
 
-        return view('admin.site-pages.' . $page, compact('currentOrg', 'data', 'page', 'meta', 'liveUrl'));
+        return view('admin.site-pages.' . $page, compact('currentOrg', 'data', 'page', 'meta', 'liveUrl', 'previewUrl', 'headerMenu', 'navItems'));
     }
 
     public function update(Request $request, string $page)
@@ -120,5 +125,19 @@ class SitePageController extends Controller
             'show_clients' => $request->boolean('show_clients'),
             'show_cta' => $request->boolean('show_cta'),
         ];
+    }
+
+    private function headerMenuFor(Organization $org): MenuLocation
+    {
+        return MenuLocation::firstOrCreate(
+            [
+                'organization_id' => $org->id,
+                'location' => MenuLocationEnum::Navbar,
+            ],
+            [
+                'name' => 'Header Navigation',
+                'slug' => 'header-navigation-' . $org->id,
+            ]
+        );
     }
 }

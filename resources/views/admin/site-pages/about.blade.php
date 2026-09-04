@@ -1,10 +1,10 @@
-@extends('admin.layouts.app')
+@extends('admin.site-pages.layout')
 
 @section('title', 'About page')
 @section('page-title', 'About page')
 @section('page-subtitle', $currentOrg->title)
 
-@section('content')
+@section('page-form')
 @php
     $intro = $data['intro'] ?? [];
     $story = $data['story'] ?? [];
@@ -13,22 +13,12 @@
     $introImage = \App\Models\Organization::themeFileUrl($intro['image'] ?? null);
 @endphp
 
-<div class="space-y-6" x-data="{
+<div x-data="{
     points: @json($points),
     panels: @json($panels),
     addPoint() { this.points.push({ title: '', icon: 'bi bi-check-lg', description: '' }); },
     addPanel() { this.panels.push({ title: '', description: '', image: null }); }
 }">
-
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
-        <div>
-            <h2 class="text-base font-bold text-slate-900">About page content</h2>
-            <p class="text-xs text-slate-500 mt-0.5">Everything on this screen is for the About page only. Team, clients, and the contact banner stay in their own menus.</p>
-        </div>
-        <a href="{{ $liveUrl }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl">
-            <i class="bi bi-box-arrow-up-right"></i> View live About
-        </a>
-    </div>
 
     <form action="{{ route('admin.site-pages.update', 'about') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
@@ -133,9 +123,7 @@
             </div>
         </div>
 
-        <div class="sticky bottom-4">
-            <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-brand-600 hover:bg-brand-500 text-white text-sm font-bold rounded-xl shadow-lg shadow-brand-600/30">Save About page</button>
-        </div>
+        <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-brand-600 hover:bg-brand-500 text-white text-sm font-bold rounded-xl shadow-lg shadow-brand-600/30">Save About page</button>
     </form>
 </div>
 @endsection

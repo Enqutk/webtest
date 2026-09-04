@@ -1,22 +1,12 @@
-@extends('admin.layouts.app')
+@extends('admin.site-pages.layout')
 
 @section('title', 'Services page')
 @section('page-title', 'Services page')
 @section('page-subtitle', $currentOrg->title)
 
-@section('content')
-<div class="space-y-6">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
-        <div>
-            <h2 class="text-base font-bold text-slate-900">Services listing header</h2>
-            <p class="text-xs text-slate-500 mt-0.5">This page only. Individual service cards stay under Website → Services.</p>
-        </div>
-        <div class="flex gap-2">
-            <a href="{{ route('admin.services.index') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 text-xs font-bold rounded-xl">Edit services catalog</a>
-            <a href="{{ $liveUrl }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl">
-                <i class="bi bi-box-arrow-up-right"></i> View live
-            </a>
-        </div>
+@section('page-form')
+    <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm mb-4">
+        <p class="text-xs text-slate-500">Individual service cards are managed under <a href="{{ route('admin.services.index') }}" class="text-brand-700 font-bold hover:underline">Services</a> in the sidebar.</p>
     </div>
 
     <form action="{{ route('admin.site-pages.update', 'services') }}" method="POST" class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm space-y-4">
@@ -37,5 +27,4 @@
         </div>
         <button type="submit" class="px-6 py-3 bg-brand-600 hover:bg-brand-500 text-white text-sm font-bold rounded-xl shadow-lg shadow-brand-600/30">Save Services page</button>
     </form>
-</div>
 @endsection
