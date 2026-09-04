@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ContentBlock;
+use App\Models\Entity;
+use App\Enums\EntityTypeEnum;
 use App\Models\Organization;
 use App\Models\Service;
 use App\Models\Team;
@@ -27,6 +29,22 @@ class HomePageController extends Controller
             ->orderBy('order')
             ->get();
         $nextServiceOrder = (Service::where('organization_id', $currentOrg->id)->max('order') ?? 0) + 1;
+        $projects = Entity::query()
+            ->where('organization_id', $currentOrg->id)
+            ->where('type', EntityTypeEnum::project)
+            ->with('media')
+            ->orderBy('order')
+            ->get();
+        $nextProjectOrder = (Entity::where('organization_id', $currentOrg->id)->where('type', EntityTypeEnum::project)->max('order') ?? 0) + 1;
+        $clientPartners = Entity::query()
+            ->where('organization_id', $currentOrg->id)
+            ->whereIn('type', [EntityTypeEnum::client, EntityTypeEnum::partner])
+            ->with('media')
+            ->orderBy('order')
+            ->get();
+        $nextClientOrder = (Entity::where('organization_id', $currentOrg->id)
+            ->whereIn('type', [EntityTypeEnum::client, EntityTypeEnum::partner])
+            ->max('order') ?? 0) + 1;
 
         $aboutPoints = $sections['about']['points'] ?? [];
         if ($aboutPoints === []) {
@@ -82,6 +100,10 @@ class HomePageController extends Controller
             'teamMembers',
             'services',
             'nextServiceOrder',
+            'projects',
+            'nextProjectOrder',
+            'clientPartners',
+            'nextClientOrder',
             'aboutPoints',
             'statsItems',
         ));

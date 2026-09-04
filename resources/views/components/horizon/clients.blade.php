@@ -6,7 +6,7 @@
 ])
 
 @if($clients->isNotEmpty())
-<section class="hz-section hz-clients bg-surface border-top border-bottom border-hz">
+<section class="hz-section hz-clients bg-surface border-top border-bottom border-hz" id="clients">
     <div class="container">
         <div class="row justify-content-between align-items-end mb-4 g-3">
             <div class="col-lg-8">
@@ -27,25 +27,30 @@
                     $tag = $client->type?->value === 'partner' ? 'Partner' : 'Client';
                 @endphp
                 <div class="col-6 col-md-4 col-lg-3">
-                    @if($client->link)
-                        <a href="{{ $client->link }}" target="_blank" rel="noopener" class="hz-client">
-                            @if($logo)
-                                <img src="{{ $logo }}" alt="{{ $client->name }}">
-                            @else
-                                <span class="hz-client-name">{{ $client->name }}</span>
-                            @endif
-                            <span class="hz-client-tag">{{ $tag }}</span>
-                        </a>
-                    @else
-                        <div class="hz-client">
-                            @if($logo)
-                                <img src="{{ $logo }}" alt="{{ $client->name }}">
-                            @else
-                                <span class="hz-client-name">{{ $client->name }}</span>
-                            @endif
-                            <span class="hz-client-tag">{{ $tag }}</span>
-                        </div>
-                    @endif
+                    <div
+                        class="h-100"
+                        {!! \App\Support\AdminPreviewAttrs::html('clients', 'client_'.$client->id, 'Edit ' . $tag, false) !!}
+                    >
+                        @if($client->link)
+                            <a href="{{ $client->link }}" target="_blank" rel="noopener" class="hz-client">
+                                @if($logo)
+                                    <img src="{{ $logo }}" alt="{{ $client->name }}" data-preview-field="client-{{ $client->id }}-image">
+                                @else
+                                    <span class="hz-client-name" data-preview-field="client-{{ $client->id }}-name">{{ $client->name }}</span>
+                                @endif
+                                <span class="hz-client-tag" data-preview-field="client-{{ $client->id }}-tag">{{ $tag }}</span>
+                            </a>
+                        @else
+                            <div class="hz-client">
+                                @if($logo)
+                                    <img src="{{ $logo }}" alt="{{ $client->name }}" data-preview-field="client-{{ $client->id }}-image">
+                                @else
+                                    <span class="hz-client-name" data-preview-field="client-{{ $client->id }}-name">{{ $client->name }}</span>
+                                @endif
+                                <span class="hz-client-tag" data-preview-field="client-{{ $client->id }}-tag">{{ $tag }}</span>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             @endforeach
         </div>

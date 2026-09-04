@@ -7,6 +7,23 @@
         'order' => $s->order,
         'status' => $s->status->value ?? $s->status,
     ])->values();
+    $projectsListForJs = $projects->map(fn ($p) => [
+        'id' => $p->id,
+        'name' => $p->name,
+        'category' => $p->category,
+        'link' => $p->link,
+        'description' => $p->description,
+        'order' => $p->order,
+        'status' => $p->status->value ?? $p->status,
+    ])->values();
+    $clientsListForJs = $clientPartners->map(fn ($c) => [
+        'id' => $c->id,
+        'name' => $c->name,
+        'type' => $c->type->value ?? $c->type,
+        'link' => $c->link,
+        'order' => $c->order,
+        'status' => $c->status->value ?? $c->status,
+    ])->values();
 @endphp
 @push('scripts')
 <script>
@@ -45,6 +62,25 @@ document.addEventListener('alpine:init', () => {
         serviceStatus: 'active',
         servicesList: @json($servicesListForJs),
 
+        openProjectModal: false,
+        editingProjectId: null,
+        projectName: '',
+        projectCategory: '',
+        projectLink: '',
+        projectDescription: '',
+        projectOrder: {{ $nextProjectOrder }},
+        projectStatus: 'active',
+        projectsList: @json($projectsListForJs),
+
+        openClientModal: false,
+        editingClientId: null,
+        clientName: '',
+        clientType: 'client',
+        clientLink: '',
+        clientOrder: {{ $nextClientOrder }},
+        clientStatus: 'active',
+        clientsList: @json($clientsListForJs),
+
         heroBadge: @json($hero['badge'] ?? 'Infrastructure · Engineering · Impact'),
         heroSubtitle: @json($hero['subtitle'] ?? 'Engineering Excellence'),
         heroTitle: @json($hero['title'] ?? 'Building resilient infrastructure for lasting communities'),
@@ -68,6 +104,10 @@ document.addEventListener('alpine:init', () => {
 
         portfolioEyebrow: @json($portfolioSec['eyebrow'] ?? 'Featured Projects'),
         portfolioTitle: @json($portfolioSec['title'] ?? 'Delivering resilient infrastructure across East Africa'),
+
+        clientsEyebrow: @json($clientsSec['eyebrow'] ?? 'Trusted partners'),
+        clientsTitle: @json($clientsSec['title'] ?? 'Organizations we work alongside'),
+        clientsDescription: @json($clientsSec['description'] ?? ''),
 
         teamEyebrow: @json($teamSec['eyebrow'] ?? 'Leadership & Team'),
         teamTitle: @json($teamSec['title'] ?? 'Experienced engineers & hydrologists'),
@@ -148,6 +188,56 @@ document.addEventListener('alpine:init', () => {
             return this.servicesList.find((s) => String(s.id) === String(id)) || null;
         },
 
+        editProject(p) {
+            this.editingProjectId = p.id;
+            this.projectName = p.name || '';
+            this.projectCategory = p.category || '';
+            this.projectLink = p.link || '';
+            this.projectDescription = p.description || '';
+            this.projectOrder = p.order || 1;
+            this.projectStatus = p.status?.value || p.status || 'active';
+            this.openProjectModal = true;
+        },
+
+        newProject() {
+            this.editingProjectId = null;
+            this.projectName = '';
+            this.projectCategory = '';
+            this.projectLink = '';
+            this.projectDescription = '';
+            this.projectOrder = {{ $nextProjectOrder }};
+            this.projectStatus = 'active';
+            this.openProjectModal = true;
+        },
+
+        findProjectById(id) {
+            return this.projectsList.find((p) => String(p.id) === String(id)) || null;
+        },
+
+        editClient(c) {
+            this.editingClientId = c.id;
+            this.clientName = c.name || '';
+            this.clientType = c.type?.value || c.type || 'client';
+            this.clientLink = c.link || '';
+            this.clientOrder = c.order || 1;
+            this.clientStatus = c.status?.value || c.status || 'active';
+            this.openClientModal = true;
+        },
+
+        newClient() {
+            this.editingClientId = null;
+            this.clientName = '';
+            this.clientType = 'client';
+            this.clientLink = '';
+            this.clientOrder = {{ $nextClientOrder }};
+            this.clientStatus = 'active';
+            this.openClientModal = true;
+        },
+
+        findClientById(id) {
+            return this.clientsList.find((c) => String(c.id) === String(id)) || null;
+        },
+
         previewFrame() {
             return this.$refs.previewFrame || null;
         },
@@ -209,6 +299,28 @@ document.addEventListener('alpine:init', () => {
                             const svc = this.findServiceById(id);
                             if (svc) {
                                 this.editService(svc);
+                            }
+                        }
+                        if (!input && /^project_\d+$/.test(options.field)) {
+                            const id = options.field.replace('project_', '');
+                            const card = form.querySelector('#project-' + id);
+                            if (card) {
+                                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                            const project = this.findProjectById(id);
+                            if (project) {
+                                this.editProject(project);
+                            }
+                        }
+                        if (!input && /^client_\d+$/.test(options.field)) {
+                            const id = options.field.replace('client_', '');
+                            const card = form.querySelector('#client-' + id);
+                            if (card) {
+                                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                            const client = this.findClientById(id);
+                            if (client) {
+                                this.editClient(client);
                             }
                         }
                         if (!input && /^stat_\d+$/.test(options.field)) {
@@ -274,6 +386,11 @@ document.addEventListener('alpine:init', () => {
             if (this.activeSection === 'portfolio') {
                 this.pushField('portfolio', 'eyebrow', this.portfolioEyebrow);
                 this.pushField('portfolio', 'title', this.portfolioTitle);
+            }
+            if (this.activeSection === 'clients') {
+                this.pushField('clients', 'eyebrow', this.clientsEyebrow);
+                this.pushField('clients', 'title', this.clientsTitle);
+                this.pushField('clients', 'description', this.clientsDescription);
             }
             if (this.activeSection === 'team') {
                 this.pushField('team', 'eyebrow', this.teamEyebrow);
@@ -359,6 +476,9 @@ document.addEventListener('alpine:init', () => {
             }, { deep: true });
             this.$watch('portfolioEyebrow', (v) => this.pushField('portfolio', 'eyebrow', v));
             this.$watch('portfolioTitle', (v) => this.pushField('portfolio', 'title', v));
+            this.$watch('clientsEyebrow', (v) => this.pushField('clients', 'eyebrow', v));
+            this.$watch('clientsTitle', (v) => this.pushField('clients', 'title', v));
+            this.$watch('clientsDescription', (v) => this.pushField('clients', 'description', v));
             this.$watch('teamEyebrow', (v) => this.pushField('team', 'eyebrow', v));
             this.$watch('teamTitle', (v) => this.pushField('team', 'title', v));
             this.$watch('teamDescription', (v) => this.pushField('team', 'description', v));

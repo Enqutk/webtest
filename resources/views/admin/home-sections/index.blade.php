@@ -724,6 +724,61 @@
                 </button>
             </div>
         </form>
+
+        <div class="bg-white rounded-2xl border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div>
+                    <h3 class="text-sm font-bold text-slate-900">Project cards on homepage</h3>
+                    <p class="text-xs text-slate-500">Rift Valley Solar Drip Pilot and other case studies in the portfolio grid.</p>
+                </div>
+                <button type="button" @click="newProject()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center gap-2">
+                    <i class="bi bi-plus-circle-fill"></i>
+                    <span>Add project</span>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 gap-4">
+                @foreach($projects as $project)
+                    @php $img = $project->getFirstMediaUrl('image'); @endphp
+                    <div id="project-{{ $project->id }}" class="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-200/80">
+                        <div class="flex items-center gap-3.5 min-w-0">
+                            <div class="w-14 h-14 rounded-xl bg-slate-200 overflow-hidden shrink-0 border border-slate-300 flex items-center justify-center">
+                                @if($img)
+                                    <img src="{{ $img }}" alt="" class="w-full h-full object-cover">
+                                @else
+                                    <i class="bi bi-briefcase text-slate-400"></i>
+                                @endif
+                            </div>
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs font-bold text-slate-900 truncate">{{ $project->name }}</span>
+                                    @if($project->category)
+                                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-brand-50 text-brand-700">{{ $project->category }}</span>
+                                    @endif
+                                </div>
+                                <p class="text-[11px] text-slate-500 line-clamp-2 mt-0.5">{{ $project->description }}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <button type="button" @click="editProject({{ json_encode([
+                                'id' => $project->id,
+                                'name' => $project->name,
+                                'category' => $project->category,
+                                'link' => $project->link,
+                                'description' => $project->description,
+                                'order' => $project->order,
+                                'status' => $project->status->value ?? $project->status,
+                            ]) }})" class="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 text-xs font-bold rounded-lg transition">Edit</button>
+                            <form action="{{ route('admin.portfolio.destroy', $project) }}" method="POST" onsubmit="return confirm('Delete this project?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
     </div>
 
     <!-- 🤝 SECTION: CLIENTS -->
@@ -746,17 +801,17 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Eyebrow</label>
-                    <input type="text" name="eyebrow" value="{{ $clientsSec['eyebrow'] ?? 'Trusted partners' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition" @input="pushField('clients', 'eyebrow', $event.target.value)">
+                    <input type="text" name="eyebrow" x-model="clientsEyebrow" value="{{ $clientsSec['eyebrow'] ?? 'Trusted partners' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-slate-700">Heading</label>
-                    <input type="text" name="title" value="{{ $clientsSec['title'] ?? 'Organizations we work alongside' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition" @input="pushField('clients', 'title', $event.target.value)">
+                    <input type="text" name="title" x-model="clientsTitle" value="{{ $clientsSec['title'] ?? 'Organizations we work alongside' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                 </div>
             </div>
 
             <div class="space-y-1.5">
                 <label class="block text-xs font-bold text-slate-700">Description</label>
-                <textarea name="description" rows="2" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition" @input="pushField('clients', 'description', $event.target.value)">{{ $clientsSec['description'] ?? '' }}</textarea>
+                <textarea name="description" rows="2" x-model="clientsDescription" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $clientsSec['description'] ?? '' }}</textarea>
             </div>
 
             <div class="flex justify-end pt-2">
@@ -765,6 +820,55 @@
                 </button>
             </div>
         </form>
+
+        <div class="bg-white rounded-2xl border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div>
+                    <h3 class="text-sm font-bold text-slate-900">Client & partner logos</h3>
+                    <p class="text-xs text-slate-500">East Africa Climate Fund, cooperatives, and other logos shown in the grid.</p>
+                </div>
+                <button type="button" @click="newClient()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center gap-2">
+                    <i class="bi bi-plus-circle-fill"></i>
+                    <span>Add logo</span>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                @foreach($clientPartners as $client)
+                    @php $logo = $client->getFirstMediaUrl('image'); @endphp
+                    <div id="client-{{ $client->id }}" class="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-200/80">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-12 h-12 rounded-lg bg-white border border-slate-200 flex items-center justify-center shrink-0 overflow-hidden">
+                                @if($logo)
+                                    <img src="{{ $logo }}" alt="" class="w-full h-full object-contain p-1">
+                                @else
+                                    <span class="text-[9px] font-bold text-slate-500 text-center px-1 leading-tight">{{ $client->name }}</span>
+                                @endif
+                            </div>
+                            <div class="min-w-0">
+                                <div class="text-xs font-bold text-slate-900 truncate">{{ $client->name }}</div>
+                                <span class="text-[10px] font-bold uppercase {{ ($client->type->value ?? $client->type) === 'partner' ? 'text-brand-700' : 'text-slate-500' }}">{{ ucfirst($client->type->value ?? $client->type) }}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <button type="button" @click="editClient({{ json_encode([
+                                'id' => $client->id,
+                                'name' => $client->name,
+                                'type' => $client->type->value ?? $client->type,
+                                'link' => $client->link,
+                                'order' => $client->order,
+                                'status' => $client->status->value ?? $client->status,
+                            ]) }})" class="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 text-xs font-bold rounded-lg transition">Edit</button>
+                            <form action="{{ route('admin.clients.destroy', $client) }}" method="POST" onsubmit="return confirm('Remove this logo?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
     </div>
 
     <!-- 📣 SECTION 7: CTA BANNER -->
@@ -1034,6 +1138,115 @@
                     <div class="pt-4 border-t border-slate-100 flex justify-end gap-3">
                         <button type="button" @click="openServiceModal = false" class="px-4 py-2 bg-slate-100 text-slate-700 text-xs font-bold rounded-xl">Cancel</button>
                         <button type="submit" class="px-5 py-2 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-brand-600/30">Save Service</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 4: ADD / EDIT PROJECT -->
+    <div x-show="openProjectModal" class="fixed inset-0 z-50 overflow-y-auto" x-cloak>
+        <div class="min-h-full px-4 py-8 flex items-center justify-center">
+            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" @click="openProjectModal = false"></div>
+            <div class="relative bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-lg w-full p-6 lg:p-8 space-y-6 z-10">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                    <h3 class="text-base font-bold text-slate-900" x-text="editingProjectId ? 'Edit project' : 'Add project'"></h3>
+                    <button @click="openProjectModal = false" class="text-slate-400 hover:text-slate-700"><i class="bi bi-x-lg"></i></button>
+                </div>
+                <form :action="editingProjectId ? ('/admin/portfolio/quick-update/' + editingProjectId) : '{{ route('admin.portfolio.quick-store') }}'" method="POST" enctype="multipart/form-data" class="space-y-4">
+                    @csrf
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700">Project name</label>
+                        <input type="text" name="name" x-model="projectName" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700">Category tag</label>
+                            <input type="text" name="category" x-model="projectCategory" placeholder="Irrigation" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700">Link</label>
+                            <input type="text" name="link" x-model="projectLink" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                        </div>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700">Summary</label>
+                        <textarea name="description" x-model="projectDescription" rows="3" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs"></textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700">Order</label>
+                            <input type="number" name="order" x-model="projectOrder" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700">Status</label>
+                            <select name="status" x-model="projectStatus" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700">Cover photo</label>
+                        <input type="file" name="image" accept="image/*" class="w-full text-xs file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700">
+                    </div>
+                    <div class="pt-4 border-t border-slate-100 flex justify-end gap-3">
+                        <button type="button" @click="openProjectModal = false" class="px-4 py-2 bg-slate-100 text-slate-700 text-xs font-bold rounded-xl">Cancel</button>
+                        <button type="submit" class="px-5 py-2 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-brand-600/30">Save project</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 5: ADD / EDIT CLIENT / PARTNER -->
+    <div x-show="openClientModal" class="fixed inset-0 z-50 overflow-y-auto" x-cloak>
+        <div class="min-h-full px-4 py-8 flex items-center justify-center">
+            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" @click="openClientModal = false"></div>
+            <div class="relative bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-lg w-full p-6 lg:p-8 space-y-6 z-10">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                    <h3 class="text-base font-bold text-slate-900" x-text="editingClientId ? 'Edit logo' : 'Add logo'"></h3>
+                    <button @click="openClientModal = false" class="text-slate-400 hover:text-slate-700"><i class="bi bi-x-lg"></i></button>
+                </div>
+                <form :action="editingClientId ? ('/admin/clients/quick-update/' + editingClientId) : '{{ route('admin.clients.quick-store') }}'" method="POST" enctype="multipart/form-data" class="space-y-4">
+                    @csrf
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700">Organization name</label>
+                        <input type="text" name="name" x-model="clientName" required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700">Type</label>
+                            <select name="type" x-model="clientType" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                                <option value="client">Client</option>
+                                <option value="partner">Partner</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700">Website link</label>
+                            <input type="text" name="link" x-model="clientLink" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700">Order</label>
+                            <input type="number" name="order" x-model="clientOrder" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700">Status</label>
+                            <select name="status" x-model="clientStatus" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700">Logo image</label>
+                        <input type="file" name="image" accept="image/*" class="w-full text-xs file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700">
+                    </div>
+                    <div class="pt-4 border-t border-slate-100 flex justify-end gap-3">
+                        <button type="button" @click="openClientModal = false" class="px-4 py-2 bg-slate-100 text-slate-700 text-xs font-bold rounded-xl">Cancel</button>
+                        <button type="submit" class="px-5 py-2 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-brand-600/30">Save</button>
                     </div>
                 </form>
             </div>

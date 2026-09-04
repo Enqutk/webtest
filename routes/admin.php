@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\CardApplicationAdminController;
+use App\Http\Controllers\Admin\ClientPartnerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HomePageController;
 use App\Http\Controllers\Admin\MenuController;
@@ -75,6 +76,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Portfolio / Projects Management
         Route::resource('portfolio', PortfolioController::class)->except(['show']);
+        Route::post('/portfolio/quick-store', [PortfolioController::class, 'quickStore'])->name('portfolio.quick-store');
+        Route::post('/portfolio/quick-update/{portfolio}', [PortfolioController::class, 'quickUpdate'])->name('portfolio.quick-update');
+        Route::post('/clients/quick-store', [ClientPartnerController::class, 'quickStore'])->name('clients.quick-store');
+        Route::post('/clients/quick-update/{clientPartner}', [ClientPartnerController::class, 'quickUpdate'])->name('clients.quick-update');
+        Route::delete('/clients/{clientPartner}', [ClientPartnerController::class, 'destroy'])->name('clients.destroy');
 
         // Built-in website pages
         Route::get('/site-settings', [SiteSettingsController::class, 'index'])->name('site-settings.index');

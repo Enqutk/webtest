@@ -54,20 +54,23 @@
                     $image = $project->getFirstMediaUrl('image') ?: null;
                 @endphp
                 <div class="col-md-6 col-lg-4 hz-portfolio-item" data-category="{{ \Illuminate\Support\Str::slug($project->category ?: 'general') }}">
-                    <article class="hz-project-card">
+                    <article
+                        class="hz-project-card"
+                        {!! \App\Support\AdminPreviewAttrs::html('portfolio', 'project_'.$project->id, 'Edit Project', false) !!}
+                    >
                         <a href="{{ route('portfolio.show', $project) }}" class="hz-project-card-media">
                             @if($image)
-                                <img src="{{ $image }}" alt="{{ $project->name }}">
+                                <img src="{{ $image }}" alt="{{ $project->name }}" data-preview-field="project-{{ $project->id }}-image">
                             @endif
                             @if($project->category)
-                                <span class="hz-project-card-tag">{{ $project->category }}</span>
+                                <span class="hz-project-card-tag" data-preview-field="project-{{ $project->id }}-category">{{ $project->category }}</span>
                             @endif
                         </a>
                         <div class="hz-project-card-body">
-                            <h3>
+                            <h3 data-preview-field="project-{{ $project->id }}-name">
                                 <a href="{{ route('portfolio.show', $project) }}">{{ $project->name }}</a>
                             </h3>
-                            <p>{{ \Illuminate\Support\Str::limit(strip_tags((string) $project->description), 110) }}</p>
+                            <p data-preview-field="project-{{ $project->id }}-description">{{ \Illuminate\Support\Str::limit(strip_tags((string) $project->description), 110) }}</p>
                             <a href="{{ route('portfolio.show', $project) }}" class="hz-link">
                                 View project <i class="bi bi-arrow-right"></i>
                             </a>
