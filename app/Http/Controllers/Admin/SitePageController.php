@@ -10,6 +10,7 @@ use App\Models\Organization;
 use App\Models\OrganizationContact;
 use App\Models\SocialRef;
 use App\Support\ThemeMedia;
+use App\Support\UploadedImage;
 use Illuminate\Http\Request;
 
 class SitePageController extends Controller
@@ -77,6 +78,13 @@ class SitePageController extends Controller
     public function update(Request $request, string $page)
     {
         abort_unless(isset(self::PAGES[$page]), 404);
+
+        if ($page === 'about') {
+            $request->validate([
+                'intro_image' => ['nullable', 'image', 'max:20480'],
+                'panel_images.*' => ['nullable', 'image', 'max:20480'],
+            ]);
+        }
 
         $currentOrg = Organization::resolveCurrent();
         $theme = is_array($currentOrg->theme) ? $currentOrg->theme : Organization::defaultTheme();
@@ -160,7 +168,7 @@ class SitePageController extends Controller
     {
         $introImage = $existing['intro']['image'] ?? null;
         if ($request->hasFile('intro_image')) {
-            $introImage = $request->file('intro_image')->store('page-images', 'public');
+            $introImage = UploadedImage::storeOptimized($request->file('intro_image'));
         }
 
         $panels = [];

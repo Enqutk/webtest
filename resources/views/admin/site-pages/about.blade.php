@@ -22,7 +22,7 @@
 
 <div x-data="aboutPageForm" x-init="init()" x-effect="syncIntroImageFocus()">
 
-    <form action="{{ route('admin.site-pages.update', 'about') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+    <form action="{{ route('admin.site-pages.update', 'about') }}" method="POST" enctype="multipart/form-data" class="space-y-6" @submit.prevent="submitAboutForm">
         @csrf
 
         <div id="page-header" class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm space-y-4">
