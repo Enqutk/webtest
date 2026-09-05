@@ -20,12 +20,13 @@ class ServiceController extends Controller
         return view('services.index', compact('services', 'currentOrg'));
     }
 
-    public function show(string $slug)
+    public function show(string $slug, ?string $service_slug = null)
     {
         $currentOrg = Organization::resolvePublicCurrent();
+        $lookup = $service_slug ?: $slug;
 
         $service = Service::where('organization_id', $currentOrg->id)
-            ->where('slug', $slug)
+            ->where('slug', $lookup)
             ->where('status', StatusEnum::active)
             ->firstOrFail();
 

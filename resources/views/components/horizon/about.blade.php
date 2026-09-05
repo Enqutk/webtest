@@ -3,6 +3,9 @@
     'features' => null,
     'showLink' => true,
     'previewContext' => 'home',
+    'linkText' => 'More about us',
+    'linkUrl' => null,
+    'layout' => 'default',
 ])
 
 @if($about)
@@ -13,13 +16,21 @@
     $featureItems = collect($about['points'] ?? $features?->list_items ?? [])->take(4);
     $isAboutPage = $previewContext === 'about-page'
         || request()->routeIs('card.about', 'about');
+    $isMe = $layout === 'me';
     $previewSection = $isAboutPage ? 'about-page-intro' : 'about';
     $sectionId = $isAboutPage ? 'about-page-intro' : 'about';
     $aboutPageEditUrl = $isAboutPage ? route('admin.site-pages.edit', 'about') : null;
     $descriptionAdminField = $isAboutPage ? 'description' : 'paragraph_1';
+    $aboutHref = $linkUrl ?: ($data['aboutUrl'] ?? route('about'));
+    $siteName = $data['siteName'] ?? config('app.name');
+    $initials = collect(preg_split('/\s+/', trim((string) $siteName)))
+        ->filter()
+        ->take(2)
+        ->map(fn ($part) => mb_strtoupper(mb_substr($part, 0, 1)))
+        ->implode('');
 @endphp
 
-<section class="hz-section hz-about" id="{{ $sectionId }}"
+<section class="hz-section hz-about {{ $isMe ? 'hz-about-me' : '' }}" id="{{ $sectionId }}"
     @if(request()->boolean('admin_preview') && $isAboutPage)
         data-admin-section="{{ $previewSection }}"
         data-admin-label="Edit Intro Section"
@@ -28,14 +39,20 @@
 >
     <div class="container">
         <div class="row align-items-center g-5">
-            <div class="col-lg-6">
+            <div class="col-lg-5">
                 @if($image)
                     <div class="hz-about-media">
                         <img src="{{ $image }}" alt="{{ $title }}">
                     </div>
+                @elseif($isMe)
+                    <div class="hz-me-portrait" aria-hidden="true">
+                        <span class="hz-me-portrait-kicker">{{ $about['kicker'] ?? 'Me' }}</span>
+                        <span class="hz-me-portrait-initials">{{ $initials ?: 'YE' }}</span>
+                        <span class="hz-me-portrait-name">{{ $about['portrait_role'] ?? $data['tagline'] ?? $siteName }}</span>
+                    </div>
                 @endif
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-7">
                 <p class="hz-eyebrow" data-preview-field="eyebrow" {!! \App\Support\AdminPreviewAttrs::html($previewSection, 'eyebrow', 'Edit Eyebrow', true, $aboutPageEditUrl ? $aboutPageEditUrl . '#about-page-intro' : null) !!}>{{ $eyebrow }}</p>
                 <h2 class="hz-title hz-about-title" data-preview-field="title" {!! \App\Support\AdminPreviewAttrs::html($previewSection, 'title', 'Edit Heading', true, $aboutPageEditUrl ? $aboutPageEditUrl . '#about-page-intro' : null) !!}>{{ $title }}</h2>
                 <div class="hz-lead hz-about-copy" data-preview-field="description" data-preview-html="1" {!! \App\Support\AdminPreviewAttrs::html($previewSection, $descriptionAdminField, 'Edit Introduction', true, $aboutPageEditUrl ? $aboutPageEditUrl . '#about-page-intro' : null) !!}>{!! $about['description'] !!}</div>
@@ -69,8 +86,8 @@
 
                 @if($showLink)
                     <div class="mt-4">
-                        <a href="{{ route('about') }}" class="btn-hz">
-                            More about us <i class="bi bi-arrow-right"></i>
+                        <a href="{{ $aboutHref }}" class="btn-hz">
+                            {{ $linkText }} <i class="bi bi-arrow-right"></i>
                         </a>
                     </div>
                 @endif

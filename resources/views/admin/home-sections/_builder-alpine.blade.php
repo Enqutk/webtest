@@ -116,6 +116,12 @@ document.addEventListener('alpine:init', () => {
         ctaTitle: @json($ctaSec['title'] ?? 'Ready to build water infrastructure that lasts?'),
         ctaButtonText: @json($ctaSec['button_text'] ?? 'Talk to an engineer'),
 
+        creatorVisible: {{ !empty($creatorSec['is_visible']) ? 'true' : 'false' }},
+        creatorLabel: @json($creatorSec['label'] ?? 'Creator of this platform'),
+        creatorName: @json($creatorSec['name'] ?? ''),
+        creatorLine: @json($creatorSec['line'] ?? ''),
+        creatorCtaText: @json($creatorSec['cta_text'] ?? ''),
+
         editSlide(index, slide) {
             this.editingSlideIndex = index;
             this.slideTitle = slide.title || '';
@@ -401,10 +407,26 @@ document.addEventListener('alpine:init', () => {
                 this.pushField('cta', 'title', this.ctaTitle);
                 this.pushField('cta', 'button_text', this.ctaButtonText);
             }
+            if (this.activeSection === 'creator') {
+                this.pushField('creator', 'label', this.creatorLabel);
+                this.pushField('creator', 'name', this.creatorName);
+                this.pushField('creator', 'line', this.creatorLine);
+                this.pushField('creator', 'cta_text', this.creatorCtaText);
+                this.syncCreatorVisibility();
+            }
+        },
+
+        syncCreatorVisibility() {
+            const doc = this.previewDoc();
+            if (!doc) return;
+            const bar = doc.querySelector('.hz-creator-bar');
+            if (!bar) return;
+            bar.classList.toggle('is-creator-off', !this.creatorVisible);
         },
 
         wirePreviewInteractions() {
             this.previewReady = true;
+            this.syncCreatorVisibility();
             this.syncActiveSectionToPreview();
         },
 
@@ -484,6 +506,17 @@ document.addEventListener('alpine:init', () => {
             this.$watch('teamDescription', (v) => this.pushField('team', 'description', v));
             this.$watch('ctaTitle', (v) => this.pushField('cta', 'title', v));
             this.$watch('ctaButtonText', (v) => this.pushField('cta', 'button_text', v));
+            this.$watch('creatorLabel', (v) => this.pushField('creator', 'label', v));
+            this.$watch('creatorName', (v) => this.pushField('creator', 'name', v));
+            this.$watch('creatorLine', (v) => this.pushField('creator', 'line', v));
+            this.$watch('creatorCtaText', (v) => {
+                this.pushField('creator', 'cta_text', v);
+                const doc = this.previewDoc();
+                if (!doc) return;
+                const link = doc.querySelector('.hz-creator-bar-link');
+                if (link) link.style.display = v ? '' : 'none';
+            });
+            this.$watch('creatorVisible', () => this.syncCreatorVisibility());
         },
     }));
 });

@@ -85,6 +85,10 @@ class HomeContentService
         $configuredSections = $theme['home_sections'] ?? [];
         $homeSections = array_replace_recursive($defaultSections, is_array($configuredSections) ? $configuredSections : []);
 
+        if (empty($configuredSections['creator']) && ! empty($theme['creator']) && is_array($theme['creator'])) {
+            $homeSections['creator'] = array_replace_recursive($homeSections['creator'] ?? [], $theme['creator']);
+        }
+
         // Repeater arrays must take exact user configuration
         if (isset($configuredSections['hero']['slides']) && is_array($configuredSections['hero']['slides'])) {
             $homeSections['hero']['slides'] = $configuredSections['hero']['slides'];
@@ -176,6 +180,12 @@ class HomeContentService
                 'points' => $sitePages['about']['intro']['points']
                     ?? $homeSections['about']['points']
                     ?? [],
+                'kicker' => $sitePages['about']['intro']['kicker']
+                    ?? $homeSections['about']['kicker']
+                    ?? null,
+                'portrait_role' => $sitePages['about']['intro']['portrait_role']
+                    ?? $homeSections['about']['portrait_role']
+                    ?? ($organization?->tagline),
             ],
 
             'aboutSection1' => !empty($sitePages['about']['story']['panels'][0] ?? null)

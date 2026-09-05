@@ -290,6 +290,14 @@ class Organization extends Model implements HasMedia, \Filament\Models\Contracts
     public static function defaultHomeSections(): array
     {
         return [
+            'creator' => [
+                'is_visible' => false,
+                'label' => 'Creator of this platform',
+                'name' => '',
+                'line' => '',
+                'cta_text' => '',
+                'url' => '/',
+            ],
             'hero' => [
                 'is_visible' => true,
                 'badge' => 'Infrastructure · Engineering · Impact',

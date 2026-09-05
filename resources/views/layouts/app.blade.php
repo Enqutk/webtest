@@ -96,6 +96,7 @@
 </head>
 <body>
     @include('layouts.horizon.header')
+    @include('layouts.horizon.creator-bar')
 
     <main>
         @yield('content')

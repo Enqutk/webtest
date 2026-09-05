@@ -24,8 +24,13 @@
                 'subtitle' => $hs['about']['eyebrow'] ?? ($data['aboutFeatures']['subtitle'] ?? null),
                 'description' => $aboutCopy !== '' ? nl2br(e($aboutCopy)) : ($data['aboutFeatures']['description'] ?? ''),
                 'points' => $hs['about']['points'] ?? $data['aboutFeatures']['points'] ?? [],
+                'kicker' => $hs['about']['kicker'] ?? ($data['aboutFeatures']['kicker'] ?? 'Me'),
+                'portrait_role' => $hs['about']['portrait_role'] ?? ($data['aboutFeatures']['portrait_role'] ?? null),
             ])"
             :features="$data['heroFeatures'] ?? null"
+            :layout="$hs['about']['layout'] ?? ($data['sitePages']['about']['layout'] ?? 'default')"
+            :link-text="$hs['about']['cta_text'] ?? 'More about us'"
+            :link-url="$hs['about']['cta_url'] ?? ($data['aboutUrl'] ?? null)"
         />
     @endif
 
@@ -36,7 +41,9 @@
             :title="$hs['services']['title'] ?? 'Our services'"
             :description="$hs['services']['description'] ?? null"
             :cta-text="$hs['services']['cta_text'] ?? 'All services'"
-            :cta-url="$hs['services']['cta_url'] ?? null"
+            :cta-url="$hs['services']['cta_url'] ?? ($data['servicesUrl'] ?? null)"
+            :layout="$hs['services']['layout'] ?? ($data['sitePages']['services']['layout'] ?? 'cards')"
+            :icons="$data['sitePages']['services']['icons'] ?? []"
         />
     @endif
 
@@ -45,6 +52,7 @@
             :stats="$data['stats'] ?? []"
             :title="$hs['stats']['title'] ?? ($data['statsTitle'] ?? 'Impact that compounds')"
             :subtitle="$hs['stats']['eyebrow'] ?? ($data['statsSubtitle'] ?? 'By the numbers')"
+            :variant="$hs['stats']['variant'] ?? 'dark'"
         />
     @endif
 

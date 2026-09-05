@@ -181,7 +181,7 @@
                         data-admin-label="Edit Footer Visibility"
                         data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('footer-display') }}"
                     @endif
-                >Developed by <a href="https://tetercreatives.com" target="_blank" rel="noopener">Teter PLC</a></div>
+                >{!! $theme['footer_credit_html'] ?? ('Developed by <a href="'.e($theme['footer_credit_url'] ?? 'https://tetercreatives.com').'" target="_blank" rel="noopener">'.e($theme['footer_credit_text'] ?? 'Teter PLC').'</a>') !!}</div>
             @endif
         </div>
     </div>

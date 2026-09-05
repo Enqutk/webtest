@@ -6,6 +6,7 @@ class AdminEditUrls
 {
     /** @var list<string> */
     public const HOME_SECTIONS = [
+        'creator',
         'hero',
         'about',
         'services',

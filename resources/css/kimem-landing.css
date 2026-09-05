@@ -1099,6 +1099,26 @@ body.kimem-landing-body {
     text-transform: uppercase;
 }
 
+.landing-creator {
+    margin-top: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: none;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    color: rgba(11, 29, 58, 0.72);
+}
+
+.landing-creator a {
+    color: var(--luxury-navy);
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid var(--luxury-gold);
+}
+
+.landing-creator a:hover {
+    color: var(--luxury-ochre);
+}
+
 /* Reveal Animations */
 .reveal {
     opacity: 0;

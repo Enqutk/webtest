@@ -19,6 +19,12 @@ class HomePageController extends Controller
         $currentOrg = Organization::resolveCurrent();
         $theme = is_array($currentOrg->theme) ? $currentOrg->theme : Organization::defaultTheme();
         $sections = $theme['home_sections'] ?? Organization::defaultHomeSections();
+        if (! isset($sections['creator'])) {
+            $sections['creator'] = Organization::defaultHomeSections()['creator'];
+            if (! empty($theme['creator']) && is_array($theme['creator'])) {
+                $sections['creator'] = array_replace_recursive($sections['creator'], $theme['creator']);
+            }
+        }
 
         $shapeOptions = Organization::imageShapeOptions(true);
         $fontOptions = Organization::getFontOptions();
@@ -144,11 +150,17 @@ class HomePageController extends Controller
             $theme['home_sections'][$sectionKey] = [];
         }
 
+        $theme['home_sections'][$sectionKey]['is_visible'] = $request->boolean('is_visible');
+
         foreach ($data as $k => $v) {
             if ($k === 'is_visible') {
-                $v = (bool) $v;
+                continue;
             }
             $theme['home_sections'][$sectionKey][$k] = $v;
+        }
+
+        if ($sectionKey === 'creator') {
+            $theme['creator'] = $theme['home_sections']['creator'];
         }
 
         $currentOrg->theme = $theme;

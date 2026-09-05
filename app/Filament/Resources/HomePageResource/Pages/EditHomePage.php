@@ -580,6 +580,10 @@ class EditHomePage extends EditRecord
             $data['theme'] = array_merge($existingTheme, $data['theme']);
         }
 
+        if (isset($data['theme']['home_sections']['creator']) && is_array($data['theme']['home_sections']['creator'])) {
+            $data['theme']['creator'] = $data['theme']['home_sections']['creator'];
+        }
+
         return $data;
     }
 

@@ -74,9 +74,11 @@
     $clientsSec = $sections['clients'] ?? \App\Models\Organization::defaultHomeSections()['clients'];
     $teamSec = $sections['team'] ?? \App\Models\Organization::defaultHomeSections()['team'];
     $ctaSec = $sections['cta'] ?? \App\Models\Organization::defaultHomeSections()['cta'];
+    $creatorSec = $sections['creator'] ?? \App\Models\Organization::defaultHomeSections()['creator'];
 
     $heroSlides = $hero['slides'] ?? \App\Models\Organization::defaultHeroSlides();
     $sectionLabels = [
+        'creator' => 'Creator Bar',
         'hero' => 'Hero Banner',
         'about' => 'About & Mission',
         'services' => 'Services Section',
@@ -138,6 +140,9 @@
 
     <!-- Top Section Switcher Navigation -->
     <div class="bg-white rounded-2xl border border-slate-200/80 p-2 shadow-sm flex flex-wrap gap-1.5 sticky top-2 z-20 backdrop-blur-md bg-white/95">
+        <button type="button" @click="selectSection('creator')" :class="activeSection === 'creator' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+            <span>Creator {{ !empty($creatorSec['is_visible']) ? 'ON' : 'OFF' }}</span>
+        </button>
         <button type="button" @click="selectSection('hero')" :class="activeSection === 'hero' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
             <span>Hero ({{ count($heroSlides) }})</span>
         </button>
@@ -167,6 +172,60 @@
     <div class="home-builder-shell">
         <!-- LEFT: forms -->
         <div class="home-builder-editor space-y-6">
+
+    <!-- ✨ SECTION 0: CREATOR BAR -->
+    <div id="admin-form-creator" x-show="activeSection === 'creator'" class="space-y-6" x-cloak>
+        <form action="{{ route('admin.home-sections.update') }}" method="POST" class="bg-white rounded-2xl border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-6">
+            @csrf
+            <input type="hidden" name="section" value="creator">
+            <input type="hidden" name="is_visible" value="0">
+
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div>
+                    <h3 class="text-sm font-bold text-slate-900">Creator of this platform</h3>
+                    <p class="text-xs text-slate-500">Thin credit bar under the header. Turn it ON or OFF, then edit the wording.</p>
+                </div>
+                <label class="flex items-center gap-2 text-xs font-bold text-slate-700 cursor-pointer">
+                    <input type="checkbox" name="is_visible" value="1" x-model="creatorVisible" {{ !empty($creatorSec['is_visible']) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">
+                    <span x-text="creatorVisible ? 'Show Creator Bar ON' : 'Show Creator Bar OFF'"></span>
+                </label>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-700">Label</label>
+                    <input type="text" name="label" x-model="creatorLabel" value="{{ $creatorSec['label'] ?? 'Creator of this platform' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                </div>
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-700">Name</label>
+                    <input type="text" name="name" x-model="creatorName" value="{{ $creatorSec['name'] ?? '' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                </div>
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="block text-xs font-bold text-slate-700">Supporting line</label>
+                <input type="text" name="line" x-model="creatorLine" value="{{ $creatorSec['line'] ?? '' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-700">Button text</label>
+                    <input type="text" name="cta_text" x-model="creatorCtaText" value="{{ $creatorSec['cta_text'] ?? '' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                </div>
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-700">Button link</label>
+                    <input type="text" name="url" value="{{ $creatorSec['url'] ?? '/' }}" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
+                    <p class="text-[11px] text-slate-400">Use <code>/</code> for the Kimem landing page, or a full URL.</p>
+                </div>
+            </div>
+
+            <div class="flex justify-end pt-2">
+                <button type="submit" class="px-5 py-2.5 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-brand-600/30 transition">
+                    Save Creator Bar
+                </button>
+            </div>
+        </form>
+    </div>
 
     <!-- 🌟 SECTION 1: HERO BANNER & SLIDES -->
     <div id="admin-form-hero" x-show="activeSection === 'hero'" class="space-y-6">

@@ -203,6 +203,7 @@
         <footer class="landing-footer rs-container">
             <div class="footer-bottom">
                 <p>&copy; {{ date('Y') }} Kimem Cards. Crafted for lasting presence.</p>
+                <p class="landing-creator">Created by <a href="{{ url('/card/yeabsira-endale') }}">Yeabsira Endale Kukusha</a> — software engineer &amp; junior project manager.</p>
             </div>
         </footer>
     </main>

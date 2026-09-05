@@ -18,12 +18,12 @@
                     : null;
                 return (object) [
                     'title' => $s['title'] ?? '',
-                    'subtitle' => $s['subtitle'] ?? null,
+                    'subtitle' => $s['subtitle'] ?? $s['eyebrow'] ?? null,
                     'description' => $s['description'] ?? null,
                     'image_url' => $imgUrl,
                     'image_shape' => $s['image_shape'] ?? null,
-                    'text_link' => $s['text_link'] ?? 'Explore services',
-                    'button_link' => $s['button_link'] ?? route('services.index'),
+                    'text_link' => $s['text_link'] ?? $s['button_label'] ?? ($heroConfig['cta_text'] ?? 'Explore services'),
+                    'button_link' => $s['button_link'] ?? $s['button_url'] ?? ($heroConfig['cta_url'] ?? route('services.index')),
                 ];
             });
     } else {
@@ -115,7 +115,7 @@
                                              <span data-preview-field="cta_text">{{ $hero->text_link ?: 'Explore services' }}</span>
                                              <i class="bi bi-arrow-right"></i>
                                          </a>
-                                         <a href="{{ $data['contactUrl'] ?? route('contact') }}" class="btn-hz-outline" data-preview-field="secondary_cta_text" {!! \App\Support\AdminPreviewAttrs::html('hero', 'secondary_cta_text', 'Edit Secondary Button') !!}>Talk to us</a>
+                                         <a href="{{ $heroSecCtaUrl }}" class="btn-hz-outline" data-preview-field="secondary_cta_text" {!! \App\Support\AdminPreviewAttrs::html('hero', 'secondary_cta_text', 'Edit Secondary Button') !!}>{{ $heroSecCtaText }}</a>
                                      </div>
                                 </div>
                                 <div class="col-lg-6">

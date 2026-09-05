@@ -30,6 +30,42 @@ class HomePageResource extends Resource
             ->schema([
                 Forms\Components\Tabs::make('Home Page Customizer')
                     ->tabs([
+                        Forms\Components\Tabs\Tab::make('Creator Bar')
+                            ->icon('heroicon-m-identification')
+                            ->schema([
+                                Forms\Components\Section::make('Creator of this platform')
+                                    ->description('Thin credit bar under the header. Toggle ON / OFF and edit the wording.')
+                                    ->schema([
+                                        Forms\Components\Toggle::make('theme.home_sections.creator.is_visible')
+                                            ->label('Show Creator Bar (ON / OFF)')
+                                            ->default(false)
+                                            ->live(),
+
+                                        Forms\Components\Grid::make(2)
+                                            ->schema([
+                                                Forms\Components\TextInput::make('theme.home_sections.creator.label')
+                                                    ->label('Label')
+                                                    ->default('Creator of this platform'),
+                                                Forms\Components\TextInput::make('theme.home_sections.creator.name')
+                                                    ->label('Name')
+                                                    ->placeholder('Kimem Cards'),
+                                            ]),
+
+                                        Forms\Components\TextInput::make('theme.home_sections.creator.line')
+                                            ->label('Supporting line')
+                                            ->columnSpanFull(),
+
+                                        Forms\Components\Grid::make(2)
+                                            ->schema([
+                                                Forms\Components\TextInput::make('theme.home_sections.creator.cta_text')
+                                                    ->label('Button text'),
+                                                Forms\Components\TextInput::make('theme.home_sections.creator.url')
+                                                    ->label('Button link')
+                                                    ->default('/'),
+                                            ]),
+                                    ]),
+                            ]),
+
                         // Tab 1: Hero Section
                         Forms\Components\Tabs\Tab::make('Hero Banner')
                             ->icon('heroicon-m-sparkles')

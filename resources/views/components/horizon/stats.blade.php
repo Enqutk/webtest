@@ -2,6 +2,7 @@
     'stats' => [],
     'title' => 'Impact that compounds',
     'subtitle' => 'By the numbers',
+    'variant' => 'dark',
 ])
 
 @php
@@ -30,12 +31,12 @@
 @endphp
 
 @if($items->isNotEmpty() || $showForPreview)
-        <section class="hz-section hz-stats hz-section-dark" id="stats" aria-label="Impact statistics">
+        <section class="hz-section hz-stats {{ $variant === 'light' ? 'hz-stats-light' : 'hz-section-dark' }}" id="stats" aria-label="Impact statistics">
     <div class="container">
         <div class="row justify-content-between align-items-end mb-4 g-3">
             <div class="col-lg-7">
-                <p class="hz-eyebrow hz-eyebrow-light" data-preview-field="eyebrow" {!! \App\Support\AdminPreviewAttrs::html('stats', 'eyebrow', 'Edit Eyebrow') !!}>{{ $subtitle }}</p>
-                <h2 class="hz-title text-white mb-0" data-preview-field="title" {!! \App\Support\AdminPreviewAttrs::html('stats', 'title', 'Edit Title') !!}>{{ $title }}</h2>
+                <p class="hz-eyebrow {{ $variant === 'light' ? '' : 'hz-eyebrow-light' }}" data-preview-field="eyebrow" {!! \App\Support\AdminPreviewAttrs::html('stats', 'eyebrow', 'Edit Eyebrow') !!}>{{ $subtitle }}</p>
+                <h2 class="hz-title {{ $variant === 'light' ? '' : 'text-white' }} mb-0" data-preview-field="title" {!! \App\Support\AdminPreviewAttrs::html('stats', 'title', 'Edit Title') !!}>{{ $title }}</h2>
             </div>
         </div>
 

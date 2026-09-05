@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             HomePageSeeder::class,
             BusinessExecutiveSeeder::class,
             EnkuTaddesseSeeder::class,
+            YeabsiraEndaleSeeder::class,
         ]);
     }
 }
