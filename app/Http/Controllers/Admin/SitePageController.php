@@ -175,7 +175,7 @@ class SitePageController extends Controller
         foreach ($request->input('panels', []) as $i => $panel) {
             $image = $panel['image'] ?? ($existing['story']['panels'][$i]['image'] ?? null);
             if ($request->hasFile("panel_images.$i")) {
-                $image = $request->file("panel_images.$i")->store('page-images', 'public');
+                $image = UploadedImage::storeOptimized($request->file("panel_images.$i"));
             }
             $panels[] = [
                 'title' => $panel['title'] ?? '',

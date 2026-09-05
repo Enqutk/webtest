@@ -7,6 +7,12 @@ DirectoryIndex index.php index.html
 
     RewriteEngine On
 
+    # Allow larger photo uploads (Apache + mod_php hosts)
+    <IfModule mod_php.c>
+        php_value upload_max_filesize 20M
+        php_value post_max_size 25M
+    </IfModule>
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

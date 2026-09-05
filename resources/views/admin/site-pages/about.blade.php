@@ -71,6 +71,7 @@
                     <img src="{{ $introImage }}" alt="" class="w-40 h-24 object-cover rounded-xl border border-slate-200 mb-2">
                 @endif
                 <input type="file" name="intro_image" accept="image/*" @change="onIntroImagePick($event)" class="w-full text-xs file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700">
+                <p class="text-[11px] text-slate-500">Large camera photos are compressed automatically before upload. JPG or PNG up to ~20 MB.</p>
             </div>
 
             @include('admin.partials.image-focus-picker', [
@@ -148,7 +149,10 @@
             </div>
         </div>
 
-        <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-brand-600 hover:bg-brand-500 text-white text-sm font-bold rounded-xl shadow-lg shadow-brand-600/30">Save About page</button>
+        <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-brand-600 hover:bg-brand-500 text-white text-sm font-bold rounded-xl shadow-lg shadow-brand-600/30" :disabled="savingAbout">
+            <span x-show="!savingAbout">Save About page</span>
+            <span x-show="savingAbout" x-cloak>Compressing photos…</span>
+        </button>
     </form>
 </div>
 @endsection
@@ -162,6 +166,18 @@ document.addEventListener('alpine:init', () => {
         introFocusX: {{ (int) ($intro['image_focus_x'] ?? 50) }},
         introFocusY: {{ (int) ($intro['image_focus_y'] ?? 50) }},
         introPreviewUrl: @json($introImage ?: ''),
+        savingAbout: false,
+        async submitAboutForm(event) {
+            const form = event.target;
+            this.savingAbout = true;
+            try {
+                await window.AdminImageUpload.compressForm(form);
+                form.submit();
+            } catch (e) {
+                this.savingAbout = false;
+                alert('Could not prepare photos for upload. Try a smaller image.');
+            }
+        },
         onIntroImagePick(event) {
             const file = event.target.files && event.target.files[0];
             if (!file) return;
