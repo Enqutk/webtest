@@ -1,5 +1,3 @@
-@once
-@push('scripts')
 <script>
 document.addEventListener('alpine:init', () => {
     if (window.__adminImageFocusMixin) return;
@@ -50,5 +48,3 @@ document.addEventListener('alpine:init', () => {
     });
 });
 </script>
-@endpush
-@endonce

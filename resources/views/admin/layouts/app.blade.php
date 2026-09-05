@@ -66,6 +66,7 @@
     </style>
 
     <!-- Alpine.js -->
+    @include('admin.partials.image-focus-alpine-head')
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.5/dist/cdn.min.js"></script>
     @stack('styles')
 </head>
@@ -404,7 +405,6 @@
         </main>
     </div>
 
-    @include('admin.partials.image-focus-alpine')
     @stack('scripts')
 </body>
 </html>

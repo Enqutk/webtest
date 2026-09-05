@@ -20,7 +20,7 @@
     $introImage = \App\Models\Organization::themeFileUrl($intro['image'] ?? null);
 @endphp
 
-<div x-data="aboutPageForm">
+<div x-data="aboutPageForm" x-effect="syncIntroImageFocus()">
 
     <form action="{{ route('admin.site-pages.update', 'about') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
@@ -70,7 +70,7 @@
                 @if($introImage)
                     <img src="{{ $introImage }}" alt="" class="w-40 h-24 object-cover rounded-xl border border-slate-200 mb-2">
                 @endif
-                <input type="file" name="intro_image" accept="image/*" @change="onImagePick($event, 'introPreviewUrl')" class="w-full text-xs file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700">
+                <input type="file" name="intro_image" accept="image/*" @change="onIntroImagePick($event)" class="w-full text-xs file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700">
             </div>
 
             @include('admin.partials.image-focus-picker', [
@@ -162,6 +162,22 @@ document.addEventListener('alpine:init', () => {
         introFocusX: {{ (int) ($intro['image_focus_x'] ?? 50) }},
         introFocusY: {{ (int) ($intro['image_focus_y'] ?? 50) }},
         introPreviewUrl: @json($introImage ?: ''),
+        onIntroImagePick(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            this.introPreviewUrl = URL.createObjectURL(file);
+            window.AdminPreview?.pushField('about-page-intro', 'image', this.introPreviewUrl);
+            this.syncIntroImageFocus();
+        },
+        syncIntroImageFocus() {
+            const pos = this.introFocusX + '% ' + this.introFocusY + '%';
+            window.AdminPreview?.pushField('about-page-intro', 'image-focus', pos);
+        },
+        onPanelImagePick(event, panel) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            panel.preview_url = URL.createObjectURL(file);
+        },
         addPoint() {
             this.points.push({ title: '', icon: 'bi bi-check-lg', description: '' });
         },
@@ -175,11 +191,6 @@ document.addEventListener('alpine:init', () => {
                 image_url: '',
                 preview_url: '',
             });
-        },
-        onPanelImagePick(event, panel) {
-            const file = event.target.files && event.target.files[0];
-            if (!file) return;
-            panel.preview_url = URL.createObjectURL(file);
         },
         pushIntroField(field, value) {
             if (field === 'description') {
