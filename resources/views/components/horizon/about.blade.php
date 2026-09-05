@@ -41,16 +41,27 @@
         <div class="row align-items-center g-5">
             <div class="col-lg-5">
                 @if($image)
-                    <div class="hz-about-media">
+                    <div class="hz-about-media" data-about-intro-media>
                         <x-horizon.focused-image
                             :src="$image"
                             :alt="$title"
                             :focus-x="$about['image_focus_x'] ?? 50"
                             :focus-y="$about['image_focus_y'] ?? 50"
+                            class="w-100"
+                            data-preview-field="image"
                         />
                     </div>
                 @elseif($isMe)
-                    <div class="hz-me-portrait" aria-hidden="true">
+                    <div class="hz-about-media d-none" data-about-intro-media>
+                        <img
+                            src=""
+                            alt="{{ $title }}"
+                            class="w-100"
+                            data-preview-field="image"
+                            style="object-fit: cover; aspect-ratio: 4/5; width: 100%; object-position: {{ ($about['image_focus_x'] ?? 50) }}% {{ ($about['image_focus_y'] ?? 50) }}%;"
+                        >
+                    </div>
+                    <div class="hz-me-portrait" data-about-intro-placeholder aria-hidden="true">
                         <span class="hz-me-portrait-kicker">{{ $about['kicker'] ?? 'Me' }}</span>
                         <span class="hz-me-portrait-initials">{{ $initials ?: 'YE' }}</span>
                         <span class="hz-me-portrait-name">{{ $about['portrait_role'] ?? $data['tagline'] ?? $siteName }}</span>
