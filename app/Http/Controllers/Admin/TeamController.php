@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\StatusEnum;
+use App\Http\Controllers\Admin\Concerns\SavesImageFocus;
 use App\Http\Controllers\Controller;
 use App\Models\Organization;
 use App\Models\Team;
@@ -10,6 +11,8 @@ use Illuminate\Http\Request;
 
 class TeamController extends Controller
 {
+    use SavesImageFocus;
+
     public function index()
     {
         $currentOrg = Organization::resolveCurrent();
@@ -49,6 +52,7 @@ class TeamController extends Controller
 
         $validated['organization_id'] = $currentOrg->id;
         $validated['founder'] = $request->boolean('founder');
+        $validated = array_merge($validated, $this->imageFocusFromRequest($request));
 
         $member = Team::create($validated);
 
@@ -80,6 +84,7 @@ class TeamController extends Controller
         $validated['order'] = $validated['order'] ?? ((Team::where('organization_id', $currentOrg->id)->max('order') ?? 0) + 1);
         $validated['status'] = $validated['status'] ?? 'active';
         $validated['founder'] = $request->boolean('founder');
+        $validated = array_merge($validated, $this->imageFocusFromRequest($request));
 
         $member = Team::create($validated);
 
@@ -111,7 +116,7 @@ class TeamController extends Controller
         ]);
 
         $validated['founder'] = $request->boolean('founder');
-        $team->update($validated);
+        $team->update(array_merge($validated, $this->imageFocusFromRequest($request)));
 
         if ($request->hasFile('photo')) {
             $team->clearMediaCollection('team-images');
@@ -136,7 +141,7 @@ class TeamController extends Controller
         ]);
 
         $validated['founder'] = $request->boolean('founder');
-        $team->update($validated);
+        $team->update(array_merge($validated, $this->imageFocusFromRequest($request)));
 
         if ($request->hasFile('photo')) {
             $team->clearMediaCollection('team-images');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\StatusEnum;
 use App\Http\Controllers\Admin\Concerns\ResolvesSitePageEditorContext;
+use App\Http\Controllers\Admin\Concerns\SavesImageFocus;
 use App\Http\Controllers\Controller;
 use App\Models\Organization;
 use App\Models\Service;
@@ -13,6 +14,7 @@ use Illuminate\Support\Str;
 class ServiceController extends Controller
 {
     use ResolvesSitePageEditorContext;
+    use SavesImageFocus;
 
     public function index()
     {
@@ -59,7 +61,7 @@ class ServiceController extends Controller
         }
 
         $validated['organization_id'] = $currentOrg->id;
-        $service = Service::create($validated);
+        $service = Service::create(array_merge($validated, $this->imageFocusFromRequest($request)));
 
         if ($request->hasFile('image')) {
             $service->clearMediaCollection('main_image');
@@ -88,7 +90,7 @@ class ServiceController extends Controller
         $validated['order'] = $validated['order'] ?? ((Service::where('organization_id', $currentOrg->id)->max('order') ?? 0) + 1);
         $validated['status'] = $validated['status'] ?? 'active';
 
-        $service = Service::create($validated);
+        $service = Service::create(array_merge($validated, $this->imageFocusFromRequest($request)));
 
         if ($request->hasFile('image')) {
             $service->clearMediaCollection('main_image');
@@ -117,7 +119,7 @@ class ServiceController extends Controller
             'image' => ['nullable', 'image', 'max:5120'],
         ]);
 
-        $service->update($validated);
+        $service->update(array_merge($validated, $this->imageFocusFromRequest($request)));
 
         if ($request->hasFile('image')) {
             $service->clearMediaCollection('main_image');
@@ -143,7 +145,7 @@ class ServiceController extends Controller
             $validated['slug'] = Str::slug($validated['title']);
         }
 
-        $service->update($validated);
+        $service->update(array_merge($validated, $this->imageFocusFromRequest($request)));
 
         if ($request->hasFile('image')) {
             $service->clearMediaCollection('main_image');

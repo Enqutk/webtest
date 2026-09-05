@@ -43,10 +43,12 @@
                             <article class="hz-about-panel {{ $meLayout ? 'hz-me-panel' : '' }}">
                                 @if(!empty($data['aboutSection1']['image']))
                                     <div class="hz-about-panel-media">
-                                        <img
-                                            src="{{ $data['aboutSection1']['image'] }}"
-                                            alt="{{ $data['aboutSection1']['title'] ?? 'Our practice' }}"
-                                        >
+                                        <x-horizon.focused-image
+                                            :src="$data['aboutSection1']['image']"
+                                            :alt="$data['aboutSection1']['title'] ?? 'Our practice'"
+                                            :focus-x="$data['aboutSection1']['image_focus_x'] ?? 50"
+                                            :focus-y="$data['aboutSection1']['image_focus_y'] ?? 50"
+                                        />
                                     </div>
                                 @endif
                                 <div class="hz-about-panel-body">
@@ -64,10 +66,12 @@
                             <article class="hz-about-panel {{ $meLayout ? 'hz-me-panel' : '' }}">
                                 @if(!empty($data['aboutSection2']['image']))
                                     <div class="hz-about-panel-media">
-                                        <img
-                                            src="{{ $data['aboutSection2']['image'] }}"
-                                            alt="{{ $data['aboutSection2']['title'] ?? 'Our approach' }}"
-                                        >
+                                        <x-horizon.focused-image
+                                            :src="$data['aboutSection2']['image']"
+                                            :alt="$data['aboutSection2']['title'] ?? 'Our approach'"
+                                            :focus-x="$data['aboutSection2']['image_focus_x'] ?? 50"
+                                            :focus-y="$data['aboutSection2']['image_focus_y'] ?? 50"
+                                        />
                                     </div>
                                 @endif
                                 <div class="hz-about-panel-body">

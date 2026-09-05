@@ -42,7 +42,12 @@
             <div class="col-lg-5">
                 @if($image)
                     <div class="hz-about-media">
-                        <img src="{{ $image }}" alt="{{ $title }}">
+                        <x-horizon.focused-image
+                            :src="$image"
+                            :alt="$title"
+                            :focus-x="$about['image_focus_x'] ?? 50"
+                            :focus-y="$about['image_focus_y'] ?? 50"
+                        />
                     </div>
                 @elseif($isMe)
                     <div class="hz-me-portrait" aria-hidden="true">

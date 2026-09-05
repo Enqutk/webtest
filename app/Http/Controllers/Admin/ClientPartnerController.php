@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\EntityTypeEnum;
+use App\Http\Controllers\Admin\Concerns\SavesImageFocus;
 use App\Http\Controllers\Controller;
 use App\Models\Entity;
 use App\Models\Organization;
@@ -11,6 +12,8 @@ use Illuminate\Validation\Rule;
 
 class ClientPartnerController extends Controller
 {
+    use SavesImageFocus;
+
     public function quickStore(Request $request)
     {
         $currentOrg = Organization::resolveCurrent();
@@ -30,7 +33,7 @@ class ClientPartnerController extends Controller
             ->max('order') ?? 0) + 1);
         $validated['status'] = $validated['status'] ?? 'active';
 
-        $entity = Entity::create($validated);
+        $entity = Entity::create(array_merge($validated, $this->imageFocusFromRequest($request)));
 
         if ($request->hasFile('image')) {
             $entity->clearMediaCollection('image');
@@ -53,7 +56,7 @@ class ClientPartnerController extends Controller
             'image' => ['nullable', 'image', 'max:5120'],
         ]);
 
-        $clientPartner->update($validated);
+        $clientPartner->update(array_merge($validated, $this->imageFocusFromRequest($request)));
 
         if ($request->hasFile('image')) {
             $clientPartner->clearMediaCollection('image');

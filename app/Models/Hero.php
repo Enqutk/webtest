@@ -29,11 +29,15 @@ class Hero extends Model implements HasMedia
         'status',
         'created_by',
         'updated_by',
+        'image_focus_x',
+        'image_focus_y',
     ];
 
     protected $casts = [
         'status'      => StatusEnum::class,
         'order'       => 'integer',
+        'image_focus_x' => 'integer',
+        'image_focus_y' => 'integer',
     ];
 
     public function creator(): BelongsTo

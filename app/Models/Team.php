@@ -23,11 +23,15 @@ class Team extends Model implements HasMedia
         'status',
         'founder',
         'order',
+        'image_focus_x',
+        'image_focus_y',
     ];
 
     protected $casts = [
         'order' => 'integer',
         'founder' => 'boolean',
+        'image_focus_x' => 'integer',
+        'image_focus_y' => 'integer',
         'status' => \App\Enums\StatusEnum::class,
     ];
 

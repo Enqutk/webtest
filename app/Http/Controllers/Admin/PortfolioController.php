@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\EntityTypeEnum;
 use App\Enums\StatusEnum;
 use App\Http\Controllers\Admin\Concerns\ResolvesSitePageEditorContext;
+use App\Http\Controllers\Admin\Concerns\SavesImageFocus;
 use App\Http\Controllers\Controller;
 use App\Models\Entity;
 use App\Models\Organization;
@@ -13,6 +14,7 @@ use Illuminate\Http\Request;
 class PortfolioController extends Controller
 {
     use ResolvesSitePageEditorContext;
+    use SavesImageFocus;
 
     public function index()
     {
@@ -57,7 +59,7 @@ class PortfolioController extends Controller
         $validated['organization_id'] = $currentOrg->id;
         $validated['type'] = EntityTypeEnum::project;
 
-        $project = Entity::create($validated);
+        $project = Entity::create(array_merge($validated, $this->imageFocusFromRequest($request)));
 
         if ($request->hasFile('image')) {
             $project->clearMediaCollection('image');
@@ -87,7 +89,7 @@ class PortfolioController extends Controller
         $validated['order'] = $validated['order'] ?? ((Entity::where('organization_id', $currentOrg->id)->where('type', EntityTypeEnum::project)->max('order') ?? 0) + 1);
         $validated['status'] = $validated['status'] ?? 'active';
 
-        $project = Entity::create($validated);
+        $project = Entity::create(array_merge($validated, $this->imageFocusFromRequest($request)));
 
         if ($request->hasFile('image')) {
             $project->clearMediaCollection('image');
@@ -111,7 +113,7 @@ class PortfolioController extends Controller
             'image' => ['nullable', 'image', 'max:5120'],
         ]);
 
-        $portfolio->update($validated);
+        $portfolio->update(array_merge($validated, $this->imageFocusFromRequest($request)));
 
         if ($request->hasFile('image')) {
             $portfolio->clearMediaCollection('image');
@@ -139,7 +141,7 @@ class PortfolioController extends Controller
             'image' => ['nullable', 'image', 'max:5120'],
         ]);
 
-        $portfolio->update($validated);
+        $portfolio->update(array_merge($validated, $this->imageFocusFromRequest($request)));
 
         if ($request->hasFile('image')) {
             $portfolio->clearMediaCollection('image');

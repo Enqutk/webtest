@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\ImageFocus;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -479,10 +480,12 @@ class Organization extends Model implements HasMedia, \Filament\Models\Contracts
 
     public static function imageObjectPosition(mixed $x = null, mixed $y = null): string
     {
-        $x = max(0, min(100, (int) ($x ?? 50)));
-        $y = max(0, min(100, (int) ($y ?? 50)));
+        return ImageFocus::position($x, $y);
+    }
 
-        return "{$x}% {$y}%";
+    public static function imageFocusStyle(mixed $x = null, mixed $y = null, ?string $extra = null): string
+    {
+        return ImageFocus::style($x, $y, $extra);
     }
 
     public static function defaultHeroSlides(): array

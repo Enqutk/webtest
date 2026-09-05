@@ -173,6 +173,8 @@ class SitePageController extends Controller
                 'title' => $panel['title'] ?? '',
                 'description' => $panel['description'] ?? '',
                 'image' => ThemeMedia::fromUploadState($image),
+                'image_focus_x' => (int) ($panel['image_focus_x'] ?? ($existing['story']['panels'][$i]['image_focus_x'] ?? 50)),
+                'image_focus_y' => (int) ($panel['image_focus_y'] ?? ($existing['story']['panels'][$i]['image_focus_y'] ?? 50)),
             ];
         }
 
@@ -194,6 +196,8 @@ class SitePageController extends Controller
                 'title' => $request->input('intro_title'),
                 'description' => $request->input('intro_description'),
                 'image' => $introImage,
+                'image_focus_x' => (int) $request->input('intro_image_focus_x', $existing['intro']['image_focus_x'] ?? 50),
+                'image_focus_y' => (int) $request->input('intro_image_focus_y', $existing['intro']['image_focus_y'] ?? 50),
                 'points' => $points,
             ],
             'story' => [

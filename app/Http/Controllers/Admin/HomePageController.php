@@ -9,6 +9,7 @@ use App\Enums\EntityTypeEnum;
 use App\Models\Organization;
 use App\Models\Service;
 use App\Models\Team;
+use App\Support\ImageFocus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -184,8 +185,8 @@ class HomePageController extends Controller
             'text_link' => $request->input('text_link', 'Explore services'),
             'button_link' => $request->input('button_link', '/our-services'),
             'image_shape' => $request->input('image_shape', 'inherit'),
-            'image_focus_x' => max(0, min(100, (int) $request->input('image_focus_x', 50))),
-            'image_focus_y' => max(0, min(100, (int) $request->input('image_focus_y', 50))),
+            'image_focus_x' => ImageFocus::clamp($request->input('image_focus_x', 50), $request->input('image_focus_y', 50))['x'],
+            'image_focus_y' => ImageFocus::clamp($request->input('image_focus_x', 50), $request->input('image_focus_y', 50))['y'],
             'is_visible' => (bool) $request->input('is_visible', true),
         ];
 

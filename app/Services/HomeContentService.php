@@ -154,6 +154,8 @@ class HomeContentService
             'heroFeatures' => $blocks->get('key-features'),
             'aboutFeatures' => [
                 'image' => Organization::themeFileUrl($sitePages['about']['intro']['image'] ?? null) ?: $aboutImage,
+                'image_focus_x' => $sitePages['about']['intro']['image_focus_x'] ?? 50,
+                'image_focus_y' => $sitePages['about']['intro']['image_focus_y'] ?? 50,
                 'title' => $sitePages['about']['intro']['title']
                     ?? $homeSections['about']['title']
                     ?? ($aboutFeaturesBlock?->title ?: 'Water expertise for living landscapes'),
@@ -191,6 +193,8 @@ class HomeContentService
             'aboutSection1' => !empty($sitePages['about']['story']['panels'][0] ?? null)
                 ? [
                     'image' => Organization::themeFileUrl($sitePages['about']['story']['panels'][0]['image'] ?? null),
+                    'image_focus_x' => $sitePages['about']['story']['panels'][0]['image_focus_x'] ?? 50,
+                    'image_focus_y' => $sitePages['about']['story']['panels'][0]['image_focus_y'] ?? 50,
                     'title' => $sitePages['about']['story']['panels'][0]['title'] ?? null,
                     'subtitle' => $sitePages['about']['story']['eyebrow'] ?? null,
                     'description' => nl2br(e((string) ($sitePages['about']['story']['panels'][0]['description'] ?? ''))),
@@ -207,6 +211,8 @@ class HomeContentService
             'aboutSection2' => !empty($sitePages['about']['story']['panels'][1] ?? null)
                 ? [
                     'image' => Organization::themeFileUrl($sitePages['about']['story']['panels'][1]['image'] ?? null),
+                    'image_focus_x' => $sitePages['about']['story']['panels'][1]['image_focus_x'] ?? 50,
+                    'image_focus_y' => $sitePages['about']['story']['panels'][1]['image_focus_y'] ?? 50,
                     'title' => $sitePages['about']['story']['panels'][1]['title'] ?? null,
                     'subtitle' => $sitePages['about']['story']['eyebrow'] ?? null,
                     'description' => nl2br(e((string) ($sitePages['about']['story']['panels'][1]['description'] ?? ''))),

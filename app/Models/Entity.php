@@ -27,6 +27,8 @@ class Entity extends Model implements HasMedia
         'status',
         'created_by',
         'updated_by',
+        'image_focus_x',
+        'image_focus_y',
     ];
 
     protected $appends = [
@@ -37,6 +39,8 @@ class Entity extends Model implements HasMedia
         'order' => 'integer',
         'type' => EntityTypeEnum::class,
         'status' => StatusEnum::class,
+        'image_focus_x' => 'integer',
+        'image_focus_y' => 'integer',
     ];
 
     // Relationships

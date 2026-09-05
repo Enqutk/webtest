@@ -31,11 +31,19 @@ class Service extends Model implements HasMedia {
         'features',
         'order',
         'status',
+        'image_focus_x',
+        'image_focus_y',
+        'secondary_image_focus_x',
+        'secondary_image_focus_y',
     ];
 
     protected $casts = [
         'order' => 'integer',
         'status' => StatusEnum::class,
+        'image_focus_x' => 'integer',
+        'image_focus_y' => 'integer',
+        'secondary_image_focus_x' => 'integer',
+        'secondary_image_focus_y' => 'integer',
     ];
 
     public function creator(): BelongsTo {
