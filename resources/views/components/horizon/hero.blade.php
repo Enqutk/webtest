@@ -151,11 +151,6 @@
                                         @php
                                             $slideShape = (!empty($hero->image_shape) && $hero->image_shape !== 'inherit') ? $hero->image_shape : null;
                                             $slideShapeCss = $slideShape ? \App\Models\Organization::getImageShapeCss($slideShape) : '';
-                                            $focusPosition = \App\Models\Organization::imageObjectPosition($hero->image_focus_x ?? null, $hero->image_focus_y ?? null);
-                                            $imgStyles = collect([
-                                                'object-position: ' . $focusPosition,
-                                                $slideShapeCss ?: null,
-                                            ])->filter()->implode('; ');
                                         @endphp
                                         <div class="hz-hero-media" @if(str_contains($slideShapeCss, 'clip-path')) style="overflow: visible;" @endif>
                                             <x-horizon.focused-image

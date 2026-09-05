@@ -9,7 +9,14 @@
     $intro = $data['intro'] ?? [];
     $story = $data['story'] ?? [];
     $points = $intro['points'] ?? [];
-    $panels = $story['panels'] ?? [];
+    $panels = collect($story['panels'] ?? [])->map(function ($panel) {
+        $panel['image_focus_x'] = $panel['image_focus_x'] ?? 50;
+        $panel['image_focus_y'] = $panel['image_focus_y'] ?? 50;
+        $panel['image_url'] = \App\Models\Organization::themeFileUrl($panel['image'] ?? null);
+        $panel['preview_url'] = $panel['image_url'];
+
+        return $panel;
+    })->values()->all();
     $introImage = \App\Models\Organization::themeFileUrl($intro['image'] ?? null);
 @endphp
 
@@ -63,8 +70,16 @@
                 @if($introImage)
                     <img src="{{ $introImage }}" alt="" class="w-40 h-24 object-cover rounded-xl border border-slate-200 mb-2">
                 @endif
-                <input type="file" name="intro_image" accept="image/*" class="w-full text-xs file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700">
+                <input type="file" name="intro_image" accept="image/*" @change="onImagePick($event, 'introPreviewUrl')" class="w-full text-xs file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700">
             </div>
+
+            @include('admin.partials.image-focus-picker', [
+                'focusX' => 'introFocusX',
+                'focusY' => 'introFocusY',
+                'previewUrl' => 'introPreviewUrl',
+                'nameX' => 'intro_image_focus_x',
+                'nameY' => 'intro_image_focus_y',
+            ])
 
             <div class="pt-2">
                 <div class="flex items-center justify-between mb-3">
@@ -111,7 +126,13 @@
                     </div>
                     <textarea :name="'panels['+index+'][description]'" x-model="panel.description" rows="3" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs"></textarea>
                     <input type="hidden" :name="'panels['+index+'][image]'" :value="panel.image || ''">
-                    <input type="file" :name="'panel_images['+index+']'" accept="image/*" class="w-full text-xs file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700">
+                    <input type="file" :name="'panel_images['+index+']'" accept="image/*" @change="onPanelImagePick($event, panel)" class="w-full text-xs file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700">
+                    @include('admin.partials.image-focus-picker-object', [
+                        'object' => 'panel',
+                        'previewExpr' => 'panel.preview_url || panel.image_url',
+                        'namePrefix' => 'panels',
+                        'indexVar' => 'index',
+                    ])
                 </div>
             </template>
         </div>
@@ -138,11 +159,27 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('aboutPageForm', () => ({
         points: @json($points),
         panels: @json($panels),
+        introFocusX: {{ (int) ($intro['image_focus_x'] ?? 50) }},
+        introFocusY: {{ (int) ($intro['image_focus_y'] ?? 50) }},
+        introPreviewUrl: @json($introImage ?: ''),
         addPoint() {
             this.points.push({ title: '', icon: 'bi bi-check-lg', description: '' });
         },
         addPanel() {
-            this.panels.push({ title: '', description: '', image: null });
+            this.panels.push({
+                title: '',
+                description: '',
+                image: null,
+                image_focus_x: 50,
+                image_focus_y: 50,
+                image_url: '',
+                preview_url: '',
+            });
+        },
+        onPanelImagePick(event, panel) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            panel.preview_url = URL.createObjectURL(file);
         },
         pushIntroField(field, value) {
             if (field === 'description') {
