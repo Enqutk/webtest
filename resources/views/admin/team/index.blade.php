@@ -15,6 +15,9 @@
     order: 1,
     status: 'active',
     founder: false,
+    focusX: 50,
+    focusY: 50,
+    previewUrl: '',
 
     edit(m) {
         this.editingId = m.id;
@@ -25,6 +28,7 @@
         this.order = m.order || 1;
         this.status = m.status?.value || m.status || 'active';
         this.founder = !!m.founder;
+        this.loadImageFocus(m, 'focusX', 'focusY', 'previewUrl', m.image_url || '');
         this.openMemberModal = true;
     },
 
@@ -37,6 +41,7 @@
         this.order = {{ ($members->max('order') ?? 0) + 1 }};
         this.status = 'active';
         this.founder = false;
+        this.resetImageFocus('focusX', 'focusY', 'previewUrl');
         this.openMemberModal = true;
     }
 }">
@@ -108,7 +113,7 @@
                                 </form>
                             </td>
                             <td class="px-6 py-4 text-right space-x-2">
-                                <button type="button" @click="edit({{ json_encode($m) }})" class="p-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg transition" title="Edit Profile">
+                                <button type="button" @click="edit({{ json_encode(array_merge($m->only(['id','first_name','last_name','title','description','order','founder','image_focus_x','image_focus_y']), ['status' => $m->status->value ?? $m->status, 'image_url' => $photo ?: ''])) }})" class="p-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg transition" title="Edit Profile">
                                     <i class="bi bi-pencil-square"></i>
                                 </button>
                                 <form action="{{ route('admin.team.destroy', $m) }}" method="POST" class="inline" onsubmit="return confirm('Delete this team member?')">

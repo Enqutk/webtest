@@ -404,6 +404,7 @@
         </main>
     </div>
 
+    @include('admin.partials.image-focus-alpine')
     @stack('scripts')
 </body>
 </html>
