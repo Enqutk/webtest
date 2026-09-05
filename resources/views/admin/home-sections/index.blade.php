@@ -464,7 +464,7 @@
                         </div>
 
                         <div class="flex items-center gap-2 shrink-0">
-                            <button type="button" @click="editMember({{ json_encode($m) }})" class="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 text-xs font-bold rounded-lg transition">
+                            <button type="button" @click="editMember({{ json_encode(array_merge($m->only(['id','first_name','last_name','title','description','order','founder','image_focus_x','image_focus_y']), ['status' => $m->status->value ?? $m->status, 'image_url' => $m->getFirstMediaUrl('team-images') ?: ''])) }})" class="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 text-xs font-bold rounded-lg transition">
                                 Edit
                             </button>
                             <form action="{{ route('admin.team.destroy', $m) }}" method="POST" onsubmit="return confirm('Delete this team member?')">
@@ -1061,50 +1061,11 @@
                         <input type="file" name="slide_image" accept="image/*" @change="onSlideImagePick($event)" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
                     </div>
 
-                    <div class="space-y-3 pt-2 border-t border-slate-100">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700">Photo crop focus</label>
-                            <p class="text-[11px] text-slate-500 mt-1">Click the preview or use the sliders to choose which part of the photo stays visible in the hero frame.</p>
-                        </div>
-
-                        <div
-                            x-show="slidePreviewUrl"
-                            x-cloak
-                            class="relative aspect-[4/3] max-h-56 bg-slate-100 rounded-xl overflow-hidden border border-slate-200 cursor-crosshair"
-                            @click="setSlideFocusFromClick($event)"
-                        >
-                            <img
-                                :src="slidePreviewUrl"
-                                alt="Slide crop preview"
-                                class="w-full h-full object-cover pointer-events-none select-none"
-                                :style="'object-position:' + slideFocusX + '% ' + slideFocusY + '%'"
-                            >
-                            <span
-                                class="absolute w-4 h-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-brand-600 shadow pointer-events-none"
-                                :style="'left:' + slideFocusX + '%; top:' + slideFocusY + '%'"
-                            ></span>
-                        </div>
-
-                        <div class="flex flex-wrap gap-2">
-                            <button type="button" @click="setSlideFocusPreset(50, 25)" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-[11px] font-bold text-slate-700">Face / top</button>
-                            <button type="button" @click="setSlideFocusPreset(50, 50)" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-[11px] font-bold text-slate-700">Center</button>
-                            <button type="button" @click="setSlideFocusPreset(50, 75)" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-[11px] font-bold text-slate-700">Lower</button>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="space-y-1.5">
-                                <label class="block text-[11px] font-bold text-slate-600">Horizontal focus</label>
-                                <input type="range" min="0" max="100" x-model.number="slideFocusX" class="w-full accent-brand-600">
-                            </div>
-                            <div class="space-y-1.5">
-                                <label class="block text-[11px] font-bold text-slate-600">Vertical focus</label>
-                                <input type="range" min="0" max="100" x-model.number="slideFocusY" class="w-full accent-brand-600">
-                            </div>
-                        </div>
-
-                        <input type="hidden" name="image_focus_x" :value="slideFocusX">
-                        <input type="hidden" name="image_focus_y" :value="slideFocusY">
-                    </div>
+                    @include('admin.partials.image-focus-picker', [
+                        'focusX' => 'slideFocusX',
+                        'focusY' => 'slideFocusY',
+                        'previewUrl' => 'slidePreviewUrl',
+                    ])
 
                     <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
                         <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
@@ -1175,8 +1136,14 @@
 
                     <div class="space-y-1.5 pt-2">
                         <label class="block text-xs font-bold text-slate-700">Profile Photo</label>
-                        <input type="file" name="photo" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
+                        <input type="file" name="photo" accept="image/*" @change="onImagePick($event, 'memberPreviewUrl')" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
                     </div>
+
+                    @include('admin.partials.image-focus-picker', [
+                        'focusX' => 'memberFocusX',
+                        'focusY' => 'memberFocusY',
+                        'previewUrl' => 'memberPreviewUrl',
+                    ])
 
                     <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
                         <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
@@ -1239,8 +1206,14 @@
 
                     <div class="space-y-1.5">
                         <label class="block text-xs font-bold text-slate-700">Cover photo</label>
-                        <input type="file" name="image" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
+                        <input type="file" name="image" accept="image/*" @change="onImagePick($event, 'servicePreviewUrl')" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
                     </div>
+
+                    @include('admin.partials.image-focus-picker', [
+                        'focusX' => 'serviceFocusX',
+                        'focusY' => 'serviceFocusY',
+                        'previewUrl' => 'servicePreviewUrl',
+                    ])
 
                     <div class="pt-4 border-t border-slate-100 flex justify-end gap-3">
                         <button type="button" @click="openServiceModal = false" class="px-4 py-2 bg-slate-100 text-slate-700 text-xs font-bold rounded-xl">Cancel</button>
@@ -1295,8 +1268,15 @@
                     </div>
                     <div class="space-y-1.5">
                         <label class="block text-xs font-bold text-slate-700">Cover photo</label>
-                        <input type="file" name="image" accept="image/*" class="w-full text-xs file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700">
+                        <input type="file" name="image" accept="image/*" @change="onImagePick($event, 'projectPreviewUrl')" class="w-full text-xs file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700">
                     </div>
+
+                    @include('admin.partials.image-focus-picker', [
+                        'focusX' => 'projectFocusX',
+                        'focusY' => 'projectFocusY',
+                        'previewUrl' => 'projectPreviewUrl',
+                    ])
+
                     <div class="pt-4 border-t border-slate-100 flex justify-end gap-3">
                         <button type="button" @click="openProjectModal = false" class="px-4 py-2 bg-slate-100 text-slate-700 text-xs font-bold rounded-xl">Cancel</button>
                         <button type="submit" class="px-5 py-2 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-brand-600/30">Save project</button>

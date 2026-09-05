@@ -322,6 +322,9 @@ document.addEventListener('alpine:init', () => {
             this.clientLink = c.link || '';
             this.clientOrder = c.order || 1;
             this.clientStatus = c.status?.value || c.status || 'active';
+            this.clientFocusX = Number(c.image_focus_x ?? 50);
+            this.clientFocusY = Number(c.image_focus_y ?? 50);
+            this.clientPreviewUrl = c.image_url || '';
             this.openClientModal = true;
         },
 
@@ -332,6 +335,7 @@ document.addEventListener('alpine:init', () => {
             this.clientLink = '';
             this.clientOrder = {{ $nextClientOrder }};
             this.clientStatus = 'active';
+            this.resetImageFocus('clientFocusX', 'clientFocusY', 'clientPreviewUrl');
             this.openClientModal = true;
         },
 
