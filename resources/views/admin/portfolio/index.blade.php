@@ -16,6 +16,9 @@
         description: '',
         order: 1,
         status: 'active',
+        focusX: 50,
+        focusY: 50,
+        previewUrl: '',
 
         create() {
             this.editingId = null;
@@ -25,6 +28,7 @@
             this.description = '';
             this.order = {{ $nextOrder }};
             this.status = 'active';
+            this.resetImageFocus('focusX', 'focusY', 'previewUrl');
             this.openModal = true;
         },
 
@@ -36,6 +40,7 @@
             this.description = p.description || '';
             this.order = p.order || 1;
             this.status = p.status?.value || p.status || 'active';
+            this.loadImageFocus(p, 'focusX', 'focusY', 'previewUrl', p.image_url || '');
             this.openModal = true;
         }
     }">
@@ -72,7 +77,7 @@
                                 <p class="text-[11px] text-slate-500 line-clamp-2 mt-0.5">{{ $p->description }}</p>
                             </div>
                             <div class="flex items-center gap-1 shrink-0">
-                                <button type="button" @click="edit({{ json_encode($p) }})" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg" title="Edit">
+                                <button type="button" @click="edit({{ json_encode(array_merge($p->only(['id','name','category','link','description','order','image_focus_x','image_focus_y']), ['status' => $p->status->value ?? $p->status, 'image_url' => $img ?: ''])) }})" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg" title="Edit">
                                     <i class="bi bi-pencil"></i>
                                 </button>
                                 <form action="{{ route('admin.portfolio.destroy', $p) }}" method="POST" onsubmit="return confirm('Delete this project?')">
@@ -134,8 +139,15 @@
                         </div>
                         <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-slate-700">Photo</label>
-                            <input type="file" name="image" accept="image/*" class="w-full text-xs file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700">
+                            <input type="file" name="image" accept="image/*" @change="onImagePick($event, 'previewUrl')" class="w-full text-xs file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700">
                         </div>
+
+                        @include('admin.partials.image-focus-picker', [
+                            'focusX' => 'focusX',
+                            'focusY' => 'focusY',
+                            'previewUrl' => 'previewUrl',
+                        ])
+
                         <div class="flex justify-end gap-2 pt-2">
                             <button type="button" @click="openModal = false" class="px-4 py-2 text-xs font-bold text-slate-600">Cancel</button>
                             <button type="submit" class="px-4 py-2 bg-brand-600 text-white text-xs font-bold rounded-xl">Save</button>

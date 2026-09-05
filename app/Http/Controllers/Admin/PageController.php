@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\SavesImageFocus;
 use App\Http\Controllers\Controller;
 use App\Models\Organization;
 use App\Models\Page;
@@ -10,6 +11,8 @@ use Illuminate\Support\Str;
 
 class PageController extends Controller
 {
+    use SavesImageFocus;
+
     public function index()
     {
         $currentOrg = Organization::resolveCurrent();
@@ -50,7 +53,7 @@ class PageController extends Controller
         $validated['display_order'] = $validated['display_order'] ?? ((Page::where('organization_id', $currentOrg->id)->max('display_order') ?? 0) + 1);
         $validated['is_active'] = $request->boolean('is_active');
 
-        $page = Page::create($validated);
+        $page = Page::create(array_merge($validated, $this->imageFocusFromRequest($request)));
 
         if ($request->hasFile('hero_image')) {
             $page->clearMediaCollection('hero_image');
@@ -79,7 +82,7 @@ class PageController extends Controller
         }
 
         $validated['is_active'] = $request->boolean('is_active');
-        $page->update($validated);
+        $page->update(array_merge($validated, $this->imageFocusFromRequest($request)));
 
         if ($request->hasFile('hero_image')) {
             $page->clearMediaCollection('hero_image');

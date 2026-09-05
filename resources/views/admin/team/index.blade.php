@@ -196,8 +196,14 @@
 
                     <div class="space-y-1.5 pt-2">
                         <label class="block text-xs font-bold text-slate-700">Profile Headshot Photo</label>
-                        <input type="file" name="photo" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
+                        <input type="file" name="photo" accept="image/*" @change="onImagePick($event, 'previewUrl')" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
                     </div>
+
+                    @include('admin.partials.image-focus-picker', [
+                        'focusX' => 'focusX',
+                        'focusY' => 'focusY',
+                        'previewUrl' => 'previewUrl',
+                    ])
 
                     <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
                         <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">

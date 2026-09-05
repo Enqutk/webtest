@@ -13,6 +13,9 @@
     shortDesc: '',
     order: 1,
     isActive: true,
+    focusX: 50,
+    focusY: 50,
+    previewUrl: '',
 
     create() {
         this.editingSlug = null;
@@ -21,6 +24,7 @@
         this.shortDesc = '';
         this.order = {{ ($pages->max('display_order') ?? 0) + 1 }};
         this.isActive = true;
+        this.resetImageFocus('focusX', 'focusY', 'previewUrl');
         this.openModal = true;
     },
 
@@ -31,6 +35,7 @@
         this.shortDesc = p.short_description || '';
         this.order = p.display_order || 1;
         this.isActive = !!p.is_active;
+        this.loadImageFocus(p, 'focusX', 'focusY', 'previewUrl', p.hero_image_url || '');
         this.openModal = true;
     }
 }">
@@ -97,7 +102,7 @@
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-right space-x-2">
-                                <button type="button" @click="edit({{ json_encode($page) }})" class="p-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg transition" title="Edit Page">
+                                <button type="button" @click="edit({{ json_encode(array_merge($page->only(['slug','title','short_description','display_order','is_active','image_focus_x','image_focus_y']), ['hero_image_url' => $heroImg ?: ''])) }})" class="p-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg transition" title="Edit Page">
                                     <i class="bi bi-pencil-square"></i>
                                 </button>
                                 <form action="{{ route('admin.pages.destroy', $page) }}" method="POST" class="inline" onsubmit="return confirm('Delete this page?')">
@@ -159,16 +164,21 @@
                         <textarea name="short_description" x-model="shortDesc" rows="2" placeholder="Brief summary of the page" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition"></textarea>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="space-y-1.5">
-                            <label class="block text-xs font-bold text-slate-700">Display Order</label>
-                            <input type="number" name="display_order" x-model="order" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
-                        </div>
-                        <div class="space-y-1.5">
-                            <label class="block text-xs font-bold text-slate-700">Hero Header Image</label>
-                            <input type="file" name="hero_image" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
-                        </div>
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700">Display Order</label>
+                        <input type="number" name="display_order" x-model="order" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">
                     </div>
+
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-700">Hero Header Image</label>
+                        <input type="file" name="hero_image" accept="image/*" @change="onImagePick($event, 'previewUrl')" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
+                    </div>
+
+                    @include('admin.partials.image-focus-picker', [
+                        'focusX' => 'focusX',
+                        'focusY' => 'focusY',
+                        'previewUrl' => 'previewUrl',
+                    ])
 
                     <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
                         <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">

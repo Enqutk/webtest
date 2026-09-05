@@ -39,12 +39,16 @@ class Page extends Model implements HasMedia
         'content',
         'is_active',
         'display_order',
+        'image_focus_x',
+        'image_focus_y',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
         'display_order' => 'integer',
         'content' => 'array',
+        'image_focus_x' => 'integer',
+        'image_focus_y' => 'integer',
     ];
 
     // Relationships
