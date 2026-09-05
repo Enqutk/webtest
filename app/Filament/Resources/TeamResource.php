@@ -19,6 +19,7 @@ use Filament\Tables\Table;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\IconColumn;
+use App\Filament\Forms\ImageFocusFields;
 
 class TeamResource extends Resource
 {
@@ -58,6 +59,7 @@ class TeamResource extends Resource
                             ->image()
                             ->imagePreviewHeight(180)
                             ->columnSpanFull(),
+                        ...ImageFocusFields::pair(),
                     ])
                     ->columns(2),
 

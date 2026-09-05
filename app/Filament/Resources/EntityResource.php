@@ -20,6 +20,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\TextColumn;
+use App\Filament\Forms\ImageFocusFields;
 
 class EntityResource extends Resource
 {
@@ -69,6 +70,7 @@ class EntityResource extends Resource
                             ->image()
                             ->imagePreviewHeight('180')
                             ->columnSpanFull(),
+                        ...ImageFocusFields::pair(),
                     ])
                     ->columns(2),
 

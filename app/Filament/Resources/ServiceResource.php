@@ -15,6 +15,7 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Forms\Set;
 use Illuminate\Support\Str;
+use App\Filament\Forms\ImageFocusFields;
 
 class ServiceResource extends Resource
 {
@@ -83,6 +84,8 @@ class ServiceResource extends Resource
                             ->collection('svg')
                             ->acceptedFileTypes(['image/svg+xml'])
                             ->imagePreviewHeight(100),
+                        ...ImageFocusFields::pair('', 'Card image crop focus'),
+                        ...ImageFocusFields::pair('secondary', 'Detail image crop focus'),
                     ])
                     ->columns(3),
 

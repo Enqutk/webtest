@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Enums\StatusEnum;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use App\Filament\Forms\ImageFocusFields;
 
 class HeroResource extends Resource
 {
@@ -60,6 +61,7 @@ class HeroResource extends Resource
                             ->imagePreviewHeight('200')
                             ->required()
                             ->helperText('Use a wide photo (about 1200×900 or larger).'),
+                        ...ImageFocusFields::pair(),
                     ])
                     ->columns(1),
 

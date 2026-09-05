@@ -14,6 +14,7 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Forms\Set;
 use Illuminate\Support\Str;
+use App\Filament\Forms\ImageFocusFields;
 
 class PageResource extends Resource
 {
@@ -53,6 +54,7 @@ class PageResource extends Resource
                             ->image()
                             ->imagePreviewHeight(200)
                             ->helperText('Hero image for the page (optional)'),
+                        ...ImageFocusFields::pair(),
                     ])->columns(2),
 
                 Forms\Components\Section::make('Settings')
