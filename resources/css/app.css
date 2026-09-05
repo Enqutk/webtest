@@ -568,6 +568,7 @@ h1, h2, h3, h4, .display-font {
 
 .hz-hero-media {
     position: relative;
+    overflow: hidden;
 }
 
 .hz-hero-media img {

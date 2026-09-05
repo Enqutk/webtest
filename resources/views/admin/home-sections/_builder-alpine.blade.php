@@ -42,6 +42,9 @@ document.addEventListener('alpine:init', () => {
         slideBtnLink: '/our-services',
         slideShape: 'inherit',
         slideVisible: true,
+        slideFocusX: 50,
+        slideFocusY: 50,
+        slidePreviewUrl: '',
 
         openTeamModal: false,
         editingMemberId: null,
@@ -131,6 +134,9 @@ document.addEventListener('alpine:init', () => {
             this.slideBtnLink = slide.button_link || '/our-services';
             this.slideShape = slide.image_shape || 'inherit';
             this.slideVisible = (slide.is_visible !== false);
+            this.slideFocusX = Number(slide.image_focus_x ?? 50);
+            this.slideFocusY = Number(slide.image_focus_y ?? 50);
+            this.slidePreviewUrl = this.slideImageUrlFromData(slide);
             this.openSlideModal = true;
         },
 
@@ -143,7 +149,39 @@ document.addEventListener('alpine:init', () => {
             this.slideBtnLink = '/our-services';
             this.slideShape = 'inherit';
             this.slideVisible = true;
+            this.slideFocusX = 50;
+            this.slideFocusY = 50;
+            this.slidePreviewUrl = '';
             this.openSlideModal = true;
+        },
+
+        slideImageUrlFromData(slide) {
+            if (!slide) return '';
+            let img = slide.image_path || slide.image || '';
+            if (Array.isArray(img)) {
+                img = img[0] || Object.values(img)[0] || '';
+            }
+            if (!img) return '';
+            if (String(img).startsWith('http')) return img;
+            return '/storage/' + String(img).replace(/^\/+/, '').replace(/^storage\//, '');
+        },
+
+        setSlideFocusFromClick(event) {
+            const rect = event.currentTarget.getBoundingClientRect();
+            if (!rect.width || !rect.height) return;
+            this.slideFocusX = Math.max(0, Math.min(100, Math.round(((event.clientX - rect.left) / rect.width) * 100)));
+            this.slideFocusY = Math.max(0, Math.min(100, Math.round(((event.clientY - rect.top) / rect.height) * 100)));
+        },
+
+        setSlideFocusPreset(x, y) {
+            this.slideFocusX = x;
+            this.slideFocusY = y;
+        },
+
+        onSlideImagePick(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            this.slidePreviewUrl = URL.createObjectURL(file);
         },
 
         editMember(m) {

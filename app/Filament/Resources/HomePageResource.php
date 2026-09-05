@@ -383,6 +383,24 @@ class HomePageResource extends Resource
                     return (array) $state;
                 })
                 ->helperText('Use a wide photo (about 1200×900 or larger).'),
+            Forms\Components\Grid::make(2)
+                ->schema([
+                    Forms\Components\TextInput::make('image_focus_x')
+                        ->label('Photo focus (horizontal)')
+                        ->numeric()
+                        ->minValue(0)
+                        ->maxValue(100)
+                        ->default(50)
+                        ->suffix('%'),
+                    Forms\Components\TextInput::make('image_focus_y')
+                        ->label('Photo focus (vertical)')
+                        ->numeric()
+                        ->minValue(0)
+                        ->maxValue(100)
+                        ->default(50)
+                        ->suffix('%')
+                        ->helperText('Lower values keep the top of portrait photos visible. Try 20–35 for headshots.'),
+                ]),
             Forms\Components\Grid::make(3)
                 ->schema([
                     Forms\Components\TextInput::make('text_link')

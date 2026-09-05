@@ -477,6 +477,14 @@ class Organization extends Model implements HasMedia, \Filament\Models\Contracts
         return asset('storage/' . $clean);
     }
 
+    public static function imageObjectPosition(mixed $x = null, mixed $y = null): string
+    {
+        $x = max(0, min(100, (int) ($x ?? 50)));
+        $y = max(0, min(100, (int) ($y ?? 50)));
+
+        return "{$x}% {$y}%";
+    }
+
     public static function defaultHeroSlides(): array
     {
         try {

@@ -5,10 +5,12 @@
 
 @php
     $configuredSlides = $heroConfig['slides'] ?? null;
+    $heroesList = $heroes instanceof \Illuminate\Support\Collection ? $heroes : collect($heroes);
     if (is_array($configuredSlides) && !empty($configuredSlides)) {
         $slides = collect($configuredSlides)
             ->filter(fn ($s) => !isset($s['is_visible']) || (bool)$s['is_visible'])
-            ->map(function ($s) {
+            ->values()
+            ->map(function ($s, $index) use ($heroConfig, $heroesList) {
                 $img = $s['image'] ?? $s['image_path'] ?? null;
                 if (is_array($img)) {
                     $img = array_values($img)[0] ?? null;
@@ -16,20 +18,46 @@
                 $imgUrl = (is_string($img) && filled($img))
                     ? (str_starts_with($img, 'http') ? $img : asset('storage/' . ltrim($img, '/')))
                     : null;
+
+                if (! $imgUrl && $heroesList->has($index)) {
+                    $heroRecord = $heroesList->get($index);
+                    $imgUrl = filled($heroRecord->image_url ?? null)
+                        ? $heroRecord->image_url
+                        : ($heroRecord->getFirstMediaUrl('image') ?: null);
+                }
+
                 return (object) [
                     'title' => $s['title'] ?? '',
                     'subtitle' => $s['subtitle'] ?? $s['eyebrow'] ?? null,
                     'description' => $s['description'] ?? null,
                     'image_url' => $imgUrl,
                     'image_shape' => $s['image_shape'] ?? null,
+                    'image_focus_x' => $s['image_focus_x'] ?? 50,
+                    'image_focus_y' => $s['image_focus_y'] ?? 50,
                     'text_link' => $s['text_link'] ?? $s['button_label'] ?? ($heroConfig['cta_text'] ?? 'Explore services'),
                     'button_link' => $s['button_link'] ?? $s['button_url'] ?? ($heroConfig['cta_url'] ?? route('services.index')),
                 ];
             });
     } else {
-        $slides = $heroes instanceof \Illuminate\Support\Collection ? $heroes : collect($heroes);
+        $slides = $heroesList->map(function ($hero) {
+            return (object) [
+                'title' => $hero->title ?? '',
+                'subtitle' => $hero->subtitle ?? null,
+                'description' => $hero->description ?? null,
+                'image_url' => filled($hero->image_url ?? null)
+                    ? $hero->image_url
+                    : ($hero->getFirstMediaUrl('image') ?: null),
+                'image_shape' => null,
+                'image_focus_x' => 50,
+                'image_focus_y' => 50,
+                'text_link' => $hero->text_link ?: 'Explore services',
+                'button_link' => $hero->button_link ?: route('services.index'),
+            ];
+        });
     }
+@endphp
 
+@php
     $hasMultiple = $slides->count() > 1;
     $siteName = $data['siteName'] ?? config('app.name', 'Site');
     $tagline = $data['tagline'] ?? '';
@@ -123,9 +151,14 @@
                                         @php
                                             $slideShape = (!empty($hero->image_shape) && $hero->image_shape !== 'inherit') ? $hero->image_shape : null;
                                             $slideShapeCss = $slideShape ? \App\Models\Organization::getImageShapeCss($slideShape) : '';
+                                            $focusPosition = \App\Models\Organization::imageObjectPosition($hero->image_focus_x ?? null, $hero->image_focus_y ?? null);
+                                            $imgStyles = collect([
+                                                'object-position: ' . $focusPosition,
+                                                $slideShapeCss ?: null,
+                                            ])->filter()->implode('; ');
                                         @endphp
                                         <div class="hz-hero-media" @if(str_contains($slideShapeCss, 'clip-path')) style="overflow: visible;" @endif>
-                                            <img src="{{ $hero->image_url }}" alt="{{ $hero->title }}" @if($slideShapeCss) style="{{ $slideShapeCss }}" @endif>
+                                            <img src="{{ $hero->image_url }}" alt="{{ $hero->title }}" @if($imgStyles) style="{{ $imgStyles }}" @endif>
                                         </div>
                                     @endif
                                 </div>

@@ -329,7 +329,10 @@
                             <!-- Thumb -->
                             <div class="w-16 h-16 rounded-xl bg-slate-200 overflow-hidden shrink-0 border border-slate-300 flex items-center justify-center">
                                 @if($fullImgUrl)
-                                    <img src="{{ $fullImgUrl }}" alt="slide" class="w-full h-full object-cover">
+                                    @php
+                                        $thumbFocus = \App\Models\Organization::imageObjectPosition($s['image_focus_x'] ?? null, $s['image_focus_y'] ?? null);
+                                    @endphp
+                                    <img src="{{ $fullImgUrl }}" alt="slide" class="w-full h-full object-cover" style="object-position: {{ $thumbFocus }};">
                                 @else
                                     <i class="bi bi-image text-slate-400 text-xl"></i>
                                 @endif
@@ -1055,7 +1058,52 @@
 
                     <div class="space-y-1.5 pt-2">
                         <label class="block text-xs font-bold text-slate-700">Slide Background Photo</label>
-                        <input type="file" name="slide_image" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
+                        <input type="file" name="slide_image" accept="image/*" @change="onSlideImagePick($event)" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
+                    </div>
+
+                    <div class="space-y-3 pt-2 border-t border-slate-100">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700">Photo crop focus</label>
+                            <p class="text-[11px] text-slate-500 mt-1">Click the preview or use the sliders to choose which part of the photo stays visible in the hero frame.</p>
+                        </div>
+
+                        <div
+                            x-show="slidePreviewUrl"
+                            x-cloak
+                            class="relative aspect-[4/3] max-h-56 bg-slate-100 rounded-xl overflow-hidden border border-slate-200 cursor-crosshair"
+                            @click="setSlideFocusFromClick($event)"
+                        >
+                            <img
+                                :src="slidePreviewUrl"
+                                alt="Slide crop preview"
+                                class="w-full h-full object-cover pointer-events-none select-none"
+                                :style="'object-position:' + slideFocusX + '% ' + slideFocusY + '%'"
+                            >
+                            <span
+                                class="absolute w-4 h-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-brand-600 shadow pointer-events-none"
+                                :style="'left:' + slideFocusX + '%; top:' + slideFocusY + '%'"
+                            ></span>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2">
+                            <button type="button" @click="setSlideFocusPreset(50, 25)" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-[11px] font-bold text-slate-700">Face / top</button>
+                            <button type="button" @click="setSlideFocusPreset(50, 50)" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-[11px] font-bold text-slate-700">Center</button>
+                            <button type="button" @click="setSlideFocusPreset(50, 75)" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-[11px] font-bold text-slate-700">Lower</button>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-1.5">
+                                <label class="block text-[11px] font-bold text-slate-600">Horizontal focus</label>
+                                <input type="range" min="0" max="100" x-model.number="slideFocusX" class="w-full accent-brand-600">
+                            </div>
+                            <div class="space-y-1.5">
+                                <label class="block text-[11px] font-bold text-slate-600">Vertical focus</label>
+                                <input type="range" min="0" max="100" x-model.number="slideFocusY" class="w-full accent-brand-600">
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="image_focus_x" :value="slideFocusX">
+                        <input type="hidden" name="image_focus_y" :value="slideFocusY">
                     </div>
 
                     <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
