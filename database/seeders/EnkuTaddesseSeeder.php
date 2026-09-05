@@ -65,6 +65,16 @@ class EnkuTaddesseSeeder extends Seeder
                 'show_email' => true,
                 'show_phone' => true,
                 'show_social_links' => true,
+                'show_footer_credit' => true,
+                'footer_credit_html' => 'Creator of <a href="/">Kimem Cards</a> — this platform.',
+                'creator' => [
+                    'is_visible' => true,
+                    'label' => 'Creator of this platform',
+                    'name' => 'Kimem Cards',
+                    'line' => 'NFC smart cards and live digital profiles.',
+                    'cta_text' => 'Visit Kimem',
+                    'url' => '/',
+                ],
                 'home_sections' => [
                     'hero' => [
                         'is_visible' => true,
@@ -180,6 +190,14 @@ class EnkuTaddesseSeeder extends Seeder
                         'button_url' => '/contact',
                         'secondary_button_text' => 'GitHub Profile',
                         'secondary_button_url' => 'https://github.com/Enqutk',
+                    ],
+                    'creator' => [
+                        'is_visible' => true,
+                        'label' => 'Creator of this platform',
+                        'name' => 'Kimem Cards',
+                        'line' => 'NFC smart cards and live digital profiles.',
+                        'cta_text' => 'Visit Kimem',
+                        'url' => '/',
                     ],
                 ],
             ],
