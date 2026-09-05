@@ -130,9 +130,27 @@
     function applyFieldUpdate(section, field, value) {
         var sectionRoot = document.getElementById(section) || document.querySelector('[data-admin-section="' + section + '"]');
         var scope = sectionRoot || document;
+
+        if (field === 'image-focus') {
+            scope.querySelectorAll('[data-preview-field="image"]').forEach(function (el) {
+                el.style.objectPosition = value || '50% 50%';
+            });
+            return;
+        }
+
         scope.querySelectorAll('[data-preview-field="' + field + '"]').forEach(function (el) {
             if (el.tagName === 'IMG') {
-                if (value) el.setAttribute('src', value);
+                if (value) {
+                    el.setAttribute('src', value);
+                    var mediaWrap = el.closest('[data-about-intro-media]');
+                    if (mediaWrap) {
+                        mediaWrap.classList.remove('d-none');
+                    }
+                    var placeholder = scope.querySelector('[data-about-intro-placeholder]');
+                    if (placeholder) {
+                        placeholder.classList.add('d-none');
+                    }
+                }
                 return;
             }
             if (el.getAttribute('data-preview-html') === '1') {

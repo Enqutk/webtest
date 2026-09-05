@@ -20,7 +20,7 @@
     $introImage = \App\Models\Organization::themeFileUrl($intro['image'] ?? null);
 @endphp
 
-<div x-data="aboutPageForm" x-effect="syncIntroImageFocus()">
+<div x-data="aboutPageForm" x-init="init()" x-effect="syncIntroImageFocus()">
 
     <form action="{{ route('admin.site-pages.update', 'about') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
@@ -172,6 +172,13 @@ document.addEventListener('alpine:init', () => {
         syncIntroImageFocus() {
             const pos = this.introFocusX + '% ' + this.introFocusY + '%';
             window.AdminPreview?.pushField('about-page-intro', 'image-focus', pos);
+        },
+        init() {
+            this.$nextTick(() => {
+                if (!this.introPreviewUrl) return;
+                window.AdminPreview?.pushField('about-page-intro', 'image', this.introPreviewUrl);
+                this.syncIntroImageFocus();
+            });
         },
         onPanelImagePick(event, panel) {
             const file = event.target.files && event.target.files[0];
