@@ -60,7 +60,13 @@
                     >
                         <a href="{{ route('portfolio.show', $project) }}" class="hz-project-card-media">
                             @if($image)
-                                <img src="{{ $image }}" alt="{{ $project->name }}" data-preview-field="project-{{ $project->id }}-image">
+                                <x-horizon.focused-image
+                                    :src="$image"
+                                    :alt="$project->name"
+                                    :focus-x="$project->image_focus_x ?? 50"
+                                    :focus-y="$project->image_focus_y ?? 50"
+                                    data-preview-field="project-{{ $project->id }}-image"
+                                />
                             @endif
                             @if($project->category)
                                 <span class="hz-project-card-tag" data-preview-field="project-{{ $project->id }}-category">{{ $project->category }}</span>

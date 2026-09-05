@@ -59,7 +59,13 @@
                         {!! \App\Support\AdminPreviewAttrs::html('services', 'service_'.$service->id, 'Edit Service', false) !!}
                     >
                         @if($image)
-                            <img src="{{ $image }}" alt="" class="hz-gallery-tile-photo">
+                            <x-horizon.focused-image
+                                :src="$image"
+                                alt=""
+                                class="hz-gallery-tile-photo"
+                                :focus-x="$service->image_focus_x ?? 50"
+                                :focus-y="$service->image_focus_y ?? 50"
+                            />
                         @endif
                         <span class="hz-gallery-tile-icon" aria-hidden="true"><i class="{{ $icon }}"></i></span>
                         <span class="hz-gallery-tile-index">{{ str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }}</span>
@@ -87,7 +93,12 @@
                         >
                             <a href="{{ $href }}" class="hz-service-card-media">
                                 @if($image)
-                                    <img src="{{ $image }}" alt="{{ $service->title }}">
+                                    <x-horizon.focused-image
+                                        :src="$image"
+                                        :alt="$service->title"
+                                        :focus-x="$service->image_focus_x ?? 50"
+                                        :focus-y="$service->image_focus_y ?? 50"
+                                    />
                                 @endif
                                 <span class="hz-service-card-index">{{ str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) }}</span>
                             </a>

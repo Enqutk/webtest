@@ -16,7 +16,12 @@
             <div class="col-lg-7">
                 @if($image)
                     <div class="hz-project-detail-media">
-                        <img src="{{ $image }}" alt="{{ $entity->name }}">
+                        <x-horizon.focused-image
+                            :src="$image"
+                            :alt="$entity->name"
+                            :focus-x="$entity->image_focus_x ?? 50"
+                            :focus-y="$entity->image_focus_y ?? 50"
+                        />
                     </div>
                 @endif
             </div>
@@ -61,7 +66,12 @@
                             <article class="hz-project-card">
                                 <a href="{{ route('portfolio.show', $project) }}" class="hz-project-card-media">
                                     @if($relatedImage)
-                                        <img src="{{ $relatedImage }}" alt="{{ $project->name }}">
+                                        <x-horizon.focused-image
+                                            :src="$relatedImage"
+                                            :alt="$project->name"
+                                            :focus-x="$project->image_focus_x ?? 50"
+                                            :focus-y="$project->image_focus_y ?? 50"
+                                        />
                                     @endif
                                     @if($project->category)
                                         <span class="hz-project-card-tag">{{ $project->category }}</span>

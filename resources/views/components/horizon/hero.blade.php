@@ -158,7 +158,13 @@
                                             ])->filter()->implode('; ');
                                         @endphp
                                         <div class="hz-hero-media" @if(str_contains($slideShapeCss, 'clip-path')) style="overflow: visible;" @endif>
-                                            <img src="{{ $hero->image_url }}" alt="{{ $hero->title }}" @if($imgStyles) style="{{ $imgStyles }}" @endif>
+                                            <x-horizon.focused-image
+                                                :src="$hero->image_url"
+                                                :alt="$hero->title"
+                                                :focus-x="$hero->image_focus_x ?? 50"
+                                                :focus-y="$hero->image_focus_y ?? 50"
+                                                :extra-style="$slideShapeCss"
+                                            />
                                         </div>
                                     @endif
                                 </div>

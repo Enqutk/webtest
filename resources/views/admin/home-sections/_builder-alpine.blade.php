@@ -6,6 +6,9 @@
         'quote' => $s->quote,
         'order' => $s->order,
         'status' => $s->status->value ?? $s->status,
+        'image_focus_x' => $s->image_focus_x ?? 50,
+        'image_focus_y' => $s->image_focus_y ?? 50,
+        'image_url' => $s->main_image_url ?: null,
     ])->values();
     $projectsListForJs = $projects->map(fn ($p) => [
         'id' => $p->id,
@@ -15,6 +18,9 @@
         'description' => $p->description,
         'order' => $p->order,
         'status' => $p->status->value ?? $p->status,
+        'image_focus_x' => $p->image_focus_x ?? 50,
+        'image_focus_y' => $p->image_focus_y ?? 50,
+        'image_url' => $p->getFirstMediaUrl('image') ?: null,
     ])->values();
     $clientsListForJs = $clientPartners->map(fn ($c) => [
         'id' => $c->id,
@@ -23,6 +29,9 @@
         'link' => $c->link,
         'order' => $c->order,
         'status' => $c->status->value ?? $c->status,
+        'image_focus_x' => $c->image_focus_x ?? 50,
+        'image_focus_y' => $c->image_focus_y ?? 50,
+        'image_url' => $c->getFirstMediaUrl('image') ?: null,
     ])->values();
 @endphp
 @push('scripts')
@@ -55,6 +64,9 @@ document.addEventListener('alpine:init', () => {
         memberOrder: {{ ($teamMembers->max('order') ?? 0) + 1 }},
         memberStatus: 'active',
         memberFounder: false,
+        memberFocusX: 50,
+        memberFocusY: 50,
+        memberPreviewUrl: '',
 
         openServiceModal: false,
         editingServiceId: null,
@@ -63,6 +75,9 @@ document.addEventListener('alpine:init', () => {
         serviceQuote: '',
         serviceOrder: {{ $nextServiceOrder }},
         serviceStatus: 'active',
+        serviceFocusX: 50,
+        serviceFocusY: 50,
+        servicePreviewUrl: '',
         servicesList: @json($servicesListForJs),
 
         openProjectModal: false,
@@ -73,6 +88,9 @@ document.addEventListener('alpine:init', () => {
         projectDescription: '',
         projectOrder: {{ $nextProjectOrder }},
         projectStatus: 'active',
+        projectFocusX: 50,
+        projectFocusY: 50,
+        projectPreviewUrl: '',
         projectsList: @json($projectsListForJs),
 
         openClientModal: false,
@@ -82,6 +100,9 @@ document.addEventListener('alpine:init', () => {
         clientLink: '',
         clientOrder: {{ $nextClientOrder }},
         clientStatus: 'active',
+        clientFocusX: 50,
+        clientFocusY: 50,
+        clientPreviewUrl: '',
         clientsList: @json($clientsListForJs),
 
         heroBadge: @json($hero['badge'] ?? 'Infrastructure · Engineering · Impact'),
@@ -167,21 +188,45 @@ document.addEventListener('alpine:init', () => {
         },
 
         setSlideFocusFromClick(event) {
-            const rect = event.currentTarget.getBoundingClientRect();
-            if (!rect.width || !rect.height) return;
-            this.slideFocusX = Math.max(0, Math.min(100, Math.round(((event.clientX - rect.left) / rect.width) * 100)));
-            this.slideFocusY = Math.max(0, Math.min(100, Math.round(((event.clientY - rect.top) / rect.height) * 100)));
+            this.imageFocusFromClick(event, 'slideFocusX', 'slideFocusY');
         },
 
         setSlideFocusPreset(x, y) {
-            this.slideFocusX = x;
-            this.slideFocusY = y;
+            this.setImageFocusPreset(x, y, 'slideFocusX', 'slideFocusY');
         },
 
         onSlideImagePick(event) {
+            this.onImagePick(event, 'slidePreviewUrl');
+        },
+
+        imageFocusFromClick(event, xProp, yProp) {
+            const rect = event.currentTarget.getBoundingClientRect();
+            if (!rect.width || !rect.height) return;
+            this[xProp] = Math.max(0, Math.min(100, Math.round(((event.clientX - rect.left) / rect.width) * 100)));
+            this[yProp] = Math.max(0, Math.min(100, Math.round(((event.clientY - rect.top) / rect.height) * 100)));
+        },
+
+        setImageFocusPreset(x, y, xProp, yProp) {
+            this[xProp] = x;
+            this[yProp] = y;
+        },
+
+        onImagePick(event, previewProp) {
             const file = event.target.files && event.target.files[0];
             if (!file) return;
-            this.slidePreviewUrl = URL.createObjectURL(file);
+            this[previewProp] = URL.createObjectURL(file);
+        },
+
+        mediaPreviewUrl(item) {
+            if (!item) return '';
+            if (item.image_url) return item.image_url;
+            return this.slideImageUrlFromData(item);
+        },
+
+        resetImageFocus(xProp, yProp, previewProp) {
+            this[xProp] = 50;
+            this[yProp] = 50;
+            this[previewProp] = '';
         },
 
         editMember(m) {
@@ -193,6 +238,9 @@ document.addEventListener('alpine:init', () => {
             this.memberOrder = m.order || 1;
             this.memberStatus = m.status?.value || m.status || 'active';
             this.memberFounder = !!m.founder;
+            this.memberFocusX = Number(m.image_focus_x ?? 50);
+            this.memberFocusY = Number(m.image_focus_y ?? 50);
+            this.memberPreviewUrl = m.image_url || '';
             this.openTeamModal = true;
         },
 
@@ -205,6 +253,7 @@ document.addEventListener('alpine:init', () => {
             this.memberOrder = {{ ($teamMembers->max('order') ?? 0) + 1 }};
             this.memberStatus = 'active';
             this.memberFounder = false;
+            this.resetImageFocus('memberFocusX', 'memberFocusY', 'memberPreviewUrl');
             this.openTeamModal = true;
         },
 
@@ -215,6 +264,9 @@ document.addEventListener('alpine:init', () => {
             this.serviceQuote = s.quote || '';
             this.serviceOrder = s.order || 1;
             this.serviceStatus = s.status?.value || s.status || 'active';
+            this.serviceFocusX = Number(s.image_focus_x ?? 50);
+            this.serviceFocusY = Number(s.image_focus_y ?? 50);
+            this.servicePreviewUrl = s.image_url || '';
             this.openServiceModal = true;
         },
 
@@ -225,6 +277,7 @@ document.addEventListener('alpine:init', () => {
             this.serviceQuote = '';
             this.serviceOrder = {{ $nextServiceOrder }};
             this.serviceStatus = 'active';
+            this.resetImageFocus('serviceFocusX', 'serviceFocusY', 'servicePreviewUrl');
             this.openServiceModal = true;
         },
 
@@ -240,6 +293,9 @@ document.addEventListener('alpine:init', () => {
             this.projectDescription = p.description || '';
             this.projectOrder = p.order || 1;
             this.projectStatus = p.status?.value || p.status || 'active';
+            this.projectFocusX = Number(p.image_focus_x ?? 50);
+            this.projectFocusY = Number(p.image_focus_y ?? 50);
+            this.projectPreviewUrl = p.image_url || '';
             this.openProjectModal = true;
         },
 
@@ -251,6 +307,7 @@ document.addEventListener('alpine:init', () => {
             this.projectDescription = '';
             this.projectOrder = {{ $nextProjectOrder }};
             this.projectStatus = 'active';
+            this.resetImageFocus('projectFocusX', 'projectFocusY', 'projectPreviewUrl');
             this.openProjectModal = true;
         },
 

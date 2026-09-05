@@ -42,7 +42,12 @@
                     <article class="hz-team-card">
                         <div class="hz-team-photo">
                             @if($photo)
-                                <img src="{{ $photo }}" alt="{{ $member->full_name }}">
+                                <x-horizon.focused-image
+                                    :src="$photo"
+                                    :alt="$member->full_name"
+                                    :focus-x="$member->image_focus_x ?? 50"
+                                    :focus-y="$member->image_focus_y ?? 50"
+                                />
                             @else
                                 <div class="hz-team-initials" aria-hidden="true">{{ $initials }}</div>
                             @endif

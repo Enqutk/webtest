@@ -20,6 +20,12 @@
 
 @php
     $heroImage = $service->secondary_image_url ?: $service->main_image_url;
+    $heroFocusX = $service->secondary_image_url
+        ? ($service->secondary_image_focus_x ?? 50)
+        : ($service->image_focus_x ?? 50);
+    $heroFocusY = $service->secondary_image_url
+        ? ($service->secondary_image_focus_y ?? 50)
+        : ($service->image_focus_y ?? 50);
 @endphp
 
 @section('page')
@@ -47,7 +53,12 @@
             <div class="col-lg-9">
                 @if($heroImage)
                     <div class="hz-service-hero mb-4">
-                        <img src="{{ $heroImage }}" alt="{{ $service->title }}">
+                        <x-horizon.focused-image
+                            :src="$heroImage"
+                            :alt="$service->title"
+                            :focus-x="$heroFocusX"
+                            :focus-y="$heroFocusY"
+                        />
                     </div>
                 @endif
 
