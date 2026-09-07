@@ -141,4 +141,16 @@ class CardApplicationTest extends TestCase
         $this->assertEquals('Marcus Vance', $org->title);
         $this->assertEquals('active', $org->status);
     }
+
+    public function test_card_vcard_opens_inline_for_native_contacts(): void
+    {
+        $response = $this->get('/card/yeabsira-endale/contact.vcf');
+
+        $response->assertOk();
+        $response->assertHeader('content-type', 'text/vcard; charset=utf-8');
+        $this->assertStringContainsString('inline;', (string) $response->headers->get('content-disposition'));
+        $response->assertSee('BEGIN:VCARD', false);
+        $response->assertSee('Yeabsira Endale Kukusha', false);
+        $response->assertSee('TEL;TYPE=CELL,VOICE:', false);
+    }
 }

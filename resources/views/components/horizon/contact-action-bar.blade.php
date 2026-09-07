@@ -99,7 +99,6 @@
                     }
 
                     const saveButton = sheet.querySelector('[data-hz-contact-sheet-save]');
-                    let activeContact = null;
 
                     const initialsFromName = (name) => {
                         const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
@@ -122,8 +121,6 @@
                     };
 
                     const openSheet = (contact) => {
-                        activeContact = contact;
-
                         sheet.querySelector('[data-hz-sheet-name]').textContent = contact.name || 'Contact';
 
                         const roleEl = sheet.querySelector('[data-hz-sheet-role]');
@@ -175,7 +172,6 @@
                         sheet.hidden = true;
                         sheet.setAttribute('aria-hidden', 'true');
                         document.body.classList.remove('hz-contact-sheet-open');
-                        activeContact = null;
                     };
 
                     document.addEventListener('click', (event) => {
