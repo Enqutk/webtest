@@ -6,6 +6,7 @@ use App\Enums\StatusEnum;
 use App\Models\ContentBlock;
 use App\Models\Organization;
 use App\Models\OrganizationContact;
+use App\Models\SocialRef;
 use Illuminate\Support\Str;
 
 class HomeContentService
@@ -241,6 +242,108 @@ class HomeContentService
             'stats' => $statsItems,
             'statsTitle' => $homeSections['stats']['title'] ?? ($statsBlock?->title ?: 'Impact that compounds'),
             'statsSubtitle' => $homeSections['stats']['eyebrow'] ?? ($statsBlock?->subtitle ?: 'By the numbers'),
+
+            'contactActions' => $this->resolveContactActions(
+                $organization,
+                $activePhone,
+                $activeEmail,
+                $theme,
+                $brandHomeUrl
+            ),
         ];
+    }
+
+    private function resolveContactActions(
+        ?Organization $organization,
+        array $phones,
+        array $emails,
+        array $theme,
+        string $profileUrl
+    ): array {
+        if (! $organization) {
+            return ['show' => false];
+        }
+
+        $phone = $phones[0] ?? null;
+        $email = $emails[0] ?? null;
+        $whatsappUrl = null;
+
+        if ($theme['show_social_links'] ?? true) {
+            $refs = SocialRef::query()
+                ->where('organization_id', $organization->id)
+                ->where('status', StatusEnum::active)
+                ->orderBy('order')
+                ->get(['link', 'icon_class', 'title']);
+
+            foreach ($refs as $ref) {
+                $link = strtolower(trim($ref->link ?? ''));
+                $icon = strtolower(trim($ref->icon_class ?? ''));
+                $title = strtolower(trim($ref->title ?? ''));
+
+                if (
+                    str_contains($link, 'wa.me')
+                    || str_contains($link, 'whatsapp')
+                    || str_contains($icon, 'whatsapp')
+                    || str_contains($title, 'whatsapp')
+                ) {
+                    $whatsappUrl = $ref->link;
+                    break;
+                }
+            }
+        }
+
+        $whatsappUrl = $this->normalizeWhatsappUrl($whatsappUrl, $phone);
+
+        $telHref = null;
+        if ($phone && ($theme['show_phone'] ?? true)) {
+            $telDigits = preg_replace('/[^\d+]/', '', $phone);
+            $telHref = $telDigits !== '' ? 'tel:'.$telDigits : null;
+        }
+
+        $canSave = (bool) ($organization->title && ($phone || $email));
+        $showCall = (bool) $telHref;
+        $showWhatsapp = (bool) $whatsappUrl;
+        $show = ($showCall || $showWhatsapp || $canSave) && ($theme['show_contact_bar'] ?? true);
+
+        $filename = Str::slug($organization->title ?: 'contact') ?: 'contact';
+
+        return [
+            'show' => $show,
+            'tel' => $telHref,
+            'whatsapp' => $whatsappUrl,
+            'canSave' => $canSave,
+            'vcard' => [
+                'name' => $organization->title,
+                'org' => $organization->title,
+                'role' => $organization->tagline,
+                'phone' => $phone,
+                'email' => $email,
+                'url' => $profileUrl,
+                'filename' => $filename,
+            ],
+        ];
+    }
+
+    private function normalizeWhatsappUrl(?string $url, ?string $phone): ?string
+    {
+        $url = trim((string) $url);
+
+        if ($url !== '') {
+            if (! preg_match('#^https?://#i', $url)) {
+                $digits = preg_replace('/[^0-9]/', '', $url);
+
+                return $digits !== '' ? 'https://wa.me/'.$digits : null;
+            }
+
+            return $url;
+        }
+
+        if (! $phone) {
+            return null;
+        }
+
+        $digits = preg_replace('/[^0-9]/', '', $phone);
+
+        return $digits !== '' ? 'https://wa.me/'.$digits : null;
     }
 }

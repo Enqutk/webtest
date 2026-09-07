@@ -17,49 +17,97 @@
 
     <!-- Success Modal/Banner if an invitation was just generated -->
     @if(session('invitation_created'))
-        @php $invite = session('invitation_created'); @endphp
-        <div class="p-6 rounded-2xl bg-gradient-to-br from-emerald-950/80 via-slate-900 to-slate-900 border border-emerald-500/40 text-white space-y-4 shadow-xl">
-            <div class="flex items-start justify-between">
+        @php
+            $invite = session('invitation_created');
+            $inviteUrl = $invite->getInvitationUrl();
+            $clientPhoneDigits = preg_replace('/[^0-9]/', '', $invite->client_phone ?? '');
+            $shareMsg = "Hello {$invite->client_name}, here is your private link to design your Kimem NFC Smart Card & Digital Profile: {$inviteUrl}";
+        @endphp
+        <div class="p-6 rounded-2xl bg-gradient-to-br from-emerald-50 via-white to-amber-50 border border-emerald-200 text-slate-900 space-y-4 shadow-lg"
+             x-data="{
+                copied: false,
+                saved: false,
+                copyLink() {
+                    navigator.clipboard.writeText(@js($inviteUrl));
+                    this.copied = true;
+                    setTimeout(() => this.copied = false, 2500);
+                },
+                saveLinkFile() {
+                    const body = `Kimem Cards — Private Invitation\n\nClient: {{ $invite->client_name }}\nRole: {{ $invite->initial_role ?: '—' }}\nPhone: {{ $invite->client_phone ?: '—' }}\nEmail: {{ $invite->client_email ?: '—' }}\nCode: {{ $invite->token }}\nLink: {{ $inviteUrl }}\n\nOpen on mobile for the best experience.`;
+                    const blob = new Blob([body], { type: 'text/plain' });
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = 'kimem-invite-{{ $invite->token }}.txt';
+                    a.click();
+                    URL.revokeObjectURL(a.href);
+                    this.saved = true;
+                    setTimeout(() => this.saved = false, 2500);
+                }
+             }">
+            <div class="flex items-start justify-between gap-3">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl">
                         <i class="bi bi-send-check-fill"></i>
                     </div>
                     <div>
-                        <h3 class="text-sm font-bold text-white">Client Invitation Link Generated!</h3>
-                        <p class="text-xs text-slate-300 mt-0.5">Send this link to <strong class="text-emerald-300">{{ $invite->client_name }}</strong> to let them customize their card on their mobile phone.</p>
+                        <h3 class="text-sm font-bold text-slate-900">Invitation created for {{ $invite->client_name }}</h3>
+                        <p class="text-xs text-slate-600 mt-0.5">Send the link below — or call / WhatsApp them directly from here.</p>
                     </div>
                 </div>
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 font-mono">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 font-mono shrink-0">
                     {{ $invite->token }}
                 </span>
             </div>
 
-            <!-- Invitation Link Box with 1-Click Copy & Social Share -->
-            <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
-                <div class="font-mono text-xs text-amber-400 font-bold truncate w-full sm:w-auto select-all">
-                    {{ $invite->getInvitationUrl() }}
-                </div>
-                <div class="flex items-center gap-2 w-full sm:w-auto shrink-0 justify-end"
-                     x-data="{ copied: false }">
-                    <button type="button" @click="navigator.clipboard.writeText('{{ $invite->getInvitationUrl() }}'); copied = true; setTimeout(() => copied = false, 2500)"
-                            class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold text-white transition flex items-center gap-1.5">
-                        <i class="bi" :class="copied ? 'bi-check-lg text-emerald-400' : 'bi-clipboard'"></i>
-                        <span x-text="copied ? 'Copied!' : 'Copy Link'"></span>
-                    </button>
+            <div class="p-3.5 rounded-xl bg-white border border-slate-200">
+                <div class="font-mono text-xs text-amber-700 font-bold break-all select-all">{{ $inviteUrl }}</div>
+            </div>
 
-                    @php
-                        $msg = urlencode("Hello {$invite->client_name}, here is your private link to design and preview your custom Kimem Smart NFC Card & Digital Profile: " . $invite->getInvitationUrl());
-                    @endphp
-                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $invite->client_phone ?? '') }}?text={{ $msg }}" target="_blank"
-                       class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white transition flex items-center gap-1.5">
-                        <i class="bi bi-whatsapp"></i> WhatsApp
-                    </a>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+                <button type="button" @click="copyLink()"
+                        class="col-span-1 px-3 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-xs font-bold text-white transition flex items-center justify-center gap-1.5 min-h-[44px]">
+                    <i class="bi" :class="copied ? 'bi-check-lg text-emerald-400' : 'bi-clipboard'"></i>
+                    <span x-text="copied ? 'Copied' : 'Copy'"></span>
+                </button>
 
-                    <a href="https://t.me/share/url?url={{ urlencode($invite->getInvitationUrl()) }}&text={{ urlencode('Design your Kimem Smart Card & Website') }}" target="_blank"
-                       class="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-xs font-bold text-white transition flex items-center gap-1.5">
-                        <i class="bi bi-telegram"></i> Telegram
-                    </a>
+                <button type="button" @click="saveLinkFile()"
+                        class="col-span-1 px-3 py-2.5 rounded-xl bg-white border border-slate-200 hover:border-amber-400 text-xs font-bold text-slate-800 transition flex items-center justify-center gap-1.5 min-h-[44px]">
+                    <i class="bi" :class="saved ? 'bi-check-lg text-emerald-600' : 'bi-download'"></i>
+                    <span x-text="saved ? 'Saved' : 'Save file'"></span>
+                </button>
+
+                @if($clientPhoneDigits)
+                <a href="tel:{{ $invite->client_phone }}"
+                   class="col-span-1 px-3 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-xs font-bold text-white transition flex items-center justify-center gap-1.5 min-h-[44px]">
+                    <i class="bi bi-telephone-fill"></i> Call client
+                </a>
+
+                <a href="https://wa.me/{{ $clientPhoneDigits }}?text={{ urlencode($shareMsg) }}" target="_blank" rel="noopener"
+                   class="col-span-1 px-3 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white transition flex items-center justify-center gap-1.5 min-h-[44px]">
+                    <i class="bi bi-whatsapp"></i> WhatsApp
+                </a>
+
+                <a href="sms:{{ $clientPhoneDigits }}?body={{ urlencode($shareMsg) }}"
+                   class="col-span-1 px-3 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-xs font-bold text-white transition flex items-center justify-center gap-1.5 min-h-[44px]">
+                    <i class="bi bi-chat-dots"></i> SMS
+                </a>
+                @else
+                <div class="col-span-2 sm:col-span-3 px-3 py-2.5 rounded-xl bg-amber-50 border border-amber-200 text-[10px] text-amber-800 flex items-center gap-2 min-h-[44px]">
+                    <i class="bi bi-info-circle"></i> Add client phone next time to enable Call / SMS buttons.
                 </div>
+                @endif
+
+                @if($invite->client_email)
+                <a href="mailto:{{ $invite->client_email }}?subject={{ urlencode('Your Kimem NFC Card invitation') }}&body={{ urlencode($shareMsg) }}"
+                   class="col-span-1 px-3 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-xs font-bold text-white transition flex items-center justify-center gap-1.5 min-h-[44px]">
+                    <i class="bi bi-envelope"></i> Email
+                </a>
+                @endif
+
+                <a href="{{ $inviteUrl }}" target="_blank" rel="noopener"
+                   class="col-span-1 px-3 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-xs font-bold text-slate-950 transition flex items-center justify-center gap-1.5 min-h-[44px]">
+                    <i class="bi bi-box-arrow-up-right"></i> Open link
+                </a>
             </div>
         </div>
     @endif
@@ -112,7 +160,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="space-y-1.5">
-                    <label class="block text-xs font-bold text-slate-700">Client Phone / WhatsApp (Optional)</label>
+                    <label class="block text-xs font-bold text-slate-700">Client Phone / WhatsApp <span class="text-amber-600 font-normal">(for Call & SMS buttons)</span></label>
                     <input type="text" name="client_phone" placeholder="+251 9... / +1 212..."
                            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:ring-1 focus:ring-amber-500 transition">
                 </div>
@@ -171,11 +219,19 @@
                                 <div class="font-bold text-slate-900">{{ $inv->client_name }} <span class="text-[10px] text-slate-400 font-normal">({{ $inv->initial_role ?: 'Client' }})</span></div>
                                 <div class="font-mono text-[10px] text-indigo-600 font-bold mt-0.5">{{ $inv->getInvitationUrl() }}</div>
                             </div>
-                            <div class="flex items-center gap-2 shrink-0">
+                            <div class="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
                                 <span class="px-2 py-0.5 rounded-full text-[10px] font-bold {{ $inv->status === 'completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700' }}">
                                     {{ ucfirst($inv->status) }}
                                 </span>
-                                <button type="button" @click="navigator.clipboard.writeText('{{ $inv->getInvitationUrl() }}')" class="p-1.5 rounded bg-white border border-slate-200 text-slate-600 hover:text-slate-900 text-xs" title="Copy URL">
+                                @if($inv->client_phone)
+                                <a href="tel:{{ $inv->client_phone }}" class="p-2 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 hover:bg-blue-100 text-xs" title="Call {{ $inv->client_name }}">
+                                    <i class="bi bi-telephone-fill"></i>
+                                </a>
+                                @endif
+                                <a href="{{ $inv->getInvitationUrl() }}" target="_blank" rel="noopener" class="p-2 rounded-lg bg-white border border-slate-200 text-slate-600 hover:text-slate-900 text-xs" title="Open invite">
+                                    <i class="bi bi-box-arrow-up-right"></i>
+                                </a>
+                                <button type="button" @click="navigator.clipboard.writeText('{{ $inv->getInvitationUrl() }}')" class="p-2 rounded-lg bg-white border border-slate-200 text-slate-600 hover:text-slate-900 text-xs" title="Copy URL">
                                     <i class="bi bi-clipboard"></i>
                                 </button>
                             </div>

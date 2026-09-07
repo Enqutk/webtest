@@ -29,6 +29,8 @@ return [
         'og_image' => 'images/image.webp',
         'area_served' => 'Ethiopia',
         'price_currency' => 'ETB',
+        'support_phone' => env('KIMEM_SUPPORT_PHONE', '+251911223344'),
+        'support_whatsapp' => env('KIMEM_SUPPORT_WHATSAPP', '+251911223344'),
     ],
 
     /*

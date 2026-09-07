@@ -65,5 +65,25 @@
             <span class="hidden sm:inline w-1 h-1 rounded-full bg-slate-300"></span>
             <span class="flex items-center gap-1"><i class="bi bi-lock text-gold-600"></i> Link is unique to you</span>
         </div>
+
+        <div class="flex flex-wrap gap-2 pt-2 border-t border-slate-100">
+            <button type="button" @click="saveDraft()"
+                    class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold border border-slate-200 bg-white text-slate-700 hover:border-gold-400 hover:bg-amber-50/60 transition min-h-[40px]">
+                <i class="bi" :class="draftSaved ? 'bi-check-lg text-emerald-600' : 'bi-bookmark'"></i>
+                <span x-text="draftSaved ? 'Progress saved!' : 'Save progress'"></span>
+            </button>
+            <a href="tel:{{ preg_replace('/[^0-9+]/', '', $kimemSupportPhone) }}"
+               class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold border border-slate-200 bg-white text-slate-700 hover:border-emerald-400 hover:bg-emerald-50/60 transition min-h-[40px]">
+                <i class="bi bi-telephone text-emerald-600"></i> Call Kimem
+            </a>
+            <a href="https://wa.me/{{ $kimemSupportWhatsapp }}?text={{ urlencode('Hi Kimem Cards, I need help with my invitation link.') }}"
+               target="_blank" rel="noopener"
+               class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold border border-emerald-200 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 transition min-h-[40px]">
+                <i class="bi bi-whatsapp"></i> WhatsApp help
+            </a>
+        </div>
+        <p x-show="draftLoaded" class="text-[10px] text-emerald-600 font-medium flex items-center gap-1">
+            <i class="bi bi-arrow-counterclockwise"></i> Your saved progress was restored.
+        </p>
     </div>
 </section>

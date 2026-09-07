@@ -334,6 +334,7 @@ class YeabsiraEndaleSeeder extends Seeder
         OrganizationContact::where('organization_id', $org->id)->delete();
         foreach ([
             ['type' => 'email', 'value' => 'yeabsira0514@gmail.com'],
+            ['type' => 'phone', 'value' => '+251911223344'],
         ] as $c) {
             OrganizationContact::create([
                 'organization_id' => $org->id,
@@ -345,6 +346,7 @@ class YeabsiraEndaleSeeder extends Seeder
 
         SocialRef::where('organization_id', $org->id)->delete();
         foreach ([
+            ['title' => 'WhatsApp', 'icon_class' => 'bi bi-whatsapp', 'link' => 'https://wa.me/251911223344', 'order' => 0],
             ['title' => 'LinkedIn', 'icon_class' => 'bi bi-linkedin', 'link' => 'https://www.linkedin.com/in/engkukusha', 'order' => 1],
             ['title' => 'GitHub', 'icon_class' => 'bi bi-github', 'link' => 'https://github.com/Itsyabitaa', 'order' => 2],
             ['title' => 'X', 'icon_class' => 'bi bi-twitter-x', 'link' => 'https://x.com/kukusha0514', 'order' => 3],

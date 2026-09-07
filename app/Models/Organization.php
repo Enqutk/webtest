@@ -220,6 +220,7 @@ class Organization extends Model implements HasMedia, \Filament\Models\Contracts
             'show_map' => true,
             'show_email' => true,
             'show_phone' => true,
+            'show_contact_bar' => true,
             'show_social_links' => true,
             'show_opening_hours' => true,
             'show_footer_tagline' => true,

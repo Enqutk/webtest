@@ -108,7 +108,7 @@
     </style>
     @stack('styles')
 </head>
-<body>
+<body @class(['has-contact-action-bar' => ! empty($data['contactActions']['show'])])>
     @include('layouts.horizon.header')
     @include('layouts.horizon.creator-bar')
 
@@ -117,6 +117,7 @@
     </main>
 
     @include('layouts.horizon.footer')
+    <x-horizon.contact-action-bar />
 
     @stack('scripts')
 
