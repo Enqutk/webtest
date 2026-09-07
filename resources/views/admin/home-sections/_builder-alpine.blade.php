@@ -123,7 +123,7 @@ document.addEventListener('alpine:init', () => {
         servicesDescription: @json($servicesSec['description'] ?? ''),
 
         statsEyebrow: @json($statsSec['eyebrow'] ?? 'By the numbers'),
-        statsTitle: @json($statsSec['title'] ?? ($statsSec['stat_1_label'] ? 'Impact & Statistics' : 'Impact that compounds across communities')),
+        statsTitle: @json($statsSec['title'] ?? (! empty($statsSec['stat_1_label']) ? 'Impact & Statistics' : 'Impact that compounds across communities')),
         statsItems: @json(collect($statsItems)->values()->all()),
 
         portfolioEyebrow: @json($portfolioSec['eyebrow'] ?? 'Featured Projects'),
