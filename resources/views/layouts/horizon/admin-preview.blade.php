@@ -147,7 +147,7 @@
         }
 
         nodes.forEach(function (el) {
-            if (el.tagName === 'IMG' || field === 'site-logo') {
+            if (el.tagName === 'IMG' || field === 'site-logo' || field === 'hero-brand-logo') {
                 var img = el.tagName === 'IMG' ? el : el.querySelector('img');
                 if (img && value) {
                     img.setAttribute('src', value);
@@ -161,7 +161,7 @@
             }
             if (el.getAttribute('data-preview-html') === '1') {
                 el.innerHTML = value || '';
-            } else if (field === 'company-name') {
+            } else if (field === 'company-name' || field === 'hero-display-name') {
                 var parts = String(value || '').trim().split(/\s+/);
                 var first = parts.shift() || '';
                 var rest = parts.join(' ');

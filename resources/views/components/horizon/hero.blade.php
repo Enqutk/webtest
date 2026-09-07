@@ -60,11 +60,14 @@
 
 @php
     $hasMultiple = $slides->count() > 1;
-    $siteName = $data['siteName'] ?? config('app.name', 'Site');
     $tagline = $data['tagline'] ?? '';
-    $theme = $data['theme'] ?? \App\Models\Organization::defaultTheme();
-    $showHeroBrandText = (bool) ($theme['show_hero_brand_text'] ?? true);
-    $showHeroLogo = (bool) ($theme['show_hero_logo'] ?? ($theme['show_logo'] ?? true));
+    $heroDisplayName = trim((string) ($heroConfig['display_name'] ?? ''));
+    $heroBrandLogoPath = $heroConfig['brand_logo_path'] ?? null;
+    $heroBrandLogoUrl = filled($heroBrandLogoPath)
+        ? (str_starts_with($heroBrandLogoPath, 'http') ? $heroBrandLogoPath : asset('storage/' . ltrim($heroBrandLogoPath, '/')))
+        : null;
+    $showHeroBrandText = (bool) ($heroConfig['show_brand_text'] ?? true);
+    $showHeroBrandLogo = (bool) ($heroConfig['show_brand_logo'] ?? true);
     $heroBadge = $heroConfig['badge'] ?? $heroConfig['subtitle'] ?? ($tagline ? \Illuminate\Support\Str::limit($tagline, 60) : 'Engineering Excellence');
     $heroHeadline = $heroConfig['title'] ?? null;
     $heroCopy = $heroConfig['description'] ?? $tagline;
@@ -85,9 +88,11 @@
                     <x-site-brand
                         as="h1"
                         class="hz-hero-brand"
-                        :name="$siteName"
+                        context="hero"
+                        :name="$heroDisplayName"
+                        :logo="$heroBrandLogoUrl"
                         :show-text="$showHeroBrandText"
-                        :show-logo="$showHeroLogo"
+                        :show-logo="$showHeroBrandLogo"
                     />
                     @if($heroHeadline)
                         <h2 class="hz-hero-title mb-3" data-preview-field="title" {!! \App\Support\AdminPreviewAttrs::html('hero', 'title', 'Edit Headline') !!}>{{ $heroHeadline }}</h2>
@@ -138,9 +143,11 @@
                                     <x-site-brand
                                         :as="$index === 0 ? 'h1' : 'p'"
                                         class="hz-hero-brand"
-                                        :name="$siteName"
+                                        context="hero"
+                                        :name="$heroDisplayName"
+                                        :logo="$heroBrandLogoUrl"
                                         :show-text="$showHeroBrandText"
-                                        :show-logo="$showHeroLogo"
+                                        :show-logo="$showHeroBrandLogo"
                                     />
 
                                     <h2 class="hz-hero-title" data-preview-field="title" {!! \App\Support\AdminPreviewAttrs::html('hero', 'title', 'Edit Headline') !!}>{{ $hero->title }}</h2>

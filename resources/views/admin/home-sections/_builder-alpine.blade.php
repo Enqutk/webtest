@@ -114,7 +114,9 @@
                 heroSecondaryCtaText: @json($hero['secondary_cta_text'] ?? 'Our Services'),
                 heroPhotoPreview: @json($heroPhotoUrl ?? ''),
                 removeHeroImage: false,
-                heroDisplayName: @json($currentOrg->title ?? ''),
+                heroDisplayName: @json($hero['display_name'] ?? ''),
+                heroBrandLogoPreview: @json($heroBrandLogoUrl ?? ''),
+                removeHeroBrandLogo: false,
 
                 aboutEyebrow: @json($about['eyebrow'] ?? 'About our firm'),
                 aboutTitle: @json($about['title'] ?? 'Rooted in East Africa, built for scale'),
@@ -213,13 +215,31 @@
                     this.heroPhotoPreview = file ? URL.createObjectURL(file) : this.heroPhotoPreview;
                 },
 
-                removeHeroPhoto() {
-                    this.removeHeroImage = true;
-                    this.heroPhotoPreview = '';
-                    if (this.$refs.heroImageInput) {
-                        this.$refs.heroImageInput.value = '';
-                    }
-                },
+        removeHeroPhoto() {
+            this.removeHeroImage = true;
+            this.heroPhotoPreview = '';
+            if (this.$refs.heroImageInput) {
+                this.$refs.heroImageInput.value = '';
+            }
+        },
+
+        onHeroBrandLogoPick(event) {
+            this.removeHeroBrandLogo = false;
+            const file = event.target.files && event.target.files[0];
+            this.heroBrandLogoPreview = file ? URL.createObjectURL(file) : this.heroBrandLogoPreview;
+            if (file) {
+                this.pushField('hero', 'hero-brand-logo', this.heroBrandLogoPreview);
+            }
+        },
+
+        removeHeroBrandLogoMark() {
+            this.removeHeroBrandLogo = true;
+            this.heroBrandLogoPreview = '';
+            this.pushField('hero', 'hero-brand-logo', '');
+            if (this.$refs.heroBrandLogoInput) {
+                this.$refs.heroBrandLogoInput.value = '';
+            }
+        },
 
                 removeSlideImage() {
                     this.slideRemoveImage = true;
@@ -601,7 +621,7 @@
 
                     this.$watch('activeSection', () => this.syncActiveSectionToPreview());
                     this.$watch('heroBadge', (v) => this.pushField('hero', 'badge', v));
-                    this.$watch('heroDisplayName', (v) => this.pushField('site-company-name', 'company-name', v));
+                    this.$watch('heroDisplayName', (v) => this.pushField('hero', 'hero-display-name', v));
                     this.$watch('heroTitle', (v) => this.pushField('hero', 'title', v));
                     this.$watch('heroDescription', (v) => this.pushField('hero', 'description', v));
                     this.$watch('heroCtaText', (v) => this.pushField('hero', 'cta_text', v));

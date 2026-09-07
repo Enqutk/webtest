@@ -50,8 +50,6 @@ class YabtsegaAsfawSeeder extends Seeder
                     'nav_font_weight' => '500',
                     'show_logo' => true,
                     'show_header_logo' => true,
-                    'show_hero_logo' => true,
-                    'show_hero_brand_text' => true,
                     'show_favicon' => true,
                     'show_brand_text' => true,
                     'show_tagline' => true,
@@ -78,6 +76,9 @@ class YabtsegaAsfawSeeder extends Seeder
                     'home_sections' => [
                         'hero' => [
                             'is_visible' => true,
+                            'display_name' => 'Yabtsega Asfaw Legese',
+                            'show_brand_text' => true,
+                            'show_brand_logo' => true,
                             'badge' => 'Senior Marketing Manager · TETER',
                             'subtitle' => 'Senior Marketing Manager',
                             'title' => 'Brands that feel clear. Campaigns that move people.',

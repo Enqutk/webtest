@@ -74,7 +74,6 @@
 
     @php
         $hero = $sections['hero'] ?? \App\Models\Organization::defaultHomeSections()['hero'];
-        $theme = is_array($currentOrg->theme) ? $currentOrg->theme : \App\Models\Organization::defaultTheme();
         $about = $sections['about'] ?? \App\Models\Organization::defaultHomeSections()['about'];
         $servicesSec = $sections['services'] ?? \App\Models\Organization::defaultHomeSections()['services'];
         $statsSec = $sections['stats'] ?? \App\Models\Organization::defaultHomeSections()['stats'];
@@ -111,6 +110,10 @@
                 $heroPhotoUrl = str_starts_with($imgPath, 'http') ? $imgPath : asset('storage/' . ltrim($imgPath, '/'));
             }
         }
+        $heroBrandLogoPath = $hero['brand_logo_path'] ?? null;
+        $heroBrandLogoUrl = filled($heroBrandLogoPath)
+            ? (str_starts_with($heroBrandLogoPath, 'http') ? $heroBrandLogoPath : asset('storage/' . ltrim($heroBrandLogoPath, '/')))
+            : null;
         $sectionLabels = [
             'creator' => 'Creator Bar',
             'hero' => 'Hero Banner',
@@ -345,22 +348,46 @@
                             </div>
                         </div>
 
-                        <div class="space-y-1.5">
-                            <label class="block text-xs font-bold text-slate-700">Display name</label>
-                            <input type="text" name="display_name" x-model="heroDisplayName"
-                                value="{{ $currentOrg->title }}"
-                                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:bg-white transition">
-                            <p class="text-[11px] text-slate-500">Large name on the hero (same as Site Settings). The logo beside it is the site logo.</p>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                                <input type="hidden" name="show_hero_brand_text" value="0">
+                        <div class="space-y-3 pt-2 border-t border-slate-100">
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-800">Hero identity</h4>
+                                <p class="text-[11px] text-slate-500 mt-0.5">Separate from Site Settings. Use the same name or logo as the header only if you want to.</p>
+                            </div>
+                            <div class="space-y-1.5">
+                                <label class="block text-xs font-bold text-slate-700">Hero display name</label>
+                                <input type="text" name="display_name" x-model="heroDisplayName"
+                                    value="{{ $hero['display_name'] ?? '' }}"
+                                    placeholder="e.g. Yabtsega Asfaw Legese"
+                                    class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:bg-white transition">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-xs font-bold text-slate-700">Hero logo mark</label>
+                                <p class="text-[11px] text-slate-500">Small logo beside the hero name — not the large photo on the right.</p>
+                                <template x-if="heroBrandLogoPreview && !removeHeroBrandLogo">
+                                    <img :src="heroBrandLogoPreview" alt="Hero logo preview"
+                                        class="h-12 w-auto max-w-full object-contain rounded-xl border border-slate-200 bg-white p-2">
+                                </template>
+                                <input type="hidden" name="remove_hero_brand_logo" :value="removeHeroBrandLogo ? '1' : '0'">
+                                <input type="file" name="hero_brand_logo" accept="image/*" x-ref="heroBrandLogoInput"
+                                    @change="onHeroBrandLogoPick($event)"
+                                    class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
+                                <button type="button" x-show="heroBrandLogoPreview && !removeHeroBrandLogo" x-cloak
+                                    @click="removeHeroBrandLogoMark()"
+                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-rose-200 bg-rose-50 text-rose-700 text-[11px] font-bold hover:bg-rose-100">
+                                    <i class="bi bi-trash"></i>
+                                    Remove logo mark
+                                </button>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <input type="hidden" name="show_brand_text" value="0">
                                 <label class="flex items-center gap-2 p-3 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer">
-                                    <input type="checkbox" name="show_hero_brand_text" value="1" {{ ($theme['show_hero_brand_text'] ?? true) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">
+                                    <input type="checkbox" name="show_brand_text" value="1" {{ ($hero['show_brand_text'] ?? true) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">
                                     <span class="text-[11px] font-semibold text-slate-700">Show name in hero</span>
                                 </label>
-                                <input type="hidden" name="show_hero_logo" value="0">
+                                <input type="hidden" name="show_brand_logo" value="0">
                                 <label class="flex items-center gap-2 p-3 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer">
-                                    <input type="checkbox" name="show_hero_logo" value="1" {{ ($theme['show_hero_logo'] ?? ($theme['show_logo'] ?? true)) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">
-                                    <span class="text-[11px] font-semibold text-slate-700">Show logo in hero</span>
+                                    <input type="checkbox" name="show_brand_logo" value="1" {{ ($hero['show_brand_logo'] ?? true) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">
+                                    <span class="text-[11px] font-semibold text-slate-700">Show logo mark in hero</span>
                                 </label>
                             </div>
                         </div>

@@ -127,11 +127,10 @@ class HomePageController extends Controller
             '_token',
             'section',
             'hero_image',
+            'hero_brand_logo',
             'about_image',
             'remove_hero_image',
-            'display_name',
-            'show_hero_logo',
-            'show_hero_brand_text',
+            'remove_hero_brand_logo',
         ]);
 
         if ($request->hasFile('about_image')) {
@@ -147,13 +146,16 @@ class HomePageController extends Controller
                 $request->boolean('remove_hero_image')
             );
 
-            $displayName = trim((string) $request->input('display_name', ''));
-            if ($displayName !== '') {
-                $currentOrg->title = $displayName;
+            if ($request->hasFile('hero_brand_logo')) {
+                $data['brand_logo_path'] = $request->file('hero_brand_logo')->store('hero-brand', 'public');
+            } elseif ($request->boolean('remove_hero_brand_logo')) {
+                $data['brand_logo_path'] = null;
+            } elseif (isset($theme['home_sections']['hero']['brand_logo_path'])) {
+                $data['brand_logo_path'] = $theme['home_sections']['hero']['brand_logo_path'];
             }
 
-            $theme['show_hero_logo'] = $request->boolean('show_hero_logo');
-            $theme['show_hero_brand_text'] = $request->boolean('show_hero_brand_text');
+            $data['show_brand_text'] = $request->boolean('show_brand_text');
+            $data['show_brand_logo'] = $request->boolean('show_brand_logo');
         }
 
         if (isset($data['points']) && is_array($data['points'])) {
