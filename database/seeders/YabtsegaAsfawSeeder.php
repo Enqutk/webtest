@@ -50,6 +50,8 @@ class YabtsegaAsfawSeeder extends Seeder
                     'nav_font_weight' => '500',
                     'show_logo' => true,
                     'show_header_logo' => true,
+                    'show_hero_logo' => true,
+                    'show_hero_brand_text' => true,
                     'show_favicon' => true,
                     'show_brand_text' => true,
                     'show_tagline' => true,
