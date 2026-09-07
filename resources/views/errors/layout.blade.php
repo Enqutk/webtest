@@ -98,22 +98,39 @@
             flex: 1;
             display: grid;
             place-items: center;
-            padding: 3.5rem 1.25rem 4.5rem;
+            padding: 2.25rem 1.25rem 2.75rem;
         }
 
         .error-inner {
+            position: relative;
             width: min(100%, 42rem);
             text-align: center;
+            padding: 3.25rem 0 1.25rem;
         }
 
         .error-code {
+            position: absolute;
+            left: 50%;
+            top: 42%;
+            transform: translate(-50%, -58%);
             font-family: var(--font-display);
-            font-size: clamp(6.5rem, 22vw, 12rem);
-            line-height: 0.85;
+            font-size: clamp(8rem, 28vw, 14rem);
+            line-height: 0.8;
             letter-spacing: -0.04em;
-            color: rgba(11, 29, 58, 0.08);
-            margin: 0 0 0.35rem;
+            color: rgba(11, 29, 58, 0.07);
+            margin: 0;
             user-select: none;
+            pointer-events: none;
+            z-index: 0;
+            white-space: nowrap;
+        }
+
+        .error-eyebrow,
+        .error-title,
+        .error-copy,
+        .error-actions {
+            position: relative;
+            z-index: 1;
         }
 
         .error-eyebrow {
@@ -128,19 +145,19 @@
 
         .error-title {
             font-family: var(--font-display);
-            font-size: clamp(1.85rem, 4vw, 2.75rem);
+            font-size: clamp(1.65rem, 3.6vw, 2.45rem);
             line-height: 1.15;
             letter-spacing: -0.02em;
-            margin: 0 0 1rem;
+            margin: 0 0 0.85rem;
             color: var(--navy);
         }
 
         .error-copy {
-            margin: 0 auto 2.25rem;
+            margin: 0 auto 1.75rem;
             max-width: 38ch;
             color: rgba(11, 29, 58, 0.72);
-            font-size: 1.05rem;
-            line-height: 1.75;
+            font-size: 1rem;
+            line-height: 1.7;
         }
 
         .error-actions {
