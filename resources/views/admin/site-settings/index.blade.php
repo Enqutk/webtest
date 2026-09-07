@@ -142,10 +142,11 @@
                 </div>
 
                 <div id="company-name" class="space-y-1.5 scroll-mt-4">
-                    <label class="block text-xs font-bold text-slate-700">Company name</label>
+                    <label class="block text-xs font-bold text-slate-700">Display name</label>
                     <input type="text" name="title" value="{{ $currentOrg->title }}" required
                         data-preview-bind="site-company-name:company-name"
                         class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                    <p class="text-[11px] text-slate-500">Shown in the header and as the large name on the home hero. Change it here to update both.</p>
                 </div>
 
                 <div id="tagline" class="space-y-1.5 scroll-mt-4">
@@ -172,16 +173,32 @@
 
                 <div id="logo" class="space-y-1.5 scroll-mt-4">
                     <label class="block text-xs font-bold text-slate-700">Logo</label>
+                    <p class="text-[11px] text-slate-500">The same logo is used in the header and next to the name on the home hero. Upload once — both update together.</p>
                     @if($logoUrl)
                         <img src="{{ $logoUrl }}" alt="" class="h-10 w-auto object-contain mb-2">
                     @endif
                     <input type="file" name="logo" accept="image/*"
+                        onchange="if (this.files[0] && window.AdminPreview) { window.AdminPreview.pushField('site-logo', 'site-logo', URL.createObjectURL(this.files[0])); }"
                         class="w-full text-xs file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700">
-                    <input type="hidden" name="theme[show_header_logo]" value="0">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                        <input type="hidden" name="theme[show_header_logo]" value="0">
+                        <label
+                            class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer">
+                            <input type="checkbox" name="theme[show_header_logo]" value="1" {{ !empty($theme['show_header_logo']) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">
+                            <span class="text-xs font-semibold text-slate-700">Show logo in header</span>
+                        </label>
+                        <input type="hidden" name="theme[show_hero_logo]" value="0">
+                        <label
+                            class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer">
+                            <input type="checkbox" name="theme[show_hero_logo]" value="1" {{ ($theme['show_hero_logo'] ?? ($theme['show_logo'] ?? true)) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">
+                            <span class="text-xs font-semibold text-slate-700">Show logo in hero</span>
+                        </label>
+                    </div>
+                    <input type="hidden" name="theme[show_hero_brand_text]" value="0">
                     <label
                         class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer mt-2">
-                        <input type="checkbox" name="theme[show_header_logo]" value="1" {{ !empty($theme['show_header_logo']) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">
-                        <span class="text-xs font-semibold text-slate-700">Show logo in header</span>
+                        <input type="checkbox" name="theme[show_hero_brand_text]" value="1" {{ ($theme['show_hero_brand_text'] ?? true) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">
+                        <span class="text-xs font-semibold text-slate-700">Show name in hero</span>
                     </label>
                 </div>
 

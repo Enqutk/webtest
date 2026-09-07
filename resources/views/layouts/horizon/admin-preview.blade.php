@@ -128,33 +128,50 @@
     }
 
     function applyFieldUpdate(section, field, value) {
-        var sectionRoot = document.getElementById(section) || document.querySelector('[data-admin-section="' + section + '"]');
-        var scope = sectionRoot || document;
+        var identityFields = { 'company-name': true, 'site-logo': true };
+        var nodes;
+        if (identityFields[field]) {
+            nodes = document.querySelectorAll('[data-preview-field="' + field + '"]');
+        } else {
+            var sectionRoot = document.getElementById(section) || document.querySelector('[data-admin-section="' + section + '"]');
+            var scope = sectionRoot || document;
+            nodes = scope.querySelectorAll('[data-preview-field="' + field + '"]');
+        }
 
         if (field === 'image-focus') {
-            scope.querySelectorAll('[data-preview-field="image"]').forEach(function (el) {
+            var imageScope = document.getElementById(section) || document;
+            imageScope.querySelectorAll('[data-preview-field="image"]').forEach(function (el) {
                 el.style.objectPosition = value || '50% 50%';
             });
             return;
         }
 
-        scope.querySelectorAll('[data-preview-field="' + field + '"]').forEach(function (el) {
-            if (el.tagName === 'IMG') {
-                if (value) {
-                    el.setAttribute('src', value);
-                    var mediaWrap = el.closest('[data-about-intro-media]');
+        nodes.forEach(function (el) {
+            if (el.tagName === 'IMG' || field === 'site-logo') {
+                var img = el.tagName === 'IMG' ? el : el.querySelector('img');
+                if (img && value) {
+                    img.setAttribute('src', value);
+                    img.style.display = '';
+                    var mediaWrap = img.closest('[data-about-intro-media]');
                     if (mediaWrap) {
                         mediaWrap.classList.remove('d-none');
-                    }
-                    var placeholder = scope.querySelector('[data-about-intro-placeholder]');
-                    if (placeholder) {
-                        placeholder.classList.add('d-none');
                     }
                 }
                 return;
             }
             if (el.getAttribute('data-preview-html') === '1') {
                 el.innerHTML = value || '';
+            } else if (field === 'company-name') {
+                var parts = String(value || '').trim().split(/\s+/);
+                var first = parts.shift() || '';
+                var rest = parts.join(' ');
+                el.textContent = '';
+                el.appendChild(document.createTextNode(first + (rest ? ' ' : '')));
+                if (rest) {
+                    var span = document.createElement('span');
+                    span.textContent = rest;
+                    el.appendChild(span);
+                }
             } else {
                 el.textContent = value || '';
             }

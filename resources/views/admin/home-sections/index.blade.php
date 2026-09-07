@@ -345,6 +345,26 @@
                         </div>
 
                         <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700">Display name</label>
+                            <input type="text" name="display_name" x-model="heroDisplayName"
+                                value="{{ $currentOrg->title }}"
+                                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:bg-white transition">
+                            <p class="text-[11px] text-slate-500">Large name on the hero (same as Site Settings). The logo beside it is the site logo.</p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                                <input type="hidden" name="show_hero_brand_text" value="0">
+                                <label class="flex items-center gap-2 p-3 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer">
+                                    <input type="checkbox" name="show_hero_brand_text" value="1" {{ ($theme['show_hero_brand_text'] ?? true) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">
+                                    <span class="text-[11px] font-semibold text-slate-700">Show name in hero</span>
+                                </label>
+                                <input type="hidden" name="show_hero_logo" value="0">
+                                <label class="flex items-center gap-2 p-3 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer">
+                                    <input type="checkbox" name="show_hero_logo" value="1" {{ ($theme['show_hero_logo'] ?? ($theme['show_logo'] ?? true)) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">
+                                    <span class="text-[11px] font-semibold text-slate-700">Show logo in hero</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-slate-700">Main Headline <span
                                     class="text-rose-500">*</span></label>
                             <input type="text" name="title" x-model="heroTitle"
