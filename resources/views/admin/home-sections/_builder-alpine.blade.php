@@ -114,6 +114,7 @@
                 heroSecondaryCtaText: @json($hero['secondary_cta_text'] ?? 'Our Services'),
                 heroPhotoPreview: @json($heroPhotoUrl ?? ''),
                 removeHeroImage: false,
+                heroDisplayName: @json($currentOrg->title ?? ''),
 
                 aboutEyebrow: @json($about['eyebrow'] ?? 'About our firm'),
                 aboutTitle: @json($about['title'] ?? 'Rooted in East Africa, built for scale'),
@@ -600,6 +601,7 @@
 
                     this.$watch('activeSection', () => this.syncActiveSectionToPreview());
                     this.$watch('heroBadge', (v) => this.pushField('hero', 'badge', v));
+                    this.$watch('heroDisplayName', (v) => this.pushField('site-company-name', 'company-name', v));
                     this.$watch('heroTitle', (v) => this.pushField('hero', 'title', v));
                     this.$watch('heroDescription', (v) => this.pushField('hero', 'description', v));
                     this.$watch('heroCtaText', (v) => this.pushField('hero', 'cta_text', v));
