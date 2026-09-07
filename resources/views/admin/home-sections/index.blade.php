@@ -77,6 +77,19 @@
     $creatorSec = $sections['creator'] ?? \App\Models\Organization::defaultHomeSections()['creator'];
 
     $heroSlides = $hero['slides'] ?? \App\Models\Organization::defaultHeroSlides();
+    $heroRecords = \App\Models\Hero::query()
+        ->where('organization_id', $currentOrg->id)
+        ->orderBy('order')
+        ->get()
+        ->values();
+    $heroSlides = collect($heroSlides)->map(function ($slide, $idx) use ($heroRecords) {
+        $heroRecord = $heroRecords->get($idx);
+        $mediaUrl = $heroRecord?->getFirstMediaUrl('image') ?: null;
+        if (empty($slide['image_url']) && $mediaUrl) {
+            $slide['image_url'] = $mediaUrl;
+        }
+        return $slide;
+    })->all();
     $sectionLabels = [
         'creator' => 'Creator Bar',
         'hero' => 'Hero Banner',
@@ -1058,7 +1071,19 @@
 
                     <div class="space-y-1.5 pt-2">
                         <label class="block text-xs font-bold text-slate-700">Slide Background Photo</label>
-                        <input type="file" name="slide_image" accept="image/*" @change="onSlideImagePick($event)" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
+                        <input type="hidden" name="remove_slide_image" :value="slideRemoveImage ? '1' : '0'">
+                        <input type="file" name="slide_image" accept="image/*" x-ref="slideImageInput" @change="onSlideImagePick($event)" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
+                        <button
+                            type="button"
+                            x-show="slidePreviewUrl"
+                            x-cloak
+                            @click="removeSlideImage()"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-rose-200 bg-rose-50 text-rose-700 text-[11px] font-bold hover:bg-rose-100"
+                        >
+                            <i class="bi bi-trash"></i>
+                            Remove picture
+                        </button>
+                        <p x-show="slideRemoveImage && !slidePreviewUrl" class="text-[11px] text-slate-500">Picture will be removed when you save this slide.</p>
                     </div>
 
                     @include('admin.partials.image-focus-picker', [

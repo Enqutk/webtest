@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ContentBlock;
 use App\Models\Entity;
 use App\Enums\EntityTypeEnum;
+use App\Models\Hero;
 use App\Models\Organization;
 use App\Models\Service;
 use App\Models\Team;
@@ -194,6 +195,10 @@ class HomePageController extends Controller
             $path = $request->file('slide_image')->store('hero-slides', 'public');
             $slideData['image'] = [$path => $path];
             $slideData['image_path'] = $path;
+        } elseif ($request->boolean('remove_slide_image')) {
+            $slideData['image'] = null;
+            $slideData['image_path'] = null;
+            $this->clearHeroMediaAtIndex($currentOrg, is_numeric($index) ? (int) $index : null);
         } elseif (is_numeric($index) && isset($slides[$index])) {
             $slideData['image'] = $slides[$index]['image'] ?? null;
             $slideData['image_path'] = $slides[$index]['image_path'] ?? null;
@@ -227,5 +232,22 @@ class HomePageController extends Controller
         }
 
         return back()->with('success', 'Hero slide removed.');
+    }
+
+    private function clearHeroMediaAtIndex(Organization $org, ?int $index): void
+    {
+        if ($index === null) {
+            return;
+        }
+
+        $hero = Hero::query()
+            ->where('organization_id', $org->id)
+            ->orderBy('order')
+            ->skip($index)
+            ->first();
+
+        if ($hero) {
+            $hero->clearMediaCollection('image');
+        }
     }
 }

@@ -54,6 +54,7 @@ document.addEventListener('alpine:init', () => {
         slideFocusX: 50,
         slideFocusY: 50,
         slidePreviewUrl: '',
+        slideRemoveImage: false,
 
         openTeamModal: false,
         editingMemberId: null,
@@ -158,6 +159,7 @@ document.addEventListener('alpine:init', () => {
             this.slideFocusX = Number(slide.image_focus_x ?? 50);
             this.slideFocusY = Number(slide.image_focus_y ?? 50);
             this.slidePreviewUrl = this.slideImageUrlFromData(slide);
+            this.slideRemoveImage = false;
             this.openSlideModal = true;
         },
 
@@ -173,11 +175,13 @@ document.addEventListener('alpine:init', () => {
             this.slideFocusX = 50;
             this.slideFocusY = 50;
             this.slidePreviewUrl = '';
+            this.slideRemoveImage = false;
             this.openSlideModal = true;
         },
 
         slideImageUrlFromData(slide) {
             if (!slide) return '';
+            if (slide.image_url) return slide.image_url;
             let img = slide.image_path || slide.image || '';
             if (Array.isArray(img)) {
                 img = img[0] || Object.values(img)[0] || '';
@@ -196,7 +200,17 @@ document.addEventListener('alpine:init', () => {
         },
 
         onSlideImagePick(event) {
+            this.slideRemoveImage = false;
             this.onImagePick(event, 'slidePreviewUrl');
+        },
+
+        removeSlideImage() {
+            this.slideRemoveImage = true;
+            this.slidePreviewUrl = '';
+            const input = this.$refs.slideImageInput;
+            if (input) {
+                input.value = '';
+            }
         },
 
         imageFocusFromClick(event, xProp, yProp) {
