@@ -9,6 +9,8 @@ use App\Models\Hero;
 use App\Models\Organization;
 use App\Models\Service;
 use App\Models\Team;
+use App\Services\HomeContentService;
+use Illuminate\Http\Response;
 
 class HomeController extends Controller
 {
@@ -50,5 +52,10 @@ class HomeController extends Controller
             ->get();
 
         return view('index', compact('heroes', 'services', 'projects', 'clients', 'team', 'currentOrg'));
+    }
+
+    public function vcard(): Response
+    {
+        return app(HomeContentService::class)->vcardResponse();
     }
 }

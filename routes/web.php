@@ -39,6 +39,7 @@ Route::prefix('card/{slug}')->name('card.')->group(function () {
     Route::get('/services/{service_slug}', [ServiceController::class, 'show'])->name('services.show');
     Route::get('/portfolio', [PortfolioController::class, 'index'])->name('portfolio.index');
     Route::get('/portfolio/{entity}', [PortfolioController::class, 'show'])->name('portfolio.show');
+    Route::get('/contact.vcf', [HomeController::class, 'vcard'])->name('vcard');
     Route::get('/contact', [ContactController::class, 'index'])->name('contact');
     Route::post('/contact/send/{recipient}', [ContactController::class, 'send'])
         ->middleware('throttle:contact')
@@ -59,6 +60,7 @@ Route::get('/our-services', [ServiceController::class, 'index'])->name('services
 Route::get('/services/{slug}', [ServiceController::class, 'show'])->name('services.show');
 Route::get('/portfolio', [PortfolioController::class, 'index'])->name('portfolio.index');
 Route::get('/portfolio/{entity}', [PortfolioController::class, 'show'])->name('portfolio.show');
+Route::get('/contact.vcf', [HomeController::class, 'vcard'])->name('contact.vcard');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact/send/{recipient}', [ContactController::class, 'send'])
     ->middleware('throttle:contact')

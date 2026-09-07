@@ -7,6 +7,7 @@ use App\Models\ContentBlock;
 use App\Models\Organization;
 use App\Models\OrganizationContact;
 use App\Models\SocialRef;
+use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 
 class HomeContentService
@@ -307,12 +308,17 @@ class HomeContentService
 
         $filename = Str::slug($organization->title ?: 'contact') ?: 'contact';
         $photo = ($theme['show_logo'] ?? true) ? ($organization->logo_url ?? null) : null;
+        $routeSlug = request()->route('slug') ?? ($organization->slug ?: null);
+        $vcardUrl = $routeSlug
+            ? route('card.vcard', ['slug' => $routeSlug])
+            : route('contact.vcard');
 
         return [
             'show' => $show,
             'tel' => $telHref,
             'whatsapp' => $whatsappUrl,
             'canSave' => $canSave,
+            'vcardUrl' => $vcardUrl,
             'vcard' => [
                 'name' => $organization->title,
                 'org' => $organization->title,
@@ -324,6 +330,67 @@ class HomeContentService
                 'filename' => $filename,
             ],
         ];
+    }
+
+    public function vcardResponse(): Response
+    {
+        $data = $this->getHomeContent();
+        $actions = $data['contactActions'] ?? [];
+
+        if (empty($actions['canSave']) || empty($actions['vcard'])) {
+            abort(404);
+        }
+
+        $contact = $actions['vcard'];
+        $filename = ($contact['filename'] ?? 'contact').'.vcf';
+        $ua = strtolower((string) request()->userAgent());
+        $isAndroid = str_contains($ua, 'android');
+
+        return response($this->buildVcard($contact), 200, [
+            'Content-Type' => $isAndroid
+                ? 'text/x-vcard; charset=utf-8'
+                : 'text/vcard; charset=utf-8',
+            'Content-Disposition' => 'inline; filename="'.$filename.'"',
+            'X-Content-Type-Options' => 'nosniff',
+            'Cache-Control' => 'private, max-age=120',
+        ]);
+    }
+
+    public function buildVcard(array $contact): string
+    {
+        $escape = static function ($value): string {
+            return str_replace(
+                ['\\', ';', ',', "\n", "\r"],
+                ['\\\\', '\\;', '\\,', '\\n', ''],
+                (string) $value
+            );
+        };
+
+        $lines = [
+            'BEGIN:VCARD',
+            'VERSION:3.0',
+            'FN:'.$escape($contact['name'] ?? ''),
+        ];
+
+        if (! empty($contact['org'])) {
+            $lines[] = 'ORG:'.$escape($contact['org']);
+        }
+        if (! empty($contact['role'])) {
+            $lines[] = 'TITLE:'.$escape($contact['role']);
+        }
+        if (! empty($contact['phone'])) {
+            $lines[] = 'TEL;TYPE=CELL,VOICE:'.$escape($contact['phone']);
+        }
+        if (! empty($contact['email'])) {
+            $lines[] = 'EMAIL;TYPE=INTERNET:'.$escape($contact['email']);
+        }
+        if (! empty($contact['url'])) {
+            $lines[] = 'URL:'.$escape($contact['url']);
+        }
+
+        $lines[] = 'END:VCARD';
+
+        return implode("\r\n", $lines)."\r\n";
     }
 
     private function normalizeWhatsappUrl(?string $url, ?string $phone): ?string

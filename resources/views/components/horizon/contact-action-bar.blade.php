@@ -79,11 +79,13 @@
                 </div>
             </div>
 
-            <button type="button" class="hz-contact-sheet__primary" data-hz-contact-sheet-save>
+            <a href="{{ $actions['vcardUrl'] }}"
+               class="hz-contact-sheet__primary"
+               data-hz-contact-sheet-save>
                 <i class="bi bi-person-plus-fill" aria-hidden="true"></i>
                 Add to Contacts
-            </button>
-            <p class="hz-contact-sheet__hint">Opens your phone’s contact app — like saving from WhatsApp.</p>
+            </a>
+            <p class="hz-contact-sheet__hint">Opens your phone’s Add Contact screen. Tap Create to save.</p>
         </div>
     </div>
 
@@ -96,7 +98,6 @@
                         return;
                     }
 
-                    const panel = sheet.querySelector('.hz-contact-sheet__panel');
                     const saveButton = sheet.querySelector('[data-hz-contact-sheet-save]');
                     let activeContact = null;
 
