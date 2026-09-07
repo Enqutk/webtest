@@ -59,7 +59,8 @@ class CardApplicationTest extends TestCase
 
         $response = $this->get('/invite/' . $invitation->token);
         $response->assertStatus(200);
-        $response->assertSee('Welcome, Maya Lin!');
+        $response->assertSee('Welcome, Maya.');
+        $response->assertSee('Private invitation');
 
         $payload = [
             'invitation_token' => $invitation->token,
