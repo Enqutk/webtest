@@ -26,17 +26,18 @@
                         : ($heroRecord->getFirstMediaUrl('image') ?: null);
                 }
 
-                return (object) [
-                    'title' => $s['title'] ?? '',
-                    'subtitle' => $s['subtitle'] ?? $s['eyebrow'] ?? null,
-                    'description' => $s['description'] ?? null,
-                    'image_url' => $imgUrl,
-                    'image_shape' => $s['image_shape'] ?? null,
-                    'image_focus_x' => $s['image_focus_x'] ?? 50,
-                    'image_focus_y' => $s['image_focus_y'] ?? 50,
+                                return (object) [
+                                    'title' => $s['title'] ?? '',
+                                    'subtitle' => $s['subtitle'] ?? $s['eyebrow'] ?? null,
+                                    'description' => $s['description'] ?? null,
+                                    'image_url' => $imgUrl,
+                                    'image_shape' => $s['image_shape'] ?? null,
+                                    'media_mode' => $s['media_mode'] ?? null,
+                                    'image_focus_x' => $s['image_focus_x'] ?? 50,
+                                    'image_focus_y' => $s['image_focus_y'] ?? 50,
                     'text_link' => $s['text_link'] ?? $s['button_label'] ?? ($heroConfig['cta_text'] ?? 'Explore services'),
-                    'button_link' => $s['button_link'] ?? $s['button_url'] ?? ($heroConfig['cta_url'] ?? route('services.index')),
-                ];
+                                    'button_link' => $s['button_link'] ?? $s['button_url'] ?? ($heroConfig['cta_url'] ?? route('services.index')),
+                                ];
             });
     } else {
         $slides = $heroesList->map(function ($hero) {
@@ -152,7 +153,7 @@
                                             $slideShape = (!empty($hero->image_shape) && $hero->image_shape !== 'inherit') ? $hero->image_shape : null;
                                             $slideShapeCss = $slideShape ? \App\Models\Organization::getImageShapeCss($slideShape) : '';
                                         @endphp
-                                        <div class="hz-hero-media" @if(str_contains($slideShapeCss, 'clip-path')) style="overflow: visible;" @endif>
+                                        <div class="hz-hero-media{{ ($hero->media_mode ?? '') === 'logo' ? ' is-mark' : '' }}" @if(str_contains($slideShapeCss, 'clip-path')) style="overflow: visible;" @endif>
                                             <x-horizon.focused-image
                                                 :src="$hero->image_url"
                                                 :alt="$hero->title"

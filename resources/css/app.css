@@ -586,6 +586,24 @@ h1, h2, h3, h4, .display-font {
     z-index: -1;
 }
 
+.hz-hero-media.is-mark {
+    background: #fff;
+    padding: 2.25rem;
+    border: 1px solid var(--hz-line);
+    overflow: visible;
+}
+
+.hz-hero-media.is-mark img {
+    height: clamp(220px, 38vh, 360px);
+    object-fit: contain;
+    background: #fff;
+    border: 0;
+}
+
+.hz-hero-media.is-mark::after {
+    inset: 1rem -1rem -1rem 1rem;
+}
+
 .hz-hero-indicators {
     margin-bottom: 0.5rem;
 }

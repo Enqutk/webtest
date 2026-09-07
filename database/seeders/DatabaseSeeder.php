@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             BusinessExecutiveSeeder::class,
             EnkuTaddesseSeeder::class,
             YeabsiraEndaleSeeder::class,
+            YabtsegaAsfawSeeder::class,
         ]);
     }
 }
