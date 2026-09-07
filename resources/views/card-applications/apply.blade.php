@@ -3,8 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Design Your Kimem NFC Smart Card & Profile | Mobile Studio</title>
-    <meta name="description" content="Customize your luxury NFC smart business card and personalized digital profile website with real-time mobile outcome preview, hero picture, portfolio showcase, and full color palette controls.">
+    @php
+        $seo = app(\App\Services\SeoService::class)->forPlatform([
+            'title' => 'Order NFC Business Card in Ethiopia | Kimem Cards',
+            'description' => 'Design and order your NFC smart business card with a live digital profile. Customize colors, photo, portfolio, and contact links. Delivery across Ethiopia.',
+            'canonical' => route('card.apply'),
+        ]);
+    @endphp
+    <x-seo-head :seo="$seo" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

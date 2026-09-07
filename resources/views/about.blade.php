@@ -5,6 +5,7 @@
     $meLayout = ($aboutPage['layout'] ?? null) === 'me';
 @endphp
 
+@section('seo_title', 'About | ' . ($data['siteName'] ?? config('app.name')))
 @section('title', $aboutPage['title'] ?? 'About Us')
 @section('eyebrow', $aboutPage['eyebrow'] ?? 'Who we are')
 @section('page_title', $aboutPage['title'] ?? ('About ' . ($data['siteName'] ?? config('app.name'))))

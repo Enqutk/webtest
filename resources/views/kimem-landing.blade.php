@@ -3,8 +3,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Kimem Cards | Luxury NFC Business Cards</title>
-    <meta name="description" content="NFC-enabled luxury cards crafted for professionals who understand that a first impression is a lasting statement.">
+    @php
+        $seo = app(\App\Services\SeoService::class)->forPlatform();
+        $seoService = app(\App\Services\SeoService::class);
+    @endphp
+    <x-seo-head :seo="$seo" />
+    @foreach($seoService->platformJsonLd() as $schema)
+        <script type="application/ld+json">{!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+    @endforeach
+    <script type="application/ld+json">{!! json_encode($seoService->platformFaqJsonLd(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/fevicon.png') }}">
 
     <!-- Google Fonts -->
@@ -58,7 +65,7 @@
                         </span>
                     </h1>
                     <p id="heroSubtitle" class="hero-subtitle">
-                        NFC-enabled luxury cards crafted for professionals who understand that a first impression is a lasting statement.
+                        Premium NFC business cards and live digital profiles for professionals in Ethiopia. Tap once — share contact, portfolio, and social links instantly. No app required.
                     </p>
                     <div class="hero-ctas">
                         <a id="heroCtaPrimary" href="#collection" class="cta-button group">
@@ -195,6 +202,67 @@
                     <div class="feature-icon"><i class="bi bi-shield-check"></i></div>
                     <h3 id="feat3Title" class="feature-title">Enterprise Security</h3>
                     <p id="feat3Desc" class="feature-desc">Protected infrastructure ensuring your digital identity remains safe.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing / Order -->
+        <section id="pricing" class="features-section rs-container rs-section">
+            <div class="section-heading">
+                <p class="section-eyebrow">Order in Ethiopia</p>
+                <h2 class="section-title">NFC Business Card <span>Pricing</span></h2>
+                <p class="hero-subtitle" style="max-width: 42rem; margin-inline: auto; margin-top: 1rem;">
+                    Smart digital business cards with a live profile you can update anytime. Delivery across Addis Ababa and Ethiopia.
+                </p>
+            </div>
+            <div class="collection-grid" style="margin-top: 2rem;">
+                <article class="collection-card">
+                    <div class="collection-card-content">
+                        <span class="collection-badge">STARTING FROM</span>
+                        <h3 class="collection-card-title">Midnight Navy</h3>
+                        <p class="collection-card-desc">Matte navy NFC card + digital profile setup.</p>
+                        <div class="collection-card-footer">
+                            <span class="collection-price">ETB 1,850</span>
+                            <a href="{{ route('card.apply') }}" class="btn-card-order">Order Now</a>
+                        </div>
+                    </div>
+                </article>
+                <article class="collection-card">
+                    <div class="collection-card-content">
+                        <span class="collection-badge">PREMIUM</span>
+                        <h3 class="collection-card-title">Brushed Gold</h3>
+                        <p class="collection-card-desc">Metallic gold NFC card + priority profile design.</p>
+                        <div class="collection-card-footer">
+                            <span class="collection-price">ETB 2,450</span>
+                            <a href="{{ route('card.apply') }}" class="btn-card-order">Order Now</a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- SEO FAQ: NFC & digital business cards in Ethiopia -->
+        <section id="faq" class="process-section rs-container rs-section" aria-labelledby="faq-heading">
+            <div class="section-heading">
+                <p class="section-eyebrow">Questions</p>
+                <h2 id="faq-heading" class="section-title">NFC &amp; Digital Business Cards <span>in Ethiopia</span></h2>
+            </div>
+            <div class="process-grid">
+                <div class="process-step">
+                    <h3 class="step-title">What is an NFC business card?</h3>
+                    <p class="step-desc">A physical card with an NFC chip inside. Tap it on any modern smartphone and your live digital profile opens — phone number, email, LinkedIn, portfolio, and more.</p>
+                </div>
+                <div class="process-step">
+                    <h3 class="step-title">Why choose a digital business card?</h3>
+                    <p class="step-desc">Your details stay current without reprinting. Update your profile once and every tap shows the latest information — ideal for founders, engineers, and sales teams in Ethiopia.</p>
+                </div>
+                <div class="process-step">
+                    <h3 class="step-title">Do Kimem Cards work on iPhone and Android?</h3>
+                    <p class="step-desc">Yes. Most recent iOS and Android devices support NFC tap. No app download is required for the person receiving your contact.</p>
+                </div>
+                <div class="process-step">
+                    <h3 class="step-title">Who is Kimem Cards for?</h3>
+                    <p class="step-desc">Professionals, freelancers, executives, and creators who want a premium first impression — from Addis Ababa to anywhere in Ethiopia and beyond.</p>
                 </div>
             </div>
         </section>

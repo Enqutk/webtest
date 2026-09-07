@@ -4,9 +4,23 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Home') | {{ $data['siteName'] ?? config('app.name') }}</title>
-    <meta name="description" content="@yield('description', $data['metaDescription'] ?? ($data['siteName'] ?? config('app.name')))">
-    <meta name="robots" content="{{ config('app.env') === 'production' ? 'index, follow' : 'noindex, nofollow' }}">
+    @php
+        $sections = Illuminate\Support\Facades\View::getSections();
+        $seo = app(\App\Services\SeoService::class)->forTenant($data ?? [], [
+            'title' => trim(strip_tags($sections['seo_title'] ?? $sections['title'] ?? 'Home')),
+            'description' => trim(strip_tags($sections['description'] ?? ($data['metaDescription'] ?? ''))),
+            'image' => ! empty($sections['seo_image']) ? trim($sections['seo_image']) : null,
+        ]);
+    @endphp
+    <x-seo-head :seo="$seo" />
+    <script type="application/ld+json">{!! json_encode(app(\App\Services\SeoService::class)->organizationJsonLd($seo), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+    <script type="application/ld+json">{!! json_encode([
+        '@context' => 'https://schema.org',
+        '@type' => 'WebSite',
+        'name' => $seo['site_name'] ?? config('app.name'),
+        'url' => $seo['canonical'] ?? url('/'),
+        'description' => $seo['description'] ?? null,
+    ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
     <link rel="shortcut icon" type="image/x-icon" href="{{ $data['faviconUrl'] ?? $data['logoUrl'] ?? asset('images/fevicon.png') }}">
     @php
         $theme = $data['theme'] ?? \App\Models\Organization::defaultTheme();

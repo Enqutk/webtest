@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@section('seo_title', ($data['siteName'] ?? 'Profile') . ' | ' . (config('seo.tenant.title_suffix') ?? 'Digital Profile'))
 @section('title', $data['homeSections']['hero']['title'] ?? 'Home')
 @section('description', $data['metaDescription'] ?? ($data['siteName'] ?? ''))
 

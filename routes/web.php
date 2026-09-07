@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\CardApplicationController;
@@ -27,6 +28,8 @@ Route::get('/invite/{token}', [CardApplicationController::class, 'showInvite'])-
 Route::post('/apply', [CardApplicationController::class, 'store'])->name('card.apply.store');
 Route::get('/apply/success/{code}', [CardApplicationController::class, 'success'])->name('card.apply.success');
 Route::get('/apply/track', [CardApplicationController::class, 'track'])->name('card.apply.track');
+
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 // 2. Client Company / Tenant Websites (/card/{slug} or /org/{slug})
 Route::prefix('card/{slug}')->name('card.')->group(function () {

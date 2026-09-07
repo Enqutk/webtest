@@ -25,7 +25,7 @@ class YeabsiraEndaleSeeder extends Seeder
             'title' => 'Yeabsira Endale Kukusha',
             'slug' => 'yeabsira-endale',
             'tagline' => 'Software Engineer · Junior PM · Creator of Kimem Cards',
-            'meta_description' => 'Yeabsira Endale Kukusha — creator of Kimem Cards. Software engineer and junior project manager building Laravel, Flutter, and NFC digital-profile platforms.',
+            'meta_description' => 'Yeabsira Endale Kukusha — creator of Kimem Cards, Ethiopia\'s NFC business card & digital profile platform. Software engineer and junior PM. Order smart business cards in Addis Ababa.',
             'po_box' => 'Dire Dawa University',
             'address' => 'Addis Ababa · Dire Dawa, Ethiopia',
             'opening_hours' => [

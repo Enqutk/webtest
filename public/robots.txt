@@ -1,2 +1,10 @@
 User-agent: *
-Disallow:
+Allow: /
+
+Disallow: /admin/
+Disallow: /apply/success/
+Disallow: /apply/track
+Disallow: /mgt/
+Disallow: /deploy-health
+
+Sitemap: https://kimemcards.com/sitemap.xml
