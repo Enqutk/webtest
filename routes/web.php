@@ -69,14 +69,6 @@ Route::get('/pages/{slug}', [PageController::class, 'show'])
     ->where('slug', '[A-Za-z0-9\-]+')
     ->name('pages.show');
 
-if (app()->environment('local')) {
-    Route::get('/__preview-error/{code}', function (string $code) {
-        abort_unless(in_array($code, ['404', '500'], true), 404);
-
-        return response()->view("errors.{$code}", [], (int) $code);
-    });
-}
-
 // Deployment Diagnostic Health Endpoint
 Route::get('/deploy-health', function () {
     $status = [
