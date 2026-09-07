@@ -55,27 +55,37 @@
         }
     }
 
-    function applyFieldUpdate(doc, section, field, value) {
+        function applyFieldUpdate(doc, section, field, value) {
         if (!doc) return;
-        var sectionRoot = doc.getElementById(section) || doc.querySelector('[data-admin-section="' + section + '"]');
-        var scope = sectionRoot || doc;
+        var identityFields = { 'company-name': true, 'site-logo': true };
+        var nodes;
+        if (identityFields[field]) {
+            nodes = doc.querySelectorAll('[data-preview-field="' + field + '"]');
+        } else {
+            var sectionRoot = doc.getElementById(section) || doc.querySelector('[data-admin-section="' + section + '"]');
+            var scope = sectionRoot || doc;
+            nodes = scope.querySelectorAll('[data-preview-field="' + field + '"]');
+        }
 
         if (field === 'image-focus') {
-            scope.querySelectorAll('[data-preview-field="image"]').forEach(function (el) {
+            nodes = (doc.getElementById(section) || doc).querySelectorAll('[data-preview-field="image"]');
+            nodes.forEach(function (el) {
                 el.style.objectPosition = value || '50% 50%';
             });
             return;
         }
 
-        scope.querySelectorAll('[data-preview-field="' + field + '"]').forEach(function (el) {
-            if (el.tagName === 'IMG') {
-                if (value) {
-                    el.setAttribute('src', value);
-                    var mediaWrap = el.closest('[data-about-intro-media]');
+        nodes.forEach(function (el) {
+            if (el.tagName === 'IMG' || field === 'site-logo') {
+                var img = el.tagName === 'IMG' ? el : el.querySelector('img');
+                if (img && value) {
+                    img.setAttribute('src', value);
+                    img.style.display = '';
+                    var mediaWrap = img.closest('[data-about-intro-media]');
                     if (mediaWrap) {
                         mediaWrap.classList.remove('d-none');
                     }
-                    var placeholder = scope.querySelector('[data-about-intro-placeholder]');
+                    var placeholder = doc.querySelector('[data-about-intro-placeholder]');
                     if (placeholder) {
                         placeholder.classList.add('d-none');
                     }
@@ -84,6 +94,17 @@
             }
             if (el.getAttribute('data-preview-html') === '1') {
                 el.innerHTML = value || '';
+            } else if (field === 'company-name') {
+                var parts = String(value || '').trim().split(/\s+/);
+                var first = parts.shift() || '';
+                var rest = parts.join(' ');
+                el.textContent = '';
+                el.appendChild(document.createTextNode(first + (rest ? ' ' : '')));
+                if (rest) {
+                    var span = document.createElement('span');
+                    span.textContent = rest;
+                    el.appendChild(span);
+                }
             } else {
                 el.textContent = value || '';
             }

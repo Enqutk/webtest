@@ -46,6 +46,7 @@
                                 data-admin-compact="1"
                                 data-admin-label="Edit Company Name"
                                 data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('company-name') }}"
+                                data-preview-field="company-name"
                             @endif
                         >
                             {{ $brandFirst }}@if($brandRest) <span>{{ $brandRest }}</span>@endif
