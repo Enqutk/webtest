@@ -178,64 +178,6 @@
                         activeContact = null;
                     };
 
-                    const buildVcard = (contact) => {
-                        const escapeVcard = (value) => String(value || '')
-                            .replace(/\\/g, '\\\\')
-                            .replace(/;/g, '\\;')
-                            .replace(/,/g, '\\,')
-                            .replace(/\n/g, '\\n');
-
-                        return [
-                            'BEGIN:VCARD',
-                            'VERSION:3.0',
-                            'FN:' + escapeVcard(contact.name),
-                            contact.org ? 'ORG:' + escapeVcard(contact.org) : null,
-                            contact.role ? 'TITLE:' + escapeVcard(contact.role) : null,
-                            contact.phone ? 'TEL;TYPE=CELL:' + escapeVcard(contact.phone) : null,
-                            contact.email ? 'EMAIL;TYPE=INTERNET:' + escapeVcard(contact.email) : null,
-                            contact.url ? 'URL:' + escapeVcard(contact.url) : null,
-                            'END:VCARD',
-                        ].filter(Boolean).join('\r\n');
-                    };
-
-                    const addToContacts = async (contact) => {
-                        const vcardText = buildVcard(contact);
-                        const filename = (contact.filename || 'contact') + '.vcf';
-                        const file = new File([vcardText], filename, { type: 'text/vcard' });
-
-                        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-                            try {
-                                await navigator.share({
-                                    files: [file],
-                                    title: contact.name || 'Contact',
-                                });
-                                return;
-                            } catch (error) {
-                                if (error && error.name === 'AbortError') {
-                                    return;
-                                }
-                            }
-                        }
-
-                        const blob = new Blob([vcardText], { type: 'text/vcard;charset=utf-8' });
-                        const url = URL.createObjectURL(blob);
-                        const isApple = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-                        if (isApple) {
-                            window.location.href = url;
-                            setTimeout(() => URL.revokeObjectURL(url), 1500);
-                            return;
-                        }
-
-                        const link = document.createElement('a');
-                        link.href = url;
-                        link.download = filename;
-                        document.body.appendChild(link);
-                        link.click();
-                        link.remove();
-                        setTimeout(() => URL.revokeObjectURL(url), 1500);
-                    };
-
                     document.addEventListener('click', (event) => {
                         const openTrigger = event.target.closest('[data-hz-open-contact-sheet]');
                         if (openTrigger) {
@@ -249,11 +191,6 @@
 
                         if (event.target.closest('[data-hz-contact-sheet-close]')) {
                             closeSheet();
-                            return;
-                        }
-
-                        if (event.target.closest('[data-hz-contact-sheet-save]') && activeContact) {
-                            addToContacts(activeContact);
                         }
                     });
 

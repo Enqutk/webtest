@@ -1883,6 +1883,7 @@ body.has-contact-action-bar {
     justify-content: center;
     gap: 0.45rem;
     cursor: pointer;
+    text-decoration: none;
     box-shadow: 0 12px 28px color-mix(in srgb, var(--hz-accent) 28%, transparent);
 }
 
