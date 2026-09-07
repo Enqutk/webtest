@@ -1,14 +1,39 @@
+@php
+    $isInvite = isset($invitation) && $invitation;
+    $defaultName = $isInvite ? $invitation->client_name : 'Alexander Sterling';
+    $defaultRole = $isInvite ? ($invitation->initial_role ?: '') : 'Senior Partner & Strategic Advisor';
+    $defaultCompany = $isInvite ? '' : 'Global Advisory Syndicate';
+    $defaultTagline = $isInvite ? '' : 'Architecting high-growth ventures and strategic leadership';
+    $defaultBio = $isInvite ? '' : 'Passionate about engineering clean architectures, strategic growth, and high-impact digital solutions.';
+    $defaultEdition = $isInvite ? ($invitation->card_edition ?: 'midnight_navy') : 'midnight_navy';
+    $defaultEmail = $isInvite ? ($invitation->client_email ?: '') : '';
+    $defaultPhone = $isInvite ? ($invitation->client_phone ?: '') : '';
+    $defaultBg = $isInvite ? '#fafafa' : '#070b14';
+    $defaultSurface = $isInvite ? '#ffffff' : '#0f172a';
+    $defaultText = $isInvite ? '#0f172a' : '#ffffff';
+    $defaultMuted = $isInvite ? '#64748b' : '#94a3b8';
+    $defaultLine = $isInvite ? '#e2e8f0' : '#1e293b';
+@endphp
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-[#070b14] text-slate-100">
+<html lang="en" class="h-full @if($isInvite) bg-white text-slate-900 @else bg-[#070b14] text-slate-100 @endif">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     @php
-        $seo = app(\App\Services\SeoService::class)->forPlatform([
-            'title' => 'Order NFC Business Card in Ethiopia | Kimem Cards',
-            'description' => 'Design and order your NFC smart business card with a live digital profile. Customize colors, photo, portfolio, and contact links. Delivery across Ethiopia.',
-            'canonical' => route('card.apply'),
-        ]);
+        $isInviteSeo = isset($invitation) && $invitation;
+        $seo = app(\App\Services\SeoService::class)->forPlatform(
+            $isInviteSeo
+                ? [
+                    'title' => 'Your Private NFC Card Studio | Kimem Cards',
+                    'description' => 'You have been personally invited to design your Kimem NFC business card and live digital profile. Customize photo, colors, portfolio, and contact links.',
+                    'canonical' => route('card.invite.show', ['token' => $invitation->token]),
+                ]
+                : [
+                    'title' => 'Order NFC Business Card in Ethiopia | Kimem Cards',
+                    'description' => 'Design and order your NFC smart business card with a live digital profile. Customize colors, photo, portfolio, and contact links. Delivery across Ethiopia.',
+                    'canonical' => route('card.apply'),
+                ]
+        );
     @endphp
     <x-seo-head :seo="$seo" />
 
@@ -65,73 +90,151 @@
         .shape-arch { border-radius: 100px 100px 16px 16px; }
         .shape-circle { border-radius: 9999px; }
         .shape-star { clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+        .mobile-preview-strip { padding-bottom: max(0.75rem, env(safe-area-inset-bottom)); }
+        .mobile-bottom-bar { padding-bottom: max(0.75rem, env(safe-area-inset-bottom)); }
+        .invite-step-active { box-shadow: 0 0 0 1px rgba(197, 160, 89, 0.35), 0 8px 30px -10px rgba(197, 160, 89, 0.25); }
     </style>
+    @if($isInvite)
+        @include('card-applications.partials.invite-theme-styles')
+    @endif
+    <script>
+        window.ApplyImageUpload = {
+            maxWidth: 1920,
+            quality: 0.82,
+            skipBelowBytes: 2 * 1024 * 1024,
+            replaceInputFile(input, file) {
+                if (!input || !file) return;
+                const dt = new DataTransfer();
+                dt.items.add(file);
+                input.files = dt.files;
+            },
+            compressFile(file) {
+                if (!file || !String(file.type || '').startsWith('image/')) return Promise.resolve(file);
+                if (file.size <= this.skipBelowBytes) return Promise.resolve(file);
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    const objectUrl = URL.createObjectURL(file);
+                    img.onload = () => {
+                        URL.revokeObjectURL(objectUrl);
+                        let width = img.naturalWidth || img.width;
+                        let height = img.naturalHeight || img.height;
+                        if (!width || !height) { resolve(file); return; }
+                        if (width > this.maxWidth) {
+                            height = Math.round(height * (this.maxWidth / width));
+                            width = this.maxWidth;
+                        }
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+                        canvas.toBlob((blob) => {
+                            if (!blob) { resolve(file); return; }
+                            const name = String(file.name || 'photo').replace(/\.[^.]+$/, '') + '.jpg';
+                            resolve(new File([blob], name, { type: 'image/jpeg', lastModified: Date.now() }));
+                        }, 'image/jpeg', this.quality);
+                    };
+                    img.onerror = () => { URL.revokeObjectURL(objectUrl); resolve(file); };
+                    img.src = objectUrl;
+                });
+            },
+            async compressForm(form) {
+                if (!form) return;
+                for (const input of form.querySelectorAll('input[type=\"file\"][accept*=\"image\"]')) {
+                    const file = input.files && input.files[0];
+                    if (!file) continue;
+                    this.replaceInputFile(input, await this.compressFile(file));
+                }
+            }
+        };
+    </script>
 </head>
-<body class="min-h-full bg-[#070b14] text-slate-100 antialiased selection:bg-gold-500 selection:text-slate-950 pb-24 lg:pb-12"
-      x-data="{
+<body class="min-h-full antialiased selection:bg-gold-500 selection:text-slate-950 pb-28 lg:pb-12 @if($isInvite) invite-flow bg-white text-slate-900 @else bg-[#070b14] text-slate-100 @endif"
+      x-data='{
           activeStep: 1,
-          previewMode: 'website',
+          isInvite: @json($isInvite),
+          explainerOpen: false,
+          previewPanel: @json($isInvite ? "example" : "live"),
+          previewMode: "website",
           showMobilePreviewModal: false,
-          colorTab: 'palettes', // 'palettes' | 'granular'
-          type: 'individual',
-          name: '{{ $invitation->client_name ?? 'Alexander Sterling' }}',
-          role_title: '{{ $invitation->initial_role ?? 'Senior Partner & Strategic Advisor' }}',
-          company_name: '{{ $invitation ? '' : 'Global Advisory Syndicate' }}',
-          tagline: 'Architecting high-growth ventures and strategic leadership',
-          bio: 'Passionate about engineering clean architectures, strategic growth, and high-impact digital solutions.',
-          card_edition: '{{ $invitation->card_edition ?? 'midnight_navy' }}',
-          
-          // Complete Minor & Major Color System
-          bg_color: '#070b14',
-          surface_color: '#0f172a',
-          accent_color: '#c5a059',
-          accent_dark: '#9e7d3b',
-          text_color: '#ffffff',
-          muted_color: '#94a3b8',
-          line_color: '#1e293b',
+          mobilePreviewExpanded: true,
+          colorTab: "palettes",
+          type: "individual",
+          name: @json($defaultName),
+          role_title: @json($defaultRole),
+          company_name: @json($defaultCompany),
+          tagline: @json($defaultTagline),
+          bio: @json($defaultBio),
+          card_edition: @json($defaultEdition),
 
-          font_display: 'Cinzel',
-          font_body: 'Outfit',
-          image_shape: 'squircle',
-          email: '{{ $invitation->client_email ?? '' }}',
-          phone: '{{ $invitation->client_phone ?? '' }}',
-          telegram: '',
-          whatsapp: '',
-          linkedin: '',
-          github: '',
-          website: '',
+          bg_color: @json($defaultBg),
+          surface_color: @json($defaultSurface),
+          accent_color: "#c5a059",
+          accent_dark: "#9e7d3b",
+          text_color: @json($defaultText),
+          muted_color: @json($defaultMuted),
+          line_color: @json($defaultLine),
+
+          font_display: "Cinzel",
+          font_body: "Outfit",
+          image_shape: "squircle",
+          email: @json($defaultEmail),
+          phone: @json($defaultPhone),
+          telegram: "",
+          whatsapp: @json($isInvite ? $defaultPhone : ""),
+          linkedin: "",
+          github: "",
+          website: "",
           photoPreview: null,
           heroPreview: null,
-          
-          highlight1: '15+ Years Strategic Advisory Leadership',
-          highlight2: 'Multi-Industry Investment & Board Experience',
-          highlight3: 'Official NFC Touchless Verified Profile',
+          submitting: false,
 
-          // Portfolio Projects Showcase
-          proj1_title: 'FinTech Sovereign Cloud Platform',
-          proj1_tag: 'Cloud Architecture',
-          proj1_desc: 'High-availability cross-border payment clearing ecosystem.',
-          proj1_url: 'https://github.com',
+          highlight1: @json($isInvite ? "" : "15+ Years Strategic Advisory Leadership"),
+          highlight2: @json($isInvite ? "" : "Multi-Industry Investment & Board Experience"),
+          highlight3: @json($isInvite ? "" : "Official NFC Touchless Verified Profile"),
 
-          proj2_title: 'Enterprise AI Strategy & Pipeline',
-          proj2_tag: 'AI Advisory',
-          proj2_desc: 'Automated intelligence pipelines for regional financial funds.',
-          proj2_url: '',
+          proj1_title: @json($isInvite ? "" : "FinTech Sovereign Cloud Platform"),
+          proj1_tag: @json($isInvite ? "Featured" : "Cloud Architecture"),
+          proj1_desc: @json($isInvite ? "" : "High-availability cross-border payment clearing ecosystem."),
+          proj1_url: @json($isInvite ? "" : "https://github.com"),
 
-          proj3_title: 'Executive Syndicate & Family Office',
-          proj3_tag: 'Venture Capital',
-          proj3_desc: 'Co-managed $450M syndicated multi-asset investment portfolio.',
-          proj3_url: '',
+          proj2_title: @json($isInvite ? "" : "Enterprise AI Strategy & Pipeline"),
+          proj2_tag: @json($isInvite ? "Featured" : "AI Advisory"),
+          proj2_desc: @json($isInvite ? "" : "Automated intelligence pipelines for regional financial funds."),
+          proj2_url: "",
+
+          proj3_title: @json($isInvite ? "" : "Executive Syndicate & Family Office"),
+          proj3_tag: @json($isInvite ? "Featured" : "Venture Capital"),
+          proj3_desc: @json($isInvite ? "" : "Co-managed $450M syndicated multi-asset investment portfolio."),
+          proj3_url: "",
 
           get quotePrice() {
-              if (this.card_edition === 'brushed_gold') return '2,450 ETB';
-              if (this.card_edition === 'executive_black') return '2,150 ETB';
-              return '1,850 ETB';
+              if (this.card_edition === "brushed_gold") return "2,450 ETB";
+              if (this.card_edition === "executive_black") return "2,150 ETB";
+              return "1,850 ETB";
           },
           get editionName() {
-              if (this.card_edition === 'brushed_gold') return 'Brushed Gold Luxe Edition';
-              if (this.card_edition === 'executive_black') return 'Executive Stealth Black';
-              return 'Midnight Obsidian Navy';
+              if (this.card_edition === "brushed_gold") return "Brushed Gold Luxe Edition";
+              if (this.card_edition === "executive_black") return "Executive Stealth Black";
+              return "Midnight Obsidian Navy";
+          },
+          get stepLabel() {
+              const labels = this.isInvite
+                  ? ["About you", "Your card", "Look & portfolio", "Finish up"]
+                  : ["Identity", "Card", "Style", "Submit"];
+              return labels[this.activeStep - 1] || "";
+          },
+          get stepHint() {
+              if (!this.isInvite) return "";
+              const hints = [
+                  "Photo, story, and what makes you stand out",
+                  "Confirm your NFC card finish",
+                  "Colors, fonts, and showcase projects",
+                  "Contact links and final submit"
+              ];
+              return hints[this.activeStep - 1] || "";
+          },
+          get progressPercent() {
+              return Math.round((this.activeStep / 4) * 100);
           },
           setPalette(bg, surface, accent, accentDark, text, muted, line) {
               this.bg_color = bg;
@@ -161,11 +264,23 @@
                   };
                   reader.readAsDataURL(file);
               }
+          },
+          async submitApplyForm(e) {
+              if (this.submitting) return;
+              this.submitting = true;
+              const form = e.target;
+              try {
+                  await window.ApplyImageUpload.compressForm(form);
+                  form.submit();
+              } catch (err) {
+                  this.submitting = false;
+                  form.submit();
+              }
           }
-      }">
+      }'>
 
     <!-- Top Header -->
-    <header class="sticky top-0 z-40 border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-xl">
+    <header class="sticky top-0 z-40 border-b backdrop-blur-xl @if($isInvite) invite-header border-slate-200 bg-white/95 @else border-slate-800/80 bg-slate-950/90 @endif">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between">
             <div class="flex items-center gap-2.5">
                 <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-gold-600 to-amber-300 flex items-center justify-center font-bold text-slate-950 text-sm shadow-md shadow-gold-500/20">
@@ -173,11 +288,18 @@
                 </div>
                 <div>
                     <span class="font-bold text-sm tracking-wide text-white font-cinzel">KIMEM</span>
-                    <span class="text-[9px] block font-mono text-gold-400 font-medium uppercase tracking-widest -mt-1">Smart NFC Studio</span>
+                    <span class="text-[9px] block font-mono text-gold-400 font-medium uppercase tracking-widest -mt-1">
+                        @if($isInvite) Your Private Studio @else Smart NFC Studio @endif
+                    </span>
                 </div>
             </div>
 
             <div class="flex items-center gap-2">
+                @if($isInvite)
+                    <span class="hidden xs:inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 text-[9px] font-bold uppercase tracking-wider">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Live
+                    </span>
+                @endif
                 <button type="button" @click="showMobilePreviewModal = true" class="lg:hidden px-3 py-1.5 rounded-xl bg-gold-500 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-gold-500/20">
                     <i class="bi bi-eye-fill"></i> Live Preview
                 </button>
@@ -194,20 +316,9 @@
 
             <!-- LEFT: Mobile Form Customizer (7 Cols) -->
             <div class="lg:col-span-7 space-y-5">
-                
-                <!-- VIP Invitation Welcome Banner -->
-                @if(isset($invitation) && $invitation)
-                    <div class="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-amber-500/20 via-slate-900 to-slate-900 border border-amber-500/40 shadow-xl space-y-2 relative overflow-hidden">
-                        <div class="flex items-center gap-2 text-gold-400 text-xs font-bold uppercase tracking-wider">
-                            <i class="bi bi-envelope-check-fill"></i> Private Invitation Active
-                        </div>
-                        <h1 class="text-xl sm:text-2xl font-bold text-white font-cinzel">
-                            Welcome, {{ $invitation->client_name }}!
-                        </h1>
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            You've been invited by Kimem Cards to customize your contactless NFC smart card, hero cover picture, portfolio showcases, and custom color palette.
-                        </p>
-                    </div>
+
+                @if($isInvite)
+                    @include('card-applications.partials.invite-welcome')
                 @else
                     <div class="p-5 sm:p-6 rounded-3xl bg-slate-900/90 border border-slate-800 shadow-xl space-y-2">
                         <span class="inline-block px-2.5 py-1 rounded-full bg-gold-500/10 border border-gold-500/20 text-gold-400 text-[10px] font-bold uppercase tracking-wider">
@@ -222,32 +333,92 @@
                     </div>
                 @endif
 
+                <!-- Mobile: live preview (first on phone for invites) -->
+                <div class="lg:hidden sticky top-14 z-20 -mx-1">
+                    <div class="invite-preview-shell rounded-2xl border overflow-hidden">
+                        <div class="flex items-center justify-between gap-2 px-3 py-2 border-b border-slate-800">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+                                <span class="text-[10px] font-bold text-white uppercase tracking-wider truncate">@if($isInvite) Your card preview @else Preview @endif</span>
+                            </div>
+                            <div class="flex items-center gap-1 shrink-0 flex-wrap justify-end">
+                                <div class="flex bg-slate-900 p-0.5 rounded-lg border border-slate-800">
+                                    <button type="button" @click="previewPanel = 'live'" :class="previewPanel === 'live' ? 'bg-gold-500 text-slate-950 font-bold' : 'text-slate-400'" class="px-2 py-1 rounded-md text-[9px]">Yours</button>
+                                    <button type="button" @click="previewPanel = 'example'" :class="previewPanel === 'example' ? 'bg-gold-500 text-slate-950 font-bold' : 'text-slate-400'" class="px-2 py-1 rounded-md text-[9px]">Example</button>
+                                </div>
+                                <div class="flex bg-slate-900 p-0.5 rounded-lg border border-slate-800">
+                                    <button type="button" @click="previewMode = 'website'" :class="previewMode === 'website' ? 'bg-slate-700 text-white font-bold' : 'text-slate-400'" class="px-2 py-1 rounded-md text-[9px]">Web</button>
+                                    <button type="button" @click="previewMode = 'card'" :class="previewMode === 'card' ? 'bg-slate-700 text-white font-bold' : 'text-slate-400'" class="px-2 py-1 rounded-md text-[9px]">NFC</button>
+                                </div>
+                                <button type="button" @click="mobilePreviewExpanded = !mobilePreviewExpanded" class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 flex items-center justify-center">
+                                    <i class="bi" :class="mobilePreviewExpanded ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+                                </button>
+                                <button type="button" @click="showMobilePreviewModal = true" class="w-8 h-8 rounded-lg bg-gold-500/15 border border-gold-500/30 text-gold-400 flex items-center justify-center" title="Full screen preview">
+                                    <i class="bi bi-arrows-fullscreen text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div x-show="mobilePreviewExpanded" x-transition class="px-3 py-3 bg-slate-900/50">
+                            <p x-show="previewPanel === 'live'" class="text-[9px] text-center text-slate-500 mb-2">Updates as you type · Step <span x-text="activeStep"></span></p>
+                            <p x-show="previewPanel === 'example'" class="text-[9px] text-center text-gold-400/80 mb-2">Finished Kimem profile example</p>
+                            <div x-show="previewPanel === 'live'">
+                                @include('card-applications.partials.live-preview', ['size' => 'compact'])
+                            </div>
+                            @include('card-applications.partials.example-showcase', ['size' => 'compact'])
+                        </div>
+                    </div>
+                </div>
+
+                @if($isInvite)
+                    @include('card-applications.partials.invite-explainer')
+                @else
+                    @include('card-applications.partials.product-explainer')
+                @endif
+
                 <!-- Stepper Progress Navigation -->
-                <div class="grid grid-cols-4 gap-1.5 bg-slate-900/90 p-1 rounded-2xl border border-slate-800">
-                    <button type="button" @click="activeStep = 1"
-                            :class="activeStep === 1 ? 'bg-gold-500 text-slate-950 font-bold shadow-md shadow-gold-500/20' : 'text-slate-400 hover:text-white'"
-                            class="py-2.5 px-2 rounded-xl text-[11px] flex flex-col sm:flex-row items-center justify-center gap-1 transition">
-                        <i class="bi bi-person-fill text-xs"></i> <span>1. Identity</span>
-                    </button>
-                    <button type="button" @click="activeStep = 2"
-                            :class="activeStep === 2 ? 'bg-gold-500 text-slate-950 font-bold shadow-md shadow-gold-500/20' : 'text-slate-400 hover:text-white'"
-                            class="py-2.5 px-2 rounded-xl text-[11px] flex flex-col sm:flex-row items-center justify-center gap-1 transition">
-                        <i class="bi bi-credit-card-2-front-fill text-xs"></i> <span>2. Card</span>
-                    </button>
-                    <button type="button" @click="activeStep = 3"
-                            :class="activeStep === 3 ? 'bg-gold-500 text-slate-950 font-bold shadow-md shadow-gold-500/20' : 'text-slate-400 hover:text-white'"
-                            class="py-2.5 px-2 rounded-xl text-[11px] flex flex-col sm:flex-row items-center justify-center gap-1 transition">
-                        <i class="bi bi-palette-fill text-xs"></i> <span>3. Colors & Style</span>
-                    </button>
-                    <button type="button" @click="activeStep = 4"
-                            :class="activeStep === 4 ? 'bg-gold-500 text-slate-950 font-bold shadow-md shadow-gold-500/20' : 'text-slate-400 hover:text-white'"
-                            class="py-2.5 px-2 rounded-xl text-[11px] flex flex-col sm:flex-row items-center justify-center gap-1 transition">
-                        <i class="bi bi-check2-circle text-xs"></i> <span>4. Submit</span>
-                    </button>
+                <div id="invite-form-start" class="space-y-2 scroll-mt-20">
+                    <div class="flex items-center justify-between px-1 gap-2">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 min-w-0">
+                            Step <span x-text="activeStep"></span> of 4
+                            <span x-show="isInvite" class="hidden sm:inline text-slate-600"> · </span>
+                            <span x-show="isInvite" class="hidden sm:inline text-gold-400/90 normal-case tracking-normal font-medium" x-text="stepHint"></span>
+                        </span>
+                        <span class="text-[10px] text-gold-400 font-bold shrink-0" x-text="stepLabel"></span>
+                    </div>
+                    <div class="h-1 rounded-full invite-progress-track overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-gold-600 via-amber-400 to-gold-300 transition-all duration-500 ease-out"
+                             :style="'width:' + progressPercent + '%'"></div>
+                    </div>
+                    <div class="grid grid-cols-4 gap-1 invite-stepper p-1 rounded-2xl border">
+                        <button type="button" @click="activeStep = 1"
+                                :class="activeStep === 1 ? 'bg-gold-500 text-slate-950 font-bold shadow-md shadow-gold-500/20' : 'text-slate-400'"
+                                class="py-3 px-1 rounded-xl text-[10px] sm:text-[11px] flex flex-col items-center justify-center gap-0.5 transition min-h-[52px]">
+                            <i class="bi bi-person-fill text-sm"></i>
+                            <span class="hidden sm:inline" x-text="isInvite ? 'You' : 'Identity'"></span>
+                        </button>
+                        <button type="button" @click="activeStep = 2"
+                                :class="activeStep === 2 ? 'bg-gold-500 text-slate-950 font-bold shadow-md shadow-gold-500/20' : 'text-slate-400'"
+                                class="py-3 px-1 rounded-xl text-[10px] sm:text-[11px] flex flex-col items-center justify-center gap-0.5 transition min-h-[52px]">
+                            <i class="bi bi-credit-card-2-front-fill text-sm"></i>
+                            <span class="hidden sm:inline" x-text="isInvite ? 'Card' : 'Card'"></span>
+                        </button>
+                        <button type="button" @click="activeStep = 3"
+                                :class="activeStep === 3 ? 'bg-gold-500 text-slate-950 font-bold shadow-md shadow-gold-500/20' : 'text-slate-400'"
+                                class="py-3 px-1 rounded-xl text-[10px] sm:text-[11px] flex flex-col items-center justify-center gap-0.5 transition min-h-[52px]">
+                            <i class="bi bi-palette-fill text-sm"></i>
+                            <span class="hidden sm:inline" x-text="isInvite ? 'Style' : 'Style'"></span>
+                        </button>
+                        <button type="button" @click="activeStep = 4"
+                                :class="activeStep === 4 ? 'bg-gold-500 text-slate-950 font-bold shadow-md shadow-gold-500/20' : 'text-slate-400'"
+                                class="py-3 px-1 rounded-xl text-[10px] sm:text-[11px] flex flex-col items-center justify-center gap-0.5 transition min-h-[52px]">
+                            <i class="bi bi-check2-circle text-sm"></i>
+                            <span class="hidden sm:inline" x-text="isInvite ? 'Done' : 'Submit'"></span>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Form Container -->
-                <form action="{{ route('card.apply.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                <form action="{{ route('card.apply.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6" @submit.prevent="submitApplyForm">
                     @csrf
 
                     @if(isset($invitation) && $invitation)
@@ -262,14 +433,18 @@
                     <input type="hidden" name="text_color" :value="text_color">
                     <input type="hidden" name="muted_color" :value="muted_color">
                     <input type="hidden" name="line_color" :value="line_color">
+                    <input type="hidden" name="highlights[]" :value="highlight1">
+                    <input type="hidden" name="highlights[]" :value="highlight2">
+                    <input type="hidden" name="highlights[]" :value="highlight3">
 
                     <!-- STEP 1: Profile, Identity, Headshot & Hero Picture -->
-                    <div x-show="activeStep === 1" class="glass-card rounded-3xl p-5 sm:p-7 space-y-5">
+                    <div x-show="activeStep === 1" class="glass-card rounded-3xl p-5 sm:p-7 space-y-5" :class="isInvite && activeStep === 1 ? 'invite-step-active' : ''">
                         <div class="border-b border-slate-800 pb-3">
                             <h2 class="text-base font-bold text-white flex items-center gap-2">
-                                <i class="bi bi-person-bounding-box text-gold-400"></i> Identity, Avatar & Hero Picture
+                                <i class="bi bi-person-bounding-box text-gold-400"></i>
+                                <span x-text="isInvite ? 'Tell us about you' : 'Identity, Avatar & Hero Picture'"></span>
                             </h2>
-                            <p class="text-[11px] text-slate-400">Your profile credentials and hero banner graphics.</p>
+                            <p class="text-[11px] text-slate-400" x-text="isInvite ? 'This is what people see when they tap your card. Add a photo and a short story.' : 'Your profile credentials and hero banner graphics.'"></p>
                         </div>
 
                         <!-- Profile Type -->
@@ -332,6 +507,20 @@
                                       class="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white focus:border-gold-500"></textarea>
                         </div>
 
+                        <!-- Profile Highlights -->
+                        <div class="space-y-2.5 p-4 rounded-2xl bg-slate-900/70 border border-slate-800">
+                            <label class="block text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                                <i class="bi bi-stars text-gold-400"></i> Profile Highlights
+                                <span class="text-[9px] font-normal text-slate-500">(shown on your card page)</span>
+                            </label>
+                            <input type="text" x-model="highlight1" placeholder="e.g. 10+ years in software engineering"
+                                   class="w-full px-3.5 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:border-gold-500">
+                            <input type="text" x-model="highlight2" placeholder="e.g. Led teams at Fortune 500 companies"
+                                   class="w-full px-3.5 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:border-gold-500">
+                            <input type="text" x-model="highlight3" placeholder="e.g. NFC verified Kimem profile"
+                                   class="w-full px-3.5 py-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:border-gold-500">
+                        </div>
+
                         <!-- PICTURE UPLOADS: Headshot Avatar + Hero Cover Banner Picture -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
                             <div class="space-y-1.5 p-3.5 rounded-2xl bg-slate-900/70 border border-slate-800">
@@ -369,13 +558,24 @@
                     </div>
 
                     <!-- STEP 2: Physical NFC Card Package & Quote -->
-                    <div x-show="activeStep === 2" class="glass-card rounded-3xl p-5 sm:p-7 space-y-5" x-cloak>
+                    <div x-show="activeStep === 2" class="glass-card rounded-3xl p-5 sm:p-7 space-y-5" x-cloak :class="isInvite && activeStep === 2 ? 'invite-step-active' : ''">
                         <div class="border-b border-slate-800 pb-3">
                             <h2 class="text-base font-bold text-white flex items-center gap-2">
-                                <i class="bi bi-credit-card-2-front-fill text-gold-400"></i> Physical NFC Card Package & Quote
+                                <i class="bi bi-credit-card-2-front-fill text-gold-400"></i>
+                                <span x-text="isInvite ? 'Your NFC card' : 'Physical NFC Card Package & Quote'"></span>
                             </h2>
-                            <p class="text-[11px] text-slate-400">Choose your physical luxury card finish.</p>
+                            <p class="text-[11px] text-slate-400" x-text="isInvite ? 'We pre-selected a finish for you — change it if you prefer another.' : 'Choose your physical luxury card finish.'"></p>
                         </div>
+
+                        @if($isInvite && $inviteEdition = ($editions[$defaultEdition] ?? null))
+                            <div class="p-3.5 rounded-2xl bg-gold-500/10 border border-gold-500/30 flex items-start gap-3">
+                                <i class="bi bi-gift text-gold-400 text-lg shrink-0 mt-0.5"></i>
+                                <div>
+                                    <div class="text-xs font-bold text-gold-200">Selected for your invitation</div>
+                                    <p class="text-[10px] text-slate-400 mt-0.5">{{ $inviteEdition['name'] }} · {{ $inviteEdition['price'] }}</p>
+                                </div>
+                            </div>
+                        @endif
 
                         <div class="space-y-2.5">
                             @foreach ($editions as $key => $edition)
@@ -695,12 +895,30 @@
                             <div class="space-y-1">
                                 <label class="block text-xs font-bold text-slate-300">Email Address *</label>
                                 <input type="email" name="email" x-model="email" required placeholder="you@example.com"
-                                       class="w-full px-3.5 py-3 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white focus:border-gold-500">
+                                       @if($isInvite && $invitation->client_email) readonly @endif
+                                       class="w-full px-3.5 py-3 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white focus:border-gold-500 @if($isInvite && $invitation->client_email) opacity-80 @endif">
                             </div>
 
                             <div class="space-y-1">
-                                <label class="block text-xs font-bold text-slate-300">Phone / WhatsApp Number *</label>
-                                <input type="text" name="phone" x-model="phone" required placeholder="+251 9... / +1 212..."
+                                <label class="block text-xs font-bold text-slate-300">Phone Number *</label>
+                                <input type="text" name="phone" x-model="phone" required placeholder="+251 9..."
+                                       class="w-full px-3.5 py-3 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white focus:border-gold-500">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                            <div class="space-y-1">
+                                <label class="block text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                                    <i class="bi bi-whatsapp text-emerald-400"></i> WhatsApp
+                                </label>
+                                <input type="text" name="whatsapp" x-model="whatsapp" placeholder="+251 9... or wa.me link"
+                                       class="w-full px-3.5 py-3 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white focus:border-gold-500">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="block text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                                    <i class="bi bi-globe2 text-gold-400"></i> Website / Portfolio URL
+                                </label>
+                                <input type="text" name="website" x-model="website" placeholder="https://yourwebsite.com"
                                        class="w-full px-3.5 py-3 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white focus:border-gold-500">
                             </div>
                         </div>
@@ -733,8 +951,9 @@
 
                         <div class="flex items-center justify-between pt-3 gap-2">
                             <button type="button" @click="activeStep = 3" class="px-4 py-2.5 bg-slate-900 text-slate-300 text-xs rounded-xl">← Back</button>
-                            <button type="submit" class="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-gold-500 to-amber-400 text-slate-950 font-extrabold text-xs rounded-xl shadow-xl shadow-gold-500/25 flex items-center justify-center gap-1.5">
-                                <i class="bi bi-check2-circle text-base"></i> Submit Quote & Request Card
+                            <button type="submit" :disabled="submitting" class="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-gold-500 to-amber-400 text-slate-950 font-extrabold text-xs rounded-xl shadow-xl shadow-gold-500/25 flex items-center justify-center gap-1.5 disabled:opacity-60">
+                                <i class="bi bi-check2-circle text-base"></i>
+                                <span x-text="submitting ? 'Uploading…' : 'Submit Quote & Request Card'"></span>
                             </button>
                         </div>
                     </div>
@@ -743,127 +962,30 @@
 
             <!-- RIGHT: Desktop Sticky Live Outcome Preview (5 Cols) -->
             <div class="hidden lg:block lg:col-span-5 lg:sticky lg:top-20 space-y-4">
-                
-                <!-- Preview Mode Switcher -->
-                <div class="flex items-center justify-between bg-slate-900/90 p-2 rounded-2xl border border-slate-800/80">
-                    <div class="flex items-center gap-2 px-2">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-wider">Live Outcome</span>
+                <div class="flex flex-col gap-2 p-2 rounded-2xl border @if($isInvite) invite-preview-shell @else bg-slate-900/90 border-slate-800/80 @endif">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2 px-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span class="text-[10px] font-bold text-slate-300 uppercase tracking-wider">Preview</span>
+                        </div>
+                        <div class="flex bg-slate-950 p-0.5 rounded-lg border border-slate-800">
+                            <button type="button" @click="previewMode = 'website'" :class="previewMode === 'website' ? 'bg-gold-500 text-slate-950 font-bold' : 'text-slate-400'" class="px-2.5 py-1 rounded-md text-[10px]">Website</button>
+                            <button type="button" @click="previewMode = 'card'" :class="previewMode === 'card' ? 'bg-gold-500 text-slate-950 font-bold' : 'text-slate-400'" class="px-2.5 py-1 rounded-md text-[10px]">NFC Card</button>
+                        </div>
                     </div>
-
-                    <div class="flex gap-1">
-                        <button type="button" @click="previewMode = 'website'"
-                                :class="previewMode === 'website' ? 'bg-gold-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'"
-                                class="px-3 py-1 rounded-xl text-xs transition">
-                            <i class="bi bi-phone"></i> Website
-                        </button>
-                        <button type="button" @click="previewMode = 'card'"
-                                :class="previewMode === 'card' ? 'bg-gold-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'"
-                                class="px-3 py-1 rounded-xl text-xs transition">
-                            <i class="bi bi-credit-card"></i> NFC Card
-                        </button>
+                    <div class="flex gap-1 px-1">
+                        <button type="button" @click="previewPanel = 'live'" :class="previewPanel === 'live' ? 'bg-gold-500/20 border-gold-500/40 text-gold-300' : 'border-slate-800 text-slate-400'" class="flex-1 py-1.5 rounded-lg border text-[10px] font-bold">Your Design</button>
+                        <button type="button" @click="previewPanel = 'example'" :class="previewPanel === 'example' ? 'bg-gold-500/20 border-gold-500/40 text-gold-300' : 'border-slate-800 text-slate-400'" class="flex-1 py-1.5 rounded-lg border text-[10px] font-bold">Example</button>
                     </div>
                 </div>
-
-                <!-- Desktop Phone Frame Mockup with FULL Minor & Major Color Layers -->
-                <div x-show="previewMode === 'website'" class="phone-frame border overflow-hidden max-w-[320px] mx-auto"
-                     :style="{ backgroundColor: bg_color, borderColor: line_color, fontFamily: font_body, color: text_color }">
-                    
-                    <!-- Dynamic Hero Cover Picture Banner -->
-                    <div class="relative h-28 w-full bg-slate-950 overflow-hidden">
-                        <template x-if="heroPreview">
-                            <img :src="heroPreview" class="w-full h-full object-cover">
-                        </template>
-                        <template x-if="!heroPreview">
-                            <div class="w-full h-full flex items-center justify-center" :style="{ backgroundColor: surface_color }">
-                                <i class="bi bi-image text-slate-700 text-2xl"></i>
-                            </div>
-                        </template>
-                        <div class="absolute inset-0" :style="{ background: 'linear-gradient(to top, ' + bg_color + ', transparent)' }"></div>
-                    </div>
-
-                    <!-- Profile Info & Avatar -->
-                    <div class="px-4 pb-4 -mt-10 relative space-y-3 max-h-[460px] overflow-y-auto text-center">
-                        <div class="w-16 h-16 mx-auto overflow-hidden border-2 shadow-2xl relative z-10"
-                             :class="'shape-' + image_shape" :style="{ borderColor: accent_color, backgroundColor: surface_color }">
-                            <template x-if="photoPreview"><img :src="photoPreview" class="w-full h-full object-cover"></template>
-                            <template x-if="!photoPreview"><div class="w-full h-full flex items-center justify-center text-slate-500 font-bold text-sm" x-text="name.charAt(0)"></div></template>
-                        </div>
-
-                        <div>
-                            <span class="inline-block px-2.5 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-wider border"
-                                  :style="{ color: accent_color, borderColor: accent_dark + '40', backgroundColor: accent_dark + '20' }" x-text="role_title"></span>
-                            <h3 class="text-xs font-bold mt-1.5" :style="{ fontFamily: font_display, color: text_color }" x-text="name"></h3>
-                            <p class="text-[9px] mt-0.5 line-clamp-2" :style="{ color: muted_color }" x-text="tagline"></p>
-                        </div>
-
-                        <!-- Portfolio Projects Showcase Inside Phone with Surface & Line Colors -->
-                        <div class="space-y-1.5 text-left pt-1">
-                            <div class="flex items-center justify-between text-[9px] font-bold uppercase" :style="{ color: muted_color }">
-                                <span>Portfolio Highlights</span>
-                                <span :style="{ color: accent_color }">Verified</span>
-                            </div>
-
-                            <template x-if="proj1_title">
-                                <div class="p-2.5 rounded-xl border space-y-0.5 transition"
-                                     :style="{ backgroundColor: surface_color, borderColor: line_color }">
-                                    <div class="flex items-center justify-between">
-                                        <span class="text-[9px] font-bold truncate" :style="{ color: text_color }" x-text="proj1_title"></span>
-                                        <span class="text-[7px] px-1.5 py-0.5 rounded font-bold font-mono shrink-0"
-                                              :style="{ backgroundColor: accent_dark + '30', color: accent_color }" x-text="proj1_tag"></span>
-                                    </div>
-                                    <p class="text-[8px] line-clamp-1" :style="{ color: muted_color }" x-text="proj1_desc"></p>
-                                </div>
-                            </template>
-
-                            <template x-if="proj2_title">
-                                <div class="p-2.5 rounded-xl border space-y-0.5 transition"
-                                     :style="{ backgroundColor: surface_color, borderColor: line_color }">
-                                    <div class="flex items-center justify-between">
-                                        <span class="text-[9px] font-bold truncate" :style="{ color: text_color }" x-text="proj2_title"></span>
-                                        <span class="text-[7px] px-1.5 py-0.5 rounded font-bold font-mono shrink-0"
-                                              :style="{ backgroundColor: accent_dark + '30', color: accent_color }" x-text="proj2_tag"></span>
-                                    </div>
-                                    <p class="text-[8px] line-clamp-1" :style="{ color: muted_color }" x-text="proj2_desc"></p>
-                                </div>
-                            </template>
-                        </div>
-
-                        <!-- Interactive Action CTA Button -->
-                        <div class="px-3 py-2 rounded-xl font-bold text-[9px] text-slate-950 inline-block w-full shadow-lg"
-                             :style="{ backgroundColor: accent_color }">
-                            Connect with <span x-text="name.split(' ')[0]"></span>
-                        </div>
-                    </div>
+                <p x-show="previewPanel === 'live'" class="text-[10px] text-center text-slate-500 -mt-2">Updates live as you customize</p>
+                <p x-show="previewPanel === 'example'" class="text-[10px] text-center text-gold-400/80 -mt-2">
+                    Finished profile example · <a href="{{ url('/card/yeabsira-endale') }}" target="_blank" rel="noopener" class="underline">view live</a>
+                </p>
+                <div x-show="previewPanel === 'live'">
+                    @include('card-applications.partials.live-preview', ['size' => 'full'])
                 </div>
-
-                <!-- Desktop 3D NFC Card Mockup -->
-                <div x-show="previewMode === 'card'" class="max-w-[320px] mx-auto space-y-3" x-cloak>
-                    <div :class="{
-                            'bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 border-indigo-500/30': card_edition === 'midnight_navy',
-                            'bg-gradient-to-br from-amber-950 via-yellow-900 to-stone-900 border-amber-500/40': card_edition === 'brushed_gold',
-                            'bg-gradient-to-br from-zinc-950 via-neutral-900 to-black border-zinc-700/50': card_edition === 'executive_black'
-                         }"
-                         class="aspect-[1.586/1] rounded-2xl p-5 border shadow-2xl relative flex flex-col justify-between overflow-hidden">
-                        
-                        <div class="flex items-center justify-between relative z-10">
-                            <div class="w-8 h-6 rounded bg-gradient-to-br from-yellow-300 to-amber-500 shadow-inner"></div>
-                            <i class="bi bi-wifi text-lg text-white/80 rotate-90"></i>
-                        </div>
-
-                        <div class="space-y-0.5 relative z-10">
-                            <div class="text-[8px] font-mono tracking-widest text-slate-400">KIMEM TOUCHLESS ID</div>
-                            <div class="text-sm font-extrabold text-white tracking-wide font-cinzel truncate" x-text="name"></div>
-                            <div class="text-[9px] font-medium text-gold-400 truncate" x-text="role_title"></div>
-                        </div>
-
-                        <div class="flex items-center justify-between border-t border-white/10 pt-1.5 relative z-10">
-                            <span class="text-[9px] font-bold font-cinzel text-white/70">KIMEM CARDS</span>
-                            <i class="bi bi-qr-code text-white text-xs"></i>
-                        </div>
-                    </div>
-                </div>
-
+                @include('card-applications.partials.example-showcase', ['size' => 'full'])
             </div>
 
         </div>
@@ -877,106 +999,56 @@
          x-transition:leave="transition ease-in duration-200"
          x-transition:leave-start="opacity-100"
          x-transition:leave-end="opacity-0" x-cloak>
-        
-        <div class="bg-slate-900 rounded-t-3xl border-t border-slate-800 p-5 space-y-4 max-h-[85vh] overflow-y-auto"
+
+        <div class="invite-modal-panel rounded-t-3xl border-t p-5 space-y-4 max-h-[85vh] overflow-y-auto"
              @click.away="showMobilePreviewModal = false">
-            
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <div class="flex items-center gap-2">
+
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3 gap-2">
+                <div class="flex items-center gap-2 min-w-0">
                     <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                    <span class="text-xs font-bold text-white uppercase tracking-wider">Live Outcome Preview</span>
+                    <span class="text-xs font-bold text-white uppercase tracking-wider truncate">Preview</span>
                 </div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-1 shrink-0 flex-wrap justify-end">
+                    <div class="flex bg-slate-950 p-0.5 rounded-lg border border-slate-800">
+                        <button type="button" @click="previewPanel = 'live'" :class="previewPanel === 'live' ? 'bg-gold-500 text-slate-950 font-bold' : 'text-slate-400'" class="px-2 py-1 rounded-md text-[9px]">Yours</button>
+                        <button type="button" @click="previewPanel = 'example'" :class="previewPanel === 'example' ? 'bg-gold-500 text-slate-950 font-bold' : 'text-slate-400'" class="px-2 py-1 rounded-md text-[9px]">Example</button>
+                    </div>
                     <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
                         <button type="button" @click="previewMode = 'website'" :class="previewMode === 'website' ? 'bg-gold-500 text-slate-950 font-bold' : 'text-slate-400'" class="px-2.5 py-1 rounded-lg text-[10px]">Website</button>
-                        <button type="button" @click="previewMode = 'card'" :class="previewMode === 'card' ? 'bg-gold-500 text-slate-950 font-bold' : 'text-slate-400'" class="px-2.5 py-1 rounded-lg text-[10px]">NFC Card</button>
+                        <button type="button" @click="previewMode = 'card'" :class="previewMode === 'card' ? 'bg-gold-500 text-slate-950 font-bold' : 'text-slate-400'" class="px-2.5 py-1 rounded-lg text-[10px]">NFC</button>
                     </div>
                     <button type="button" @click="showMobilePreviewModal = false" class="w-8 h-8 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center text-sm">✕</button>
                 </div>
             </div>
 
-            <!-- Mobile Phone Simulator Inside Modal with Full Color Bindings -->
-            <div x-show="previewMode === 'website'" class="phone-frame border overflow-hidden max-w-[280px] mx-auto"
-                 :style="{ backgroundColor: bg_color, borderColor: line_color, fontFamily: font_body, color: text_color }">
-                
-                <div class="relative h-24 w-full bg-slate-950 overflow-hidden">
-                    <template x-if="heroPreview"><img :src="heroPreview" class="w-full h-full object-cover"></template>
-                    <template x-if="!heroPreview"><div class="w-full h-full flex items-center justify-center" :style="{ backgroundColor: surface_color }"><i class="bi bi-image text-slate-700"></i></div></template>
-                    <div class="absolute inset-0" :style="{ background: 'linear-gradient(to top, ' + bg_color + ', transparent)' }"></div>
+            <p x-show="previewPanel === 'example'" class="text-[10px] text-center text-gold-400/90 -mt-2">
+                Example finished profile · <a href="{{ url('/card/yeabsira-endale') }}" target="_blank" rel="noopener" class="underline font-bold">open live demo</a>
+            </p>
+
+            <!-- Mobile full-screen preview drawer -->
+            <div class="px-1 pb-2">
+                <div x-show="previewPanel === 'live'">
+                    @include('card-applications.partials.live-preview', ['size' => 'full'])
                 </div>
-
-                <div class="px-3 pb-3 -mt-8 relative space-y-2.5 text-center">
-                    <div class="w-14 h-14 mx-auto overflow-hidden border-2 shadow-lg relative z-10"
-                         :class="'shape-' + image_shape" :style="{ borderColor: accent_color, backgroundColor: surface_color }">
-                        <template x-if="photoPreview"><img :src="photoPreview" class="w-full h-full object-cover"></template>
-                        <template x-if="!photoPreview"><div class="w-full h-full flex items-center justify-center text-slate-500 font-bold text-xs" x-text="name.charAt(0)"></div></template>
-                    </div>
-
-                    <h3 class="text-xs font-bold" :style="{ fontFamily: font_display, color: text_color }" x-text="name"></h3>
-                    <p class="text-[9px] line-clamp-1" :style="{ color: muted_color }" x-text="tagline"></p>
-
-                    <!-- Portfolio Items in Mobile -->
-                    <div class="space-y-1 text-left">
-                        <template x-if="proj1_title">
-                            <div class="p-1.5 rounded-lg border flex items-center justify-between"
-                                 :style="{ backgroundColor: surface_color, borderColor: line_color }">
-                                <span class="text-[8px] font-bold truncate" :style="{ color: text_color }" x-text="proj1_title"></span>
-                                <span class="text-[7px] font-mono px-1 py-0.2 rounded" :style="{ backgroundColor: accent_dark + '30', color: accent_color }" x-text="proj1_tag"></span>
-                            </div>
-                        </template>
-                        <template x-if="proj2_title">
-                            <div class="p-1.5 rounded-lg border flex items-center justify-between"
-                                 :style="{ backgroundColor: surface_color, borderColor: line_color }">
-                                <span class="text-[8px] font-bold truncate" :style="{ color: text_color }" x-text="proj2_title"></span>
-                                <span class="text-[7px] font-mono px-1 py-0.2 rounded" :style="{ backgroundColor: accent_dark + '30', color: accent_color }" x-text="proj2_tag"></span>
-                            </div>
-                        </template>
-                    </div>
-
-                    <div class="px-3 py-1 rounded-xl font-bold text-[8px] text-slate-950 inline-block w-full"
-                         :style="{ backgroundColor: accent_color }">
-                        Connect with <span x-text="name.split(' ')[0]"></span>
-                    </div>
-                </div>
+                @include('card-applications.partials.example-showcase', ['size' => 'full'])
             </div>
 
-            <!-- Mobile 3D NFC Card Inside Modal -->
-            <div x-show="previewMode === 'card'" class="max-w-[280px] mx-auto" x-cloak>
-                <div :class="{
-                        'bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 border-indigo-500/30': card_edition === 'midnight_navy',
-                        'bg-gradient-to-br from-amber-950 via-yellow-900 to-stone-900 border-amber-500/40': card_edition === 'brushed_gold',
-                        'bg-gradient-to-br from-zinc-950 via-neutral-900 to-black border-zinc-700/50': card_edition === 'executive_black'
-                     }"
-                     class="aspect-[1.586/1] rounded-2xl p-4 border shadow-2xl relative flex flex-col justify-between overflow-hidden">
-                    <div class="flex items-center justify-between">
-                        <div class="w-7 h-5 rounded bg-gradient-to-br from-yellow-300 to-amber-500"></div>
-                        <i class="bi bi-wifi text-base text-white/80 rotate-90"></i>
-                    </div>
-                    <div>
-                        <div class="text-[8px] font-mono tracking-widest text-slate-400">KIMEM TOUCHLESS ID</div>
-                        <div class="text-xs font-extrabold text-white font-cinzel truncate" x-text="name"></div>
-                        <div class="text-[9px] font-medium text-gold-400 truncate" x-text="role_title"></div>
-                    </div>
-                    <div class="flex items-center justify-between border-t border-white/10 pt-1">
-                        <span class="text-[8px] font-bold font-cinzel text-white/70">KIMEM CARDS</span>
-                        <i class="bi bi-qr-code text-white text-xs"></i>
-                    </div>
-                </div>
-            </div>
-
-            <button type="button" @click="showMobilePreviewModal = false" class="w-full py-2.5 rounded-xl bg-slate-800 text-white font-bold text-xs">
+            <button type="button" @click="showMobilePreviewModal = false" class="w-full py-3 rounded-xl bg-slate-800 text-white font-bold text-xs">
                 Continue Customizing
             </button>
         </div>
     </div>
 
     <!-- Mobile Bottom Floating Action Bar -->
-    <div class="fixed bottom-0 inset-x-0 z-30 lg:hidden p-3 bg-slate-950/95 border-t border-slate-800/80 backdrop-blur-xl flex items-center justify-between gap-2">
-        <button type="button" @click="showMobilePreviewModal = true" class="flex-1 py-2.5 px-3 rounded-xl bg-slate-900 border border-slate-800 text-xs font-bold text-white flex items-center justify-center gap-1.5">
-            <i class="bi bi-phone text-gold-400"></i> View Live Outcome
+    <div class="fixed bottom-0 inset-x-0 z-30 lg:hidden mobile-bottom-bar invite-bottom-bar p-3 border-t backdrop-blur-xl flex items-center gap-2">
+        <button type="button" @click="mobilePreviewExpanded = !mobilePreviewExpanded; window.scrollTo({ top: 0, behavior: 'smooth' })" class="py-3 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 min-w-[44px] @if($isInvite) bg-slate-50 border-slate-200 text-slate-600 @else bg-slate-900 border-slate-800 text-white @endif">
+            <i class="bi bi-eye text-gold-500"></i>
         </button>
-        <button type="button" @click="activeStep < 4 ? activeStep++ : document.querySelector('form').requestSubmit()" class="flex-1 py-2.5 px-3 rounded-xl bg-gold-500 text-slate-950 font-extrabold text-xs flex items-center justify-center gap-1 shadow-md shadow-gold-500/20">
-            <span x-text="activeStep === 4 ? 'Submit Request' : 'Next Step →'"></span>
+        <button type="button" @click="activeStep > 1 ? activeStep-- : null" :disabled="activeStep === 1" class="py-3 px-4 rounded-xl border text-xs font-bold disabled:opacity-40 @if($isInvite) bg-slate-50 border-slate-200 text-slate-600 @else bg-slate-900 border-slate-800 text-slate-300 @endif">
+            Back
+        </button>
+        <button type="button" @click="activeStep < 4 ? activeStep++ : document.querySelector('form').requestSubmit()" :disabled="submitting" class="flex-1 py-3 px-3 rounded-xl bg-gold-500 text-slate-950 font-extrabold text-xs flex items-center justify-center gap-1 shadow-md shadow-gold-500/20 disabled:opacity-60 min-h-[44px]">
+            <span x-text="submitting ? 'Sending…' : (activeStep === 4 ? 'Submit Request' : 'Next Step →')"></span>
         </button>
     </div>
 
