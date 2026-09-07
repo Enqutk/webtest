@@ -35,7 +35,7 @@
                                 data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('logo') }}"
                             @endif
                         >
-                            <img src="{{ $logoUrl }}" alt="{{ $siteName }}" class="hz-brand-logo">
+                            <img src="{{ $logoUrl }}" alt="{{ $siteName }}" class="hz-brand-logo" data-preview-field="site-logo">
                         </span>
                     @endif
                     @if($showBrandText)

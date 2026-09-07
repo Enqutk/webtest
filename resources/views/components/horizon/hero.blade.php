@@ -90,7 +90,7 @@
                         :show-logo="$showHeroLogo"
                     />
                     @if($heroHeadline)
-                        <h1 class="hz-hero-title mb-3" data-preview-field="title" {!! \App\Support\AdminPreviewAttrs::html('hero', 'title', 'Edit Headline') !!}>{{ $heroHeadline }}</h1>
+                        <h2 class="hz-hero-title mb-3" data-preview-field="title" {!! \App\Support\AdminPreviewAttrs::html('hero', 'title', 'Edit Headline') !!}>{{ $heroHeadline }}</h2>
                     @endif
                     @if($heroCopy)
                         <p class="hz-hero-copy" data-preview-field="description" {!! \App\Support\AdminPreviewAttrs::html('hero', 'description', 'Edit Description') !!}>{{ $heroCopy }}</p>
