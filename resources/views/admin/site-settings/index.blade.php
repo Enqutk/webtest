@@ -107,8 +107,27 @@
             @endforeach
         </div>
 
-        <form action="{{ route('admin.site-settings.update') }}" method="POST" enctype="multipart/form-data"
-            class="space-y-4">
+        @if($errors->any())
+            <div class="p-3.5 bg-rose-50 border border-rose-200 text-rose-800 rounded-xl text-xs font-semibold">
+                <div class="flex items-center gap-2 mb-1">
+                    <i class="bi bi-exclamation-octagon-fill text-rose-500"></i>
+                    <span>Could not save. Check the fields below.</span>
+                </div>
+                <ul class="list-disc pl-5 space-y-0.5 font-medium">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form
+            id="site-settings-form"
+            action="{{ route('admin.site-settings.update') }}"
+            method="POST"
+            enctype="multipart/form-data"
+            class="space-y-4"
+        >
             @csrf
             <input type="hidden" name="_hash" :value="saveHash()">
             <input type="hidden" name="theme[accent_dark]" :value="accentSecondary">
@@ -186,25 +205,15 @@
                 </div>
             </div>
 
-            {{-- Navigation --}}
-            <div x-show="activeTab === 'navigation'" x-cloak id="navigation" class="scroll-mt-4">
-                @include('admin.site-pages._nav-links')
-            </div>
-
-            {{-- Footer --}}
+            {{-- Footer (contact + visibility only) --}}
             <div x-show="activeTab === 'footer'" x-cloak
                 class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm space-y-6">
                 <div class="border-b border-slate-100 pb-3">
                     <h3 class="text-sm font-bold text-slate-900">Footer & contact</h3>
-                    <p class="text-xs text-slate-500 mt-0.5">Social icons, contact details, and footer visibility.</p>
+                    <p class="text-xs text-slate-500 mt-0.5">Contact details and footer visibility.</p>
                 </div>
 
-                <div id="social" class="scroll-mt-4 pt-4 border-t border-slate-100">
-                    <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3">Social icons</h4>
-                    @include('admin.site-pages._social-links', ['bare' => true])
-                </div>
-
-                <div id="contact" class="pt-4 border-t border-slate-100 space-y-3 scroll-mt-4">
+                <div id="contact" class="space-y-3 scroll-mt-4">
                     <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Contact details</h4>
                     <p class="text-[11px] text-slate-500">Shown in the footer Contact column.</p>
                     <div class="space-y-2" x-data="{
@@ -283,13 +292,27 @@
                         class="font-bold text-brand-700 hover:underline">open Organization & Brand Settings →</a>
                 </p>
             </div>
-
-            <div x-show="activeTab !== 'navigation'" x-cloak
-                class="sticky bottom-0 pt-2 pb-1 bg-gradient-to-t from-slate-50 via-slate-50 to-transparent">
-                <button type="submit"
-                    class="w-full px-4 py-3 bg-brand-600 hover:bg-brand-500 text-white text-sm font-bold rounded-xl shadow-lg shadow-brand-600/30">Save
-                    site settings</button>
-            </div>
         </form>
+
+        {{-- Nested forms must stay outside site-settings-form or the Save button is orphaned --}}
+        <div x-show="activeTab === 'navigation'" x-cloak id="navigation" class="scroll-mt-4">
+            @include('admin.site-pages._nav-links')
+        </div>
+
+        <div x-show="activeTab === 'footer'" x-cloak id="social"
+            class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm space-y-3 scroll-mt-4">
+            <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Social icons</h4>
+            @include('admin.site-pages._social-links', ['bare' => true])
+        </div>
+
+        <div class="sticky bottom-0 pt-2 pb-1 bg-gradient-to-t from-slate-50 via-slate-50 to-transparent">
+            <button
+                type="submit"
+                form="site-settings-form"
+                class="w-full px-4 py-3 bg-brand-600 hover:bg-brand-500 text-white text-sm font-bold rounded-xl shadow-lg shadow-brand-600/30"
+            >
+                Save site settings
+            </button>
+        </div>
     </div>
 @endsection
