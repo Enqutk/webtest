@@ -94,7 +94,7 @@ class HomePageController extends Controller
         if ($statsItems === []) {
             $statsItems = Organization::defaultHomeSections()['stats']['items'] ?? [];
         }
-        $statsItems = collect($statsItems)->map(fn ($item) => [
+        $statsItems = collect($statsItems)->map(fn($item) => [
             'value' => (string) ($item['value'] ?? $item['number'] ?? ''),
             'label' => $item['label'] ?? '',
         ])->values()->all();
@@ -123,24 +123,33 @@ class HomePageController extends Controller
         $theme = is_array($currentOrg->theme) ? $currentOrg->theme : Organization::defaultTheme();
 
         $sectionKey = $request->input('section'); // e.g. 'hero', 'about', 'services', 'portfolio', 'team', 'cta'
-        $data = $request->except(['_token', 'section', 'hero_image']);
+        $data = $request->except(['_token', 'section', 'hero_image', 'about_image', 'remove_hero_image']);
 
         if ($request->hasFile('about_image')) {
             $path = $request->file('about_image')->store('about', 'public');
             $data['image_path'] = $path;
         }
 
+        if ($sectionKey === 'hero') {
+            $this->syncHeroPhoto(
+                $currentOrg,
+                $theme,
+                $request->file('hero_image'),
+                $request->boolean('remove_hero_image')
+            );
+        }
+
         if (isset($data['points']) && is_array($data['points'])) {
             $data['points'] = array_values(array_filter(
                 $data['points'],
-                fn ($point) => filled($point['title'] ?? null) || filled($point['description'] ?? null)
+                fn($point) => filled($point['title'] ?? null) || filled($point['description'] ?? null)
             ));
         }
 
         if (isset($data['items']) && is_array($data['items'])) {
             $data['items'] = array_values(array_filter(
                 $data['items'],
-                fn ($item) => filled($item['label'] ?? null) || filled($item['value'] ?? null)
+                fn($item) => filled($item['label'] ?? null) || filled($item['value'] ?? null)
             ));
         }
 
@@ -232,6 +241,63 @@ class HomePageController extends Controller
         }
 
         return back()->with('success', 'Hero slide removed.');
+    }
+
+    private function syncHeroPhoto(Organization $org, array &$theme, $file, bool $remove): void
+    {
+        if (! $file && ! $remove) {
+            return;
+        }
+
+        if (! isset($theme['home_sections']['hero']['slides']) || ! is_array($theme['home_sections']['hero']['slides'])) {
+            $theme['home_sections']['hero']['slides'] = Organization::defaultHeroSlides();
+        }
+
+        $slides = $theme['home_sections']['hero']['slides'];
+        if ($slides === []) {
+            $slides[] = [
+                'title' => $theme['home_sections']['hero']['title'] ?? '',
+                'subtitle' => $theme['home_sections']['hero']['badge'] ?? '',
+                'description' => $theme['home_sections']['hero']['description'] ?? '',
+                'text_link' => $theme['home_sections']['hero']['cta_text'] ?? 'About me',
+                'button_link' => $theme['home_sections']['hero']['cta_url'] ?? '/about',
+                'is_visible' => true,
+            ];
+        }
+
+        if ($file) {
+            $path = $file->store('hero-slides', 'public');
+            $slides[0]['image'] = [$path => $path];
+            $slides[0]['image_path'] = $path;
+            $this->replaceHeroMediaAtIndex($org, 0, $file);
+        } elseif ($remove) {
+            $slides[0]['image'] = null;
+            $slides[0]['image_path'] = null;
+            $this->clearHeroMediaAtIndex($org, 0);
+        }
+
+        $theme['home_sections']['hero']['slides'] = array_values($slides);
+    }
+
+    private function replaceHeroMediaAtIndex(Organization $org, int $index, $file): void
+    {
+        $hero = Hero::query()
+            ->where('organization_id', $org->id)
+            ->orderBy('order')
+            ->skip($index)
+            ->first();
+
+        if (! $hero) {
+            $hero = Hero::create([
+                'organization_id' => $org->id,
+                'title' => $org->title,
+                'order' => $index + 1,
+                'status' => 'active',
+            ]);
+        }
+
+        $hero->clearMediaCollection('image');
+        $hero->addMedia($file)->toMediaCollection('image');
     }
 
     private function clearHeroMediaAtIndex(Organization $org, ?int $index): void
