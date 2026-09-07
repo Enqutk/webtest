@@ -112,6 +112,19 @@ document.addEventListener('alpine:init', () => {
         heroDescription: @json($hero['description'] ?? ''),
         heroCtaText: @json($hero['cta_text'] ?? 'Explore Our Work'),
         heroSecondaryCtaText: @json($hero['secondary_cta_text'] ?? 'Our Services'),
+        heroPhotoPreview: @json($heroPhotoUrl ?? ''),
+        removeHeroImage: false,
+
+        onHeroPhotoPick(event) {
+            this.removeHeroImage = false;
+            const file = event.target.files && event.target.files[0];
+            this.heroPhotoPreview = file ? URL.createObjectURL(file) : this.heroPhotoPreview;
+        },
+
+        removeHeroPhoto() {
+            this.removeHeroImage = true;
+            this.heroPhotoPreview = '';
+        },
 
         aboutEyebrow: @json($about['eyebrow'] ?? 'About our firm'),
         aboutTitle: @json($about['title'] ?? 'Rooted in East Africa, built for scale'),

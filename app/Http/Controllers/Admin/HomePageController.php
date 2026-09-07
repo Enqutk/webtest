@@ -215,8 +215,14 @@ class HomePageController extends Controller
 
         if (is_numeric($index) && isset($slides[$index])) {
             $slides[$index] = array_merge($slides[$index], $slideData);
+            $savedIndex = (int) $index;
         } else {
             $slides[] = $slideData;
+            $savedIndex = array_key_last($slides);
+        }
+
+        if ($request->hasFile('slide_image') && is_int($savedIndex)) {
+            $this->replaceHeroMediaAtIndex($currentOrg, $savedIndex, $request->file('slide_image'));
         }
 
         $theme['home_sections']['hero']['slides'] = array_values($slides);
@@ -297,7 +303,7 @@ class HomePageController extends Controller
         }
 
         $hero->clearMediaCollection('image');
-        $hero->addMedia($file)->toMediaCollection('image');
+        $hero->addMedia($file)->preservingOriginal()->toMediaCollection('image');
     }
 
     private function clearHeroMediaAtIndex(Organization $org, ?int $index): void

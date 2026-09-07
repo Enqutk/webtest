@@ -290,7 +290,7 @@
                 <!-- 🌟 SECTION 1: HERO BANNER & SLIDES -->
                 <div id="admin-form-hero" x-show="activeSection === 'hero'" class="space-y-6">
                     <!-- Banner Settings Form -->
-                    <form action="{{ route('admin.home-sections.update') }}" method="POST"
+                    <form action="{{ route('admin.home-sections.update') }}" method="POST" enctype="multipart/form-data"
                         class="bg-white rounded-2xl border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-6">
                         @csrf
                         <input type="hidden" name="section" value="hero">
@@ -347,34 +347,39 @@
                         </div>
 
                         @php
-                            $heroPhotoUrl = $heroSlides[0]['image_url']
-                                ?? (function () use ($heroSlides) {
-                                    $slide = $heroSlides[0] ?? [];
-                                    $imgPath = $slide['image_path'] ?? (is_array($slide['image'] ?? null) ? array_values($slide['image'])[0] : ($slide['image'] ?? null));
-                                    if (!$imgPath) {
-                                        return null;
-                                    }
-                                    return str_starts_with($imgPath, 'http') ? $imgPath : asset('storage/' . ltrim($imgPath, '/'));
-                                })();
+                            $heroSlide0 = $heroSlides[0] ?? [];
+                            $heroPhotoUrl = $heroSlide0['image_url'] ?? null;
+                            if (!$heroPhotoUrl) {
+                                $imgPath = $heroSlide0['image_path'] ?? null;
+                                if (!$imgPath && is_array($heroSlide0['image'] ?? null)) {
+                                    $imgPath = array_values($heroSlide0['image'])[0] ?? null;
+                                } elseif (!$imgPath) {
+                                    $imgPath = is_string($heroSlide0['image'] ?? null) ? $heroSlide0['image'] : null;
+                                }
+                                if (is_string($imgPath) && $imgPath !== '') {
+                                    $heroPhotoUrl = str_starts_with($imgPath, 'http') ? $imgPath : asset('storage/' . ltrim($imgPath, '/'));
+                                }
+                            }
                         @endphp
                         <div class="space-y-2 pt-4 border-t border-slate-100">
                             <label class="block text-xs font-bold text-slate-700">Hero photo</label>
                             <p class="text-[11px] text-slate-500">This is the picture on the right of the homepage banner.
-                                Upload a portrait, logo, or campaign image.</p>
-                            @if($heroPhotoUrl)
-                                <img src="{{ $heroPhotoUrl }}" alt="Current hero photo"
+                                Choose a portrait, logo, or campaign image, then click Save Hero Banner Settings.</p>
+                            <template x-if="heroPhotoPreview && !removeHeroImage">
+                                <img :src="heroPhotoPreview" alt="Hero photo preview"
                                     class="h-28 w-auto max-w-full object-contain rounded-xl border border-slate-200 bg-white p-2">
-                            @endif
-                            <input type="file" name="hero_image" accept="image/*"
+                            </template>
+                            <input type="hidden" name="remove_hero_image" :value="removeHeroImage ? '1' : '0'">
+                            <input type="file" name="hero_image" accept="image/*" @change="onHeroPhotoPick($event)"
                                 class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
-                            @if($heroPhotoUrl)
-                                <label
-                                    class="inline-flex items-center gap-2 text-[11px] font-bold text-rose-700 cursor-pointer">
-                                    <input type="checkbox" name="remove_hero_image" value="1"
-                                        class="w-4 h-4 rounded text-rose-600">
-                                    Remove current picture
-                                </label>
-                            @endif
+                            <button type="button" x-show="heroPhotoPreview && !removeHeroImage" x-cloak
+                                @click="removeHeroPhoto()"
+                                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-rose-200 bg-rose-50 text-rose-700 text-[11px] font-bold hover:bg-rose-100">
+                                <i class="bi bi-trash"></i>
+                                Remove picture
+                            </button>
+                            <p x-show="removeHeroImage" class="text-[11px] text-slate-500">Picture will be removed when you
+                                save.</p>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-100">
@@ -473,7 +478,8 @@
                                                 @endif
                                             </div>
                                             <p class="text-[11px] text-slate-500 truncate max-w-xl">
-                                                {{ $s['description'] ?? '' }}</p>
+                                                {{ $s['description'] ?? '' }}
+                                            </p>
                                         </div>
                                     </div>
 
@@ -831,7 +837,8 @@
                                                                     </span>
                                                                 </div>
                                                                 <p class="text-[11px] text-slate-500 line-clamp-2 mt-0.5">
-                                                                    {{ $srv->short_description }}</p>
+                                                                    {{ $srv->short_description }}
+                                                                </p>
                                                                 <span class="text-[10px] text-slate-400">Order: {{ $srv->order }}</span>
                                                             </div>
                                                         </div>
@@ -844,7 +851,8 @@
                                     'quote' => $srv->quote,
                                     'order' => $srv->order,
                                     'status' => $srv->status->value ?? $srv->status,
-                                ]) }})" class="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 text-xs font-bold rounded-lg transition">
+                                ]) }})"
+                                                                class="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 text-xs font-bold rounded-lg transition">
                                                                 Edit
                                                             </button>
                                                             <form action="{{ route('admin.services.destroy', $srv) }}" method="POST"
@@ -1035,7 +1043,8 @@
                                                                     @endif
                                                                 </div>
                                                                 <p class="text-[11px] text-slate-500 line-clamp-2 mt-0.5">
-                                                                    {{ $project->description }}</p>
+                                                                    {{ $project->description }}
+                                                                </p>
                                                             </div>
                                                         </div>
                                                         <div class="flex items-center gap-2 shrink-0">
@@ -1047,7 +1056,8 @@
                                     'description' => $project->description,
                                     'order' => $project->order,
                                     'status' => $project->status->value ?? $project->status,
-                                ]) }})" class="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 text-xs font-bold rounded-lg transition">Edit</button>
+                                ]) }})"
+                                                                class="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 text-xs font-bold rounded-lg transition">Edit</button>
                                                             <form action="{{ route('admin.portfolio.destroy', $project) }}" method="POST"
                                                                 onsubmit="return confirm('Delete this project?')">
                                                                 @csrf
@@ -1154,7 +1164,8 @@
                                     'link' => $client->link,
                                     'order' => $client->order,
                                     'status' => $client->status->value ?? $client->status,
-                                ]) }})" class="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 text-xs font-bold rounded-lg transition">Edit</button>
+                                ]) }})"
+                                                                class="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 text-xs font-bold rounded-lg transition">Edit</button>
                                                             <form action="{{ route('admin.clients.destroy', $client) }}" method="POST"
                                                                 onsubmit="return confirm('Remove this logo?')">
                                                                 @csrf
