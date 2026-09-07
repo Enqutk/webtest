@@ -26,6 +26,7 @@ class SiteSettingsController extends Controller
         $currentOrg = Organization::resolveCurrent();
         $theme = is_array($currentOrg->theme) ? $currentOrg->theme : Organization::defaultTheme();
         $logoUrl = $currentOrg->getFirstMediaUrl('logo');
+        $footerLogoUrl = $currentOrg->getFirstMediaUrl('footer-logo');
 
         $headerMenu = $this->navbarMenuService->resolveMenu($currentOrg);
         $navItems = $this->navbarMenuService->topLevelItems($currentOrg);
@@ -54,6 +55,7 @@ class SiteSettingsController extends Controller
             'currentOrg',
             'theme',
             'logoUrl',
+            'footerLogoUrl',
             'headerMenu',
             'navItems',
             'contacts',
@@ -82,6 +84,7 @@ class SiteSettingsController extends Controller
             'connect_links.*.label' => ['nullable', 'string', 'max:100'],
             'connect_links.*.url' => ['nullable', 'string', 'max:255'],
             'logo' => ['nullable', 'image', 'max:5120'],
+            'footer_logo' => ['nullable', 'image', 'max:5120'],
         ]);
 
         $currentTheme = is_array($currentOrg->theme) ? $currentOrg->theme : Organization::defaultTheme();
@@ -113,6 +116,11 @@ class SiteSettingsController extends Controller
         if ($request->hasFile('logo')) {
             $currentOrg->clearMediaCollection('logo');
             $currentOrg->addMediaFromRequest('logo')->toMediaCollection('logo');
+        }
+
+        if ($request->hasFile('footer_logo')) {
+            $currentOrg->clearMediaCollection('footer-logo');
+            $currentOrg->addMediaFromRequest('footer_logo')->toMediaCollection('footer-logo');
         }
 
         $this->syncContacts($currentOrg, 'email', $validated['contact_emails'] ?? []);

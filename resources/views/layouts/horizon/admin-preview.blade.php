@@ -128,7 +128,14 @@
     }
 
     function applyFieldUpdate(section, field, value) {
-        var identityFields = { 'company-name': true, 'site-logo': true };
+        var identityFields = {
+            'company-name': true,
+            'header-display-name': true,
+            'footer-display-name': true,
+            'site-logo': true,
+            'header-logo': true,
+            'footer-logo': true,
+        };
         var nodes;
         if (identityFields[field]) {
             nodes = document.querySelectorAll('[data-preview-field="' + field + '"]');
@@ -147,7 +154,7 @@
         }
 
         nodes.forEach(function (el) {
-            if (el.tagName === 'IMG' || field === 'site-logo' || field === 'hero-brand-logo') {
+            if (el.tagName === 'IMG' || field === 'site-logo' || field === 'header-logo' || field === 'hero-brand-logo' || field === 'footer-logo') {
                 var img = el.tagName === 'IMG' ? el : el.querySelector('img');
                 if (img && value) {
                     img.setAttribute('src', value);
@@ -161,7 +168,7 @@
             }
             if (el.getAttribute('data-preview-html') === '1') {
                 el.innerHTML = value || '';
-            } else if (field === 'company-name' || field === 'hero-display-name') {
+            } else if (field === 'company-name' || field === 'hero-display-name' || field === 'header-display-name' || field === 'footer-display-name') {
                 var parts = String(value || '').trim().split(/\s+/);
                 var first = parts.shift() || '';
                 var rest = parts.join(' ');

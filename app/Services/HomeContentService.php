@@ -74,8 +74,18 @@ class HomeContentService
 
         $aboutImage = $aboutFeaturesBlock?->getFirstMediaUrl('images') ?: null;
 
-        $logoUrl = ($theme['show_logo'] ?? true) ? $organization?->logo_url : null;
+        $logoUrl = $organization?->logo_url;
+        $footerLogoUrl = $organization?->footer_logo_url;
+        $headerLogoUrl = ($theme['show_header_logo'] ?? true) ? $logoUrl : null;
+        $activeFooterLogoUrl = ($theme['show_footer_logo'] ?? true) ? $footerLogoUrl : null;
         $faviconUrl = ($theme['show_favicon'] ?? true) ? $organization?->favicon_url : null;
+
+        $headerDisplayName = array_key_exists('header_display_name', $theme)
+            ? trim((string) $theme['header_display_name'])
+            : $siteName;
+        $footerDisplayName = array_key_exists('footer_display_name', $theme)
+            ? trim((string) $theme['footer_display_name'])
+            : $siteName;
         $activeTagline = ($theme['show_tagline'] ?? true) ? $tagline : '';
         $activeAddress = ($theme['show_address'] ?? true) ? ($organization->address ?? null) : null;
         $activeWorkingDays = ($theme['show_opening_hours'] ?? true) ? ($organization->opening_hours ?? []) : [];
@@ -137,12 +147,16 @@ class HomeContentService
             'portfolioUrl' => $portfolioUrl,
             'routeSlug' => $routeSlug,
             'siteName' => $siteName,
+            'headerDisplayName' => $headerDisplayName,
+            'footerDisplayName' => $footerDisplayName,
             'tagline' => $activeTagline,
             'metaDescription' => $metaDescription,
             'theme' => $theme,
             'sitePages' => $sitePages,
             'homeSections' => $homeSections,
-            'logoUrl' => $logoUrl,
+            'logoUrl' => $headerLogoUrl,
+            'headerLogoUrl' => $headerLogoUrl,
+            'footerLogoUrl' => $activeFooterLogoUrl,
             'faviconUrl' => $faviconUrl,
 
             'email' => $activeEmail,

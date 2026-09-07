@@ -1,10 +1,10 @@
 @php
     $navItems = $navItems ?? collect();
-    $siteName = $data['siteName'] ?? config('app.name', 'Site');
     $theme = $data['theme'] ?? \App\Models\Organization::defaultTheme();
-    $showLogo = ($theme['show_logo'] ?? true) && ($theme['show_header_logo'] ?? true);
-    $showBrandText = (bool) ($theme['show_brand_text'] ?? true);
-    $logoUrl = $showLogo ? ($data['logoUrl'] ?? null) : null;
+    $headerName = trim((string) ($data['headerDisplayName'] ?? ($data['siteName'] ?? config('app.name', 'Site'))));
+    $showLogo = (bool) ($theme['show_header_logo'] ?? true);
+    $showBrandText = (bool) ($theme['show_header_brand_text'] ?? $theme['show_brand_text'] ?? true);
+    $logoUrl = $showLogo ? ($data['headerLogoUrl'] ?? $data['logoUrl'] ?? null) : null;
     $showHeaderCta = (bool) ($theme['show_header_cta'] ?? true);
     $headerCtaText = !empty($theme['header_cta_text']) ? $theme['header_cta_text'] : 'Get in touch';
     $routeSlug = request()->route('slug') ?? ($data['routeSlug'] ?? ($data['organization']->slug ?? null));
@@ -20,39 +20,39 @@
     }
 
     $adminPreview = request()->boolean('admin_preview');
-    $brandParts = preg_split('/\s+/', trim($siteName), 2) ?: [trim($siteName)];
-    $brandFirst = $brandParts[0] ?? $siteName;
+    $brandParts = preg_split('/\s+/', trim($headerName), 2) ?: [trim($headerName)];
+    $brandFirst = $brandParts[0] ?? $headerName;
     $brandRest = $brandParts[1] ?? null;
 @endphp
 
 <header class="hz-header" data-hz-header>
     <nav class="navbar navbar-expand-lg hz-navbar" aria-label="Primary">
         <div class="container hz-navbar-inner">
-            @if($logoUrl || $showBrandText)
+            @if($logoUrl || ($showBrandText && $headerName !== ''))
                 <a class="navbar-brand hz-brand" href="{{ $brandHomeUrl }}">
                     @if($logoUrl)
                         <span
                             class="hz-brand-mark"
                             @if($adminPreview)
-                                data-admin-section="site-logo"
+                                data-admin-section="site-header-logo"
                                 data-admin-compact="1"
-                                data-admin-label="Edit Logo"
-                                data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('logo') }}"
+                                data-admin-label="Edit header logo"
+                                data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('header-logo') }}"
                             @endif
                         >
-                            <img src="{{ $logoUrl }}" alt="{{ $siteName }}" class="hz-brand-logo" data-preview-field="site-logo">
+                            <img src="{{ $logoUrl }}" alt="{{ $headerName }}" class="hz-brand-logo" data-preview-field="header-logo">
                         </span>
                     @endif
-                    @if($showBrandText)
+                    @if($showBrandText && $headerName !== '')
                         <span
                             class="hz-brand-text"
                             @if($adminPreview)
-                                data-admin-section="site-company-name"
-                                data-admin-field="company-name"
+                                data-admin-section="site-header-name"
+                                data-admin-field="header-display-name"
                                 data-admin-compact="1"
-                                data-admin-label="Edit Company Name"
-                                data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('company-name') }}"
-                                data-preview-field="company-name"
+                                data-admin-label="Edit header name"
+                                data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('header-name') }}"
+                                data-preview-field="header-display-name"
                             @endif
                         >
                             {{ $brandFirst }}@if($brandRest) <span>{{ $brandRest }}</span>@endif

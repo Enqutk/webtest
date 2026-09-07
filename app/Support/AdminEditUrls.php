@@ -49,8 +49,12 @@ class AdminEditUrls
     public static function forCommonSection(string $section): ?string
     {
         return match ($section) {
-            'site-header', 'site-brand', 'site-company-name' => self::siteSettings('company-name'),
-            'site-logo' => self::siteSettings('logo'),
+            'site-header', 'site-header-name' => self::siteSettings('header-name'),
+            'site-header-logo' => self::siteSettings('header-logo'),
+            'site-footer-name' => self::siteSettings('footer-name'),
+            'site-footer-logo' => self::siteSettings('footer-logo'),
+            'site-brand', 'site-company-name' => self::siteSettings('header-name'),
+            'site-logo' => self::siteSettings('header-logo'),
             'site-tagline' => self::siteSettings('tagline'),
             'site-header-cta' => self::siteSettings('header-cta'),
             'site-nav', 'site-connect' => self::siteSettings('navigation'),
@@ -82,10 +86,14 @@ class AdminEditUrls
     public static function editTargetsForJs(): array
     {
         $targets = [
-            'site-header' => self::siteSettings('company-name'),
-            'site-brand' => self::siteSettings('company-name'),
-            'site-company-name' => self::siteSettings('company-name'),
-            'site-logo' => self::siteSettings('logo'),
+            'site-header' => self::siteSettings('header-name'),
+            'site-header-name' => self::siteSettings('header-name'),
+            'site-header-logo' => self::siteSettings('header-logo'),
+            'site-footer-name' => self::siteSettings('footer-name'),
+            'site-footer-logo' => self::siteSettings('footer-logo'),
+            'site-brand' => self::siteSettings('header-name'),
+            'site-company-name' => self::siteSettings('header-name'),
+            'site-logo' => self::siteSettings('header-logo'),
             'site-tagline' => self::siteSettings('tagline'),
             'site-nav' => self::siteSettings('navigation'),
             'site-connect' => self::siteSettings('navigation'),
@@ -115,10 +123,14 @@ class AdminEditUrls
     public static function siteSettingsLocalAnchors(): array
     {
         return [
-            'site-header' => ['tab' => 'header', 'hash' => 'company-name'],
-            'site-brand' => ['tab' => 'header', 'hash' => 'company-name'],
-            'site-company-name' => ['tab' => 'header', 'hash' => 'company-name'],
-            'site-logo' => ['tab' => 'header', 'hash' => 'logo'],
+            'site-header' => ['tab' => 'header', 'hash' => 'header-name'],
+            'site-header-name' => ['tab' => 'header', 'hash' => 'header-name'],
+            'site-header-logo' => ['tab' => 'header', 'hash' => 'header-logo'],
+            'site-footer-name' => ['tab' => 'footer', 'hash' => 'footer-name'],
+            'site-footer-logo' => ['tab' => 'footer', 'hash' => 'footer-logo'],
+            'site-brand' => ['tab' => 'header', 'hash' => 'header-name'],
+            'site-company-name' => ['tab' => 'header', 'hash' => 'header-name'],
+            'site-logo' => ['tab' => 'header', 'hash' => 'header-logo'],
             'site-tagline' => ['tab' => 'header', 'hash' => 'tagline'],
             'site-header-cta' => ['tab' => 'header', 'hash' => 'header-cta'],
             'site-nav' => ['tab' => 'navigation', 'hash' => 'navigation'],

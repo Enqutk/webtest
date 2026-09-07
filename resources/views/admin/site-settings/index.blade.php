@@ -38,10 +38,13 @@
             lineColor: '{{ $theme['line'] ?? '#d7e0dd' }}',
             hashToTab: {
                 header: 'header',
-                'company-name': 'header',
+                'site-title': 'header',
+                'header-name': 'header',
                 tagline: 'header',
-                logo: 'header',
+                'header-logo': 'header',
                 'header-cta': 'header',
+                'footer-name': 'footer',
+                'footer-logo': 'footer',
                 navigation: 'navigation',
                 footer: 'footer',
                 social: 'footer',
@@ -66,7 +69,7 @@
             saveHash() {
                 const hash = window.location.hash.replace('#', '');
                 if (hash && this.hashToTab[hash]) return hash;
-                const defaults = { header: 'company-name', navigation: 'navigation', footer: 'contact', colors: 'branding' };
+                const defaults = { header: 'header-name', navigation: 'navigation', footer: 'footer-name', colors: 'branding' };
                 return defaults[this.activeTab] || 'header';
             },
             applyThemePreset(preset) {
@@ -141,12 +144,19 @@
                         at the top of every page.</p>
                 </div>
 
-                <div id="company-name" class="space-y-1.5 scroll-mt-4">
-                    <label class="block text-xs font-bold text-slate-700">Company name</label>
+                <div id="site-title" class="space-y-1.5 scroll-mt-4">
+                    <label class="block text-xs font-bold text-slate-700">Site title (admin & SEO)</label>
                     <input type="text" name="title" value="{{ $currentOrg->title }}" required
-                        data-preview-bind="site-company-name:company-name"
                         class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
-                    <p class="text-[11px] text-slate-500">Shown in the site header only. Hero name is edited under Home Page Sections → Hero.</p>
+                    <p class="text-[11px] text-slate-500">Internal name for this card. Header and footer names are set separately below.</p>
+                </div>
+
+                <div id="header-name" class="space-y-1.5 scroll-mt-4">
+                    <label class="block text-xs font-bold text-slate-700">Header name</label>
+                    <input type="text" name="theme[header_display_name]"
+                        value="{{ $theme['header_display_name'] ?? $currentOrg->title }}"
+                        data-preview-bind="site-header-name:header-display-name"
+                        class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
                 </div>
 
                 <div id="tagline" class="space-y-1.5 scroll-mt-4">
@@ -155,10 +165,10 @@
                         data-preview-bind="site-tagline:tagline"
                         class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                        <input type="hidden" name="theme[show_brand_text]" value="0">
+                        <input type="hidden" name="theme[show_header_brand_text]" value="0">
                         <label
                             class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer">
-                            <input type="checkbox" name="theme[show_brand_text]" value="1" {{ !empty($theme['show_brand_text']) ? 'checked' : '' }}
+                            <input type="checkbox" name="theme[show_header_brand_text]" value="1" {{ ($theme['show_header_brand_text'] ?? $theme['show_brand_text'] ?? true) ? 'checked' : '' }}
                                 class="w-4 h-4 rounded text-brand-600">
                             <span class="text-xs font-semibold text-slate-700">Show name in header</span>
                         </label>
@@ -171,14 +181,14 @@
                     </div>
                 </div>
 
-                <div id="logo" class="space-y-1.5 scroll-mt-4">
-                    <label class="block text-xs font-bold text-slate-700">Logo</label>
-                    <p class="text-[11px] text-slate-500">Header logo only. Hero logo mark is edited under Home Page Sections → Hero.</p>
+                <div id="header-logo" class="space-y-1.5 scroll-mt-4">
+                    <label class="block text-xs font-bold text-slate-700">Header logo</label>
+                    <p class="text-[11px] text-slate-500">Logo in the top navigation only. Footer and hero logos are separate.</p>
                     @if($logoUrl)
                         <img src="{{ $logoUrl }}" alt="" class="h-10 w-auto object-contain mb-2">
                     @endif
                     <input type="file" name="logo" accept="image/*"
-                        onchange="if (this.files[0] && window.AdminPreview) { window.AdminPreview.pushField('site-logo', 'site-logo', URL.createObjectURL(this.files[0])); }"
+                        onchange="if (this.files[0] && window.AdminPreview) { window.AdminPreview.pushField('site-header-logo', 'header-logo', URL.createObjectURL(this.files[0])); }"
                         class="w-full text-xs file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700">
                     <input type="hidden" name="theme[show_header_logo]" value="0">
                     <label
@@ -213,10 +223,38 @@
                 class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm space-y-6">
                 <div class="border-b border-slate-100 pb-3">
                     <h3 class="text-sm font-bold text-slate-900">Footer & contact</h3>
-                    <p class="text-xs text-slate-500 mt-0.5">Contact details and footer visibility.</p>
+                    <p class="text-xs text-slate-500 mt-0.5">Footer brand, contact details, and visibility.</p>
                 </div>
 
-                <div id="contact" class="space-y-3 scroll-mt-4">
+                <div id="footer-name" class="space-y-1.5 scroll-mt-4">
+                    <label class="block text-xs font-bold text-slate-700">Footer name</label>
+                    <input type="text" name="theme[footer_display_name]"
+                        value="{{ $theme['footer_display_name'] ?? $currentOrg->title }}"
+                        data-preview-bind="site-footer-name:footer-display-name"
+                        class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                    <input type="hidden" name="theme[show_footer_brand_text]" value="0">
+                    <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer mt-2">
+                        <input type="checkbox" name="theme[show_footer_brand_text]" value="1" {{ ($theme['show_footer_brand_text'] ?? true) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">
+                        <span class="text-xs font-semibold text-slate-700">Show name in footer</span>
+                    </label>
+                </div>
+
+                <div id="footer-logo" class="space-y-1.5 scroll-mt-4">
+                    <label class="block text-xs font-bold text-slate-700">Footer logo</label>
+                    @if($footerLogoUrl)
+                        <img src="{{ $footerLogoUrl }}" alt="" class="h-10 w-auto object-contain mb-2">
+                    @endif
+                    <input type="file" name="footer_logo" accept="image/*"
+                        onchange="if (this.files[0] && window.AdminPreview) { window.AdminPreview.pushField('site-footer-logo', 'footer-logo', URL.createObjectURL(this.files[0])); }"
+                        class="w-full text-xs file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700">
+                    <input type="hidden" name="theme[show_footer_logo]" value="0">
+                    <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer mt-2">
+                        <input type="checkbox" name="theme[show_footer_logo]" value="1" {{ ($theme['show_footer_logo'] ?? true) ? 'checked' : '' }} class="w-4 h-4 rounded text-brand-600">
+                        <span class="text-xs font-semibold text-slate-700">Show logo in footer</span>
+                    </label>
+                </div>
+
+                <div id="contact" class="space-y-3 scroll-mt-4 pt-4 border-t border-slate-100">
                     <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Contact details</h4>
                     <p class="text-[11px] text-slate-500">Shown in the footer Contact column.</p>
                     <div class="space-y-2" x-data="{

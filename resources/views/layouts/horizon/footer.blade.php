@@ -1,12 +1,13 @@
 @php
-    $siteName = $data['siteName'] ?? config('app.name', 'Site');
     $theme = $data['theme'] ?? \App\Models\Organization::defaultTheme();
+    $footerName = trim((string) ($data['footerDisplayName'] ?? ($data['siteName'] ?? config('app.name', 'Site'))));
+    $siteName = $data['siteName'] ?? config('app.name', 'Site');
     $tagline = ($theme['show_footer_tagline'] ?? true) ? ($data['tagline'] ?? '') : '';
     $navItems = $navItems ?? collect();
     $footerNavItems = $footerNavItems ?? $navItems;
-    $showBrandText = (bool) ($theme['show_brand_text'] ?? true);
-    $showLogo = (bool) ($theme['show_logo'] ?? true);
-    $logoUrl = $showLogo ? ($data['logoUrl'] ?? null) : null;
+    $showBrandText = (bool) ($theme['show_footer_brand_text'] ?? true);
+    $showLogo = (bool) ($theme['show_footer_logo'] ?? true);
+    $logoUrl = $showLogo ? ($data['footerLogoUrl'] ?? null) : null;
     $showFooterNav = (bool) ($theme['show_footer_nav'] ?? true);
     $showFooterSocial = (bool) ($theme['show_footer_social'] ?? true) && (bool) ($theme['show_social_links'] ?? true);
     $showFooterContact = (bool) ($theme['show_footer_contact'] ?? true);
@@ -15,9 +16,10 @@
     $adminPreview = request()->boolean('admin_preview');
     $routeSlug = request()->route('slug') ?? ($data['routeSlug'] ?? ($data['organization']->slug ?? null));
     $connectLinks = $theme['footer_connect_links'] ?? [['label' => 'Contact', 'url' => '/contact']];
-    $brandParts = preg_split('/\s+/', trim($siteName), 2) ?: [trim($siteName)];
-    $brandFirst = $brandParts[0] ?? $siteName;
+    $brandParts = preg_split('/\s+/', trim($footerName), 2) ?: [trim($footerName)];
+    $brandFirst = $brandParts[0] ?? $footerName;
     $brandRest = $brandParts[1] ?? null;
+    $copyrightName = $footerName !== '' ? $footerName : $siteName;
 @endphp
 
 <footer class="hz-footer">
@@ -29,24 +31,24 @@
                         <span
                             class="hz-brand-mark d-inline-block"
                             @if($adminPreview)
-                                data-admin-section="site-logo"
+                                data-admin-section="site-footer-logo"
                                 data-admin-compact="1"
-                                data-admin-label="Edit Logo"
-                                data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('logo') }}"
+                                data-admin-label="Edit footer logo"
+                                data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('footer-logo') }}"
                             @endif
                         >
-                            <img src="{{ $logoUrl }}" alt="{{ $siteName }}" class="hz-brand-logo" data-preview-field="site-logo">
+                            <img src="{{ $logoUrl }}" alt="{{ $footerName }}" class="hz-brand-logo" data-preview-field="footer-logo">
                         </span>
                     @endif
-                    @if($showBrandText)
+                    @if($showBrandText && $footerName !== '')
                         <span
                             class="hz-brand-text d-inline-block"
                             @if($adminPreview)
-                                data-admin-section="site-company-name"
+                                data-admin-section="site-footer-name"
                                 data-admin-compact="1"
-                                data-admin-label="Edit Company Name"
-                                data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('company-name') }}"
-                                data-preview-field="company-name"
+                                data-admin-label="Edit footer name"
+                                data-admin-edit-url="{{ \App\Support\AdminEditUrls::siteSettings('footer-name') }}"
+                                data-preview-field="footer-display-name"
                             @endif
                         >
                             {{ $brandFirst }}@if($brandRest) <span>{{ $brandRest }}</span>@endif
@@ -173,7 +175,7 @@
         </div>
 
         <div class="hz-footer-bottom d-flex flex-column flex-md-row justify-content-between gap-2">
-            <div>&copy; {{ date('Y') }} {{ $siteName }}. All rights reserved.</div>
+            <div>&copy; {{ date('Y') }} {{ $copyrightName }}. All rights reserved.</div>
             @if($showFooterCredit)
                 <div
                     @if($adminPreview)

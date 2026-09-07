@@ -175,6 +175,10 @@ class Organization extends Model implements HasMedia, \Filament\Models\Contracts
             ->singleFile()
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml']);
 
+        $this->addMediaCollection('footer-logo')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml']);
+
         $this->addMediaCollection('favicon')
             ->singleFile()
             ->acceptsMimeTypes(['image/png', 'image/x-icon', 'image/vnd.microsoft.icon', 'image/jpeg', 'image/webp', 'image/svg+xml']);
@@ -183,6 +187,13 @@ class Organization extends Model implements HasMedia, \Filament\Models\Contracts
     public function getLogoUrlAttribute(): ?string
     {
         $url = $this->getFirstMediaUrl('logo');
+
+        return $url !== '' ? $url : null;
+    }
+
+    public function getFooterLogoUrlAttribute(): ?string
+    {
+        $url = $this->getFirstMediaUrl('footer-logo');
 
         return $url !== '' ? $url : null;
     }
@@ -208,11 +219,16 @@ class Organization extends Model implements HasMedia, \Filament\Models\Contracts
             'font_display' => 'Fraunces',
             'font_body' => 'Outfit',
             'show_brand_text' => true,
+            'show_header_brand_text' => true,
+            'show_footer_brand_text' => true,
+            'header_display_name' => '',
+            'footer_display_name' => '',
             'show_logo' => true,
             'show_favicon' => true,
             'show_tagline' => true,
             'show_po_box' => true,
             'show_header_logo' => true,
+            'show_footer_logo' => true,
             'show_header_cta' => true,
             'header_cta_text' => 'Get in touch',
             'header_cta_url' => '/contact',
