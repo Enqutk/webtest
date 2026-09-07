@@ -97,6 +97,19 @@
             }
             return $slide;
         })->all();
+        $heroSlide0 = $heroSlides[0] ?? [];
+        $heroPhotoUrl = $heroSlide0['image_url'] ?? null;
+        if (! $heroPhotoUrl) {
+            $imgPath = $heroSlide0['image_path'] ?? null;
+            if (! $imgPath && is_array($heroSlide0['image'] ?? null)) {
+                $imgPath = array_values($heroSlide0['image'])[0] ?? null;
+            } elseif (! $imgPath) {
+                $imgPath = is_string($heroSlide0['image'] ?? null) ? $heroSlide0['image'] : null;
+            }
+            if (is_string($imgPath) && $imgPath !== '') {
+                $heroPhotoUrl = str_starts_with($imgPath, 'http') ? $imgPath : asset('storage/' . ltrim($imgPath, '/'));
+            }
+        }
         $sectionLabels = [
             'creator' => 'Creator Bar',
             'hero' => 'Hero Banner',
@@ -346,21 +359,6 @@
                                 class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $hero['description'] ?? '' }}</textarea>
                         </div>
 
-                        @php
-                            $heroSlide0 = $heroSlides[0] ?? [];
-                            $heroPhotoUrl = $heroSlide0['image_url'] ?? null;
-                            if (!$heroPhotoUrl) {
-                                $imgPath = $heroSlide0['image_path'] ?? null;
-                                if (!$imgPath && is_array($heroSlide0['image'] ?? null)) {
-                                    $imgPath = array_values($heroSlide0['image'])[0] ?? null;
-                                } elseif (!$imgPath) {
-                                    $imgPath = is_string($heroSlide0['image'] ?? null) ? $heroSlide0['image'] : null;
-                                }
-                                if (is_string($imgPath) && $imgPath !== '') {
-                                    $heroPhotoUrl = str_starts_with($imgPath, 'http') ? $imgPath : asset('storage/' . ltrim($imgPath, '/'));
-                                }
-                            }
-                        @endphp
                         <div class="space-y-2 pt-4 border-t border-slate-100">
                             <label class="block text-xs font-bold text-slate-700">Hero photo</label>
                             <p class="text-[11px] text-slate-500">This is the picture on the right of the homepage banner.
@@ -370,7 +368,8 @@
                                     class="h-28 w-auto max-w-full object-contain rounded-xl border border-slate-200 bg-white p-2">
                             </template>
                             <input type="hidden" name="remove_hero_image" :value="removeHeroImage ? '1' : '0'">
-                            <input type="file" name="hero_image" accept="image/*" @change="onHeroPhotoPick($event)"
+                            <input type="file" name="hero_image" accept="image/*" x-ref="heroImageInput"
+                                @change="onHeroPhotoPick($event)"
                                 class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100">
                             <button type="button" x-show="heroPhotoPreview && !removeHeroImage" x-cloak
                                 @click="removeHeroPhoto()"
