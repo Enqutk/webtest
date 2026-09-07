@@ -74,6 +74,7 @@
 
     @php
         $hero = $sections['hero'] ?? \App\Models\Organization::defaultHomeSections()['hero'];
+        $theme = is_array($currentOrg->theme) ? $currentOrg->theme : \App\Models\Organization::defaultTheme();
         $about = $sections['about'] ?? \App\Models\Organization::defaultHomeSections()['about'];
         $servicesSec = $sections['services'] ?? \App\Models\Organization::defaultHomeSections()['services'];
         $statsSec = $sections['stats'] ?? \App\Models\Organization::defaultHomeSections()['stats'];

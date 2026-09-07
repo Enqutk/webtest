@@ -123,7 +123,16 @@ class HomePageController extends Controller
         $theme = is_array($currentOrg->theme) ? $currentOrg->theme : Organization::defaultTheme();
 
         $sectionKey = $request->input('section'); // e.g. 'hero', 'about', 'services', 'portfolio', 'team', 'cta'
-        $data = $request->except(['_token', 'section', 'hero_image', 'about_image', 'remove_hero_image']);
+        $data = $request->except([
+            '_token',
+            'section',
+            'hero_image',
+            'about_image',
+            'remove_hero_image',
+            'display_name',
+            'show_hero_logo',
+            'show_hero_brand_text',
+        ]);
 
         if ($request->hasFile('about_image')) {
             $path = $request->file('about_image')->store('about', 'public');
@@ -137,6 +146,14 @@ class HomePageController extends Controller
                 $request->file('hero_image'),
                 $request->boolean('remove_hero_image')
             );
+
+            $displayName = trim((string) $request->input('display_name', ''));
+            if ($displayName !== '') {
+                $currentOrg->title = $displayName;
+            }
+
+            $theme['show_hero_logo'] = $request->boolean('show_hero_logo');
+            $theme['show_hero_brand_text'] = $request->boolean('show_hero_brand_text');
         }
 
         if (isset($data['points']) && is_array($data['points'])) {
