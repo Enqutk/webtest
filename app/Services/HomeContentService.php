@@ -306,6 +306,7 @@ class HomeContentService
         $show = ($showCall || $showWhatsapp || $canSave) && ($theme['show_contact_bar'] ?? true);
 
         $filename = Str::slug($organization->title ?: 'contact') ?: 'contact';
+        $photo = ($theme['show_logo'] ?? true) ? ($organization->logo_url ?? null) : null;
 
         return [
             'show' => $show,
@@ -319,6 +320,7 @@ class HomeContentService
                 'phone' => $phone,
                 'email' => $email,
                 'url' => $profileUrl,
+                'photo' => $photo,
                 'filename' => $filename,
             ],
         ];
