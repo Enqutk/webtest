@@ -213,6 +213,8 @@ class Organization extends Model implements HasMedia, \Filament\Models\Contracts
             'show_tagline' => true,
             'show_po_box' => true,
             'show_header_logo' => true,
+            'show_hero_logo' => true,
+            'show_hero_brand_text' => true,
             'show_header_cta' => true,
             'header_cta_text' => 'Get in touch',
             'header_cta_url' => '/contact',
