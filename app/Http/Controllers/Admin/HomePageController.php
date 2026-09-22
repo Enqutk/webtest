@@ -385,7 +385,7 @@ class HomePageController extends Controller
             $path = $file->store('hero-slides', 'public');
             $slides[0]['image'] = [$path => $path];
             $slides[0]['image_path'] = $path;
-            $this->replaceHeroMediaAtIndex($org, 0, $file);
+            $this->replaceHeroMediaAtIndex($org, 0, $file, $slides[0]);
         } elseif ($remove) {
             $slides[0]['image'] = null;
             $slides[0]['image_path'] = null;
@@ -395,7 +395,7 @@ class HomePageController extends Controller
         $theme['home_sections']['hero']['slides'] = array_values($slides);
     }
 
-    private function replaceHeroMediaAtIndex(Organization $org, int $index, $file): void
+    private function replaceHeroMediaAtIndex(Organization $org, int $index, $file, array $slide = []): void
     {
         $hero = Hero::query()
             ->where('organization_id', $org->id)
@@ -406,7 +406,11 @@ class HomePageController extends Controller
         if (! $hero) {
             $hero = Hero::create([
                 'organization_id' => $org->id,
-                'title' => $org->title,
+                'title' => filled($slide['title'] ?? null) ? $slide['title'] : $org->title,
+                'subtitle' => $slide['subtitle'] ?? null,
+                'description' => (string) ($slide['description'] ?? ''),
+                'text_link' => $slide['text_link'] ?? null,
+                'button_link' => $slide['button_link'] ?? null,
                 'order' => $index + 1,
                 'status' => 'active',
             ]);
