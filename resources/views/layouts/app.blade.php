@@ -108,7 +108,10 @@
     </style>
     @stack('styles')
 </head>
-<body @class(['has-contact-action-bar' => ! empty($data['contactActions']['show'])])>
+<body @class([
+    'has-contact-action-bar' => ! empty($data['contactActions']['show']),
+    'hz-ceremony' => ($theme['layout'] ?? 'horizon') === 'ceremony',
+])>
     @include('layouts.horizon.header')
     @include('layouts.horizon.creator-bar')
 

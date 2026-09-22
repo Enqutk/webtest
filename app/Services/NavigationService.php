@@ -60,7 +60,7 @@ class NavigationService
             if (!$showServices && (str_contains($label, 'service') || str_contains($url, 'service'))) {
                 return false;
             }
-            if (!$showPortfolio && (str_contains($label, 'portfolio') || str_contains($label, 'project') || str_contains($url, 'portfolio'))) {
+            if (!$showPortfolio && (str_contains($label, 'portfolio') || str_contains($label, 'project'))) {
                 return false;
             }
             if (!$showAbout && (str_contains($label, 'about') || str_contains($url, '/about'))) {

@@ -55,6 +55,44 @@
         }
     }
 
+        function paintPreviewPicture(doc, section, field, value) {
+            if (!doc || !value) return false;
+            var isPicture = field === 'background_image' || field.indexOf('tile_') === 0 || field.indexOf('frame_') === 0;
+            if (!isPicture) return false;
+            var host = doc.getElementById(section) || doc.querySelector('[data-admin-section="' + section + '"]') || doc;
+
+            if (field === 'background_image') {
+                var fill = host.querySelector('.hz-fill');
+                if (!fill) {
+                    fill = doc.createElement('div');
+                    fill.className = 'hz-fill';
+                    fill.innerHTML = '<img alt="" data-preview-field="background_image"><span class="hz-fill-shade"></span>';
+                    host.insertBefore(fill, host.firstChild);
+                }
+                var bg = fill.querySelector('img');
+                if (bg) {
+                    bg.setAttribute('src', value);
+                    bg.style.display = '';
+                }
+                return true;
+            }
+
+            var fig = doc.querySelector('[data-admin-section="' + section + '"][data-admin-field="' + field + '"]');
+            if (!fig) return false;
+            var img = fig.tagName === 'IMG' ? fig : fig.querySelector('img');
+            if (!img) {
+                img = doc.createElement('img');
+                img.alt = '';
+                img.setAttribute('data-preview-field', field);
+                fig.insertBefore(img, fig.firstChild);
+            }
+            img.setAttribute('src', value);
+            img.style.display = '';
+            var empty = fig.querySelector('.cm-photo-empty');
+            if (empty) empty.style.display = 'none';
+            return true;
+        }
+
         function applyFieldUpdate(doc, section, field, value) {
         if (!doc) return;
         var identityFields = {
@@ -79,6 +117,10 @@
             nodes.forEach(function (el) {
                 el.style.objectPosition = value || '50% 50%';
             });
+            return;
+        }
+
+        if (paintPreviewPicture(doc, section, field, value)) {
             return;
         }
 
@@ -288,6 +330,13 @@
                     return true;
                 }
                 window.location.href = data.url;
+                return true;
+            }
+
+            if (data.type === 'picture-picked' && data.section && data.field) {
+                if (typeof this.handlers.onPicturePicked === 'function') {
+                    this.handlers.onPicturePicked(data.section, data.field, data.file || null, data.url || '');
+                }
                 return true;
             }
 

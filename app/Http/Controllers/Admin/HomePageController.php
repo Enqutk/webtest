@@ -123,6 +123,30 @@ class HomePageController extends Controller
         $theme = is_array($currentOrg->theme) ? $currentOrg->theme : Organization::defaultTheme();
 
         $sectionKey = $request->input('section'); // e.g. 'hero', 'about', 'services', 'portfolio', 'team', 'cta'
+
+        if ($sectionKey === 'layout') {
+            $layout = $request->input('layout', 'horizon');
+            $theme['layout'] = in_array($layout, ['horizon', 'ceremony'], true) ? $layout : 'horizon';
+            $footerStyle = $request->input('footer_style', 'columns');
+            $theme['footer_style'] = in_array($footerStyle, ['columns', 'explore'], true) ? $footerStyle : 'columns';
+            $theme['footer_explore_label'] = trim((string) $request->input('footer_explore_label', 'Explore'));
+
+            $order = $request->input('order', []);
+            if (is_array($order) && $order !== []) {
+                asort($order, SORT_NUMERIC);
+                $allowed = ['hero', 'about', 'services', 'spotlight', 'stats', 'portfolio', 'gallery', 'clients', 'team', 'cta', 'inquiry'];
+                $theme['section_order'] = array_values(array_filter(
+                    array_keys($order),
+                    fn ($key) => in_array($key, $allowed, true)
+                ));
+            }
+
+            $currentOrg->theme = $theme;
+            $currentOrg->save();
+
+            return back()->with('success', 'Page style saved. Turn sections on or off, reorder them, and edit each one below.');
+        }
+
         $data = $request->except([
             '_token',
             'section',
@@ -131,6 +155,10 @@ class HomePageController extends Controller
             'about_image',
             'remove_hero_image',
             'remove_hero_brand_logo',
+            'background_image',
+            'remove_background_image',
+            'frame_files',
+            'gallery_files',
         ]);
 
         if ($request->hasFile('about_image')) {
@@ -156,6 +184,40 @@ class HomePageController extends Controller
 
             $data['show_brand_text'] = $request->boolean('show_brand_text');
             $data['show_brand_logo'] = $request->boolean('show_brand_logo');
+        }
+
+        if ($request->hasFile('background_image')) {
+            $data['background_image'] = $request->file('background_image')->store('theme-images', 'public');
+        } elseif ($request->boolean('remove_background_image')) {
+            $data['background_image'] = null;
+        }
+
+        foreach (['background_opacity', 'background_shade', 'background_focus_x', 'background_focus_y'] as $toneKey) {
+            if ($request->exists($toneKey)) {
+                $data[$toneKey] = max(0, min(100, (int) $request->input($toneKey)));
+            }
+        }
+
+        if ($sectionKey === 'spotlight') {
+            $frames = $request->input('frames', []);
+            foreach ((array) $request->file('frame_files', []) as $index => $file) {
+                if ($file) {
+                    $frames[$index]['image'] = $file->store('theme-images', 'public');
+                    unset($frames[$index]['remove']);
+                }
+            }
+            $data['frames'] = $this->cleanRepeaters(is_array($frames) ? $frames : []);
+        }
+
+        if ($sectionKey === 'gallery') {
+            $tiles = $request->input('tiles', []);
+            foreach ((array) $request->file('gallery_files', []) as $index => $file) {
+                if ($file) {
+                    $tiles[$index]['image'] = $file->store('theme-images', 'public');
+                    unset($tiles[$index]['remove']);
+                }
+            }
+            $data['tiles'] = $this->cleanRepeaters(is_array($tiles) ? $tiles : []);
         }
 
         if (isset($data['points']) && is_array($data['points'])) {
@@ -241,7 +303,7 @@ class HomePageController extends Controller
         }
 
         if ($request->hasFile('slide_image') && is_int($savedIndex)) {
-            $this->replaceHeroMediaAtIndex($currentOrg, $savedIndex, $request->file('slide_image'));
+            $this->replaceHeroMediaAtIndex($currentOrg, $savedIndex, $request->file('slide_image'), $slideData);
         }
 
         $theme['home_sections']['hero']['slides'] = array_values($slides);
@@ -266,6 +328,35 @@ class HomePageController extends Controller
         }
 
         return back()->with('success', 'Hero slide removed.');
+    }
+
+    private function cleanRepeaters(array $rows): array
+    {
+        $clean = [];
+
+        foreach (array_values($rows) as $row) {
+            if (! is_array($row) || ! empty($row['remove'])) {
+                continue;
+            }
+
+            unset($row['remove']);
+            $row = array_map(function ($value) {
+                if (is_string($value)) {
+                    $value = trim($value);
+                }
+
+                return $value === '' ? null : $value;
+            }, $row);
+
+            $hasContent = collect($row)
+                ->except(['span'])
+                ->contains(fn ($value) => filled($value));
+            if ($hasContent) {
+                $clean[] = $row;
+            }
+        }
+
+        return $clean;
     }
 
     private function syncHeroPhoto(Organization $org, array &$theme, $file, bool $remove): void

@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             EnkuTaddesseSeeder::class,
             YeabsiraEndaleSeeder::class,
             YabtsegaAsfawSeeder::class,
+            KimemCeremonySeeder::class,
         ]);
     }
 }

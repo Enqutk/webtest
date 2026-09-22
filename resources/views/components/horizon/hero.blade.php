@@ -78,6 +78,13 @@
 @endphp
 
 <section class="hz-hero" id="hero" aria-label="Homepage hero">
+    <x-horizon.fill-background
+        :image="\App\Models\Organization::themeFileUrl($heroConfig['background_image'] ?? null)"
+        :opacity="$heroConfig['background_opacity'] ?? 80"
+        :shade="$heroConfig['background_shade'] ?? 0"
+        :focus-x="$heroConfig['background_focus_x'] ?? 50"
+        :focus-y="$heroConfig['background_focus_y'] ?? 50"
+    />
     @if($slides->isEmpty())
         <div class="container">
             <div class="row align-items-center g-5 hz-hero-slide">

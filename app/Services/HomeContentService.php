@@ -111,6 +111,18 @@ class HomeContentService
         if (isset($configuredSections['about']['points']) && is_array($configuredSections['about']['points'])) {
             $homeSections['about']['points'] = $configuredSections['about']['points'];
         }
+        if (isset($configuredSections['spotlight']['points']) && is_array($configuredSections['spotlight']['points'])) {
+            $homeSections['spotlight']['points'] = $configuredSections['spotlight']['points'];
+        }
+        if (isset($configuredSections['spotlight']['frames']) && is_array($configuredSections['spotlight']['frames'])) {
+            $homeSections['spotlight']['frames'] = $configuredSections['spotlight']['frames'];
+        }
+        if (isset($configuredSections['gallery']['tiles']) && is_array($configuredSections['gallery']['tiles'])) {
+            $homeSections['gallery']['tiles'] = $configuredSections['gallery']['tiles'];
+        }
+        if (isset($configuredSections['services']['icons']) && is_array($configuredSections['services']['icons'])) {
+            $homeSections['services']['icons'] = $configuredSections['services']['icons'];
+        }
 
         $statsItems = !empty($homeSections['stats']['items'])
             ? $homeSections['stats']['items']

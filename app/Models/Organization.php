@@ -268,6 +268,11 @@ class Organization extends Model implements HasMedia, \Filament\Models\Contracts
             // Picture / Image Shape Style
             'image_shape' => 'rounded-xl',
 
+            // Page composition. horizon = current profile layout. ceremony = full-bleed event layout.
+            // Every section, color, and photo stays editable either way.
+            'layout' => 'horizon',
+            'footer_style' => 'columns',
+
             // Home Page Sections Customizer
             'home_sections' => self::defaultHomeSections(),
 
@@ -330,6 +335,12 @@ class Organization extends Model implements HasMedia, \Filament\Models\Contracts
                 'cta_url' => '/portfolio',
                 'secondary_cta_text' => 'Our Services',
                 'secondary_cta_url' => '/our-services',
+                'style' => 'split',
+                'background_image' => null,
+                'background_opacity' => 80,
+                'background_shade' => 40,
+                'background_focus_x' => 50,
+                'background_focus_y' => 50,
                 'slides' => self::defaultHeroSlides(),
             ],
             'about' => [
@@ -387,10 +398,56 @@ class Organization extends Model implements HasMedia, \Filament\Models\Contracts
             ],
             'cta' => [
                 'is_visible' => true,
+                'style' => 'band',
+                'eyebrow' => '',
                 'title' => 'Have a project in mind?',
                 'description' => 'Climate-smart irrigation, rural WASH, flood resilience, and water-resource GIS across East Africa.',
                 'button_text' => 'Start a conversation',
                 'button_url' => '/contact',
+                'background_image' => null,
+                'background_opacity' => 80,
+                'background_shade' => 40,
+                'background_focus_x' => 50,
+                'background_focus_y' => 50,
+            ],
+            'spotlight' => [
+                'is_visible' => false,
+                'overlay' => '',
+                'overlay_sub' => '',
+                'eyebrow' => 'Featured story',
+                'title' => 'A day worth remembering',
+                'description' => '',
+                'points' => [],
+                'frames' => [],
+                'background_image' => null,
+                'background_opacity' => 80,
+                'background_shade' => 40,
+                'background_focus_x' => 50,
+                'background_focus_y' => 50,
+            ],
+            'gallery' => [
+                'is_visible' => false,
+                'eyebrow' => 'Pictures',
+                'title' => '',
+                'description' => '',
+                'tiles' => [],
+                'background_image' => null,
+                'background_opacity' => 80,
+                'background_shade' => 40,
+                'background_focus_x' => 50,
+                'background_focus_y' => 50,
+            ],
+            'inquiry' => [
+                'is_visible' => false,
+                'eyebrow' => 'Contact us',
+                'title' => 'Tell us about the day you are planning',
+                'description' => '',
+                'button_text' => 'Send message',
+                'background_image' => null,
+                'background_opacity' => 80,
+                'background_shade' => 40,
+                'background_focus_x' => 50,
+                'background_focus_y' => 50,
             ],
         ];
     }
@@ -497,6 +554,33 @@ class Organization extends Model implements HasMedia, \Filament\Models\Contracts
         $clean = ltrim(str_replace(['/storage/', 'storage/'], '', $value), '/');
 
         return asset('storage/' . $clean);
+    }
+
+    public static function publicUrl(?string $url): string
+    {
+        $url = trim((string) $url);
+        if ($url === '') {
+            return '#';
+        }
+
+        if (
+            str_starts_with($url, '#')
+            || str_starts_with($url, 'http://')
+            || str_starts_with($url, 'https://')
+            || str_starts_with($url, 'mailto:')
+            || str_starts_with($url, 'tel:')
+        ) {
+            return $url;
+        }
+
+        $slug = request()->route('slug');
+        if ($slug && str_starts_with($url, '/') && ! str_starts_with($url, "/card/{$slug}")) {
+            $path = $url === '/' ? "/card/{$slug}" : "/card/{$slug}".$url;
+
+            return url($path);
+        }
+
+        return url($url);
     }
 
     public static function imageObjectPosition(mixed $x = null, mixed $y = null): string

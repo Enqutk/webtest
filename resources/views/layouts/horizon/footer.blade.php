@@ -22,6 +22,30 @@
     $copyrightName = $footerName !== '' ? $footerName : $siteName;
 @endphp
 
+@if(($theme['footer_style'] ?? 'columns') === 'explore')
+<footer class="hz-footer hz-footer-explore">
+    <div class="container">
+        @if($showFooterNav)
+            @if(filled($theme['footer_explore_label'] ?? 'Explore'))
+                <p class="cm-kicker">{{ $theme['footer_explore_label'] ?? 'Explore' }}</p>
+            @endif
+            <ul class="hz-footer-explore-links">
+                @forelse($footerNavItems as $link)
+                    <li><a href="{{ $link['url'] }}">{{ $link['label'] }}</a></li>
+                @empty
+                    <li><a href="{{ $data['brandHomeUrl'] ?? url('/') }}">Home</a></li>
+                @endforelse
+            </ul>
+        @endif
+        <div class="hz-footer-bottom">
+            <div>&copy; {{ date('Y') }} {{ $copyrightName }}. All rights reserved.</div>
+            @if($showFooterCredit && filled($theme['footer_credit_text'] ?? null))
+                <div class="mt-2">{!! $theme['footer_credit_html'] ?? e($theme['footer_credit_text']) !!}</div>
+            @endif
+        </div>
+    </div>
+</footer>
+@else
 <footer class="hz-footer">
     <div class="container">
         <div class="row g-4">
@@ -189,3 +213,4 @@
         </div>
     </div>
 </footer>
+@endif

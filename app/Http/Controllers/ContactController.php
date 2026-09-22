@@ -19,7 +19,7 @@ class ContactController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'phone' => ['required', 'string', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'min:10', 'max:40'],
+            'phone' => ['nullable', 'string', 'max:40'],
             'subject' => 'required|string|max:255',
             'message' => 'required|string|max:5000',
         ]);
@@ -34,7 +34,7 @@ class ContactController extends Controller
             Mail::send('emails.contact', [
                 'name' => $validated['name'],
                 'email' => $validated['email'],
-                'phone' => $validated['phone'],
+                'phone' => $validated['phone'] ?? '',
                 'subject' => $validated['subject'],
                 'userMessage' => $validated['message'],
             ], function ($mail) use ($validated, $recipient) {

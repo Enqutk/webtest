@@ -124,6 +124,9 @@
             'team' => 'Leadership Team',
             'clients' => 'Clients & Partners',
             'cta' => 'CTA Banner',
+            'spotlight' => 'Spotlight story',
+            'gallery' => 'Picture grid',
+            'inquiry' => 'Contact form',
         ];
     @endphp
 
@@ -184,6 +187,8 @@
             </div>
         </div>
 
+        @include('admin.home-sections._page-style')
+
         <!-- Top Section Switcher Navigation -->
         <div
             class="bg-white rounded-2xl border border-slate-200/80 p-2 shadow-sm flex flex-wrap gap-1.5 sticky top-2 z-20 backdrop-blur-md bg-white/95">
@@ -196,6 +201,21 @@
                 :class="activeSection === 'hero' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'"
                 class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
                 <span>Hero ({{ count($heroSlides) }})</span>
+            </button>
+            <button type="button" @click="selectSection('spotlight')"
+                :class="activeSection === 'spotlight' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'"
+                class="px-3.5 py-2 rounded-xl text-xs font-bold transition">
+                <span>Spotlight</span>
+            </button>
+            <button type="button" @click="selectSection('gallery')"
+                :class="activeSection === 'gallery' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'"
+                class="px-3.5 py-2 rounded-xl text-xs font-bold transition">
+                <span>Pictures</span>
+            </button>
+            <button type="button" @click="selectSection('inquiry')"
+                :class="activeSection === 'inquiry' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'"
+                class="px-3.5 py-2 rounded-xl text-xs font-bold transition">
+                <span>Contact form</span>
             </button>
             <button type="button" @click="selectSection('about')"
                 :class="activeSection === 'about' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/20' : 'text-slate-600 hover:bg-slate-100'"
@@ -428,6 +448,16 @@
                             <p x-show="removeHeroImage" class="text-[11px] text-slate-500">Picture will be removed when you
                                 save.</p>
                         </div>
+
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700">Hero arrangement</label>
+                            <select name="style" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                                <option value="split" {{ ($hero['style'] ?? 'split') === 'split' ? 'selected' : '' }}>Split — words beside a photo</option>
+                                <option value="backdrop" {{ ($hero['style'] ?? '') === 'backdrop' ? 'selected' : '' }}>Backdrop — photo fills the hero behind the words</option>
+                            </select>
+                        </div>
+
+                        @include('admin.home-sections._fill-background', ['section' => $hero])
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-100">
                             <div class="grid grid-cols-2 gap-3">
@@ -724,6 +754,17 @@
                         </div>
 
                         <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700">About arrangement</label>
+                            <select name="layout" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                                <option value="default" {{ ($about['layout'] ?? 'default') === 'default' ? 'selected' : '' }}>Photo and story</option>
+                                <option value="me" {{ ($about['layout'] ?? '') === 'me' ? 'selected' : '' }}>Portrait profile</option>
+                                <option value="editorial" {{ ($about['layout'] ?? '') === 'editorial' ? 'selected' : '' }}>Editorial — label beside the story</option>
+                            </select>
+                        </div>
+
+                        @include('admin.home-sections._fill-background', ['section' => $about])
+
+                        <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-slate-700">Paragraph 1</label>
                             <textarea name="paragraph_1" x-model="aboutP1" rows="2"
                                 class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $about['paragraph_1'] ?? '' }}</textarea>
@@ -802,7 +843,7 @@
 
                 <!-- 🔧 SECTION 3: SERVICES SECTION -->
                 <div id="admin-form-services" x-show="activeSection === 'services'" class="space-y-6" x-cloak>
-                    <form action="{{ route('admin.home-sections.update') }}" method="POST"
+                    <form action="{{ route('admin.home-sections.update') }}" method="POST" enctype="multipart/form-data"
                         class="bg-white rounded-2xl border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-6">
                         @csrf
                         <input type="hidden" name="section" value="services">
@@ -838,6 +879,38 @@
                             <textarea name="description" x-model="servicesDescription" rows="2"
                                 class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white transition">{{ $servicesSec['description'] ?? '' }}</textarea>
                         </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <label class="space-y-1.5">
+                                <span class="block text-xs font-bold text-slate-700">Card arrangement</span>
+                                <select name="layout" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                                    <option value="cards" {{ ($servicesSec['layout'] ?? 'cards') === 'cards' ? 'selected' : '' }}>Standard cards</option>
+                                    <option value="gallery" {{ ($servicesSec['layout'] ?? '') === 'gallery' ? 'selected' : '' }}>Gallery tiles</option>
+                                    <option value="outline" {{ ($servicesSec['layout'] ?? '') === 'outline' ? 'selected' : '' }}>Outline cards</option>
+                                </select>
+                            </label>
+                            <label class="space-y-1.5">
+                                <span class="block text-xs font-bold text-slate-700">Link under each outline card</span>
+                                <input type="text" name="card_link_text" value="{{ $servicesSec['card_link_text'] ?? 'Learn more' }}"
+                                    class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                            </label>
+                        </div>
+
+                        @if($services->isNotEmpty())
+                            <div class="space-y-2">
+                                <h4 class="text-xs font-bold text-slate-800">Outline card icons</h4>
+                                <p class="text-[11px] text-slate-500">Bootstrap icon class, for example bi bi-stars. Leave blank to use the default icon.</p>
+                                @foreach($services as $service)
+                                    <label class="grid grid-cols-1 md:grid-cols-[1fr_180px] gap-2 items-center">
+                                        <span class="text-xs text-slate-700">{{ $service->title }}</span>
+                                        <input type="text" name="icons[{{ $service->slug }}]" value="{{ $servicesSec['icons'][$service->slug] ?? '' }}" placeholder="bi bi-stars"
+                                            class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs">
+                                    </label>
+                                @endforeach
+                            </div>
+                        @endif
+
+                        @include('admin.home-sections._fill-background', ['section' => $servicesSec])
 
                         <div class="flex justify-end pt-2">
                             <button type="submit"
@@ -1230,7 +1303,7 @@
 
                 <!-- 📣 SECTION 7: CTA BANNER -->
                 <div id="admin-form-cta" x-show="activeSection === 'cta'" class="space-y-6" x-cloak>
-                    <form action="{{ route('admin.home-sections.update') }}" method="POST"
+                    <form action="{{ route('admin.home-sections.update') }}" method="POST" enctype="multipart/form-data"
                         class="bg-white rounded-2xl border border-slate-200/80 p-6 lg:p-8 shadow-sm space-y-6">
                         @csrf
                         <input type="hidden" name="section" value="cta">
@@ -1266,6 +1339,23 @@
                             </div>
                         </div>
 
+                        <label class="space-y-1.5 block">
+                            <span class="block text-xs font-bold text-slate-700">Arrangement</span>
+                            <select name="style" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                                <option value="band" {{ ($ctaSec['style'] ?? 'band') === 'band' ? 'selected' : '' }}>Side-by-side band</option>
+                                <option value="center" {{ ($ctaSec['style'] ?? '') === 'center' ? 'selected' : '' }}>Centered statement</option>
+                            </select>
+                        </label>
+                        <label class="space-y-1.5 block">
+                            <span class="block text-xs font-bold text-slate-700">Line under the headline</span>
+                            <input type="text" name="eyebrow" value="{{ $ctaSec['eyebrow'] ?? '' }}"
+                                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                        </label>
+                        <label class="space-y-1.5 block">
+                            <span class="block text-xs font-bold text-slate-700">Supporting text</span>
+                            <textarea name="description" rows="3" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs">{{ $ctaSec['description'] ?? '' }}</textarea>
+                        </label>
+                        @include('admin.home-sections._fill-background', ['section' => $ctaSec])
                         <div class="flex justify-end pt-2">
                             <button type="submit"
                                 class="px-5 py-2.5 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-brand-600/30 transition">
@@ -1274,6 +1364,8 @@
                         </div>
                     </form>
                 </div>
+
+                @include('admin.home-sections._story-sections')
 
             </div><!-- /forms column -->
 

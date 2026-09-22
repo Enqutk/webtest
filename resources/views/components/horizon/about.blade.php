@@ -37,6 +37,16 @@
         data-admin-edit-url="{{ $aboutPageEditUrl }}#about-page-intro"
     @endif
 >
+    @if(! $isAboutPage)
+        @php $aboutBg = $data['homeSections']['about'] ?? []; @endphp
+        <x-horizon.fill-background
+            :image="\App\Models\Organization::themeFileUrl($aboutBg['background_image'] ?? null)"
+            :opacity="$aboutBg['background_opacity'] ?? 80"
+            :shade="$aboutBg['background_shade'] ?? 40"
+            :focus-x="$aboutBg['background_focus_x'] ?? 50"
+            :focus-y="$aboutBg['background_focus_y'] ?? 50"
+        />
+    @endif
     <div class="container">
         <div class="row align-items-center g-5">
             <div class="col-lg-5">

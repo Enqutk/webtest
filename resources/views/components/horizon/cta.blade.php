@@ -12,6 +12,14 @@
 @endphp
 
 <section class="hz-cta" id="cta">
+    @php $ctaBg = $data['homeSections']['cta'] ?? []; @endphp
+    <x-horizon.fill-background
+        :image="\App\Models\Organization::themeFileUrl($ctaBg['background_image'] ?? null)"
+        :opacity="$ctaBg['background_opacity'] ?? 80"
+        :shade="$ctaBg['background_shade'] ?? 45"
+        :focus-x="$ctaBg['background_focus_x'] ?? 50"
+        :focus-y="$ctaBg['background_focus_y'] ?? 50"
+    />
     <div class="container">
         <div class="row align-items-center g-4">
             <div class="col-lg-8">

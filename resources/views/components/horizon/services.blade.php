@@ -27,6 +27,14 @@
 @endphp
 
 <section class="hz-section hz-services {{ $isGallery ? 'hz-services-gallery' : 'bg-surface border-top border-bottom border-hz' }}" id="services">
+    @php $servicesBg = $data['homeSections']['services'] ?? []; @endphp
+    <x-horizon.fill-background
+        :image="\App\Models\Organization::themeFileUrl($servicesBg['background_image'] ?? null)"
+        :opacity="$servicesBg['background_opacity'] ?? 80"
+        :shade="$servicesBg['background_shade'] ?? 40"
+        :focus-x="$servicesBg['background_focus_x'] ?? 50"
+        :focus-y="$servicesBg['background_focus_y'] ?? 50"
+    />
     <div class="container">
         @if($showHeader)
             <div class="row justify-content-between align-items-end mb-4 g-3">

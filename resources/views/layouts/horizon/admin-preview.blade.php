@@ -82,6 +82,11 @@
     body.admin-preview-mode [data-admin-section]:not([data-admin-compact]).is-admin-focused::after {
         background: #ea580c;
     }
+    body.admin-preview-mode [data-admin-field="background_image"],
+    body.admin-preview-mode [data-admin-field^="tile_"],
+    body.admin-preview-mode [data-admin-field^="frame_"] {
+        cursor: pointer !important;
+    }
     body.admin-preview-mode a,
     body.admin-preview-mode button {
         pointer-events: none !important;
@@ -127,6 +132,44 @@
         return candidates[0];
     }
 
+    function paintPreviewPicture(doc, section, field, value) {
+        if (!value) return false;
+        var isPicture = field === 'background_image' || field.indexOf('tile_') === 0 || field.indexOf('frame_') === 0;
+        if (!isPicture) return false;
+        var host = doc.getElementById(section) || doc.querySelector('[data-admin-section="' + section + '"]') || doc;
+
+        if (field === 'background_image') {
+            var fill = host.querySelector('.hz-fill');
+            if (!fill) {
+                fill = doc.createElement('div');
+                fill.className = 'hz-fill';
+                fill.innerHTML = '<img alt="" data-preview-field="background_image"><span class="hz-fill-shade"></span>';
+                host.insertBefore(fill, host.firstChild);
+            }
+            var bg = fill.querySelector('img');
+            if (bg) {
+                bg.setAttribute('src', value);
+                bg.style.display = '';
+            }
+            return true;
+        }
+
+        var fig = doc.querySelector('[data-admin-section="' + section + '"][data-admin-field="' + field + '"]');
+        if (!fig) return false;
+        var img = fig.tagName === 'IMG' ? fig : fig.querySelector('img');
+        if (!img) {
+            img = doc.createElement('img');
+            img.alt = '';
+            img.setAttribute('data-preview-field', field);
+            fig.insertBefore(img, fig.firstChild);
+        }
+        img.setAttribute('src', value);
+        img.style.display = '';
+        var empty = fig.querySelector('.cm-photo-empty');
+        if (empty) empty.style.display = 'none';
+        return true;
+    }
+
     function applyFieldUpdate(section, field, value) {
         var identityFields = {
             'company-name': true,
@@ -150,6 +193,10 @@
             imageScope.querySelectorAll('[data-preview-field="image"]').forEach(function (el) {
                 el.style.objectPosition = value || '50% 50%';
             });
+            return;
+        }
+
+        if (paintPreviewPicture(document, section, field, value)) {
             return;
         }
 
@@ -188,6 +235,28 @@
         });
     }
 
+    function isPictureField(field) {
+        return field === 'background_image' || /^tile_\d+$/.test(field || '') || /^frame_\d+$/.test(field || '');
+    }
+
+    function openPicturePicker(section, field) {
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.style.position = 'fixed';
+        input.style.left = '-9999px';
+        document.body.appendChild(input);
+        input.addEventListener('change', function () {
+            var file = input.files && input.files[0];
+            input.remove();
+            if (!file) return;
+            var url = URL.createObjectURL(file);
+            paintPreviewPicture(document, section, field, url);
+            post('picture-picked', { section: section, field: field, file: file, url: url });
+        });
+        input.click();
+    }
+
     document.addEventListener('click', function (event) {
         var el = findTargetAt(event.clientX, event.clientY);
         if (!el) return;
@@ -198,6 +267,11 @@
         var field = el.getAttribute('data-admin-field');
         var editUrl = el.getAttribute('data-admin-edit-url');
         focusElement(el);
+        if (isPictureField(field)) {
+            openPicturePicker(section, field);
+            post('section-click', { section: section, field: field, editUrl: null });
+            return;
+        }
         if (editUrl) {
             post('navigate-edit', { url: editUrl, section: section, field: field });
             return;

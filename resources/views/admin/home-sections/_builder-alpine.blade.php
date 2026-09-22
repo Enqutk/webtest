@@ -426,6 +426,45 @@
                     }
                 },
 
+                applyPickedPicture(section, field, file, url) {
+                    const form = document.getElementById('admin-form-' + section);
+                    if (!form) return;
+                    let input = null;
+                    let card = null;
+                    if (field === 'background_image') {
+                        input = form.querySelector('[name="background_image"]');
+                    } else if (/^tile_\d+$/.test(field || '')) {
+                        const idx = field.replace('tile_', '');
+                        input = form.querySelector('[name="gallery_files[' + idx + ']"]');
+                        card = form.querySelector('#tile-' + idx);
+                    } else if (/^frame_\d+$/.test(field || '')) {
+                        const idx = field.replace('frame_', '');
+                        input = form.querySelector('[name="frame_files[' + idx + ']"]');
+                        card = form.querySelector('#frame-' + idx);
+                    }
+                    if (input && file) {
+                        const transfer = new DataTransfer();
+                        transfer.items.add(file);
+                        input.files = transfer.files;
+                    }
+                    const thumbHost = card || form;
+                    let thumb = thumbHost.querySelector('.js-picture-thumb');
+                    if (url) {
+                        if (!thumb && card) {
+                            thumb = document.createElement('img');
+                            thumb.className = 'js-picture-thumb h-20 w-32 object-cover rounded-lg border border-slate-200';
+                            card.insertBefore(thumb, card.querySelector('input[type="file"]'));
+                        }
+                        if (thumb) {
+                            thumb.src = url;
+                            thumb.style.display = '';
+                        }
+                    }
+                    if (url && window.AdminPreview) {
+                        window.AdminPreview.pushField(section, field, url);
+                    }
+                },
+
                 selectSection(section, options) {
                     options = options || {};
                     if (!section) return;
@@ -479,6 +518,21 @@
                                         this.editClient(client);
                                     }
                                 }
+                                if (!input && /^(tile|frame)_\d+$/.test(options.field)) {
+                                    const kind = options.field.startsWith('tile_') ? 'tile' : 'frame';
+                                    const idx = options.field.replace(kind + '_', '');
+                                    const card = form.querySelector('#' + kind + '-' + idx);
+                                    const fileName = kind === 'tile'
+                                        ? 'gallery_files[' + idx + ']'
+                                        : 'frame_files[' + idx + ']';
+                                    input = form.querySelector('[name="' + fileName + '"]');
+                                    if (card) {
+                                        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                    }
+                                }
+                                if (!input && options.field === 'background_image') {
+                                    input = form.querySelector('[name="background_image"]');
+                                }
                                 if (!input && /^stat_\d+$/.test(options.field)) {
                                     const idx = options.field.replace('stat_', '');
                                     input = form.querySelector('#stat-' + idx + '-value')
@@ -489,7 +543,9 @@
                                     }
                                 }
                                 if (input) {
-                                    input.focus();
+                                    if (input.type !== 'file') {
+                                        input.focus();
+                                    }
                                     input.scrollIntoView({ behavior: 'smooth', block: 'center' });
                                 }
                             }
@@ -595,6 +651,10 @@
                     if (window.AdminPreview) {
                         window.AdminPreview.handlers.onSectionClick = (section, field) => {
                             this.selectSection(section, { fromPreview: true, field: field || null });
+                        };
+                        window.AdminPreview.handlers.onPicturePicked = (section, field, file, url) => {
+                            this.selectSection(section, { fromPreview: true, field: field || null });
+                            this.$nextTick(() => this.applyPickedPicture(section, field, file, url));
                         };
                     }
 

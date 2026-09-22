@@ -15,6 +15,9 @@ class AdminEditUrls
         'team',
         'clients',
         'cta',
+        'spotlight',
+        'gallery',
+        'inquiry',
     ];
 
     public static function siteSettings(?string $tab = null): string
