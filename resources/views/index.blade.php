@@ -12,12 +12,26 @@
             $hs['about']['paragraph_1'] ?? null,
             $hs['about']['paragraph_2'] ?? null,
         ])->filter()->implode("\n\n"));
+    $defaultSectionOrder = ['hero', 'about', 'services', 'stats', 'portfolio', 'clients', 'team', 'cta'];
+    $allowedSections = $defaultSectionOrder;
+    $configuredOrder = $data['theme']['section_order'] ?? null;
+    $sectionOrder = is_array($configuredOrder)
+        ? array_values(array_filter($configuredOrder, fn ($key) => in_array($key, $allowedSections, true)))
+        : $defaultSectionOrder;
+    if ($sectionOrder === []) {
+        $sectionOrder = $defaultSectionOrder;
+    }
 @endphp
 
+@foreach ($sectionOrder as $sectionKey)
+@switch($sectionKey)
+@case('hero')
     @if(!isset($hs['hero']['is_visible']) || !empty($hs['hero']['is_visible']))
         <x-horizon.hero :heroes="$heroes" :hero-config="$hs['hero'] ?? []" />
     @endif
+    @break
 
+@case('about')
     @if(!isset($hs['about']['is_visible']) || !empty($hs['about']['is_visible']))
         <x-horizon.about
             :about="array_merge($data['aboutFeatures'] ?? [], [
@@ -34,7 +48,9 @@
             :link-url="$hs['about']['cta_url'] ?? ($data['aboutUrl'] ?? null)"
         />
     @endif
+    @break
 
+@case('services')
     @if(!isset($hs['services']['is_visible']) || !empty($hs['services']['is_visible']))
         <x-horizon.services
             :services="$services"
@@ -47,7 +63,9 @@
             :icons="$data['sitePages']['services']['icons'] ?? []"
         />
     @endif
+    @break
 
+@case('stats')
     @if(!isset($hs['stats']['is_visible']) || !empty($hs['stats']['is_visible']))
         <x-horizon.stats
             :stats="$data['stats'] ?? []"
@@ -56,7 +74,9 @@
             :variant="$hs['stats']['variant'] ?? 'dark'"
         />
     @endif
+    @break
 
+@case('portfolio')
     @if(!isset($hs['portfolio']['is_visible']) || !empty($hs['portfolio']['is_visible']))
         <x-horizon.portfolio
             :projects="$projects"
@@ -67,7 +87,9 @@
             :cta-url="$hs['portfolio']['cta_url'] ?? null"
         />
     @endif
+    @break
 
+@case('clients')
     @if(!isset($hs['clients']['is_visible']) || !empty($hs['clients']['is_visible']))
         <x-horizon.clients
             :clients="$clients"
@@ -76,7 +98,9 @@
             :description="$hs['clients']['description'] ?? null"
         />
     @endif
+    @break
 
+@case('team')
     @if(!isset($hs['team']['is_visible']) || !empty($hs['team']['is_visible']))
         <x-horizon.team
             :team="$team"
@@ -87,7 +111,9 @@
             :cta-url="$hs['team']['cta_url'] ?? null"
         />
     @endif
+    @break
 
+@case('cta')
     @if(!isset($hs['cta']['is_visible']) || !empty($hs['cta']['is_visible']))
         <x-horizon.cta
             :title="$hs['cta']['title'] ?? 'Have a project in mind?'"
@@ -96,4 +122,7 @@
             :href="$hs['cta']['button_url'] ?? null"
         />
     @endif
+    @break
+@endswitch
+@endforeach
 @endsection

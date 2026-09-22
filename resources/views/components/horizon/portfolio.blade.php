@@ -67,6 +67,8 @@
                                     :focus-y="$project->image_focus_y ?? 50"
                                     data-preview-field="project-{{ $project->id }}-image"
                                 />
+                            @else
+                                <span class="hz-project-card-mark" aria-hidden="true">{{ mb_strtoupper(mb_substr($project->name, 0, 1)) }}</span>
                             @endif
                             @if($project->category)
                                 <span class="hz-project-card-tag" data-preview-field="project-{{ $project->id }}-category">{{ $project->category }}</span>

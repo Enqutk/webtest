@@ -12,9 +12,9 @@
 @section('page')
 <section class="hz-section hz-project-detail">
     <div class="container">
-        <div class="row g-4 g-xl-5">
+        <div class="row g-4 g-xl-5 {{ $image ? '' : 'justify-content-center' }}">
+            @if($image)
             <div class="col-lg-7">
-                @if($image)
                     <div class="hz-project-detail-media">
                         <x-horizon.focused-image
                             :src="$image"
@@ -23,9 +23,9 @@
                             :focus-y="$entity->image_focus_y ?? 50"
                         />
                     </div>
-                @endif
             </div>
-            <div class="col-lg-5">
+            @endif
+            <div class="{{ $image ? 'col-lg-5' : 'col-lg-8' }}">
                 @if($entity->category)
                     <p class="hz-eyebrow">{{ $entity->category }}</p>
                 @endif
@@ -72,6 +72,8 @@
                                             :focus-x="$project->image_focus_x ?? 50"
                                             :focus-y="$project->image_focus_y ?? 50"
                                         />
+                                    @else
+                                        <span class="hz-project-card-mark" aria-hidden="true">{{ mb_strtoupper(mb_substr($project->name, 0, 1)) }}</span>
                                     @endif
                                     @if($project->category)
                                         <span class="hz-project-card-tag">{{ $project->category }}</span>
